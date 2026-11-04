@@ -468,3 +468,4 @@ Mute	Dempen
 INIT: restarting the WebSDR	INIT: WebSDR wordt opnieuw gestart
 Lock	Slot
 This page cannot be displayed in this app	Deze pagina kan niet in deze app worden weergegeven
+Keep the screen on	Scherm niet uitschakelen

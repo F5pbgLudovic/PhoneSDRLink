@@ -468,3 +468,4 @@ Mute	Utišaj
 INIT: restarting the WebSDR	INIT: ponovni zagon WebSDR
 Lock	Ključavnica
 This page cannot be displayed in this app	Te strani v tej aplikaciji ni mogoče prikazati
+Keep the screen on	Ne ugasni zaslona

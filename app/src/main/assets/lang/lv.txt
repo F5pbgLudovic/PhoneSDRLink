@@ -468,3 +468,4 @@ Mute	Izslēgt skaņu
 INIT: restarting the WebSDR	INIT: WebSDR tiek pārstartēts
 Lock	Slēdzene
 This page cannot be displayed in this app	Šo lapu šajā lietotnē nevar parādīt
+Keep the screen on	Neizslēgt ekrānu

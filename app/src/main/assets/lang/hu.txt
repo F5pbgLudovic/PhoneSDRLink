@@ -468,3 +468,4 @@ Mute	Némítás
 INIT: restarting the WebSDR	INIT: a WebSDR újraindítása
 Lock	Zár
 This page cannot be displayed in this app	Ez az oldal nem jeleníthető meg ebben az alkalmazásban
+Keep the screen on	A képernyő ne kapcsoljon ki

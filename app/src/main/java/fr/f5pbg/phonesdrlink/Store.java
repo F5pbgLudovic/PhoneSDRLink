@@ -19,7 +19,12 @@ final class Favorite {
 
     Favorite(String name, String url) {
         this.url = url == null ? "" : url.trim();
-        this.name = name == null || name.trim().isEmpty() ? hostOf(this.url) : name.trim();
+        this.name = name == null || name.trim().isEmpty() ? hostOf(this.url) : clean(name);
+    }
+
+    // Nom sur une seule ligne, sans reste de balisage des annuaires (un retour à la ligne casserait le fichier de réglages).
+    static String clean(String n) {
+        return n.replace("\\\"", "\"").replace("&#39;", "'").replace("&amp;", "&").replaceAll("[\\r\\n\\s]+", " ").trim();
     }
 
     boolean matches(String other) {
@@ -180,14 +185,13 @@ final class Store {
     static final long MIN_HZ = 1800000L, MAX_HZ = 440000000L;
     static final int IMP_CONFIG = 1, IMP_WEBSDR = 2, IMP_MEMS = 4, IMP_SCAN = 8;
 
-    static final String[] DEFAULT_FAVS = {
-        "Liste des WebSDR (websdr.org)|http://www.websdr.org/", "Liste des KiwiSDR|http://rx.linkfanel.net/",
-        "Liste des OpenWebRX (ReceiverBook)|https://www.receiverbook.de/?type=openwebrx", "Twente (NL) - websdr.org|http://websdr.ewi.utwente.nl:8901/",
-        "Wessex (UK) - UberSDR|https://wessex.zapto.org/v2/", "French Alps - PhantomSDR|http://linkz.ddns.net:8088/" };
+    // Favoris de départ : assets/default-favorites.txt (« nom|adresse »), tous dans la liste 1, nommée HF.
+    static String[] DEFAULT_FAVS = { "Twente (NL) - websdr.org|http://websdr.ewi.utwente.nl:8901/", "Wessex (UK) - UberSDR|https://wessex.zapto.org/v2/",
+        "French Alps - PhantomSDR|http://linkz.ddns.net:8088/" };
 
     // Configuration
     String language = "";
-    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone;
+    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen;
     String callsign = "PhoneSDRLink";
     String lastUrl = "http://websdr.ewi.utwente.nl:8901/";
     long freqHz = 7100000L;
@@ -215,6 +219,14 @@ final class Store {
 
     static void init(Context ctx) {
         file = new File(ctx.getFilesDir(), "settings.ini");
+        try {
+            InputStream in = ctx.getAssets().open("default-favorites.txt");
+            String[] l = readAll(in).split("\r?\n");
+            in.close();
+            ArrayList<String> keep = new ArrayList<String>();
+            for (String x : l) if (x.contains("|")) keep.add(x);
+            if (!keep.isEmpty()) DEFAULT_FAVS = keep.toArray(new String[0]);
+        } catch (Exception e) { }
         Store s = new Store();
         boolean existed = file.exists();
         if (existed) { try { s.parse(readFile(file), 0xFFFF); } catch (Exception e) { } }
@@ -228,7 +240,8 @@ final class Store {
         favListCount = 4;
         curFavList = 0;
         for (int i = 0; i < Favorite.MAX_LISTS; i++) favListNames[i] = "Liste " + (i + 1);
-        for (String f : DEFAULT_FAVS) favorites.add(Favorite.fromSetting(f));
+        favListNames[0] = "HF";
+        for (String f : DEFAULT_FAVS) { int bar = f.lastIndexOf('|'); favorites.add(new Favorite(f.substring(0, bar), f.substring(bar + 1))); }
         firstSearchDone = false;
     }
 
@@ -248,7 +261,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        dark = true; autoNotch = false; autoDnr = false; checkUpdates = true; callsign = "PhoneSDRLink";
+        dark = true; autoNotch = false; autoDnr = false; keepScreen = false; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; stepIdx = 3;
     }
 
@@ -279,7 +292,14 @@ final class Store {
         ArrayList<long[]> skips = new ArrayList<long[]>();
         ArrayList<ScanProfile> profs = new ArrayList<ScanProfile>();
         int favCount = favListCount, memCount = memListCount;
-        for (String raw : text.split("\r?\n")) {
+        // Une ligne qui ne commence pas par « Clé= » prolonge la précédente (anciens fichiers où un nom contenait un retour à la ligne).
+        ArrayList<String> rows = new ArrayList<String>();
+        for (String l : text.split("\r?\n")) {
+            if (l.isEmpty()) continue;
+            if (!rows.isEmpty() && !l.matches("^[A-Za-z0-9]+=.*")) rows.set(rows.size() - 1, rows.get(rows.size() - 1) + " " + l);
+            else rows.add(l);
+        }
+        for (String raw : rows) {
             int eq = raw.indexOf('=');
             if (eq <= 0) continue;
             String k = raw.substring(0, eq).trim(), v = raw.substring(eq + 1);
@@ -289,6 +309,7 @@ final class Store {
                 else if (k.equals("DarkMode")) dark = v.trim().equals("1");
                 else if (k.equals("AutoNotch")) autoNotch = v.trim().equals("1");
                 else if (k.equals("AutoDnr")) autoDnr = v.trim().equals("1");
+                else if (k.equals("KeepScreen")) keepScreen = v.trim().equals("1");
                 else if (k.equals("CheckUpdates")) checkUpdates = !v.trim().equals("0");
                 else if (k.equals("Callsign")) { try { String c = clean(java.net.URLDecoder.decode(v, "UTF-8")); if (!c.isEmpty()) callsign = c; } catch (Exception e) { } }
                 else if (k.equals("LastUrl")) { if (v.trim().length() > 0) lastUrl = v.trim(); }
@@ -386,6 +407,7 @@ final class Store {
         line(sb, "DarkMode", dark ? 1 : 0);
         line(sb, "AutoNotch", autoNotch ? 1 : 0);
         line(sb, "AutoDnr", autoDnr ? 1 : 0);
+        line(sb, "KeepScreen", keepScreen ? 1 : 0);
         line(sb, "CheckUpdates", checkUpdates ? 1 : 0);
         try { line(sb, "Callsign", java.net.URLEncoder.encode(callsign, "UTF-8").replace("+", "%20")); } catch (Exception e) { }
         line(sb, "LastUrl", lastUrl);

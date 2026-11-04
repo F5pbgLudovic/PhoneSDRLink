@@ -468,3 +468,4 @@ Mute	Nutildyti
 INIT: restarting the WebSDR	INIT: WebSDR paleidžiamas iš naujo
 Lock	Spyna
 This page cannot be displayed in this app	Šio puslapio šioje programėlėje parodyti negalima
+Keep the screen on	Neišjungti ekrano

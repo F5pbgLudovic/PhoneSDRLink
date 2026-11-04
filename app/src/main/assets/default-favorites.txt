@@ -1,0 +1,136 @@
+Twente (NL) - websdr.org|http://websdr.ewi.utwente.nl:8901/
+Wessex (UK) - UberSDR|https://wessex.zapto.org/v2/
+French Alps - PhantomSDR|http://linkz.ddns.net:8088/
+F1FHL (France)|http://aubjpla.myddns.me:8073/
+Antenna Shared Apex SAL 30 Array solution / Montmorillon 86500 FRANCE|http://86.254.7.95:8073
+ENJOY BY F4JOY / PRADIERS DEP 15 JN15LG, FRANCE|http://f4joy.ddns.net:8073
+[F1RIQ Tony - HF-VHF-UHF TOURS FRANCE]|https://f1riq.freeboxos.fr/
+OpenWebRX de Poitiers 86 (Smarves) HF (160,80,45,40,30,31,20,16,15,12,11,10 & 6m) (France)|http://noradio86.ddns.net:8073/
+OpenWebRX B VHF/UHF de Poitiers 86 (Smarves) (France)|http://noradio86.ddns.net:8074/
+Web_Sdr_Manlay (France)|http://sdrmanlay.ddns.net:8073/
+15 kHz-30 MHz KiwiSDR2 - F1JEK/P - France - DX-500 active antenna.|http://f1jeksdr1.ddns.net:8073
+0-30 MHz SDR Auxerre France|http://82.64.206.44:8073
+0-30 MHz SDR Auxerre France|http://sdrauxerre.ddns.net:8073/
+F5LFE - North Burgundy KiwiSDR 0-30 MHZ / Marsangy (89), France|http://www.f5lfe.fr:8073
+F5LFE - North Burgundy KiwiSDR 0-30 MHZ / Marsangy (89), France|http://82.66.244.238:8073/
+F1SYH (France)|https://sdr.pulsraider.com/
+F1RIV_____________FR70PM (France)|http://f1riv.freeboxos.fr:8073/
+AutreRadioAutreCulture 2 / TREMOLAT (24), FRANCE|http://sdr.autreradioautreculture.com:8074
+AutreRadioAutreCulture 1 / TREMOLAT (24), FRANCE|http://sdr.autreradioautreculture.com:8073
+0-30 MHz SDR, VICTOR DELTA PARIS FRANCE|http://90.46.27.243:8073
+F1UBL - JN08 near Paris - Yvelines - France - 0-30 MHz SDR|http://f1ubl.ddns.net:8072
+F1UBL OpenWebRX public (est) (France)|http://f1ubl.ddns.net:8073/
+0-30 MHz SDR // F5NKP // nr Paris, France|http://f5nkp.freeboxos.fr:8073/
+0-30 MHz SDR // F5NKP // nr Paris, France|http://82.65.236.171:8073/
+[freddydu17] (France)|http://f4erg.hd.free.fr:8073/
+linkz - kiwi 1 / Isere, France|http://linkz.ddns.net:8073
+linkz - kiwi 2 / Isere, France|http://linkz.ddns.net:8074
+linkz - kiwi 3 / Isere, France|http://linkz.ddns.net:8075
+0-30 MHz SDR / 14 CF 004 NICOLAS villers aux bois france|http://22859.proxy.kiwisdr.com
+F4VUK / Maconnex, France|http://samoro.hopto.org:32073
+0-30 MHz SDR, JAVARADIOFRANCE|http://javaradiofrance.ddns.net:8073
+0-30 MHz SDR, 14HAM01 / Daviken - Chantilly (60) North France|http://chantilly-sdr.ddns.net:8073
+0-30 MHz SDR, 14HAM01 / Daviken - Chantilly (60) North France|http://daviken.ddns.net:8073/
+0-30 MHz SDR, 14HAM01 / Daviken - Chantilly (60) North France|http://80.119.208.227:8073/
+0-30 MHz SDR / (France)|http://f6bir.ddns.net:8073/
+0-30 MHz SDR / (France)|http://78.122.246.81:8073/
+NantesWebRx HF-VHF-UHF SDR Rx (France)|http://nanteswebrx.mooo.com:8585/
+- Freebands - Bordeaux (France) 11m / 446 Mhz / Etc ..|http://freebands.websdrbordeaux.fr:9000/
+- Ham - Bordeaux (France) 80m / 40m / 20m / 15m / 10m / 144 Mhz / 433 Mhz / Es Hail-2 ; QO…|http://ham.websdrbordeaux.fr:8000/
+HB9VIV - KiwiSDR V2 / Servion, Switzerland (Suisse)|http://hb9viv.proxy.kiwisdr.com
+0-30 MHz SDR / Ecublens-FR, Switzerland (Suisse)|http://21625.proxy.kiwisdr.com
+F4knp, RC MONTBELIARD, Doubs, France 0-30 MHz SDR|http://176.170.38.29:8073
+HB9ADJ / Roche VD Switzerland (Suisse)|http://22579.proxy.kiwisdr.com
+HB3YQQ / CHOCO69 "VS" KIWI SDR 0-30MHZ SOLAR POWERED ON 40M LONG-WIRE ANTENNA / Vérossaz… (Suisse)|http://178.237.95.113:8073
+HB3YQQ / CHOCO69 "VS" KIWI SDR 0-30MHZ SOLAR POWERED ON 40M LONG-WIRE ANTENNA / Vérossaz… (Suisse)|http://grejy.is-a-geek.org:8073/
+CHOCO 69 / OPENWEBRX+|http://choco69.synology.me:8076/
+F1JWV (France)|http://francedmr.ddns.net:8073/
+0-30 MHZ KiwiSDR, Camping Fraso-Ranch, Chasserall, JN37MC, Lignières NE, SWITZERLAND (HB9H… (Suisse)|http://chasseral.proxy.kiwisdr.com
+F6KOH SHTSF / Le Havre, France|http://shtsf.ddns.net:8073
+HB9BMR 0...30 MHz / Gurmels, Switzerland (Suisse)|http://21115.proxy.kiwisdr.com
+0-30 MHz Loop 95m , HB9EXC, Switzerland (Suisse)|http://81.13.254.159:8073
+F1UQR (France)|http://f1uqr.freeboxos.fr:8073/
+[HB9ITR]|http://185.230.119.204:8073/
+0-30 MHZ KiwiSDR, Rapperswil BE, JN37RC (Suisse)|http://rapperswil-be.proxy.kiwisdr.com
+HB9HZW (0-30 MHz KiwiSDR-2) Valais - Switzerland (Suisse)|https://kiwisdr.hb9hzw.ch/
+0-30 MHz SDR / Bern, Switzerland (Suisse)|http://kiwisdr-bern.try.yaler.io/
+FR08YG - Montcy-Saint-Pierre (France)|https://sdr-1.giarel.li/
+0-30 MHz SDR / SULNIAC 56250 , France.|http://kiwisdr56.ddns.net:8073
+0-30 MHz SDR, HB9RLM / Zielebach Switzerland (Suisse)|http://hb9rlm.ddns.net:8073
+F1UVN-RSPDX (France)|http://82.67.147.130:8080/
+0-30 MHz SDR, HB9CWK Heimiswil, Switzerland (Suisse)|http://hb9cwk.internet-box.ch:8073
+Eriz - Berner Oberland - Schweiz 🇨🇭🇨🇭🇨🇭 (Suisse)|http://178.38.13.74:8073
+Eriz - Berner Oberland - Schweiz 🇨🇭🇨🇭🇨🇭 (Suisse)|http://kiwieriz.dyndns.org:8073/
+Eriz - Berner Oberland - Schweiz 🇨🇭🇨🇭🇨🇭 (Suisse)|http://kiwieriz.7355.ch:8073/
+SDR001-France-Dept31-CB-Ham-PMR&DMR|http://sdr001.zapto.org:8073/
+RX Ahornalp LU, 1'140 asl, Switzerland @ HB9DSE, 0-32MHz (Suisse)|http://ahorn.proxy.kiwisdr.com
+RX Ahornalp LU, 1'140 asl, Switzerland @ HB9DSE, 0-32MHz (Suisse)|http://ahor.ddns.net:8073/
+F-21573 / AURAY, France|http://f21573.proxy.kiwisdr.com
+Funkclub Schlössli - HB9RE - DMR2282157 / Bodenberg, Switzerland (Suisse)|http://hb9re.ddns.net:8081
+Funkclub Schlössli - HB9RE - DMR2282157 (Suisse)|http://hb9re.ddns.net:8080/
+0-30 MHz SDR / Brettnach F57320 (France)|http://f4kiy.ddns.net:8073
+For the CB / 11m folks // OWRXCM4|http://gz62.synology.me/
+F4MZI - VHF - UHF - Le SDR HF : https://sdr.f4mzi.fr (France)|https://vhf.f4mzi.fr/
+HB9HBQ (Suisse)|https://openwebrx.hb9hbq.ch/
+IU1KWK KiwiSDR / Turin,Italy (Italie)|http://23229.proxy.kiwisdr.com
+10 kHZ - 30 MHz, Hainaut / Brunehaut, Belgium (Belgique)|http://hainaut-picardie.ddns.net:8075/
+0-30 MHz SDR, Schenkenberg, Thalheim, Switzerland (Suisse)|http://thalheim-1.proxy.kiwisdr.com
+kiwiSDR Thalheim - 0-30 MHz SDR (Suisse)|http://thalheim-2.proxy.kiwisdr.com
+0-30 MHz SDR, Thalheim, Schenkenberg, Switzerland (Suisse)|http://thalheim-3.proxy.kiwisdr.com
+0-30 MHz SDR / Thalheim, Schweiz (Suisse)|http://21707.proxy.kiwisdr.com
+IU1WFE (Italie)|http://vst-aero.it:8073/
+0-30 MHz SDR, France (Belgium border)|http://sdr.mimosys.net:8074
+Montanaro SDR|http://cbfenis.ddns.net:43510/
+Antz Kiwisdr2 no3 / Jersey UK (Royaume-Uni)|http://21181.proxy.kiwisdr.com
+0-30 MHz SDR / Jersey United Kingdom (Royaume-Uni)|http://antskiwisdr.zapto.org:8077
+antsz kiwisdr2 no4 / Jersey, United Kingdom (Royaume-Uni)|http://21182.proxy.kiwisdr.com
+0-30 MHz SDR / Jersey United Kingdom (Royaume-Uni)|http://antskiwisdr.zapto.org:8078/
+0 - 32 MHz, DJ9FBA, JN39MF / Deutschland, Saarbrücken (Allemagne)|http://dj9fba.proxy.kiwisdr.com
+ON0LLV (Belgique)|http://on0llv.on6ll.be:8073/
+KiwiSDR from Sattracker in Maegenwil / Switzerland 0 - 30MHZ (Suisse)|http://maegenwilsdr.dyndns-remote.com/
+LX0XP|http://skylink.ath.cx:8073/
+LX0XP|http://lx0bce.rl.lu:8073/
+WebSDR in C3 Ordino - ANDORRA PRINCIPALITY - ARDAM Ham Radio Association - RX 4 pcs Fun… (Andorre)|http://sdr.radioandorra.org/
+IK1YRA Public HF Kiwisdr2 Multi Mode Rx / Near Viverone Lake, Italy (Italie)|http://21262.proxy.kiwisdr.com
+HB9EUE|http://websdr.hb9eue.radio:8901/
+0-30 MHz SDR / SWITZERLAND Hasenberg03 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|http://hasenberg700m.ddns.net:8075/
+0-30 MHz SDR / SWITZERLAND Hasenberg01 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|http://hasenberg700m.ddns.net:8073/
+0-30 MHz SDR / SWITZERLAND Hasenberg01 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|http://hasenberg01.proxy.kiwisdr.com
+HASENBERG AG 700M SWITZERLAND (HB9HEH) (Suisse)|https://hasenberg01.openwebrx.ch/
+0-30 MHz SDR / SWITZERLAND Hasenberg01 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|https://hasenberg01.kiwisdr.ch/
+0-30 MHz SDR / SWITZERLAND Hasenberg02 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|https://hasenberg02.kiwisdr.ch/
+0-30 MHz SDR / SWITZERLAND Hasenberg03 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|https://hasenberg03.kiwisdr.ch/
+110-142MHz AirBand KiwiSDR / SWITZERLAND Hasenberg04 AG 700m / Antenna: VHF Omni (Suisse)|https://hasenberg04.kiwisdr.ch/
+0-30 MHZ HAM KiwiSDR / SWITZERLAND Hasenberg05 AG 700m (HB9HEH) / Antenna: Sirio Gain-Mast… (Suisse)|https://hasenberg05.kiwisdr.ch/
+HASENBERG AG 700M SWITZERLAND (HB9HEH) (Suisse)|https://openwebrx.kiwihasenberg.ch/
+0-30 MHz SDR / SWITZERLAND Hasenberg02 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|http://hasenberg02.proxy.kiwisdr.com
+110-142MHz AirBand KiwiSDR / SWITZERLAND Hasenberg04 AG 700m / Antenna: VHF Omni (Suisse)|http://hasenberg04.proxy.kiwisdr.com
+0-30 MHz SDR / SWITZERLAND Hasenberg02 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|http://hasenberg700m.ddns.net:8074/
+0-30 MHZ HAM KiwiSDR / SWITZERLAND Hasenberg05 AG 700m (HB9HEH) / Antenna: Sirio Gain-Mast… (Suisse)|http://hasenberg700m.ddns.net:8072/
+0-30 MHz SDR / SWITZERLAND Hasenberg03 AG 700m / Antenna: Sirio Gain-Master 25.5-30MHz (Suisse)|http://hasenberg03.proxy.kiwisdr.com
+0-30 MHZ HAM KiwiSDR / SWITZERLAND Hasenberg05 AG 700m (HB9HEH) / Antenna: Sirio Gain-Mast… (Suisse)|http://hasenberg05.proxy.kiwisdr.com
+kszsdr / Zug, Switzerland (Suisse)|http://22273.proxy.kiwisdr.com
+Remote DX-Station at 1'660m Rigi Scheidegg operated by HB9RYZ|http://185.199.176.46:8092/
+0-30MHz KiwiSDR / SWITZERLAND Zurich Altstetten01 JN47FJ (HB9HEH) (Suisse)|https://altstetten01.kiwisdr.ch/
+0-30MHz KiwiSDR / SWITZERLAND Zurich Altstetten01 JN47FJ (HB9HEH) (Suisse)|http://altstetten01.proxy.kiwisdr.com
+Zuerich|http://80.218.128.11:8073
+0-30 MHz SDR, HB9RYZ-1, JN47GA - Rigi Scheidegg|http://kiwisdr.rigiremote.ch
+[ON4JES-12] IPR - RADIOCLUB IEPER - WATOU VHF/UHF (Belgique)|http://watou.on4ipr.be:8073/
+[ON4JES-12] IPR - RADIOCLUB IEPER - WATOU VHF/UHF (Belgique)|http://nieuwkerke.on4ipr.be:8073/
+[ON4JES-12] IPR - RADIOCLUB IEPER - WATOU VHF/UHF (Belgique)|http://nieuwkerke.on4ipr.be:8074/
+[ON4JES-12] IPR - RADIOCLUB IEPER - WATOU VHF/UHF (Belgique)|http://watou.on4ipr.be:8076/
+SDR Pirineo - acuanticopower.com|https://sdr.acuanticopower.com/
+DB0BLG V/U (Allemagne)|http://db0blg.de:8073/
+RadioHill ObereHueb|https://kwrx.oberehueb.duckdns.org/
+HE9TGW, Winterthur Switzerland (Suisse)|http://kiwiwinterthur.ddns.net:8073
+0-30 MHz SDR / HB9ODP / Ticino, South Switzerland, 1600m, near Gotthard Pass / 160m triang… (Suisse)|http://hb9odp.proxy.kiwisdr.com
+Thunder SDR, Pi4, Diamond D-130J, SDRPlay RSP1A|http://thunder76.keenetic.pro:8073/
+0-32 MHz SDR, HB9TTU, Russikon Switzerland, optimized for 20-30 MHz (Suisse)|http://hb9ttu.dyndns.org:8073
+Thunder SDR3, Pi5, RTL-SDR V4, Proxel EX-211, Ticino Broadcast SDR – FM & DAB+|http://thunder76.keenetic.pro:8075/
+ON1MS Michel SOFIA|https://sdr.on1ms.online/
+14ALT266 (France)|https://14alt266.freeboxos.fr/openwebrx/
+DO4GME / Winzeln|http://93.219.224.162:8073
+0-30 MHz SDR / Wildmountain (Wildberg), Switzerland (Suisse)|http://wildmountain.ham-radio-op.net:8073
+0-30 MHz SDR, i1fqh - Casale Monferrato Italy (Italie)|http://i1fqh.proxy.kiwisdr.com
+ITParadies|http://itparadies.duckdns.org:8073/
+Fenu-Radio Kiwi2-SDR / Kefikon / Switzerland (Suisse)|http://fenuradio-kiwi2.ddns.net:8074

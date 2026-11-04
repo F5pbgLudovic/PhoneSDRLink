@@ -468,3 +468,4 @@ Mute	Σίγαση
 INIT: restarting the WebSDR	INIT: επανεκκίνηση του WebSDR
 Lock	Κλείδωμα
 This page cannot be displayed in this app	Αυτή η σελίδα δεν μπορεί να εμφανιστεί σε αυτήν την εφαρμογή
+Keep the screen on	Να μην σβήνει η οθόνη

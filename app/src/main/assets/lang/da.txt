@@ -468,3 +468,4 @@ Mute	Lyd fra
 INIT: restarting the WebSDR	INIT: WebSDR genstartes
 Lock	Lås
 This page cannot be displayed in this app	Denne side kan ikke vises i denne app
+Keep the screen on	Sluk ikke skærmen

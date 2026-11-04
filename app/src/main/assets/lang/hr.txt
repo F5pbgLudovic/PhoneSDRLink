@@ -468,3 +468,4 @@ Mute	Utišaj
 INIT: restarting the WebSDR	INIT: ponovno pokretanje WebSDR-a
 Lock	Brava
 This page cannot be displayed in this app	Ova se stranica ne može prikazati u ovoj aplikaciji
+Keep the screen on	Ne gasi zaslon

@@ -221,6 +221,31 @@
     for (var j = 0; j < media.length; j++) media[j].volume = Math.min(1, v);
   };
 
+  // Volume propre à la page au maximum de son curseur (appelé une fois par page) : le volume du téléphone règle alors le niveau final.
+  L.maxVolume = function () {
+    var k = detect();
+    var setv = function (el, v) {
+      try { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, v); } catch (e) { el.value = v; }
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    var max = function (el) { if (el) setv(el, el.max); };
+    try {
+      if (k === 'websdr') max(document.getElementById('volumecontrol2'));
+      else if (k === 'owrx' || k === 'owrx+') max(document.getElementById('openwebrx-panel-volume'));
+      else if (k === 'kiwi') max(document.querySelector('input.id-input-volume'));
+      else if (k === 'phantom') max(L.phantomVolume());
+      else if (k === 'ubersdr') UberSDR.command('volume', { volume: 1 }).catch(function () { });
+    } catch (e) { }
+    var media = document.querySelectorAll('audio,video');
+    for (var j = 0; j < media.length; j++) media[j].volume = 1;
+  };
+  // PhantomSDR : le curseur de volume est le premier « glass-slider » de 0 à 100.
+  L.phantomVolume = function () {
+    var s = document.querySelectorAll('input.glass-slider');
+    for (var i = 0; i < s.length; i++) if (s[i].min === '0' && s[i].max === '100') return s[i];
+    return null;
+  };
   function detect() {
     if (window.UberSDR && typeof UberSDR.command === 'function' && typeof UberSDR.state === 'function') return 'ubersdr';
     // PhantomSDR (avec module CATsync) : imite en partie Kiwi/websdr.org, à reconnaître avant eux.

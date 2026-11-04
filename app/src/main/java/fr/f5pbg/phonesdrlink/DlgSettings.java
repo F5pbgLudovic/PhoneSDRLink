@@ -25,11 +25,17 @@ final class DlgSettings {
         LinearLayout col = Ui.column(a);
         final Dialog d = Ui.window(a, "SET", Ui.scroll(a, col), false);
 
-        TextView ver = Ui.label(a, "PhoneSDRLink V" + a.versionName() + " @F5PBG");
+        TextView ver = Ui.label(a, "PhoneSDRLink V" + a.versionName() + " @F5PBG 2026");
         ver.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
-        col.addView(ver);
+        ver.setTextColor(0xFFFFEF00);   // jaune canari
+        ver.setBackground(Ui.round(0xFF1B2128, 10, a));
+        ver.setPadding(Ui.dp(a, 12), Ui.dp(a, 8), Ui.dp(a, 12), Ui.dp(a, 8));
+        col.addView(ver, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 0));
         col.addView(toggle(a, Lang.T("Mode sombre", "Dark mode"), st.dark, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.dark = on; st.save(); d.dismiss(); a.recreate(); }
+        }));
+        col.addView(toggle(a, Lang.T("Interdire l'extinction de l'écran", "Keep the screen on"), st.keepScreen, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.keepScreen = on; st.save(); a.applyKeepScreen(); }
         }));
         col.addView(toggle(a, Lang.T("Notch automatique (DNF)", "Auto notch (DNF)"), st.autoNotch, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.autoNotch = on; st.save(); a.applyAudio(); }

@@ -468,3 +468,4 @@ Mute	Ljud av
 INIT: restarting the WebSDR	INIT: WebSDR startas om
 Lock	Lås
 This page cannot be displayed in this app	Den här sidan kan inte visas i den här appen
+Keep the screen on	Stäng inte av skärmen

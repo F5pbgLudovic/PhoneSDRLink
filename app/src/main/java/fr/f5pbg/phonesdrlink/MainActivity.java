@@ -106,6 +106,7 @@ public class MainActivity extends Activity {
         mode = st.mode;
         try { InputStream in = getAssets().open("bridge.js"); bridgeScript = Store.readAll(in); in.close(); } catch (Exception e) { }
         build();
+        applyKeepScreen();
         setupWeb();
         refreshAll();
         String first = getIntent() != null ? getIntent().getStringExtra("url") : null;
@@ -147,8 +148,26 @@ public class MainActivity extends Activity {
     @Override
     protected void onNewIntent(Intent i) {
         super.onNewIntent(i);
+        debugIntent(i);
         String u = i.getStringExtra("url");
         if (u != null) openUrl(u);
+    }
+
+    // Outils de mise au point par adb : --ez dump true (copie settings.ini dans le dossier public de l'application),
+    // --es js "code" (évalue du JavaScript dans la page et écrit le résultat dans le journal, étiquette PSDR).
+    void debugIntent(Intent i) {
+        if (i == null) return;
+        if (i.getBooleanExtra("dump", false)) {
+            try {
+                st.freqHz = freq; st.mode = mode; st.save();
+                java.io.File out = new java.io.File(getExternalFilesDir(null), "settings-dump.ini");
+                java.io.FileOutputStream o = new java.io.FileOutputStream(out);
+                o.write(st.exportText().getBytes("UTF-8"));
+                o.close();
+            } catch (Exception e) { android.util.Log.i("PSDR", "dump: " + e); }
+        }
+        String code = i.getStringExtra("js");
+        if (code != null) web.evaluateJavascript("(function(){try{Promise.resolve(" + code + ").then(function(v){PhoneSdr.post(\"dbg|\"+(typeof v===\"string\"?v:JSON.stringify(v)))},function(e){PhoneSdr.post(\"dbg|ERR \"+e)})}catch(e){PhoneSdr.post(\"dbg|ERR \"+e)}})()", null);
     }
 
     @Override
@@ -208,21 +227,21 @@ public class MainActivity extends Activity {
         btnScan = Ui.button(this, "▶ Scan", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; onScanButton(); } });
         btnScanConf = Ui.button(this, Lang.T("Conf scan", "Scan setup"), new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgScan.show(MainActivity.this); } });
         btnMem = Ui.button(this, Lang.T("Mémoires", "Memories"), new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgMemory.show(MainActivity.this); } });
+        btnStep = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseStep(); } });
+        for (Button x : new Button[] { btnScan, btnScanConf, btnMem, btnStep }) { x.setTextSize(13); x.setPadding(Ui.dp(this, 4), 0, Ui.dp(this, 4), 0); }
         r3.addView(btnScan, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
-        r3.addView(btnScanConf, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
-        r3.addView(btnMem, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
+        r3.addView(btnScanConf, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.05f, this, 2));
+        r3.addView(btnMem, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.05f, this, 2));
+        r3.addView(btnStep, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.9f, this, 2));
         controls.addView(r3);
 
-        // Ligne 4 : barre à glisser et pas
+        // Ligne 4 : barre à glisser, sur toute la largeur
         LinearLayout r4 = Ui.row(this);
         bar = new FreqBar(this);
         bar.hint = Lang.T("◀ glisser : − fréquence | + fréquence ▶", "◀ swipe: − frequency | + frequency ▶");
         bar.setListener(new FreqBar.Listener() { public void onSteps(int n, double ms) { tuneBySteps(n, ms); } });
-        btnStep = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseStep(); } });
         r4.addView(bar, Ui.lp(0, Ui.dp(this, 52), 1, this, 2));
-        r4.addView(btnStep, Ui.lp(Ui.dp(this, 92), Ui.dp(this, 52), 0, this, 2));
         controls.addView(r4);
-
         tvStatus = Ui.small(this, "");
         tvStatus.setPadding(Ui.dp(this, 6), Ui.dp(this, 2), Ui.dp(this, 6), 0);
         tvStatus.setMinLines(1);
@@ -463,6 +482,17 @@ public class MainActivity extends Activity {
         if (s != null) web.evaluateJavascript(s, null);
     }
 
+    // « Interdire l'extinction de l'écran » (SET).
+    void applyKeepScreen() {
+        if (st.keepScreen) getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    // Volume de la page au maximum (une fois par page) : le volume du téléphone donne alors le son le plus fort possible.
+    void maxPageVolume() {
+        js("if(window.__sdrlink)__sdrlink.maxVolume();");
+    }
+
     void js(String code) {
         web.evaluateJavascript("(function(){try{" + code + "}catch(e){}})()", null);
     }
@@ -524,6 +554,7 @@ public class MainActivity extends Activity {
     // Messages du pont : « type|Hz|mode[|u] » (état du WebSDR) ou « click » (appui dans la page).
     void onWebMessage(String msg) {
         if ("click".equals(msg)) { onPageClick(); return; }
+        if (msg.startsWith("dbg|")) { android.util.Log.i("PSDR", "js=" + msg.substring(4)); return; }
         String[] p = msg.split("\\|", -1);
         if (p.length < 3) return;
         long f;
@@ -535,7 +566,7 @@ public class MainActivity extends Activity {
         boolean first = sdrKind.isEmpty();
         sdrKind = kind;
         sdrF = f;
-        if (first) applyAudio();
+        if (first) { applyAudio(); h.postDelayed(new Runnable() { public void run() { maxPageVolume(); } }, 2500); }
         String fam = family(m);
 
         // Juste après un clic qui a arrêté le scan : la page est remise sur la fréquence scannée.

@@ -468,3 +468,4 @@ Mute	Muto
 INIT: restarting the WebSDR	INIT: riavvio del WebSDR
 Lock	Blocco
 This page cannot be displayed in this app	Questa pagina non può essere visualizzata in questa app
+Keep the screen on	Impedisci lo spegnimento dello schermo

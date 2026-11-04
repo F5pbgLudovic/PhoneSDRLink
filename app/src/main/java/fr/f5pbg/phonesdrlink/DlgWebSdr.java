@@ -64,8 +64,25 @@ final class DlgWebSdr {
                 for (Favorite f : st.favorites) if (st.curFavList >= st.favListCount || f.list == st.curFavList) shown.add(f);
                 ArrayList<String> rows = new ArrayList<String>();
                 for (Favorite f : shown) rows.add(f.name);
+                // Grandes cases : un WebSDR par case, bien visible et facile à toucher.
                 lv.setAdapter(new ArrayAdapter<String>(a, android.R.layout.simple_list_item_1, rows) {
-                    public View getView(int p, View v, ViewGroup g) { TextView t = (TextView) super.getView(p, v, g); t.setTextColor(Ui.fg()); t.setTextSize(15); return t; }
+                    public View getView(int p, View v, ViewGroup g) {
+                        LinearLayout box = new LinearLayout(a);
+                        box.setPadding(Ui.dp(a, 4), Ui.dp(a, 4), Ui.dp(a, 4), Ui.dp(a, 4));
+                        TextView t = new TextView(a);
+                        t.setText(getItem(p));
+                        t.setTextColor(Ui.fg());
+                        t.setTextSize(16);
+                        t.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+                        t.setMaxLines(3);
+                        t.setEllipsize(android.text.TextUtils.TruncateAt.END);
+                        t.setGravity(Gravity.CENTER_VERTICAL);
+                        t.setMinHeight(Ui.dp(a, 68));
+                        t.setPadding(Ui.dp(a, 16), Ui.dp(a, 10), Ui.dp(a, 16), Ui.dp(a, 10));
+                        t.setBackground(Ui.round(Ui.btn(), 14, a));
+                        box.addView(t, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        return box;
+                    }
                 });
             }
         };
@@ -73,6 +90,7 @@ final class DlgWebSdr {
             public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (!filling[0]) { st.curFavList = pos; fill[0].run(); } }
             public void onNothingSelected(AdapterView<?> p) { }
         });
+        lv.setDivider(null);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
                 d.dismiss();
