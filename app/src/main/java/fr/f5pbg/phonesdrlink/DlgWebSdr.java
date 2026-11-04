@@ -297,8 +297,9 @@ final class DlgWebSdr {
             public void onClick(View v) {
                 ArrayList<Favorite> c = cl.checkedOrSelected();
                 if (c.isEmpty()) { Ui.toast(a, Lang.T("Sélectionnez d'abord un favori dans la liste.", "Please select a favorite in the list first.")); return; }
-                d.dismiss();
+                // La fenêtre reste ouverte : le WebSDR s'ouvre derrière et on l'entend pendant la gestion des favoris.
                 a.openUrl(c.get(0).url);
+                info.setText("♪ " + Lang.F("Écoute de « {0} »", "Listening to \"{0}\"", c.get(0).name));
             }
         }), w(a, 1.4f));
         r2.addView(Ui.button(a, Lang.T("Déplacer vers ▸", "Move to ▸"), new View.OnClickListener() {

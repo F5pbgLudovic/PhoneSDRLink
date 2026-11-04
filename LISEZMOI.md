@@ -30,8 +30,11 @@ Application Android (APK) qui reprend les fonctions de réception de SDRLink, sa
 
 * **1.3** (4 nov. 2026, publiée ; essayée à l'oreille par F5PBG : le son ne craque plus) : saccades écran éteint, surtout au lancement d'un REC. Cause : les WebSDR demandent la latence minimale (piste audio « rapide » de 8 ms) ; mesuré : 7 à 8 sous-alimentations de la sortie audio en 40 s écran éteint. Correction dans `bridge.js` : `AudioContext` enveloppé pour imposer `latencyHint:'playback'` (piste normale d'environ 80 ms) et tampon du ScriptProcessor du REC porté de 4096 à 16384. Mesuré après : 0 sous-alimentation en 40 s avec REC écran éteint.
 
+* **1.4** (5 nov. 2026, publiée) : (1) appui long sur le mode : largeur de bande (2,1 / 2,4 / 2,8 / 2,9 / 3 / 4 kHz ou valeur libre 0,3-12 kHz), `bridge.js` `L.setBw` / `L.applyBw` : websdr.org `lo`/`hi` + `updbw()`, KiwiSDR `ext_set_passband`, OpenWebRX/OpenWebRX+ `demodulateur.setBandpass`, UberSDR `command('passband')`, PhantomSDR `spectrumAudio.setAudioRange` ; SSB bord à 300 Hz, AM/FM/CW centrée ; réappliquée après un changement de mode et au rechargement ; remise à zéro à l'ouverture d'un autre WebSDR. (2) appui long sur Muet : minuterie 15/30/45/60 min ou libre, le son est coupé (le REC enregistre le son brut, donc continue) puis `finishAndRemoveTask` ; avec un REC en cours : choix de l'heure d'arrêt du REC, fermeture à la fin du REC. (3) barre à glisser : effet de roue (VelocityTracker, friction exponentielle, un appui arrête). (4) Gestion des favoris : « Écouter la sélection » ne ferme plus la fenêtre. Toutes essayées par adb sur le OnePlus ; 23 textes traduits dans les 21 langues. Le build écrase dist\PhoneSDRLink-<version>.apk : toujours changer versionName avant de compiler.
+
 ## Points ouverts
 
+* 1.4 : OpenWebRX classique (non « + ») non essayé pour la largeur de bande ; effet de roue réglé par adb seulement (friction 1,6 dans FreqBar), à ajuster si F5PBG le demande.
 * Pas essayés sur le vrai téléphone : scan, mémoires, favoris (import/export, vérification), coupure pendant un appel, PhantomSDR (pas de zoom du spectre : aucune commande trouvée), mise à jour (aucune version plus récente à détecter).
 * Le volume de la page et le volume du téléphone se multiplient (téléphone bas = son très bas) ; à ajuster si F5PBG le demande.
 * Pas de licence sur le dépôt.

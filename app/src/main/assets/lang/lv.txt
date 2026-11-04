@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Spektra tālummaiņa (1 kHz uz mm)
 Cannot record: no audio	Ierakstīšana nav iespējama: nav skaņas
 Cannot record: 	Ierakstīšana nav iespējama:
 The recordings are in Music/PhoneSDRLink	Ieraksti atrodas mapē Mūzika/PhoneSDRLink
+Listening to "{0}"	Klausāties "{0}"
+{0} minutes	{0} minūtes
+Cancel the timer	Atcelt taimeri
+Other duration (minutes)…	Cits ilgums (minūtes)…
+Cut the sound and close the application in:	Izslēgt skaņu un aizvērt lietotni pēc:
+Duration in minutes	Ilgums minūtēs
+Invalid duration (1 to 1440 minutes).	Nederīgs ilgums (no 1 līdz 1440 minūtēm).
+At the same time as the sound ({0} min)	Vienlaikus ar skaņu ({0} min)
+{0} min (after the sound is cut)	{0} min (pēc skaņas izslēgšanas)
+The recording in progress stops in:	Notiekošais ieraksts apstāsies pēc:
+Stop the recording in (minutes)	Apturēt ierakstu pēc (minūtēm)
+The sound will be cut and the application closed in {0} min	Skaņa tiks izslēgta un lietotne aizvērta pēc {0} min
+(recording stopped in {0} min)	(ieraksts apstāsies pēc {0} min)
+Timer cancelled	Taimeris atcelts
+Sound cut; the application will close when the recording ends	Skaņa izslēgta; lietotne aizvērsies, kad ieraksts beigsies
+Cannot set the bandwidth: no active WebSDR	Nevar iestatīt joslas platumu: nav aktīva WebSDR
+WebSDR default filter	WebSDR noklusējuma filtrs
+Other value (kHz)…	Cita vērtība (kHz)…
+Signal bandwidth:	Signāla joslas platums:
+Bandwidth in kHz (0.3 to 12)	Joslas platums kHz (no 0,3 līdz 12)
+Invalid value (0.3 to 12 kHz).	Nederīga vērtība (no 0,3 līdz 12 kHz).
+Bandwidth: WebSDR default filter	Joslas platums: WebSDR noklusējuma filtrs
+Bandwidth: {0}	Joslas platums: {0}

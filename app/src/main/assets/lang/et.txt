@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Spektri suum (1 kHz mm kohta)
 Cannot record: no audio	Salvestamine pole võimalik: heli puudub
 Cannot record: 	Salvestamine pole võimalik:
 The recordings are in Music/PhoneSDRLink	Salvestused asuvad kaustas Muusika/PhoneSDRLink
+Listening to "{0}"	Kuulate "{0}"
+{0} minutes	{0} minutit
+Cancel the timer	Tühista taimer
+Other duration (minutes)…	Muu kestus (minutit)…
+Cut the sound and close the application in:	Heli vaigistamine ja rakenduse sulgemine:
+Duration in minutes	Kestus minutites
+Invalid duration (1 to 1440 minutes).	Kehtetu kestus (1 kuni 1440 minutit).
+At the same time as the sound ({0} min)	Samaaegselt heliga ({0} min)
+{0} min (after the sound is cut)	{0} min (pärast heli vaigistamist)
+The recording in progress stops in:	Käimasolev salvestus peatub:
+Stop the recording in (minutes)	Salvestuse peatamine (minutit)
+The sound will be cut and the application closed in {0} min	Heli vaigistatakse ja rakendus suletakse {0} min pärast
+(recording stopped in {0} min)	(salvestus peatub {0} min pärast)
+Timer cancelled	Taimer tühistatud
+Sound cut; the application will close when the recording ends	Heli vaigistatud; rakendus suletakse salvestuse lõppedes
+Cannot set the bandwidth: no active WebSDR	Ribalaiust ei saa määrata: aktiivset WebSDR-i pole
+WebSDR default filter	WebSDR-i vaikefilter
+Other value (kHz)…	Muu väärtus (kHz)…
+Signal bandwidth:	Signaali ribalaius:
+Bandwidth in kHz (0.3 to 12)	Ribalaius kHz-des (0,3 kuni 12)
+Invalid value (0.3 to 12 kHz).	Kehtetu väärtus (0,3 kuni 12 kHz).
+Bandwidth: WebSDR default filter	Ribalaius: WebSDR-i vaikefilter
+Bandwidth: {0}	Ribalaius: {0}

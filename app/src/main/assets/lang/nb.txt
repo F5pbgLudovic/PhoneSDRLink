@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Spektrumzoom (1 kHz per mm)
 Cannot record: no audio	Kan ikke ta opp: ingen lyd
 Cannot record: 	Kan ikke ta opp:
 The recordings are in Music/PhoneSDRLink	Opptakene ligger i Musikk/PhoneSDRLink
+Listening to "{0}"	Du lytter til "{0}"
+{0} minutes	{0} minutter
+Cancel the timer	Avbryt tidtakeren
+Other duration (minutes)…	Annen varighet (minutter)…
+Cut the sound and close the application in:	Slå av lyden og lukk applikasjonen om:
+Duration in minutes	Varighet i minutter
+Invalid duration (1 to 1440 minutes).	Ugyldig varighet (1 til 1440 minutter).
+At the same time as the sound ({0} min)	Samtidig med lyden ({0} min)
+{0} min (after the sound is cut)	{0} min (etter at lyden er slått av)
+The recording in progress stops in:	Opptaket som pågår stopper om:
+Stop the recording in (minutes)	Stopp opptaket om (minutter)
+The sound will be cut and the application closed in {0} min	Lyden slås av og applikasjonen lukkes om {0} min
+(recording stopped in {0} min)	(opptaket stopper om {0} min)
+Timer cancelled	Tidtaker avbrutt
+Sound cut; the application will close when the recording ends	Lyden er slått av; applikasjonen lukkes når opptaket er ferdig
+Cannot set the bandwidth: no active WebSDR	Kan ikke stille inn båndbredden: ingen aktiv WebSDR
+WebSDR default filter	WebSDR-standardfilter
+Other value (kHz)…	Annen verdi (kHz)…
+Signal bandwidth:	Signalbåndbredde:
+Bandwidth in kHz (0.3 to 12)	Båndbredde i kHz (0,3 til 12)
+Invalid value (0.3 to 12 kHz).	Ugyldig verdi (0,3 til 12 kHz).
+Bandwidth: WebSDR default filter	Båndbredde: WebSDR-standardfilter
+Bandwidth: {0}	Båndbredde: {0}

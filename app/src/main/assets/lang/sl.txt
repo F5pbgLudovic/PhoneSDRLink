@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Povečava spektra (1 kHz na mm)
 Cannot record: no audio	Snemanje ni mogoče: ni zvoka
 Cannot record: 	Snemanje ni mogoče:
 The recordings are in Music/PhoneSDRLink	Posnetki so v mapi Glasba/PhoneSDRLink
+Listening to "{0}"	Poslušate »{0}«
+{0} minutes	{0} minut
+Cancel the timer	Prekliči časovnik
+Other duration (minutes)…	Drugo trajanje (minute)…
+Cut the sound and close the application in:	Utišaj zvok in zapri aplikacijo čez:
+Duration in minutes	Trajanje v minutah
+Invalid duration (1 to 1440 minutes).	Neveljavno trajanje (od 1 do 1440 minut).
+At the same time as the sound ({0} min)	Hkrati z zvokom ({0} min)
+{0} min (after the sound is cut)	{0} min (po utišanju zvoka)
+The recording in progress stops in:	Snemanje v teku se ustavi čez:
+Stop the recording in (minutes)	Ustavi snemanje čez (minute)
+The sound will be cut and the application closed in {0} min	Zvok bo utišan in aplikacija zaprta čez {0} min
+(recording stopped in {0} min)	(snemanje se ustavi čez {0} min)
+Timer cancelled	Časovnik preklican
+Sound cut; the application will close when the recording ends	Zvok utišan; aplikacija se bo zaprla ob koncu snemanja
+Cannot set the bandwidth: no active WebSDR	Pasovne širine ni mogoče nastaviti: ni aktivnega WebSDR
+WebSDR default filter	Privzeti filter WebSDR
+Other value (kHz)…	Druga vrednost (kHz)…
+Signal bandwidth:	Pasovna širina signala:
+Bandwidth in kHz (0.3 to 12)	Pasovna širina v kHz (od 0,3 do 12)
+Invalid value (0.3 to 12 kHz).	Neveljavna vrednost (od 0,3 do 12 kHz).
+Bandwidth: WebSDR default filter	Pasovna širina: privzeti filter WebSDR
+Bandwidth: {0}	Pasovna širina: {0}

@@ -216,6 +216,7 @@ public class MainActivity extends Activity {
         btnMute = Ui.button(this, Lang.T("Muet", "Mute"), new View.OnClickListener() {
             public void onClick(View v) { muted = !muted; applyVolume(); updateButtons(); }
         });
+        btnMute.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { onMuteLongPress(); return true; } });
         btnRec = Ui.button(this, "● REC", new View.OnClickListener() { public void onClick(View v) { onRecButton(); } });
         btnRec.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { openRecordings(); return true; } });
         r1.addView(btnWeb, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.05f, this, 2));
@@ -240,6 +241,7 @@ public class MainActivity extends Activity {
         tvFreq.setBackground(Ui.round(Ui.panel(), 10, this));
         tvFreq.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgKeypad.show(MainActivity.this); } });
         btnMode = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseMode(); } });
+        btnMode.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { chooseBandwidth(); return true; } });
         btnMode.setTextSize(18);
         btnMode.setTypeface(Typeface.DEFAULT_BOLD);
         r2.addView(tvFreq, Ui.lp(0, Ui.dp(this, 64), 1, this, 2));
@@ -367,13 +369,13 @@ public class MainActivity extends Activity {
 
     void updateDisplays() {
         tvFreq.setText(formatFreq(freq));
-        btnMode.setText(modeLabel(mode));
+        btnMode.setText(bwHz > 0 ? modeLabel(mode) + "\n" + bwText(bwHz).replace(" kHz", "k") : modeLabel(mode));
         btnStep.setText(stepText(Store.STEPS[st.stepIdx]));
     }
 
     void updateButtons() {
         boolean m = muted || callMute || focusMute;
-        btnMute.setText(m ? Lang.T("🔇 Muet", "🔇 Muted") : Lang.T("Muet", "Mute"));
+        btnMute.setText(m ? Lang.T("🔇 Muet", "🔇 Muted") : sleepAt != 0 ? "⏱ " + sleepText() : Lang.T("Muet", "Mute"));
         Ui.paint(btnMute, muted, Ui.danger());
         btnLock.setText(locked ? "🔒 " + Lang.T("Verrou", "Lock") : "🔓 " + Lang.T("Verrou", "Lock"));
         Ui.paint(btnLock, locked, Ui.danger());
@@ -598,6 +600,8 @@ public class MainActivity extends Activity {
         if (url.isEmpty()) return;
         if (!url.contains("://")) url = "http://" + url;
         sdrKind = "";
+        bwHz = 0;   // nouveau WebSDR : son filtre d'origine
+        updateDisplays();
         web.loadUrl(url);
     }
 
@@ -634,6 +638,7 @@ public class MainActivity extends Activity {
             // Page qui vient de se charger : l'application impose sa fréquence et son mode.
             settleUntil = System.currentTimeMillis() + SETTLE_MS;
             setSdr(freq, toSdr(mode));
+            if (bwHz > 0) h.postDelayed(new Runnable() { public void run() { if (bwHz > 0) js("if(window.__sdrlink)__sdrlink.setBw(" + bwHz + ");"); } }, 3500);   // page rechargée : largeur remise
             updateDisplays();
             return;
         }
@@ -888,6 +893,182 @@ public class MainActivity extends Activity {
         audio.requestAudioFocus(focusReq);
     }
 
+    // ------------------------------------------------------------------ largeur de bande (appui long sur le mode)
+
+    int bwHz;   // 0 = filtre d'origine du WebSDR
+
+    static String bwText(int hz) {
+        return hz % 1000 == 0 ? (hz / 1000) + " kHz" : String.format(java.util.Locale.US, "%.2f", hz / 1000.0).replaceAll("0+$", "").replace(".", Lang.T(",", ".")) + " kHz";
+    }
+
+    void chooseBandwidth() {
+        if (blocked()) return;
+        if (sdrKind.isEmpty()) { status(Lang.T("Largeur de bande impossible : aucun WebSDR actif", "Cannot set the bandwidth: no active WebSDR")); return; }
+        final int[] v = { 2100, 2400, 2800, 2900, 3000, 4000 };
+        String[] items = new String[v.length + 2];
+        items[0] = Lang.T("Filtre d'origine du WebSDR", "WebSDR default filter") + (bwHz == 0 ? "  ✓" : "");
+        for (int i = 0; i < v.length; i++) items[i + 1] = bwText(v[i]) + (bwHz == v[i] ? "  ✓" : "");
+        items[v.length + 1] = Lang.T("Autre valeur (en kHz)…", "Other value (kHz)…") + (bwHz != 0 && !contains(v, bwHz) ? "  ✓ " + bwText(bwHz) : "");
+        Ui.choose(this, Lang.T("Largeur de bande du signal :", "Signal bandwidth:"), items, new Ui.Index() {
+            public void chose(int i) {
+                if (i == 0) setBandwidth(0);
+                else if (i <= v.length) setBandwidth(v[i - 1]);
+                else Ui.input(MainActivity.this, Lang.T("Largeur de bande en kHz (0,3 à 12)", "Bandwidth in kHz (0.3 to 12)"), "kHz", bwHz > 0 ? bwText(bwHz).replace(" kHz", "") : "", new Ui.Text() {
+                    public void got(String t) {
+                        double k = -1;
+                        try { k = Double.parseDouble(t.trim().replace(',', '.')); } catch (NumberFormatException e) { }
+                        if (!(k >= 0.3 && k <= 12)) { Ui.toast(MainActivity.this, Lang.T("Valeur invalide (0,3 à 12 kHz).", "Invalid value (0.3 to 12 kHz).")); return; }
+                        setBandwidth((int) Math.round(k * 1000));
+                    }
+                });
+            }
+        });
+    }
+
+    static boolean contains(int[] a, int x) { for (int y : a) if (y == x) return true; return false; }
+
+    void setBandwidth(int hz) {
+        bwHz = hz;
+        if (hz == 0) {
+            // Retour au filtre d'origine : le mode est simplement réappliqué.
+            js("if(window.__sdrlink)__sdrlink.bw=0;");
+            setSdr(0, toSdr(mode));
+            status(Lang.T("Largeur de bande : filtre d'origine du WebSDR", "Bandwidth: WebSDR default filter"));
+        } else {
+            js("if(window.__sdrlink)__sdrlink.setBw(" + hz + ");");
+            status(Lang.F("Largeur de bande : {0}", "Bandwidth: {0}", bwText(hz)));
+        }
+        updateDisplays();
+    }
+
+    // ------------------------------------------------------------------ minuterie d'arrêt (appui long sur Muet)
+
+    long sleepAt, recStopAt;      // heures d'arrêt (System.currentTimeMillis), 0 = pas de minuterie
+    boolean sleepFired;           // le son est coupé ; l'application se ferme dès la fin du REC éventuel
+
+    final Runnable sleepRun = new Runnable() { public void run() { sleepFire(); } };
+    final Runnable recStopRun = new Runnable() { public void run() { recStopTimer(); } };
+    final Runnable sleepTick = new Runnable() {
+        public void run() {
+            if (sleepAt == 0 || sleepFired) return;
+            updateButtons();
+            h.postDelayed(this, 1000);
+        }
+    };
+
+    String sleepText() {
+        long s = Math.max(0, (sleepAt - System.currentTimeMillis() + 999) / 1000);
+        return s >= 60 ? Lang.F("{0} min", "{0} min", (s + 59) / 60) : s + " s";
+    }
+
+    void onMuteLongPress() {
+        if (blocked()) return;
+        java.util.ArrayList<String> items = new java.util.ArrayList<String>();
+        final boolean armed = sleepAt != 0 || recStopAt != 0;
+        if (armed) items.add(Lang.T("Annuler la minuterie", "Cancel the timer"));
+        items.add(Lang.F("{0} minutes", "{0} minutes", 15));
+        items.add(Lang.F("{0} minutes", "{0} minutes", 30));
+        items.add(Lang.F("{0} minutes", "{0} minutes", 45));
+        items.add(Lang.F("{0} minutes", "{0} minutes", 60));
+        items.add(Lang.T("Autre durée (en minutes)…", "Other duration (minutes)…"));
+        final int off = armed ? 1 : 0;
+        Ui.choose(this, Lang.T("Couper le son et fermer l'application dans :", "Cut the sound and close the application in:"), items.toArray(new String[0]), new Ui.Index() {
+            public void chose(int i) {
+                if (armed && i == 0) { sleepCancel(); return; }
+                int k = i - off;
+                if (k < 4) sleepAsk(new int[] { 15, 30, 45, 60 }[k]);
+                else Ui.input(MainActivity.this, Lang.T("Durée en minutes", "Duration in minutes"), "min", "", new Ui.Text() {
+                    public void got(String t) {
+                        int m = 0;
+                        try { m = Integer.parseInt(t.trim()); } catch (NumberFormatException e) { }
+                        if (m < 1 || m > 1440) { Ui.toast(MainActivity.this, Lang.T("Durée invalide (1 à 1440 minutes).", "Invalid duration (1 to 1440 minutes).")); return; }
+                        sleepAsk(m);
+                    }
+                });
+            }
+        });
+    }
+
+    // Minuterie de m minutes. Si un REC est en cours, demande quand l'arrêter (il peut durer après la coupure du son).
+    void sleepAsk(final int m) {
+        if (!recording) { sleepSet(m, 0); return; }
+        final int[] rec = { m, m + 15, m + 30, m + 60 };
+        String[] items = new String[5];
+        items[0] = Lang.F("En même temps que le son ({0} min)", "At the same time as the sound ({0} min)", rec[0]);
+        for (int i = 1; i < 4; i++) items[i] = Lang.F("{0} min (après la coupure du son)", "{0} min (after the sound is cut)", rec[i]);
+        items[4] = Lang.T("Autre durée (en minutes)…", "Other duration (minutes)…");
+        Ui.choose(this, Lang.T("Le REC en cours s'arrête dans :", "The recording in progress stops in:"), items, new Ui.Index() {
+            public void chose(int i) {
+                if (i < 4) { sleepSet(m, rec[i]); return; }
+                Ui.input(MainActivity.this, Lang.T("Arrêt du REC dans (minutes)", "Stop the recording in (minutes)"), "min", "", new Ui.Text() {
+                    public void got(String t) {
+                        int r = 0;
+                        try { r = Integer.parseInt(t.trim()); } catch (NumberFormatException e) { }
+                        if (r < 1 || r > 1440) { Ui.toast(MainActivity.this, Lang.T("Durée invalide (1 à 1440 minutes).", "Invalid duration (1 to 1440 minutes).")); return; }
+                        sleepSet(m, r);
+                    }
+                });
+            }
+        });
+    }
+
+    void sleepSet(int m, int recMin) {
+        sleepCancel();
+        long now = System.currentTimeMillis();
+        sleepAt = now + m * 60000L;
+        h.postDelayed(sleepRun, m * 60000L);
+        h.postDelayed(sleepTick, 1000);
+        String s = Lang.F("Le son sera coupé et l'application fermée dans {0} min", "The sound will be cut and the application closed in {0} min", m);
+        if (recMin > 0) {
+            recStopAt = now + recMin * 60000L;
+            h.postDelayed(recStopRun, recMin * 60000L);
+            s += " " + Lang.F("(REC arrêté dans {0} min)", "(recording stopped in {0} min)", recMin);
+        }
+        status(s);
+        updateButtons();
+    }
+
+    void sleepCancel() {
+        boolean was = sleepAt != 0 || recStopAt != 0;
+        h.removeCallbacks(sleepRun);
+        h.removeCallbacks(recStopRun);
+        h.removeCallbacks(sleepTick);
+        sleepAt = 0;
+        recStopAt = 0;
+        sleepFired = false;
+        if (was) status(Lang.T("Minuterie annulée", "Timer cancelled"));
+        updateButtons();
+    }
+
+    // Fin de la minuterie : le son du haut-parleur est coupé (le REC enregistre le son brut, il continue). L'application se ferme
+    // tout de suite, ou à la fin du REC (heure choisie, ou arrêt immédiat si aucune heure n'a été donnée).
+    void sleepFire() {
+        sleepFired = true;
+        sleepAt = 0;
+        muted = true;
+        applyVolume();
+        updateButtons();
+        if (!recording && !recPending) { quitApp(); return; }
+        if (recStopAt > System.currentTimeMillis()) {
+            status(Lang.T("Son coupé ; l'application se fermera à la fin du REC", "Sound cut; the application will close when the recording ends"));
+            return;
+        }
+        recStopTimer();
+    }
+
+    void recStopTimer() {
+        recStopAt = 0;
+        if (recording && !recPending) onRecButton();
+        else if (!recording && !recPending && sleepFired) quitApp();
+    }
+
+    void quitApp() {
+        st.freqHz = freq;
+        st.mode = mode;
+        st.save();
+        finishAndRemoveTask();
+    }
+
     // ------------------------------------------------------------------ enregistrement MP3
 
     String recTime() {
@@ -1003,6 +1184,7 @@ public class MainActivity extends Activity {
         updateButtons();
         status(empty ? Lang.T("Enregistrement vide : rien à sauvegarder", "Empty recording: nothing to save")
             : Lang.F("Enregistrement sauvegardé : « {0} » (Musique/PhoneSDRLink)", "Recording saved: \"{0}\"", name));
+        if (sleepFired) quitApp();
     }
 
     void recClose(boolean discard) {

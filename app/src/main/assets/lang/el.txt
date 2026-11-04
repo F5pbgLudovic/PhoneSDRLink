@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Μεγέθυνση φάσματος (1 kHz ανά m
 Cannot record: no audio	Η εγγραφή δεν είναι δυνατή: δεν υπάρχει ήχος
 Cannot record: 	Η εγγραφή δεν είναι δυνατή:
 The recordings are in Music/PhoneSDRLink	Οι εγγραφές βρίσκονται στο Μουσική/PhoneSDRLink
+Listening to "{0}"	Ακούτε «{0}»
+{0} minutes	{0} λεπτά
+Cancel the timer	Ακύρωση του χρονοδιακόπτη
+Other duration (minutes)…	Άλλη διάρκεια (λεπτά)…
+Cut the sound and close the application in:	Σίγαση του ήχου και κλείσιμο της εφαρμογής σε:
+Duration in minutes	Διάρκεια σε λεπτά
+Invalid duration (1 to 1440 minutes).	Μη έγκυρη διάρκεια (1 έως 1440 λεπτά).
+At the same time as the sound ({0} min)	Ταυτόχρονα με τον ήχο ({0} λεπτά)
+{0} min (after the sound is cut)	{0} λεπτά (μετά τη σίγαση του ήχου)
+The recording in progress stops in:	Η εγγραφή που βρίσκεται σε εξέλιξη σταματά σε:
+Stop the recording in (minutes)	Διακοπή της εγγραφής σε (λεπτά)
+The sound will be cut and the application closed in {0} min	Ο ήχος θα σιγήσει και η εφαρμογή θα κλείσει σε {0} λεπτά
+(recording stopped in {0} min)	(η εγγραφή σταματά σε {0} λεπτά)
+Timer cancelled	Ο χρονοδιακόπτης ακυρώθηκε
+Sound cut; the application will close when the recording ends	Ο ήχος σίγησε· η εφαρμογή θα κλείσει όταν τελειώσει η εγγραφή
+Cannot set the bandwidth: no active WebSDR	Αδυναμία ρύθμισης του εύρους ζώνης: κανένα ενεργό WebSDR
+WebSDR default filter	Προεπιλεγμένο φίλτρο WebSDR
+Other value (kHz)…	Άλλη τιμή (kHz)…
+Signal bandwidth:	Εύρος ζώνης σήματος:
+Bandwidth in kHz (0.3 to 12)	Εύρος ζώνης σε kHz (0,3 έως 12)
+Invalid value (0.3 to 12 kHz).	Μη έγκυρη τιμή (0,3 έως 12 kHz).
+Bandwidth: WebSDR default filter	Εύρος ζώνης: προεπιλεγμένο φίλτρο WebSDR
+Bandwidth: {0}	Εύρος ζώνης: {0}

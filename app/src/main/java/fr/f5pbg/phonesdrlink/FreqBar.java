@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 
 // Barre de réglage : on glisse le doigt vers la droite pour monter la fréquence, vers la gauche pour la baisser
@@ -30,11 +31,56 @@ final class FreqBar extends View {
 
     void setListener(Listener l) { listener = l; }
 
+    // Effet de roue : après un geste rapide, la barre continue sur sa lancée en ralentissant ; un nouvel appui l'arrête.
+    private VelocityTracker vt;
+    private float flingV;          // vitesse restante, pixels par seconde (signée)
+    private long flingT;
+    private static final float FLING_MIN = 900 * android.content.res.Resources.getSystem().getDisplayMetrics().density;       // vitesse de lâcher minimale pour lancer la roue
+    private static final float FLING_STOP = 40 * android.content.res.Resources.getSystem().getDisplayMetrics().density;       // en dessous, la roue s'arrête
+    private static final float FRICTION = 1.6f;               // décroissance exponentielle par seconde
+
+    private final Runnable flingStep = new Runnable() {
+        public void run() {
+            if (flingV == 0 || locked) { flingV = 0; return; }
+            long now = android.os.SystemClock.uptimeMillis();
+            float dt = Math.min(0.05f, (now - flingT) / 1000f);
+            flingT = now;
+            float dx = flingV * dt;
+            flingV *= (float) Math.exp(-FRICTION * dt);
+            if (Math.abs(flingV) < FLING_STOP) flingV = 0;
+            move(dx, now, Math.abs(flingV) > 0 ? flingV : dx / Math.max(dt, 0.001f));
+            invalidate();
+            if (flingV != 0) postOnAnimation(this);
+        }
+    };
+
+    void stopFling() { flingV = 0; removeCallbacks(flingStep); }
+
+    @Override
+    protected void onDetachedFromWindow() { stopFling(); super.onDetachedFromWindow(); }
+
+    // Déplacement de dx pixels : convertit en pas ; v = vitesse (pixels par seconde) qui règle l'accélération.
+    private void move(float dx, long now, float v) {
+        shift = (shift + dx) % (pxPerStep * 4);
+        carry += dx;
+        int n = (int) (carry / pxPerStep);
+        if (n != 0) {
+            carry -= n * pxPerStep;
+            double ms = Math.abs(v) > 1 ? 1000.0 * pxPerStep / Math.abs(v) : 1000;
+            if (listener != null) listener.onSteps(n, ms);
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (locked) { if (e.getActionMasked() == MotionEvent.ACTION_DOWN) android.widget.Toast.makeText(getContext(), Lang.T("🔒 Verrouillé : appuyez sur Verrou pour modifier", "🔒 Locked: press Lock to change"), android.widget.Toast.LENGTH_SHORT).show(); return true; }
+        if (vt == null) vt = VelocityTracker.obtain();
+        vt.addMovement(e);
         switch (e.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+                stopFling();
+                vt.clear();
+                vt.addMovement(e);
                 getParent().requestDisallowInterceptTouchEvent(true);
                 down = true;
                 lastX = e.getX();
@@ -59,10 +105,25 @@ final class FreqBar extends View {
                 return true;
             }
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_CANCEL: {
                 down = false;
+                float v = 0;
+                if (e.getActionMasked() == MotionEvent.ACTION_UP) {
+                    vt.computeCurrentVelocity(1000);
+                    v = vt.getXVelocity();
+                    // Doigt resté immobile avant de lâcher : pas de lancée.
+                    if (e.getEventTime() - lastMove > 120) v = 0;
+                }
+                vt.recycle();
+                vt = null;
+                if (Math.abs(v) >= FLING_MIN) {
+                    flingV = Math.max(-9000f, Math.min(9000f, v));
+                    flingT = android.os.SystemClock.uptimeMillis();
+                    postOnAnimation(flingStep);
+                }
                 invalidate();
                 return true;
+            }
         }
         return super.onTouchEvent(e);
     }

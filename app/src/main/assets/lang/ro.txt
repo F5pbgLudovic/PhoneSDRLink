@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Zoom spectru (1 kHz pe mm)
 Cannot record: no audio	Înregistrare imposibilă: fără sunet
 Cannot record: 	Înregistrare imposibilă:
 The recordings are in Music/PhoneSDRLink	Înregistrările sunt în Muzică/PhoneSDRLink
+Listening to "{0}"	Ascultați "{0}"
+{0} minutes	{0} minute
+Cancel the timer	Anulează temporizatorul
+Other duration (minutes)…	Altă durată (minute)…
+Cut the sound and close the application in:	Oprește sunetul și închide aplicația peste:
+Duration in minutes	Durata în minute
+Invalid duration (1 to 1440 minutes).	Durată invalidă (de la 1 la 1440 minute).
+At the same time as the sound ({0} min)	Simultan cu sunetul ({0} min)
+{0} min (after the sound is cut)	{0} min (după oprirea sunetului)
+The recording in progress stops in:	Înregistrarea în curs se oprește peste:
+Stop the recording in (minutes)	Oprește înregistrarea peste (minute)
+The sound will be cut and the application closed in {0} min	Sunetul va fi oprit, iar aplicația închisă peste {0} min
+(recording stopped in {0} min)	(înregistrare oprită peste {0} min)
+Timer cancelled	Temporizator anulat
+Sound cut; the application will close when the recording ends	Sunet oprit; aplicația se va închide la sfârșitul înregistrării
+Cannot set the bandwidth: no active WebSDR	Nu se poate seta lățimea de bandă: niciun WebSDR activ
+WebSDR default filter	Filtrul implicit al WebSDR
+Other value (kHz)…	Altă valoare (kHz)…
+Signal bandwidth:	Lățimea de bandă a semnalului:
+Bandwidth in kHz (0.3 to 12)	Lățimea de bandă în kHz (0,3 la 12)
+Invalid value (0.3 to 12 kHz).	Valoare invalidă (0,3 la 12 kHz).
+Bandwidth: WebSDR default filter	Lățime de bandă: filtrul implicit al WebSDR
+Bandwidth: {0}	Lățime de bandă: {0}

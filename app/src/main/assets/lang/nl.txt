@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Spectrumzoom (1 kHz per mm)
 Cannot record: no audio	Opnemen niet mogelijk: geen geluid
 Cannot record: 	Opnemen niet mogelijk:
 The recordings are in Music/PhoneSDRLink	De opnamen staan in Muziek/PhoneSDRLink
+Listening to "{0}"	U luistert naar "{0}"
+{0} minutes	{0} minuten
+Cancel the timer	Timer annuleren
+Other duration (minutes)…	Andere duur (minuten)…
+Cut the sound and close the application in:	Geluid uitschakelen en applicatie sluiten over:
+Duration in minutes	Duur in minuten
+Invalid duration (1 to 1440 minutes).	Ongeldige duur (1 tot 1440 minuten).
+At the same time as the sound ({0} min)	Tegelijk met het geluid ({0} min)
+{0} min (after the sound is cut)	{0} min (nadat het geluid is uitgeschakeld)
+The recording in progress stops in:	De lopende opname stopt over:
+Stop the recording in (minutes)	Opname stoppen over (minuten)
+The sound will be cut and the application closed in {0} min	Het geluid wordt uitgeschakeld en de applicatie gesloten over {0} min
+(recording stopped in {0} min)	(opname gestopt over {0} min)
+Timer cancelled	Timer geannuleerd
+Sound cut; the application will close when the recording ends	Geluid uitgeschakeld; de applicatie sluit zodra de opname eindigt
+Cannot set the bandwidth: no active WebSDR	Bandbreedte kan niet worden ingesteld: geen actieve WebSDR
+WebSDR default filter	Standaardfilter van de WebSDR
+Other value (kHz)…	Andere waarde (kHz)…
+Signal bandwidth:	Signaalbandbreedte:
+Bandwidth in kHz (0.3 to 12)	Bandbreedte in kHz (0,3 tot 12)
+Invalid value (0.3 to 12 kHz).	Ongeldige waarde (0,3 tot 12 kHz).
+Bandwidth: WebSDR default filter	Bandbreedte: standaardfilter van de WebSDR
+Bandwidth: {0}	Bandbreedte: {0}

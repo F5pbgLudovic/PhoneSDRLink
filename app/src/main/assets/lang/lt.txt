@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Spektro didinimas (1 kHz per mm)
 Cannot record: no audio	Įrašyti neįmanoma: nėra garso
 Cannot record: 	Įrašyti neįmanoma:
 The recordings are in Music/PhoneSDRLink	Įrašai yra aplanke Muzika/PhoneSDRLink
+Listening to "{0}"	Klausotės „{0}“
+{0} minutes	{0} min.
+Cancel the timer	Atšaukti laikmatį
+Other duration (minutes)…	Kita trukmė (minutės)…
+Cut the sound and close the application in:	Išjungti garsą ir uždaryti programą po:
+Duration in minutes	Trukmė minutėmis
+Invalid duration (1 to 1440 minutes).	Netinkama trukmė (nuo 1 iki 1440 minučių).
+At the same time as the sound ({0} min)	Tuo pačiu metu kaip garsas ({0} min.)
+{0} min (after the sound is cut)	{0} min. (išjungus garsą)
+The recording in progress stops in:	Vykstantis įrašymas sustos po:
+Stop the recording in (minutes)	Sustabdyti įrašymą po (minučių)
+The sound will be cut and the application closed in {0} min	Garsas bus išjungtas, o programa uždaryta po {0} min.
+(recording stopped in {0} min)	(įrašymas sustos po {0} min.)
+Timer cancelled	Laikmatis atšauktas
+Sound cut; the application will close when the recording ends	Garsas išjungtas; programa užsidarys pasibaigus įrašymui
+Cannot set the bandwidth: no active WebSDR	Nepavyksta nustatyti juostos pločio: nėra aktyvaus WebSDR
+WebSDR default filter	Numatytasis WebSDR filtras
+Other value (kHz)…	Kita vertė (kHz)…
+Signal bandwidth:	Signalo juostos plotis:
+Bandwidth in kHz (0.3 to 12)	Juostos plotis kHz (nuo 0,3 iki 12)
+Invalid value (0.3 to 12 kHz).	Netinkama vertė (nuo 0,3 iki 12 kHz).
+Bandwidth: WebSDR default filter	Juostos plotis: numatytasis WebSDR filtras
+Bandwidth: {0}	Juostos plotis: {0}

@@ -579,7 +579,38 @@
         owrxTune(k, hz, mode);
       }
     } catch (e) { }
+    if (L.bw && mode) setTimeout(L.applyBw, 500);   // un changement de mode rend à la page son filtre d'origine
     L.poll();
+  };
+
+  // Largeur de bande (Hz) du signal écouté. SSB : bord à 300 Hz de la porteuse, du côté du mode ; AM, FM, CW : centrée sur
+  // le centre actuel du filtre. L.bw = 0 : filtre d'origine de la page (non modifié).
+  L.bw = 0;
+  L.setBw = function (bw) { L.bw = bw > 0 ? Math.round(bw) : 0; if (L.bw) L.applyBw(); };
+  L.applyBw = function () {
+    var bw = L.bw, k = detect(), s = bw ? L.get() : null;
+    if (!bw || !k || !s) return;
+    var m = String(s.m || '').toLowerCase(), side = m === 'lsb' ? -1 : m === 'usb' ? 1 : 0, E = 300, cur = null, p;
+    try {
+      if (k === 'websdr') cur = [window.lo * 1000, window.hi * 1000];
+      else if (k === 'kiwi') { var kp = ext_get_passband(); cur = [kp.low, kp.high]; }
+      else if (k === 'owrx+' || k === 'owrx') { var bp = (k === 'owrx+' ? UI.getDemodulator() : owrxDemod()).getBandpass(); cur = [bp.low_cut, bp.high_cut]; }
+      else if (k === 'ubersdr') { var ut = uberTuning(); if (ut && ut.bandwidthLow != null) cur = [ut.bandwidthLow, ut.bandwidthHigh]; }
+    } catch (e) { }
+    var centre = cur && isFinite(cur[0]) && isFinite(cur[1]) ? (cur[0] + cur[1]) / 2 : 0;
+    p = side > 0 ? [E, E + bw] : side < 0 ? [-E - bw, -E] : [centre - bw / 2, centre + bw / 2];
+    try {
+      if (k === 'websdr') { window.lo = p[0] / 1000; window.hi = p[1] / 1000; updbw(); }
+      else if (k === 'kiwi') ext_set_passband(Math.round(p[0]), Math.round(p[1]));
+      else if (k === 'owrx+' || k === 'owrx') (k === 'owrx+' ? UI.getDemodulator() : owrxDemod()).setBandpass({ low_cut: Math.round(p[0]), high_cut: Math.round(p[1]) });
+      else if (k === 'ubersdr') UberSDR.command('passband', { low: Math.round(p[0]), high: Math.round(p[1]) }).catch(function () { });
+      else if (k === 'phantom') {
+        // Largeur en points du spectre ; la page décale les trois valeurs de réserve de 200/750/200 Hz.
+        var a = spectrumAudio, r = a.getAudioRange(), bin = a.totalBandwidth / a.audioMaxSize, n = bw / bin, l2, r2, mm = r[1];
+        if (m === 'lsb') { l2 = mm - n; r2 = mm; } else if (m === 'usb') { l2 = mm; r2 = mm + n; } else { var c = (r[0] + r[2]) / 2; l2 = c - n / 2; r2 = c + n / 2; }
+        a.setAudioRange(l2, mm, r2, l2 - 200 / bin, mm - 750 / bin, r2 - 200 / bin);
+      }
+    } catch (e) { }
   };
 
   // Bordeaux : rappel du mode à côté du S-mètre, tenu à jour seulement par ses boutons de mode (ni par ses boutons

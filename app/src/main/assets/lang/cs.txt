@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Zoom spektra (1 kHz na mm)
 Cannot record: no audio	Nahrávání není možné: žádný zvuk
 Cannot record: 	Nahrávání není možné:
 The recordings are in Music/PhoneSDRLink	Nahrávky jsou ve složce Hudba/PhoneSDRLink
+Listening to "{0}"	Posloucháte „{0}“
+{0} minutes	{0} minut
+Cancel the timer	Zrušit časovač
+Other duration (minutes)…	Jiná doba (minuty)…
+Cut the sound and close the application in:	Ztlumit zvuk a zavřít aplikaci za:
+Duration in minutes	Doba v minutách
+Invalid duration (1 to 1440 minutes).	Neplatná doba (1 až 1440 minut).
+At the same time as the sound ({0} min)	Současně se zvukem ({0} min)
+{0} min (after the sound is cut)	{0} min (po ztlumení zvuku)
+The recording in progress stops in:	Probíhající nahrávání se zastaví za:
+Stop the recording in (minutes)	Zastavit nahrávání za (minuty)
+The sound will be cut and the application closed in {0} min	Zvuk bude ztlumen a aplikace zavřena za {0} min
+(recording stopped in {0} min)	(nahrávání zastaveno za {0} min)
+Timer cancelled	Časovač zrušen
+Sound cut; the application will close when the recording ends	Zvuk ztlumen; aplikace se zavře po skončení nahrávání
+Cannot set the bandwidth: no active WebSDR	Nelze nastavit šířku pásma: žádný aktivní WebSDR
+WebSDR default filter	Výchozí filtr WebSDR
+Other value (kHz)…	Jiná hodnota (kHz)…
+Signal bandwidth:	Šířka signálu:
+Bandwidth in kHz (0.3 to 12)	Šířka pásma v kHz (0,3 až 12)
+Invalid value (0.3 to 12 kHz).	Neplatná hodnota (0,3 až 12 kHz).
+Bandwidth: WebSDR default filter	Šířka pásma: výchozí filtr WebSDR
+Bandwidth: {0}	Šířka pásma: {0}

@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Spektrum nagyítása (1 kHz/mm)
 Cannot record: no audio	A felvétel nem lehetséges: nincs hang
 Cannot record: 	A felvétel nem lehetséges:
 The recordings are in Music/PhoneSDRLink	A felvételek a Zene/PhoneSDRLink mappában vannak
+Listening to "{0}"	Hallgatja: "{0}"
+{0} minutes	{0} perc
+Cancel the timer	Időzítő megszakítása
+Other duration (minutes)…	Más időtartam (perc)…
+Cut the sound and close the application in:	Hang elnémítása és az alkalmazás bezárása:
+Duration in minutes	Időtartam percben
+Invalid duration (1 to 1440 minutes).	Érvénytelen időtartam (1–1440 perc).
+At the same time as the sound ({0} min)	A hanggal egy időben ({0} perc)
+{0} min (after the sound is cut)	{0} perc (a hang elnémítása után)
+The recording in progress stops in:	A folyamatban lévő felvétel leáll:
+Stop the recording in (minutes)	Felvétel leállítása (perc)
+The sound will be cut and the application closed in {0} min	A hang elnémul, és az alkalmazás bezárul {0} perc múlva
+(recording stopped in {0} min)	(a felvétel {0} perc múlva leáll)
+Timer cancelled	Időzítő megszakítva
+Sound cut; the application will close when the recording ends	Hang elnémítva; az alkalmazás a felvétel végén bezárul
+Cannot set the bandwidth: no active WebSDR	A sávszélesség nem állítható be: nincs aktív WebSDR
+WebSDR default filter	WebSDR alapértelmezett szűrője
+Other value (kHz)…	Más érték (kHz)…
+Signal bandwidth:	Jel sávszélessége:
+Bandwidth in kHz (0.3 to 12)	Sávszélesség kHz-ben (0,3–12)
+Invalid value (0.3 to 12 kHz).	Érvénytelen érték (0,3–12 kHz).
+Bandwidth: WebSDR default filter	Sávszélesség: WebSDR alapértelmezett szűrője
+Bandwidth: {0}	Sávszélesség: {0}

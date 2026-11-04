@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Zoom do espetro (1 kHz por mm)
 Cannot record: no audio	Não é possível gravar: sem som
 Cannot record: 	Não é possível gravar:
 The recordings are in Music/PhoneSDRLink	As gravações estão em Música/PhoneSDRLink
+Listening to "{0}"	A ouvir "{0}"
+{0} minutes	{0} minutos
+Cancel the timer	Cancelar o temporizador
+Other duration (minutes)…	Outra duração (minutos)…
+Cut the sound and close the application in:	Cortar o som e fechar a aplicação dentro de:
+Duration in minutes	Duração em minutos
+Invalid duration (1 to 1440 minutes).	Duração inválida (1 a 1440 minutos).
+At the same time as the sound ({0} min)	Ao mesmo tempo que o som ({0} min)
+{0} min (after the sound is cut)	{0} min (depois de cortar o som)
+The recording in progress stops in:	A gravação em curso para dentro de:
+Stop the recording in (minutes)	Parar a gravação dentro de (minutos)
+The sound will be cut and the application closed in {0} min	O som será cortado e a aplicação fechada dentro de {0} min
+(recording stopped in {0} min)	(gravação parada dentro de {0} min)
+Timer cancelled	Temporizador cancelado
+Sound cut; the application will close when the recording ends	Som cortado; a aplicação fechará quando a gravação terminar
+Cannot set the bandwidth: no active WebSDR	Não é possível definir a largura de banda: nenhum WebSDR ativo
+WebSDR default filter	Filtro predefinido do WebSDR
+Other value (kHz)…	Outro valor (kHz)…
+Signal bandwidth:	Largura de banda do sinal:
+Bandwidth in kHz (0.3 to 12)	Largura de banda em kHz (0,3 a 12)
+Invalid value (0.3 to 12 kHz).	Valor inválido (0,3 a 12 kHz).
+Bandwidth: WebSDR default filter	Largura de banda: filtro predefinido do WebSDR
+Bandwidth: {0}	Largura de banda: {0}

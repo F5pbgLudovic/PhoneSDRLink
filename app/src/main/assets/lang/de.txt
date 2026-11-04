@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Spektrum-Zoom (1 kHz pro mm)
 Cannot record: no audio	Aufnahme nicht möglich: kein Ton
 Cannot record: 	Aufnahme nicht möglich:
 The recordings are in Music/PhoneSDRLink	Die Aufnahmen befinden sich in Musik/PhoneSDRLink
+Listening to "{0}"	Sie hören „{0}“
+{0} minutes	{0} Minuten
+Cancel the timer	Timer abbrechen
+Other duration (minutes)…	Andere Dauer (Minuten)…
+Cut the sound and close the application in:	Ton ausschalten und Anwendung beenden in:
+Duration in minutes	Dauer in Minuten
+Invalid duration (1 to 1440 minutes).	Ungültige Dauer (1 bis 1440 Minuten).
+At the same time as the sound ({0} min)	Gleichzeitig mit dem Ton ({0} min)
+{0} min (after the sound is cut)	{0} min (nach dem Ausschalten des Tons)
+The recording in progress stops in:	Die laufende Aufnahme stoppt in:
+Stop the recording in (minutes)	Aufnahme stoppen in (Minuten)
+The sound will be cut and the application closed in {0} min	Der Ton wird ausgeschaltet und die Anwendung in {0} min beendet
+(recording stopped in {0} min)	(Aufnahme stoppt in {0} min)
+Timer cancelled	Timer abgebrochen
+Sound cut; the application will close when the recording ends	Ton aus; die Anwendung wird am Ende der Aufnahme beendet
+Cannot set the bandwidth: no active WebSDR	Bandbreite kann nicht eingestellt werden: kein aktiver WebSDR
+WebSDR default filter	WebSDR-Standardfilter
+Other value (kHz)…	Anderer Wert (kHz)…
+Signal bandwidth:	Signalbandbreite:
+Bandwidth in kHz (0.3 to 12)	Bandbreite in kHz (0,3 bis 12)
+Invalid value (0.3 to 12 kHz).	Ungültiger Wert (0,3 bis 12 kHz).
+Bandwidth: WebSDR default filter	Bandbreite: WebSDR-Standardfilter
+Bandwidth: {0}	Bandbreite: {0}

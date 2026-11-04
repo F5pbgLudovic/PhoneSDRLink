@@ -473,3 +473,26 @@ Spectrum zoom (1 kHz per mm)	Spektrumzoom (1 kHz per mm)
 Cannot record: no audio	Kan inte spela in: inget ljud
 Cannot record: 	Kan inte spela in:
 The recordings are in Music/PhoneSDRLink	Inspelningarna finns i Musik/PhoneSDRLink
+Listening to "{0}"	Du lyssnar på "{0}"
+{0} minutes	{0} minuter
+Cancel the timer	Avbryt timern
+Other duration (minutes)…	Annan längd (minuter)…
+Cut the sound and close the application in:	Stäng av ljudet och stäng programmet om:
+Duration in minutes	Längd i minuter
+Invalid duration (1 to 1440 minutes).	Ogiltig längd (1 till 1440 minuter).
+At the same time as the sound ({0} min)	Samtidigt som ljudet ({0} min)
+{0} min (after the sound is cut)	{0} min (efter att ljudet stängts av)
+The recording in progress stops in:	Den pågående inspelningen stoppar om:
+Stop the recording in (minutes)	Stoppa inspelningen om (minuter)
+The sound will be cut and the application closed in {0} min	Ljudet stängs av och programmet stängs om {0} min
+(recording stopped in {0} min)	(inspelningen stoppar om {0} min)
+Timer cancelled	Timern avbruten
+Sound cut; the application will close when the recording ends	Ljudet avstängt; programmet stängs när inspelningen är klar
+Cannot set the bandwidth: no active WebSDR	Det går inte att ställa in bandbredden: ingen aktiv WebSDR
+WebSDR default filter	WebSDR:s standardfilter
+Other value (kHz)…	Annat värde (kHz)…
+Signal bandwidth:	Signalbandbredd:
+Bandwidth in kHz (0.3 to 12)	Bandbredd i kHz (0,3 till 12)
+Invalid value (0.3 to 12 kHz).	Ogiltigt värde (0,3 till 12 kHz).
+Bandwidth: WebSDR default filter	Bandbredd: WebSDR:s standardfilter
+Bandwidth: {0}	Bandbredd: {0}
