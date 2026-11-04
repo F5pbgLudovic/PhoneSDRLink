@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: WebSDR startes på nytt
 Lock	Lås
 This page cannot be displayed in this app	Denne siden kan ikke vises i denne appen
 Keep the screen on	Ikke slå av skjermen
+Spectrum zoom (1 kHz per mm)	Spektrumzoom (1 kHz per mm)
+Cannot record: no audio	Kan ikke ta opp: ingen lyd
+Cannot record: 	Kan ikke ta opp:

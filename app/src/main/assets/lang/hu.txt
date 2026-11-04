@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: a WebSDR újraindítása
 Lock	Zár
 This page cannot be displayed in this app	Ez az oldal nem jeleníthető meg ebben az alkalmazásban
 Keep the screen on	A képernyő ne kapcsoljon ki
+Spectrum zoom (1 kHz per mm)	Spektrum nagyítása (1 kHz/mm)
+Cannot record: no audio	A felvétel nem lehetséges: nincs hang
+Cannot record: 	A felvétel nem lehetséges:

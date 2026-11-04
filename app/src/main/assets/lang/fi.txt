@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: WebSDR käynnistetään uudelleen
 Lock	Lukko
 This page cannot be displayed in this app	Tätä sivua ei voi näyttää tässä sovelluksessa
 Keep the screen on	Älä sammuta näyttöä
+Spectrum zoom (1 kHz per mm)	Spektrin zoomaus (1 kHz / mm)
+Cannot record: no audio	Tallennus ei onnistu: ei ääntä
+Cannot record: 	Tallennus ei onnistu:

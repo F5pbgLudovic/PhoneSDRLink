@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: ponovni zagon WebSDR
 Lock	Ključavnica
 This page cannot be displayed in this app	Te strani v tej aplikaciji ni mogoče prikazati
 Keep the screen on	Ne ugasni zaslona
+Spectrum zoom (1 kHz per mm)	Povečava spektra (1 kHz na mm)
+Cannot record: no audio	Snemanje ni mogoče: ni zvoka
+Cannot record: 	Snemanje ni mogoče:

@@ -37,6 +37,9 @@ final class DlgSettings {
         col.addView(toggle(a, Lang.T("Interdire l'extinction de l'écran", "Keep the screen on"), st.keepScreen, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.keepScreen = on; st.save(); a.applyKeepScreen(); }
         }));
+        col.addView(toggle(a, Lang.T("Zoom du spectre (1 kHz par mm)", "Spectrum zoom (1 kHz per mm)"), st.spectrumZoom, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.spectrumZoom = on; st.save(); if (on) a.applySpectrumZoom(); }
+        }));
         col.addView(toggle(a, Lang.T("Notch automatique (DNF)", "Auto notch (DNF)"), st.autoNotch, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.autoNotch = on; st.save(); a.applyAudio(); }
         }));

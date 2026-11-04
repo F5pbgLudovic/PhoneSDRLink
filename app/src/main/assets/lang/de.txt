@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: WebSDR wird neu gestartet
 Lock	Sperre
 This page cannot be displayed in this app	Diese Seite kann in dieser App nicht angezeigt werden
 Keep the screen on	Bildschirm nicht ausschalten
+Spectrum zoom (1 kHz per mm)	Spektrum-Zoom (1 kHz pro mm)
+Cannot record: no audio	Aufnahme nicht möglich: kein Ton
+Cannot record: 	Aufnahme nicht möglich:

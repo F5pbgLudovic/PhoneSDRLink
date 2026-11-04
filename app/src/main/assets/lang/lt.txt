@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: WebSDR paleidžiamas iš naujo
 Lock	Spyna
 This page cannot be displayed in this app	Šio puslapio šioje programėlėje parodyti negalima
 Keep the screen on	Neišjungti ekrano
+Spectrum zoom (1 kHz per mm)	Spektro didinimas (1 kHz per mm)
+Cannot record: no audio	Įrašyti neįmanoma: nėra garso
+Cannot record: 	Įrašyti neįmanoma:

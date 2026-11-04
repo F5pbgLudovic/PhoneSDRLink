@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: ponowne uruchamianie WebSDR
 Lock	Blokada
 This page cannot be displayed in this app	Tej strony nie można wyświetlić w tej aplikacji
 Keep the screen on	Nie wygaszaj ekranu
+Spectrum zoom (1 kHz per mm)	Powiększenie widma (1 kHz na mm)
+Cannot record: no audio	Nie można nagrywać: brak dźwięku
+Cannot record: 	Nie można nagrywać:

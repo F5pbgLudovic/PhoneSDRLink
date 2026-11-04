@@ -54,6 +54,9 @@
           n.f.push(b);
           n.slots.push({ bin: -1, miss: 0 });
         }
+        n.chk = ctx.createAnalyser();   // sonde de santé : un filtre numérique qui sort NaN reste muet pour toujours
+        n.chk.fftSize = 32;
+        origConnect.call(n.f[NOTCHES - 1], n.chk);
       }
       if (on === n.on) return;
       n.on = on;
@@ -99,6 +102,9 @@
           d.g.push(g); d.fc.push(f); d.floor.push(NaN); d.att.push(0);
         }
         d.buf = new Float32Array(d.an.frequencyBinCount);
+        d.chk = ctx.createAnalyser();
+        d.chk.fftSize = 32;
+        origConnect.call(d.output, d.chk);
       }
       if (on === d.on) return;
       d.on = on;
@@ -130,7 +136,12 @@
       if (!L.dnrOn) return;
       for (var i = 0; i < L.ctxs.length; i++) {
         var d = L.ctxs[i].__sdrlinkDnr;
-        if (d && d.on && L.ctxs[i].state === 'running') { try { dnrStep(L.ctxs[i], d); } catch (e) { } }
+        if (d && d.on && L.ctxs[i].state === 'running') {
+          try {
+            if (d.chk && (d.tick = (d.tick || 0) + 1) % 10 === 0 && !healthy(d.chk)) { rebuildDnr(L.ctxs[i]); continue; }
+            dnrStep(L.ctxs[i], d);
+          } catch (e) { }
+        }
       }
     }, 50);
     var release = function (ctx, n, i) {
@@ -186,13 +197,31 @@
     var place = function (ctx, n, s, bin, hz) {
       var a = n.avg[bin - 1], b = n.avg[bin], c = n.avg[bin + 1], d = a - 2 * b + c;
       var f = (bin + (d !== 0 ? 0.5 * (a - c) / d : 0)) * hz;
+      if (!isFinite(f) || f < 60 || f > ctx.sampleRate * 0.45) return;
       n.slots[s].bin = bin;
       n.slots[s].miss = 0;
       n.f[s].frequency.setTargetAtTime(f, ctx.currentTime, n.slots[s].placed ? 0.05 : 0.005);
       n.f[s].Q.value = Math.max(5, f / 40);
       n.slots[s].placed = true;
     };
-    L.notchOn = false;
+    // Contrôle de santé : la sonde reçoit des NaN quand un filtre est devenu fou ; on le reconstruit alors à neuf.
+    var healthy = function (an) {
+      var b = new Float32Array(an.fftSize);
+      an.getFloatTimeDomainData(b);
+      for (var i = 0; i < b.length; i++) if (b[i] !== b[i]) return false;
+      return true;
+    };
+    var rebuildNotch = function (ctx) {
+      var old = ctx.__sdrlinkNotch;
+      if (!old) return;
+      try { origDisconnect.call(ctx.__sdrlinkIn, old.an); } catch (e) { }
+      ctx.__sdrlinkNotch = null;
+      notch(ctx, true);
+    };
+    var rebuildDnr = function (ctx) {
+      ctx.__sdrlinkDnr = null;
+      dnr(ctx, true);
+    };    L.notchOn = false;
     L.setNotch = function (on) {
       L.notchOn = !!on;
       for (var i = 0; i < L.ctxs.length; i++) notch(L.ctxs[i], L.notchOn);
@@ -201,7 +230,12 @@
       if (!L.notchOn) return;
       for (var i = 0; i < L.ctxs.length; i++) {
         var n = L.ctxs[i].__sdrlinkNotch;
-        if (n && n.on && L.ctxs[i].state === 'running') { try { analyse(L.ctxs[i], n); } catch (e) { } }
+        if (n && n.on && L.ctxs[i].state === 'running') {
+          try {
+            if (n.chk && (n.tick = (n.tick || 0) + 1) % 5 === 0 && !healthy(n.chk)) { rebuildNotch(L.ctxs[i]); continue; }
+            analyse(L.ctxs[i], n);
+          } catch (e) { }
+        }
       }
     }, 100);
     AudioNode.prototype.connect = function (dest) {
@@ -221,30 +255,138 @@
     for (var j = 0; j < media.length; j++) media[j].volume = Math.min(1, v);
   };
 
-  // Volume propre à la page au maximum de son curseur (appelé une fois par page) : le volume du téléphone règle alors le niveau final.
-  L.maxVolume = function () {
+  // Volume propre à la page, suivant le volume du téléphone : f de 0 à 1 (1 = curseur au maximum).
+  L.pageVol = 1;
+  L.setPageVolume = function (f) {
+    L.pageVol = f;
     var k = detect();
     var setv = function (el, v) {
       try { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(el, v); } catch (e) { el.value = v; }
       el.dispatchEvent(new Event('input', { bubbles: true }));
       el.dispatchEvent(new Event('change', { bubbles: true }));
     };
-    var max = function (el) { if (el) setv(el, el.max); };
+    var slide = function (el) { if (el) { var lo = parseFloat(el.min), hi = parseFloat(el.max); setv(el, String(lo + f * (hi - lo))); } };
     try {
-      if (k === 'websdr') max(document.getElementById('volumecontrol2'));
-      else if (k === 'owrx' || k === 'owrx+') max(document.getElementById('openwebrx-panel-volume'));
-      else if (k === 'kiwi') max(document.querySelector('input.id-input-volume'));
-      else if (k === 'phantom') max(L.phantomVolume());
-      else if (k === 'ubersdr') UberSDR.command('volume', { volume: 1 }).catch(function () { });
+      if (k === 'websdr') slide(document.getElementById('volumecontrol2'));
+      else if (k === 'owrx' || k === 'owrx+') slide(document.getElementById('openwebrx-panel-volume'));
+      else if (k === 'kiwi') slide(document.querySelector('input.id-input-volume'));
+      else if (k === 'phantom') slide(L.phantomVolume());
+      else if (k === 'ubersdr') UberSDR.command('volume', { volume: f }).catch(function () { });
     } catch (e) { }
     var media = document.querySelectorAll('audio,video');
     for (var j = 0; j < media.length; j++) media[j].volume = 1;
-  };
-  // PhantomSDR : le curseur de volume est le premier « glass-slider » de 0 à 100.
+  };  // PhantomSDR : le curseur de volume est le premier « glass-slider » de 0 à 100.
   L.phantomVolume = function () {
     var s = document.querySelectorAll('input.glass-slider');
     for (var i = 0; i < s.length; i++) if (s[i].min === '0' && s[i].max === '100') return s[i];
     return null;
+  };
+  // Enregistrement MP3 : le son brut de la page (avant volume, muet, notch et réducteur de bruit) est copié par un
+  // ScriptProcessor vers un encodeur lamejs (dans un Worker si la page le permet), qui renvoie le MP3 par morceaux en base64.
+  L.rec = null;
+  L.recStart = function (lameSrc, kbps) {
+    var ctx = null, i;
+    for (i = 0; i < L.ctxs.length; i++) if (L.ctxs[i].state === 'running') { ctx = L.ctxs[i]; break; }
+    if (!ctx || !ctx.createScriptProcessor) { __post('rec|err|noaudio'); return; }
+    var r = { ctx: ctx, worker: null, enc: null, sp: null };
+    var send = function (bytes) {
+      var s = '';
+      for (var j = 0; j < bytes.length; j += 8192) s += String.fromCharCode.apply(null, bytes.subarray(j, j + 8192));
+      __post('mp3|' + btoa(s));
+    };
+    r.send = send;
+    try {
+      var src = lameSrc + ';\nvar enc=null;self.onmessage=function(e){var d=e.data;if(d.init){enc=new lamejs.Mp3Encoder(1,d.rate,d.kbps);return;}' +
+        'if(d.stop){self.postMessage({mp3:enc.flush(),end:true});return;}var o=enc.encodeBuffer(new Int16Array(d));if(o.length)self.postMessage({mp3:o});};';
+      r.worker = new Worker(URL.createObjectURL(new Blob([src], { type: 'application/javascript' })));
+      r.worker.onmessage = function (e) {
+        if (e.data.mp3 && e.data.mp3.length) send(new Uint8Array(e.data.mp3.buffer));
+        if (e.data.end) { __post('mp3end'); r.worker.terminate(); }
+      };
+      r.worker.onerror = function () { __post('rec|err|worker'); };
+      r.worker.postMessage({ init: true, rate: ctx.sampleRate, kbps: kbps });
+    } catch (e) {
+      r.worker = null;
+      try { (0, eval)(lameSrc); r.enc = new lamejs.Mp3Encoder(1, ctx.sampleRate, kbps); } catch (e2) { __post('rec|err|encoder'); return; }
+    }
+    var sp = r.sp = ctx.createScriptProcessor(4096, 1, 1), silent = ctx.createGain();
+    sp.channelCount = 1;
+    sp.channelCountMode = 'explicit';
+    silent.gain.value = 0;
+    origConnect.call(ctx.__sdrlinkIn, sp);
+    origConnect.call(sp, silent);
+    origConnect.call(silent, ctx.destination);   // un ScriptProcessor ne tourne que s'il est relié à la sortie
+    r.silent = silent;
+    sp.onaudioprocess = function (e) {
+      var d = e.inputBuffer.getChannelData(0), p = new Int16Array(d.length), j;
+      for (j = 0; j < d.length; j++) p[j] = Math.max(-1, Math.min(1, d[j])) * 32767 | 0;
+      if (r.worker) r.worker.postMessage(p.buffer, [p.buffer]);
+      else { var o = r.enc.encodeBuffer(p); if (o.length) send(new Uint8Array(o.buffer)); }
+    };
+    L.rec = r;
+    __post('rec|ok|' + ctx.sampleRate);
+  };
+  L.recStop = function () {
+    var r = L.rec;
+    if (!r) { __post('mp3end'); return; }
+    L.rec = null;
+    try { r.sp.onaudioprocess = null; origDisconnect.call(r.sp); origDisconnect.call(ctx_of(r), r.sp); } catch (e) { }
+    try { origDisconnect.call(r.silent); } catch (e) { }
+    if (r.worker) r.worker.postMessage({ stop: true });
+    else { var f = r.enc.flush(); if (f.length) r.send(new Uint8Array(f.buffer)); __post('mp3end'); }
+  };
+  function ctx_of(r) { return r.ctx.__sdrlinkIn; }
+  // Zoom du spectre : la largeur de la cascade affichée est ramenée à une échelle fixe sur l'écran (kHzParMm : 1 = 3 kHz de
+  // spectre pour 3 mm de téléphone). Les WebSDR zooment par paliers (puissances de 2 ou presque) : on prend le palier le plus
+  // proche. webPx = largeur de la WebView en pixels, xdpi = pixels par pouce de l'écran.
+  L.zoomTimer = 0;
+  L.spectrumZoom = function (webPx, xdpi, kHzPerMm) {
+    clearTimeout(L.zoomTimer);
+    var k = detect();
+    var cssPerPx = (window.visualViewport && visualViewport.width) ? visualViewport.width / webPx : 1;   // pixels CSS par pixel écran
+    var mmPerCss = 25.4 / xdpi / cssPerPx;
+    var wf = function () {   // la plus large cascade visible, en pixels CSS
+      var best = null, c = document.querySelectorAll('canvas'), i, w;
+      for (i = 0; i < c.length; i++) {
+        w = c[i].getBoundingClientRect().width;
+        if (w > 100 && (!best || w > best.w)) best = { el: c[i], w: w };
+      }
+      return best;
+    };
+    var log2 = function (x) { return Math.log(x) / Math.LN2; };
+    try {
+      if (k === 'websdr') {
+        // khzperpixel : kHz par pixel de la cascade ; wfset(0) zoome d'un palier, wfset(1) dézoome.
+        var cv = document.querySelector('canvas[id^=wf]') || (wf() && wf().el), tries = 0, last = -1;
+        var step = function () {
+          var w = cv.getBoundingClientRect().width, desired = w * mmPerCss * kHzPerMm, span = khzperpixel * cv.width, r = log2(span / desired);
+          if (Math.abs(r) < 0.5 || tries++ > 16 || khzperpixel === last) return;
+          last = khzperpixel;
+          wfset(r > 0 ? 0 : 1);
+          L.zoomTimer = setTimeout(step, 900);
+        };
+        step();
+      } else if (k === 'kiwi') {
+        var w1 = wf(); if (!w1) return;
+        var desired1 = w1.w * mmPerCss * kHzPerMm, bw = (typeof bandwidth === 'number' ? bandwidth : 30e6) / 1000;
+        var z = Math.max(0, Math.min(typeof zoom_levels_max === 'number' ? zoom_levels_max : 14, Math.round(log2(bw / desired1))));
+        ext_set_zoom(ext_zoom.ABS, z);
+      } else if (k === 'owrx' || k === 'owrx+') {
+        if (typeof zoom_levels === 'undefined' || typeof zoom_set !== 'function') return;
+        var w2 = typeof waterfallWidth === 'function' ? waterfallWidth() : (wf() ? wf().w : 0);
+        var desired2 = w2 * mmPerCss * kHzPerMm, bw2 = bandwidth / 1000, bestL = 0, bestD = 1e9, l;
+        for (l = 0; l < zoom_levels.length; l++) {
+          var d2 = Math.abs(log2(bw2 / zoom_levels[l] / desired2));
+          if (d2 < bestD) { bestD = d2; bestL = l; }
+        }
+        zoom_set(bestL);
+      } else if (k === 'ubersdr') {
+        var w3 = wf(), desired3 = (w3 ? w3.w : visualViewport.width) * mmPerCss * kHzPerMm;
+        UberSDR.command('spectrum', { span: Math.round(desired3 * 1000) }).catch(function () { });
+      } else {
+        __post('zoom|unsupported');
+      }
+    } catch (e) { }
   };
   function detect() {
     if (window.UberSDR && typeof UberSDR.command === 'function' && typeof UberSDR.state === 'function') return 'ubersdr';

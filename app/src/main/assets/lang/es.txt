@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: reiniciando el WebSDR
 Lock	Bloqueo
 This page cannot be displayed in this app	Esta página no se puede mostrar en esta aplicación
 Keep the screen on	Impedir que la pantalla se apague
+Spectrum zoom (1 kHz per mm)	Zoom del espectro (1 kHz por mm)
+Cannot record: no audio	No se puede grabar: no hay audio
+Cannot record: 	No se puede grabar:

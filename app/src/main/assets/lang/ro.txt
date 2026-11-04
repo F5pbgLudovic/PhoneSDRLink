@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: se repornește WebSDR
 Lock	Blocare
 This page cannot be displayed in this app	Această pagină nu poate fi afișată în această aplicație
 Keep the screen on	Nu stinge ecranul
+Spectrum zoom (1 kHz per mm)	Zoom spectru (1 kHz pe mm)
+Cannot record: no audio	Înregistrare imposibilă: fără sunet
+Cannot record: 	Înregistrare imposibilă:

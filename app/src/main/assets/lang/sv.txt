@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: WebSDR startas om
 Lock	Lås
 This page cannot be displayed in this app	Den här sidan kan inte visas i den här appen
 Keep the screen on	Stäng inte av skärmen
+Spectrum zoom (1 kHz per mm)	Spektrumzoom (1 kHz per mm)
+Cannot record: no audio	Kan inte spela in: inget ljud
+Cannot record: 	Kan inte spela in:

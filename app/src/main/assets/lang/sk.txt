@@ -469,3 +469,6 @@ INIT: restarting the WebSDR	INIT: WebSDR sa reštartuje
 Lock	Zámok
 This page cannot be displayed in this app	Túto stránku nemožno v tejto aplikácii zobraziť
 Keep the screen on	Nevypínať obrazovku
+Spectrum zoom (1 kHz per mm)	Zoom spektra (1 kHz na mm)
+Cannot record: no audio	Nahrávanie nie je možné: žiadny zvuk
+Cannot record: 	Nahrávanie nie je možné:

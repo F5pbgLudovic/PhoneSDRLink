@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
     WebView web;
     LinearLayout root, controls;
     FrameLayout webFrame;
-    Button btnWeb, btnSet, btnMute, btnLock, btnMode, btnScan, btnScanConf, btnMem, btnStep;
+    Button btnWeb, btnSet, btnRec, btnMute, btnLock, btnMode, btnScan, btnScanConf, btnMem, btnStep;
     TextView tvFreq, tvStatus, tvPage;
     FreqBar bar;
     final Handler h = new Handler(Looper.getMainLooper());
@@ -70,6 +70,14 @@ public class MainActivity extends Activity {
     long sdrF;
     boolean muted, callMute, focusMute, locked;
     int crashes;
+    // Enregistrement MP3
+    boolean recording;
+    long recStart;
+    java.io.OutputStream recOut;
+    android.net.Uri recUri;
+    java.io.File recFile;
+    String recName = "";
+    boolean recPending;
     long crashSince;
     ScriptHandler bridgeHandle, identityHandle;
     long settleUntil, targetUntil, target, scanHoldUntil, scanHoldHz;
@@ -120,12 +128,15 @@ public class MainActivity extends Activity {
         super.onResume();
         web.onResume();
         requestFocus();
+        registerReceiver(volReceiver, new android.content.IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
+        applyPhoneVolume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         web.onPause();
+        try { unregisterReceiver(volReceiver); } catch (Exception e) { }
         if (focusReq != null) audio.abandonAudioFocusRequest(focusReq);
         st.freqHz = freq;
         st.mode = mode;
@@ -166,8 +177,9 @@ public class MainActivity extends Activity {
                 o.close();
             } catch (Exception e) { android.util.Log.i("PSDR", "dump: " + e); }
         }
+        if (i.getBooleanExtra("rec", false)) onRecButton();
         String code = i.getStringExtra("js");
-        if (code != null) web.evaluateJavascript("(function(){try{Promise.resolve(" + code + ").then(function(v){PhoneSdr.post(\"dbg|\"+(typeof v===\"string\"?v:JSON.stringify(v)))},function(e){PhoneSdr.post(\"dbg|ERR \"+e)})}catch(e){PhoneSdr.post(\"dbg|ERR \"+e)}})()", null);
+        if (code != null) web.evaluateJavascript("(function(){try{Promise.resolve((0, eval)(" + org.json.JSONObject.quote(code) + ")).then(function(v){PhoneSdr.post(\"dbg|\"+(typeof v===\"string\"?v:JSON.stringify(v)))},function(e){PhoneSdr.post(\"dbg|ERR \"+e)})}catch(e){PhoneSdr.post(\"dbg|ERR \"+e)}})()", null);
     }
 
     @Override
@@ -196,13 +208,16 @@ public class MainActivity extends Activity {
         btnMute = Ui.button(this, Lang.T("Muet", "Mute"), new View.OnClickListener() {
             public void onClick(View v) { muted = !muted; applyVolume(); updateButtons(); }
         });
-        r1.addView(btnWeb, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
-        r1.addView(btnSet, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
+        btnRec = Ui.button(this, "● REC", new View.OnClickListener() { public void onClick(View v) { onRecButton(); } });
+        r1.addView(btnWeb, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.05f, this, 2));
+        r1.addView(btnSet, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.7f, this, 2));
+        r1.addView(btnRec, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.95f, this, 2));
         btnLock = Ui.button(this, "", new View.OnClickListener() {
             public void onClick(View v) { locked = !locked; bar.locked = locked; updateButtons(); }
         });
-        r1.addView(btnMute, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.7f, this, 2));
-        r1.addView(btnLock, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.7f, this, 2));
+        for (Button x : new Button[] { btnWeb, btnSet, btnRec, btnMute, btnLock }) { x.setTextSize(13); x.setPadding(Ui.dp(this, 3), 0, Ui.dp(this, 3), 0); }
+        r1.addView(btnMute, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.8f, this, 2));
+        r1.addView(btnLock, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.9f, this, 2));
         controls.addView(r1);
 
         // Ligne 2 : fréquence (appui = clavier) et mode
@@ -302,7 +317,7 @@ public class MainActivity extends Activity {
 
     Button zoomButton(String text, final boolean in) {
         Button b = Ui.button(this, text, new View.OnClickListener() {
-            public void onClick(View v) { if (in) web.zoomIn(); else web.zoomOut(); }
+            public void onClick(View v) { if (in) web.zoomIn(); else web.zoomOut(); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 700); }
         });
         b.setTextSize(22);
         b.setTypeface(Typeface.DEFAULT_BOLD);
@@ -353,6 +368,8 @@ public class MainActivity extends Activity {
         Ui.paint(btnMute, muted, Ui.danger());
         btnLock.setText(locked ? "🔒 " + Lang.T("Verrou", "Lock") : "🔓 " + Lang.T("Verrou", "Lock"));
         Ui.paint(btnLock, locked, Ui.danger());
+        btnRec.setText(recording ? "■ " + recTime() : "● REC");
+        Ui.paint(btnRec, recording, Ui.danger());
         btnScan.setText(scanning ? Lang.T("■ Arrêter le scan", "■ Stop scan") : "▶ Scan");
         Ui.paint(btnScan, scanning, Ui.danger());
     }
@@ -410,6 +427,7 @@ public class MainActivity extends Activity {
             public void onPageStarted(WebView v, String url, android.graphics.Bitmap icon) {
                 sdrKind = "";
                 sdrF = 0;
+                if (recording) recFinish();
                 if (!WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) injectFallback();
                 tvPage.setText(url);
             }
@@ -489,8 +507,33 @@ public class MainActivity extends Activity {
     }
 
     // Volume de la page au maximum (une fois par page) : le volume du téléphone donne alors le son le plus fort possible.
-    void maxPageVolume() {
-        js("if(window.__sdrlink)__sdrlink.maxVolume();");
+    void maxPageVolume() { applyPhoneVolume(); }
+
+    // Zoom du spectre : 3 kHz de spectre = 3 mm sur l'écran (SET), recalculé quand la taille de la page change.
+    void applySpectrumZoom() {
+        if (!st.spectrumZoom || sdrKind.isEmpty()) return;
+        float xdpi = getResources().getDisplayMetrics().xdpi;
+        js("if(window.__sdrlink)__sdrlink.spectrumZoom(" + web.getWidth() + "," + xdpi + ",1);");
+    }
+
+    // Le volume du téléphone (touches ou curseur système) est recopié sur le curseur de volume de la page du WebSDR.
+    void applyPhoneVolume() {
+        int max = Math.max(1, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        float f = audio.getStreamVolume(AudioManager.STREAM_MUSIC) / (float) max;
+        js("if(window.__sdrlink)__sdrlink.setPageVolume(" + f + ");");
+    }
+
+    final android.content.BroadcastReceiver volReceiver = new android.content.BroadcastReceiver() {
+        public void onReceive(Context c, Intent i) {
+            if (i.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1) == AudioManager.STREAM_MUSIC) applyPhoneVolume();
+        }
+    };
+
+    @Override
+    public boolean onKeyDown(int code, android.view.KeyEvent e) {
+        boolean r = super.onKeyDown(code, e);
+        if (code == android.view.KeyEvent.KEYCODE_VOLUME_UP || code == android.view.KeyEvent.KEYCODE_VOLUME_DOWN) h.postDelayed(new Runnable() { public void run() { applyPhoneVolume(); } }, 150);
+        return r;
     }
 
     void js(String code) {
@@ -554,6 +597,9 @@ public class MainActivity extends Activity {
     // Messages du pont : « type|Hz|mode[|u] » (état du WebSDR) ou « click » (appui dans la page).
     void onWebMessage(String msg) {
         if ("click".equals(msg)) { onPageClick(); return; }
+        if (msg.startsWith("mp3|")) { recWrite(msg.substring(4)); return; }
+        if (msg.equals("mp3end")) { recFinish(); return; }
+        if (msg.startsWith("rec|")) { onRecMessage(msg.split("\\|", -1)); return; }
         if (msg.startsWith("dbg|")) { android.util.Log.i("PSDR", "js=" + msg.substring(4)); return; }
         String[] p = msg.split("\\|", -1);
         if (p.length < 3) return;
@@ -566,7 +612,7 @@ public class MainActivity extends Activity {
         boolean first = sdrKind.isEmpty();
         sdrKind = kind;
         sdrF = f;
-        if (first) { applyAudio(); h.postDelayed(new Runnable() { public void run() { maxPageVolume(); } }, 2500); }
+        if (first) { applyAudio(); h.postDelayed(new Runnable() { public void run() { maxPageVolume(); } }, 2500); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 4500); }
         String fam = family(m);
 
         // Juste après un clic qui a arrêté le scan : la page est remise sur la fréquence scannée.
@@ -823,6 +869,118 @@ public class MainActivity extends Activity {
         audio.requestAudioFocus(focusReq);
     }
 
+    // ------------------------------------------------------------------ enregistrement MP3
+
+    String recTime() {
+        long s = (System.currentTimeMillis() - recStart) / 1000;
+        return String.format(java.util.Locale.US, "%d:%02d", s / 60, s % 60);
+    }
+
+    final Runnable recTick = new Runnable() {
+        public void run() {
+            if (!recording) return;
+            updateButtons();
+            h.postDelayed(this, 1000);
+        }
+    };
+
+    void onRecButton() {
+        if (recPending) return;
+        if (recording) {
+            recPending = true;   // la fin arrive par le message « mp3end » une fois le dernier morceau encodé
+            js("if(window.__sdrlink)__sdrlink.recStop();");
+            h.postDelayed(new Runnable() { public void run() { if (recPending) recFinish(); } }, 4000);
+            return;
+        }
+        if (sdrKind.isEmpty()) { status(Lang.T("Enregistrement impossible : aucun son", "Cannot record: no audio")); return; }
+        try {
+            java.io.InputStream in = getAssets().open("lame.min.js");
+            String src = Store.readAll(in);
+            in.close();
+            String stamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(new java.util.Date());
+            recName = "PhoneSDRLink_" + stamp + "_" + Memory.kHz(freq) + "kHz_" + modeLabel(mode) + ".mp3";
+            openRecFile();
+            web.evaluateJavascript("(function(){try{__sdrlink.recStart(" + org.json.JSONObject.quote(src) + ", 128)}catch(e){PhoneSdr.post(\"rec|err|\"+e)}})()", null);
+        } catch (Exception e) {
+            status(Lang.T("Enregistrement impossible : ", "Cannot record: ") + e.getMessage());
+            recClose(true);
+        }
+    }
+
+    // Fichier de sortie : dossier Musique/PhoneSDRLink (MediaStore), ou dossier de l'application avant Android 10.
+    void openRecFile() throws Exception {
+        recUri = null;
+        recFile = null;
+        if (Build.VERSION.SDK_INT >= 29) {
+            android.content.ContentValues v = new android.content.ContentValues();
+            v.put(android.provider.MediaStore.Audio.Media.DISPLAY_NAME, recName);
+            v.put(android.provider.MediaStore.Audio.Media.MIME_TYPE, "audio/mpeg");
+            v.put(android.provider.MediaStore.Audio.Media.RELATIVE_PATH, "Music/PhoneSDRLink");
+            v.put(android.provider.MediaStore.Audio.Media.IS_PENDING, 1);
+            recUri = getContentResolver().insert(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, v);
+            if (recUri == null) throw new Exception("MediaStore");
+            recOut = getContentResolver().openOutputStream(recUri);
+        } else {
+            java.io.File dir = getExternalFilesDir(android.os.Environment.DIRECTORY_MUSIC);
+            dir.mkdirs();
+            recFile = new java.io.File(dir, recName);
+            recOut = new java.io.FileOutputStream(recFile);
+        }
+    }
+
+    void onRecMessage(String[] p) {
+        if (p.length >= 2 && p[1].equals("ok")) {
+            recording = true;
+            recStart = System.currentTimeMillis();
+            status(Lang.F("Enregistrement du son de « {0} » (appuyez sur REC pour arrêter)", "Recording the sound of \"{0}\" (click REC to stop)", currentTitle()));
+            updateButtons();
+            h.postDelayed(recTick, 1000);
+        } else {
+            status(Lang.T("Enregistrement impossible : aucun son", "Cannot record: no audio"));
+            recClose(true);
+        }
+    }
+
+    long recBytes;
+
+    void recWrite(String b64) {
+        if (recOut == null) return;
+        try {
+            byte[] d = android.util.Base64.decode(b64, android.util.Base64.DEFAULT);
+            recOut.write(d);
+            recBytes += d.length;
+        } catch (Exception e) { recFinish(); }
+    }
+
+    // Fin : le dernier morceau est arrivé (ou la page a changé : ce qui a été reçu est gardé).
+    void recFinish() {
+        if (!recording && !recPending && recOut == null) return;
+        boolean empty = recBytes == 0;
+        String name = recName;
+        recClose(empty);
+        recording = false;
+        recPending = false;
+        updateButtons();
+        status(empty ? Lang.T("Enregistrement vide : rien à sauvegarder", "Empty recording: nothing to save")
+            : Lang.F("Enregistrement sauvegardé : « {0} » (Musique/PhoneSDRLink)", "Recording saved: \"{0}\"", name));
+    }
+
+    void recClose(boolean discard) {
+        try { if (recOut != null) recOut.close(); } catch (Exception e) { }
+        recOut = null;
+        if (recUri != null) {
+            if (discard) { try { getContentResolver().delete(recUri, null, null); } catch (Exception e) { } }
+            else if (Build.VERSION.SDK_INT >= 29) {
+                android.content.ContentValues v = new android.content.ContentValues();
+                v.put(android.provider.MediaStore.Audio.Media.IS_PENDING, 0);
+                try { getContentResolver().update(recUri, v, null, null); } catch (Exception e) { }
+            }
+        } else if (recFile != null && discard) recFile.delete();
+        recUri = null;
+        recFile = null;
+        recBytes = 0;
+        if (discard) { recording = false; recPending = false; updateButtons(); }
+    }
     // ------------------------------------------------------------------ fichiers (Import / Export)
 
     void pickFile(boolean create, String name, FileCb cb) {

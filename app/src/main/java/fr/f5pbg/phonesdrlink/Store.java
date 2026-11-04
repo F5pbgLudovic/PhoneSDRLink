@@ -191,7 +191,7 @@ final class Store {
 
     // Configuration
     String language = "";
-    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen;
+    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen, spectrumZoom = true;
     String callsign = "PhoneSDRLink";
     String lastUrl = "http://websdr.ewi.utwente.nl:8901/";
     long freqHz = 7100000L;
@@ -261,7 +261,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        dark = true; autoNotch = false; autoDnr = false; keepScreen = false; checkUpdates = true; callsign = "PhoneSDRLink";
+        dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; stepIdx = 3;
     }
 
@@ -310,6 +310,7 @@ final class Store {
                 else if (k.equals("AutoNotch")) autoNotch = v.trim().equals("1");
                 else if (k.equals("AutoDnr")) autoDnr = v.trim().equals("1");
                 else if (k.equals("KeepScreen")) keepScreen = v.trim().equals("1");
+                else if (k.equals("SpecZoom")) spectrumZoom = !v.trim().equals("0");
                 else if (k.equals("CheckUpdates")) checkUpdates = !v.trim().equals("0");
                 else if (k.equals("Callsign")) { try { String c = clean(java.net.URLDecoder.decode(v, "UTF-8")); if (!c.isEmpty()) callsign = c; } catch (Exception e) { } }
                 else if (k.equals("LastUrl")) { if (v.trim().length() > 0) lastUrl = v.trim(); }
@@ -408,6 +409,7 @@ final class Store {
         line(sb, "AutoNotch", autoNotch ? 1 : 0);
         line(sb, "AutoDnr", autoDnr ? 1 : 0);
         line(sb, "KeepScreen", keepScreen ? 1 : 0);
+        line(sb, "SpecZoom", spectrumZoom ? 1 : 0);
         line(sb, "CheckUpdates", checkUpdates ? 1 : 0);
         try { line(sb, "Callsign", java.net.URLEncoder.encode(callsign, "UTF-8").replace("+", "%20")); } catch (Exception e) { }
         line(sb, "LastUrl", lastUrl);
