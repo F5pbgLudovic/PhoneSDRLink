@@ -462,3 +462,9 @@ The page crashed: reloading	Страницата се срина: презаре
 Phone call: WebSDR sound muted	Телефонно обаждане: звукът на WebSDR е заглушен
 PhoneSDRLink: updates	PhoneSDRLink: актуализации
 You are using the latest version.	Използвате най-новата версия.
+Sort by:	Подреди по:
+🔒 Locked: press Lock to change	🔒 Заключено: натиснете Заключване за промяна
+Mute	Заглуши
+INIT: restarting the WebSDR	INIT: WebSDR се рестартира
+Lock	Заключване
+This page cannot be displayed in this app	Тази страница не може да се покаже в това приложение

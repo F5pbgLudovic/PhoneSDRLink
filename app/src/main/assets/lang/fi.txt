@@ -462,3 +462,9 @@ The page crashed: reloading	Sivu kaatui: ladataan uudelleen
 Phone call: WebSDR sound muted	Puhelu: WebSDR:n ääni mykistetty
 PhoneSDRLink: updates	PhoneSDRLink: päivitykset
 You are using the latest version.	Käytät uusinta versiota.
+Sort by:	Lajittelu:
+🔒 Locked: press Lock to change	🔒 Lukittu: muuta painamalla Lukko
+Mute	Mykistä
+INIT: restarting the WebSDR	INIT: WebSDR käynnistetään uudelleen
+Lock	Lukko
+This page cannot be displayed in this app	Tätä sivua ei voi näyttää tässä sovelluksessa

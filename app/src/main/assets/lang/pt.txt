@@ -462,3 +462,9 @@ The page crashed: reloading	A página falhou: a recarregar
 Phone call: WebSDR sound muted	Chamada telefónica: som do WebSDR silenciado
 PhoneSDRLink: updates	PhoneSDRLink: atualizações
 You are using the latest version.	Está a utilizar a versão mais recente.
+Sort by:	Ordenar por:
+🔒 Locked: press Lock to change	🔒 Bloqueado: prima Bloqueio para alterar
+Mute	Sem som
+INIT: restarting the WebSDR	INIT: a reiniciar o WebSDR
+Lock	Bloqueio
+This page cannot be displayed in this app	Esta página não pode ser apresentada nesta aplicação

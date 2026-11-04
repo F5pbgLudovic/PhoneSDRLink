@@ -462,3 +462,9 @@ The page crashed: reloading	La pagina si è bloccata: ricaricamento
 Phone call: WebSDR sound muted	Chiamata telefonica: audio del WebSDR disattivato
 PhoneSDRLink: updates	PhoneSDRLink: aggiornamenti
 You are using the latest version.	Stai usando l'ultima versione.
+Sort by:	Ordina per:
+🔒 Locked: press Lock to change	🔒 Bloccato: premi Blocco per modificare
+Mute	Muto
+INIT: restarting the WebSDR	INIT: riavvio del WebSDR
+Lock	Blocco
+This page cannot be displayed in this app	Questa pagina non può essere visualizzata in questa app

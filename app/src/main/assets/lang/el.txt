@@ -462,3 +462,9 @@ The page crashed: reloading	Η σελίδα κράτησε: επαναφόρτω
 Phone call: WebSDR sound muted	Τηλεφωνική κλήση: ο ήχος του WebSDR σίγασε
 PhoneSDRLink: updates	PhoneSDRLink: ενημερώσεις
 You are using the latest version.	Χρησιμοποιείτε την τελευταία έκδοση.
+Sort by:	Ταξινόμηση κατά:
+🔒 Locked: press Lock to change	🔒 Κλειδωμένο: πατήστε Κλείδωμα για αλλαγή
+Mute	Σίγαση
+INIT: restarting the WebSDR	INIT: επανεκκίνηση του WebSDR
+Lock	Κλείδωμα
+This page cannot be displayed in this app	Αυτή η σελίδα δεν μπορεί να εμφανιστεί σε αυτήν την εφαρμογή

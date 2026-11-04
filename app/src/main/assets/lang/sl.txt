@@ -462,3 +462,9 @@ The page crashed: reloading	Stran se je sesula: ponovno nalaganje
 Phone call: WebSDR sound muted	Telefonski klic: zvok WebSDR utišan
 PhoneSDRLink: updates	PhoneSDRLink: posodobitve
 You are using the latest version.	Uporabljate najnovejšo različico.
+Sort by:	Razvrsti po:
+🔒 Locked: press Lock to change	🔒 Zaklenjeno: za spremembe pritisnite Ključavnico
+Mute	Utišaj
+INIT: restarting the WebSDR	INIT: ponovni zagon WebSDR
+Lock	Ključavnica
+This page cannot be displayed in this app	Te strani v tej aplikaciji ni mogoče prikazati

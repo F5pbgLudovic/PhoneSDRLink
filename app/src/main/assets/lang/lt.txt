@@ -462,3 +462,9 @@ The page crashed: reloading	Puslapis sugriuvo: perkraunama
 Phone call: WebSDR sound muted	Telefono skambutis: WebSDR garsas nutildytas
 PhoneSDRLink: updates	PhoneSDRLink: naujinimai
 You are using the latest version.	Naudojate naujausią versiją.
+Sort by:	Rūšiuoti pagal:
+🔒 Locked: press Lock to change	🔒 Užrakinta: norėdami keisti, paspauskite Spyną
+Mute	Nutildyti
+INIT: restarting the WebSDR	INIT: WebSDR paleidžiamas iš naujo
+Lock	Spyna
+This page cannot be displayed in this app	Šio puslapio šioje programėlėje parodyti negalima

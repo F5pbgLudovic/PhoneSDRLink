@@ -5,13 +5,11 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
-import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -21,20 +19,24 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.net.ssl.HttpsURLConnection;
 
-// Bouton WEBSDR : choisir un favori (par liste), saisir une adresse, ajouter la page aux favoris, gérer les favoris,
-// rechercher des WebSDR dans les annuaires publics (comme SDRLink).
+// Bouton WEBSDR : choisir un favori (par liste), saisir une adresse, ajouter ou retirer la page des favoris, gérer les favoris,
+// rechercher des WebSDR dans les annuaires publics (mêmes fenêtres et mêmes réglages que SDRLink).
 final class DlgWebSdr {
     static final Handler UI = new Handler(Looper.getMainLooper());
     static List<FoundSdr> cache;
+
+    static LinearLayout.LayoutParams w(MainActivity a, float weight) { return Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, weight, a, 2); }
 
     // ------------------------------------------------------------------ fenêtre WEBSDR
 
@@ -80,7 +82,6 @@ final class DlgWebSdr {
         col.addView(sp);
         col.addView(lv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
 
-        // Adresse saisie à la main
         LinearLayout ar = Ui.row(a);
         final EditText url = Ui.edit(a, "", Lang.T("Adresse du WebSDR", "WebSDR address"), InputType.TYPE_TEXT_VARIATION_URI | InputType.TYPE_CLASS_TEXT);
         ar.addView(url, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
@@ -92,20 +93,25 @@ final class DlgWebSdr {
         LinearLayout r1 = Ui.row(a);
         r1.addView(Ui.button(a, Lang.T("★ Ajouter aux favoris", "★ Add to favorites"), new View.OnClickListener() {
             public void onClick(View v) { addCurrent(a, fill[0]); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r1.addView(Ui.button(a, Lang.T("Gérer les favoris…", "Manage favorites…"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); manage(a); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        }), w(a, 1));
+        r1.addView(Ui.button(a, Lang.T("Retirer des favoris", "Remove from favorites"), new View.OnClickListener() {
+            public void onClick(View v) { removeCurrent(a, fill[0]); }
+        }), w(a, 1));
         col.addView(r1);
         LinearLayout r2 = Ui.row(a);
+        r2.addView(Ui.button(a, Lang.T("Gérer les favoris…", "Manage favorites…"), new View.OnClickListener() {
+            public void onClick(View v) { d.dismiss(); manage(a); }
+        }), w(a, 1));
         r2.addView(Ui.button(a, Lang.T("Chercher des WebSDR…", "Find WebSDRs…"), new View.OnClickListener() {
             public void onClick(View v) { d.dismiss(); search(a); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.4f, a, 2));
-        r2.addView(Ui.button(a, Lang.T("Recharger", "Reload"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); a.web.reload(); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r2.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        }), w(a, 1));
         col.addView(r2);
+        LinearLayout r3 = Ui.row(a);
+        r3.addView(Ui.button(a, Lang.T("Recharger", "Reload"), new View.OnClickListener() {
+            public void onClick(View v) { d.dismiss(); a.web.reload(); }
+        }), w(a, 1));
+        r3.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 1));
+        col.addView(r3);
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { st.save(); } });
         fill[0].run();
         d.show();
@@ -120,6 +126,23 @@ final class DlgWebSdr {
             return;
         }
         editFavorite(a, null, a.currentTitle(), url, Math.min(st.curFavList, st.favListCount - 1), refresh);
+    }
+
+    // Retire la page affichée de la liste choisie.
+    static void removeCurrent(final MainActivity a, final Runnable refresh) {
+        final Store st = a.st;
+        final String url = a.currentUrl();
+        int list = st.curFavList >= st.favListCount ? -1 : st.curFavList;
+        Favorite found = null;
+        for (Favorite f : st.favorites) if (f.matches(url) && (list < 0 || f.list == list)) found = f;
+        if (found == null) {
+            Ui.message(a, Lang.T("Retirer des favoris", "Remove from favorites"), Lang.F("Cette page n'est pas dans « {0} ».", "This page is not in \"{0}\".", list < 0 ? Lang.T("Toutes les listes", "All lists") : st.favListLabel(list)));
+            return;
+        }
+        final Favorite fav = found;
+        Ui.confirm(a, Lang.T("Retirer des favoris", "Remove from favorites"), Lang.F("Retirer « {0} » de « {1} » ?", "Remove \"{0}\" from \"{1}\"?", fav.name, st.favListLabel(fav.list)), new Ui.Yes() {
+            public void yes() { st.favorites.remove(fav); st.save(); refresh.run(); }
+        });
     }
 
     // Ajout (f == null) ou modification d'un favori : nom, adresse, liste.
@@ -176,13 +199,19 @@ final class DlgWebSdr {
         final Dialog d = Ui.window(a, Lang.T("Gestion des favoris", "Favorite manager"), col, true);
         final Spinner sp = Ui.spinner(a, new ArrayList<String>());
         final ListView lv = new ListView(a);
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         final TextView info = Ui.small(a, "");
-        final ArrayList<Favorite> shown = new ArrayList<Favorite>();
         final HashMap<Favorite, String> status = new HashMap<Favorite, String>();
+        final CheckList<Favorite> cl = new CheckList<Favorite>(a, new CheckList.Fmt<Favorite>() {
+            public String title(Favorite f) { return f.name; }
+            public String sub(Favorite f) { return f.url + (status.containsKey(f) ? "   [" + status.get(f) + "]" : ""); }
+        });
+        lv.setAdapter(cl);
         final boolean[] filling = { false };
         final Runnable[] fill = new Runnable[1];
-        final ArrayList<Favorite> keepChecked = new ArrayList<Favorite>();
+        final Runnable infoRun = new Runnable() {
+            public void run() { info.setText(Lang.F("{0} favori(s) affiché(s), {1} coché(s)", "{0} favorite(s) shown, {1} checked", cl.items.size(), cl.checked.size())); }
+        };
+        cl.onChange = infoRun;
         fill[0] = new Runnable() {
             @SuppressWarnings("unchecked")
             public void run() {
@@ -193,16 +222,10 @@ final class DlgWebSdr {
                 ad.add(Lang.T("Toutes les listes", "All lists"));
                 sp.setSelection(Math.min(st.curFavList, st.favListCount));
                 filling[0] = false;
-                shown.clear();
+                ArrayList<Favorite> shown = new ArrayList<Favorite>();
                 for (Favorite f : st.favorites) if (st.curFavList >= st.favListCount || f.list == st.curFavList) shown.add(f);
-                ArrayList<String> rows = new ArrayList<String>();
-                for (Favorite f : shown) rows.add(f.name + "\n" + f.url + (status.containsKey(f) ? "   [" + status.get(f) + "]" : ""));
-                lv.setAdapter(new ArrayAdapter<String>(a, android.R.layout.simple_list_item_multiple_choice, rows) {
-                    public View getView(int p, View v, ViewGroup g) { CheckedTextView t = (CheckedTextView) super.getView(p, v, g); t.setTextColor(Ui.fg()); t.setTextSize(14); t.setMinHeight(0); t.setMinimumHeight(Ui.dp(a, 56)); t.setSingleLine(false); t.setMaxLines(4); t.setPadding(t.getPaddingLeft(), Ui.dp(a, 6), t.getPaddingRight(), Ui.dp(a, 6)); return t; }
-                });
-                for (int i = 0; i < shown.size(); i++) if (keepChecked.contains(shown.get(i))) lv.setItemChecked(i, true);
-                keepChecked.clear();
-                info.setText(Lang.F("{0} favori(s) affiché(s), {1} coché(s)", "{0} favorite(s) shown, {1} checked", shown.size(), lv.getCheckedItemCount()));
+                cl.set(shown);
+                infoRun.run();
             }
         };
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -210,9 +233,7 @@ final class DlgWebSdr {
             public void onNothingSelected(AdapterView<?> p) { }
         });
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
-                info.setText(Lang.F("{0} favori(s) affiché(s), {1} coché(s)", "{0} favorite(s) shown, {1} checked", shown.size(), lv.getCheckedItemCount()));
-            }
+            public void onItemClick(AdapterView<?> p, View v, int pos, long id) { cl.select(pos); }
         });
         col.addView(sp);
         col.addView(lv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
@@ -221,60 +242,65 @@ final class DlgWebSdr {
         LinearLayout r1 = Ui.row(a);
         r1.addView(Ui.button(a, Lang.T("Ajouter un favori…", "Add favorite…"), new View.OnClickListener() {
             public void onClick(View v) { editFavorite(a, null, "", "", Math.min(st.curFavList, st.favListCount - 1), fill[0]); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r1.addView(Ui.button(a, Lang.T("Modifier…", "Edit…"), new View.OnClickListener() {
+        }), w(a, 1));
+        r1.addView(Ui.button(a, Lang.T("Renommer…", "Rename…"), new View.OnClickListener() {
             public void onClick(View v) {
-                ArrayList<Favorite> c = checked(lv, shown);
-                if (c.size() != 1) { Ui.toast(a, Lang.T("Cochez un seul favori.", "Check a single favorite.")); return; }
+                ArrayList<Favorite> c = cl.checkedOrSelected();
+                if (c.size() != 1) { Ui.toast(a, Lang.T("Sélectionnez d'abord un favori dans la liste.", "Please select a favorite in the list first.")); return; }
                 editFavorite(a, c.get(0), c.get(0).name, c.get(0).url, c.get(0).list, fill[0]);
             }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        }), w(a, 1));
         r1.addView(Ui.button(a, Lang.T("Supprimer…", "Remove…"), new View.OnClickListener() {
             public void onClick(View v) {
-                final ArrayList<Favorite> c = checked(lv, shown);
+                final ArrayList<Favorite> c = cl.checkedOrSelected();
                 if (c.isEmpty()) { Ui.toast(a, Lang.T("Sélectionnez d'abord un favori dans la liste.", "Please select a favorite in the list first.")); return; }
                 String msg = c.size() == 1 ? Lang.F("Supprimer le favori « {0} » ?", "Remove favorite \"{0}\"?", c.get(0).name)
                     : Lang.F("Supprimer les {0} favoris cochés ?", "Remove the {0} checked favorites?", c.size());
                 Ui.confirm(a, Lang.T("Supprimer…", "Remove…"), msg, new Ui.Yes() { public void yes() { st.favorites.removeAll(c); st.save(); fill[0].run(); } });
             }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        }), w(a, 1));
         col.addView(r1);
 
         LinearLayout r2 = Ui.row(a);
+        r2.addView(Ui.button(a, Lang.T("Écouter la sélection", "Listen to selection"), new View.OnClickListener() {
+            public void onClick(View v) {
+                ArrayList<Favorite> c = cl.checkedOrSelected();
+                if (c.isEmpty()) { Ui.toast(a, Lang.T("Sélectionnez d'abord un favori dans la liste.", "Please select a favorite in the list first.")); return; }
+                d.dismiss();
+                a.openUrl(c.get(0).url);
+            }
+        }), w(a, 1.4f));
         r2.addView(Ui.button(a, Lang.T("Déplacer vers ▸", "Move to ▸"), new View.OnClickListener() {
             public void onClick(View v) {
-                final ArrayList<Favorite> c = checked(lv, shown);
+                final ArrayList<Favorite> c = cl.checkedOrSelected();
                 if (c.isEmpty()) { Ui.toast(a, Lang.T("Sélectionnez d'abord un favori dans la liste.", "Please select a favorite in the list first.")); return; }
                 String[] names = new String[st.favListCount];
                 for (int i = 0; i < names.length; i++) names[i] = st.favListLabel(i);
                 Ui.choose(a, Lang.T("Déplacer vers ▸", "Move to ▸"), names, new Ui.Index() {
-                    public void chose(int i) { for (Favorite f : c) f.list = i; keepChecked.addAll(c); st.save(); fill[0].run(); }
+                    public void chose(int i) {
+                        for (Favorite f : c) f.list = i;
+                        st.save();
+                        a.status(Lang.F("{0} favori(s) déplacé(s) vers « {1} ».", "{0} favorite(s) moved to \"{1}\".", c.size(), st.favListLabel(i)));
+                        fill[0].run();
+                    }
                 });
             }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.3f, a, 2));
-        r2.addView(Ui.button(a, "▲", new View.OnClickListener() { public void onClick(View v) { move(st, checked(lv, shown), -1, keepChecked); fill[0].run(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.6f, a, 2));
-        r2.addView(Ui.button(a, "▼", new View.OnClickListener() { public void onClick(View v) { move(st, checked(lv, shown), 1, keepChecked); fill[0].run(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.6f, a, 2));
-        r2.addView(Ui.button(a, Lang.T("Tout cocher", "Check all"), new View.OnClickListener() {
-            public void onClick(View v) { for (int i = 0; i < shown.size(); i++) lv.setItemChecked(i, true); info.setText(Lang.F("{0} favori(s) affiché(s), {1} coché(s)", "{0} favorite(s) shown, {1} checked", shown.size(), lv.getCheckedItemCount())); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r2.addView(Ui.button(a, Lang.T("Tout décocher", "Uncheck all"), new View.OnClickListener() {
-            public void onClick(View v) { lv.clearChoices(); lv.requestLayout(); for (int i = 0; i < shown.size(); i++) lv.setItemChecked(i, false); info.setText(Lang.F("{0} favori(s) affiché(s), {1} coché(s)", "{0} favorite(s) shown, {1} checked", shown.size(), lv.getCheckedItemCount())); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        }), w(a, 1));
+        r2.addView(Ui.button(a, "▲", new View.OnClickListener() { public void onClick(View v) { move(st, cl.checkedOrSelected(), -1); fill[0].run(); } }), w(a, 0.5f));
+        r2.addView(Ui.button(a, "▼", new View.OnClickListener() { public void onClick(View v) { move(st, cl.checkedOrSelected(), 1); fill[0].run(); } }), w(a, 0.5f));
         col.addView(r2);
 
         LinearLayout r3 = Ui.row(a);
+        r3.addView(Ui.button(a, Lang.T("Tout cocher", "Check all"), new View.OnClickListener() { public void onClick(View v) { cl.checkAll(true); } }), w(a, 1));
+        r3.addView(Ui.button(a, Lang.T("Tout décocher", "Uncheck all"), new View.OnClickListener() { public void onClick(View v) { cl.checkAll(false); } }), w(a, 1));
         r3.addView(Ui.button(a, Lang.T("Vérifier les favoris", "Check favorites"), new View.OnClickListener() {
-            public void onClick(View v) { checkFavorites(a, shown, status, lv, info, fill[0]); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.3f, a, 2));
-        r3.addView(Ui.button(a, Lang.T("Importer…", "Import…"), new View.OnClickListener() {
-            public void onClick(View v) { importFavorites(a, fill[0]); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r3.addView(Ui.button(a, Lang.T("Exporter…", "Export…"), new View.OnClickListener() {
-            public void onClick(View v) { exportFavorites(a, shown); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+            public void onClick(View v) { checkFavorites(a, cl, status, info, fill[0]); }
+        }), w(a, 1.3f));
         col.addView(r3);
 
         LinearLayout r4 = Ui.row(a);
+        r4.addView(Ui.button(a, Lang.T("Importer…", "Import…"), new View.OnClickListener() { public void onClick(View v) { importFavorites(a, fill[0]); } }), w(a, 1));
+        r4.addView(Ui.button(a, Lang.T("Exporter…", "Export…"), new View.OnClickListener() { public void onClick(View v) { exportFavorites(a, cl.items); } }), w(a, 1));
         r4.addView(Ui.button(a, Lang.T("Nouvelle liste", "New list"), new View.OnClickListener() {
             public void onClick(View v) {
                 if (st.favListCount >= Favorite.MAX_LISTS) return;
@@ -282,8 +308,11 @@ final class DlgWebSdr {
                 a.status(Lang.F("Liste « {0} » ajoutée ({1}/{2}).", "List \"{0}\" added ({1}/{2}).", st.favListLabel(st.curFavList), st.favListCount, Favorite.MAX_LISTS));
                 fill[0].run();
             }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r4.addView(Ui.button(a, Lang.T("Renommer la liste", "Rename list"), new View.OnClickListener() {
+        }), w(a, 1));
+        col.addView(r4);
+
+        LinearLayout r5 = Ui.row(a);
+        r5.addView(Ui.button(a, Lang.T("Renommer la liste", "Rename list"), new View.OnClickListener() {
             public void onClick(View v) {
                 final int i = st.curFavList;
                 if (i >= st.favListCount) return;
@@ -291,8 +320,8 @@ final class DlgWebSdr {
                     public void got(String t) { if (t.trim().length() > 0) { st.favListNames[i] = t.trim(); fill[0].run(); } }
                 });
             }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r4.addView(Ui.button(a, Lang.T("Supprimer la liste…", "Delete list…"), new View.OnClickListener() {
+        }), w(a, 1));
+        r5.addView(Ui.button(a, Lang.T("Supprimer la liste…", "Delete list…"), new View.OnClickListener() {
             public void onClick(View v) {
                 final int i = st.curFavList;
                 if (i >= st.favListCount || st.favListCount <= 1) return;
@@ -308,37 +337,27 @@ final class DlgWebSdr {
                         st.favListNames[Favorite.MAX_LISTS - 1] = "Liste " + Favorite.MAX_LISTS;
                         st.favListCount--;
                         st.curFavList = Math.max(0, Math.min(i, st.favListCount - 1));
+                        st.save();
+                        a.status(Lang.F("Liste « {0} » supprimée.", "List \"{0}\" deleted.", st.favListLabel(st.curFavList)));
                         fill[0].run();
                     }
                 });
             }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        col.addView(r4);
-
-        LinearLayout r5 = Ui.row(a);
-        r5.setGravity(Gravity.END);
-        r5.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }));
+        }), w(a, 1));
+        r5.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 0.7f));
         col.addView(r5);
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { st.save(); } });
         fill[0].run();
         d.show();
     }
 
-    static ArrayList<Favorite> checked(ListView lv, ArrayList<Favorite> shown) {
-        ArrayList<Favorite> r = new ArrayList<Favorite>();
-        SparseBooleanArray s = lv.getCheckedItemPositions();
-        for (int i = 0; i < shown.size(); i++) if (s.get(i)) r.add(shown.get(i));
-        return r;
-    }
-
-    // Monte ou descend les favoris cochés d'un rang, parmi ceux de la même liste.
-    static void move(final Store st, final ArrayList<Favorite> sel, int dir, ArrayList<Favorite> keep) {
-        keep.addAll(sel);
+    // Monte ou descend les favoris choisis d'un rang, parmi ceux de la même liste.
+    static void move(final Store st, final ArrayList<Favorite> sel, int dir) {
         ArrayList<Favorite> order = new ArrayList<Favorite>(sel);
-        java.util.Collections.sort(order, new java.util.Comparator<Favorite>() {
+        Collections.sort(order, new Comparator<Favorite>() {
             public int compare(Favorite x, Favorite y) { return st.favorites.indexOf(x) - st.favorites.indexOf(y); }
         });
-        if (dir > 0) java.util.Collections.reverse(order);
+        if (dir > 0) Collections.reverse(order);
         for (Favorite f : order) {
             int i = st.favorites.indexOf(f), j = i + dir;
             while (j >= 0 && j < st.favorites.size() && st.favorites.get(j).list != f.list) j += dir;
@@ -348,18 +367,20 @@ final class DlgWebSdr {
         }
         st.save();
     }
-    // Vérifie les adresses (réponse du serveur) ; supprime les doublons ; coche les liens morts pour que « Supprimer… » les retire.
-    static void checkFavorites(final MainActivity a, final ArrayList<Favorite> shown, final HashMap<Favorite, String> status,
-                               final ListView lv, final TextView info, final Runnable refresh) {
+
+    // Vérifie les adresses (réponse du serveur) ; retire les doublons ; coche les liens morts pour que « Supprimer… » les retire.
+    static void checkFavorites(final MainActivity a, final CheckList<Favorite> cl, final HashMap<Favorite, String> status,
+                               final TextView info, final Runnable refresh) {
         final Store st = a.st;
         int dup = 0;
-        for (Favorite f : new ArrayList<Favorite>(shown)) {
+        for (Favorite f : new ArrayList<Favorite>(cl.items)) {
             for (Favorite g : st.favorites) {
-                if (g != f && g.list == f.list && g.matches(f.url) && st.favorites.indexOf(g) < st.favorites.indexOf(f)) { st.favorites.remove(f); shown.remove(f); dup++; break; }
+                if (g != f && g.list == f.list && g.matches(f.url) && st.favorites.indexOf(g) < st.favorites.indexOf(f)) { st.favorites.remove(f); dup++; break; }
             }
         }
+        refresh.run();
         final int dups = dup;
-        final ArrayList<Favorite> todo = new ArrayList<Favorite>(shown);
+        final ArrayList<Favorite> todo = new ArrayList<Favorite>(cl.items);
         final int[] left = { todo.size() };
         final ArrayList<Favorite> dead = new ArrayList<Favorite>();
         info.setText(Lang.F("Vérification de {0} adresse(s)…", "Checking {0} address(es)…", todo.size()));
@@ -375,8 +396,9 @@ final class DlgWebSdr {
                             left[0]--;
                             info.setText(Lang.F("Vérification… {0} restant(s)", "Checking… {0} left", left[0]));
                             if (left[0] == 0) {
-                                refresh.run();
-                                for (int i = 0; i < shown.size(); i++) if (dead.contains(shown.get(i))) lv.setItemChecked(i, true);
+                                cl.checked.clear();
+                                cl.checked.addAll(dead);
+                                cl.notifyDataSetChanged();
                                 info.setText(Lang.F("Vérification terminée : {1} doublon(s) retiré(s), {0} lien(s) mort(s). Appuyez sur « Supprimer… » pour les retirer.",
                                     "Check done: {1} duplicate(s) removed, {0} dead link(s) checked. Click \"Remove…\" to delete them.", dead.size(), dups));
                                 st.save();
@@ -387,7 +409,6 @@ final class DlgWebSdr {
             });
         }
         pool.shutdown();
-        if (todo.isEmpty()) refresh.run();
     }
 
     static String probe(String url) {
@@ -447,7 +468,7 @@ final class DlgWebSdr {
         });
     }
 
-    static void exportFavorites(final MainActivity a, final ArrayList<Favorite> shown) {
+    static void exportFavorites(final MainActivity a, final List<Favorite> shown) {
         a.pickFile(true, "PhoneSDRLink-favoris.csv", new MainActivity.FileCb() {
             public void done(Uri uri) {
                 try {
@@ -464,15 +485,21 @@ final class DlgWebSdr {
 
     // ------------------------------------------------------------------ recherche de WebSDR
 
+    static int userCount(FoundSdr s) {
+        try { return Integer.parseInt(s.users.split("/")[0].trim()); } catch (Exception e) { return -1; }
+    }
+
     static void search(final MainActivity a) {
         final Store st = a.st;
         LinearLayout col = Ui.column(a);
         col.setPadding(Ui.dp(a, 10), Ui.dp(a, 6), Ui.dp(a, 10), Ui.dp(a, 10));
         final Dialog d = Ui.window(a, Lang.T("Rechercher des WebSDR (France et pays voisins)", "Find WebSDRs (France and neighbouring countries)"), col, true);
 
-        col.addView(Ui.small(a, Lang.T("Distance max du centre de la France (km) :", "Max distance from the centre of France (km):")));
+        LinearLayout dr = Ui.row(a);
+        dr.addView(Ui.small(a, Lang.T("Distance max du centre de la France (km) :", "Max distance from the centre of France (km):")), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
         final EditText dist = Ui.edit(a, "1000", "", InputType.TYPE_CLASS_NUMBER);
-        col.addView(dist);
+        dr.addView(dist, Ui.lp(Ui.dp(a, 90), ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        col.addView(dr);
         LinearLayout fr = Ui.row(a);
         final EditText filter = Ui.edit(a, "", Lang.T("Filtre :", "Filter:"), InputType.TYPE_CLASS_TEXT);
         ArrayList<String> types = new ArrayList<String>();
@@ -485,30 +512,50 @@ final class DlgWebSdr {
         fr.addView(filter, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
         fr.addView(sType, Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
         col.addView(fr);
+        LinearLayout so = Ui.row(a);
+        so.addView(Ui.small(a, Lang.T("Trier par :", "Sort by:")), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 4));
+        ArrayList<String> cols = new ArrayList<String>();
+        cols.add(Lang.T("Nom", "Name"));
+        cols.add(Lang.T("Lieu", "Location"));
+        cols.add(Lang.T("Pays", "Country"));
+        cols.add("Type");
+        cols.add("km");
+        cols.add(Lang.T("Util.", "Users"));
+        final Spinner sSort = Ui.spinner(a, cols);
+        sSort.setSelection(4);
+        final boolean[] desc = { false };
+        final android.widget.Button bOrder = Ui.button(a, "↑", null);
+        so.addView(sSort, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        so.addView(bOrder, Ui.lp(Ui.dp(a, 56), ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        col.addView(so);
 
         final ListView lv = new ListView(a);
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        col.addView(lv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         final TextView info = Ui.small(a, "");
-        col.addView(info);
-        col.addView(Ui.small(a, Lang.T("Cochez pour ajouter aux favoris ; appui long sur un récepteur : l'écouter.", "Tick to add to favorites; long-press a receiver to listen to it.")));
-
-        final ArrayList<FoundSdr> shown = new ArrayList<FoundSdr>();
-        final java.util.HashSet<String> checkedKeys = new java.util.HashSet<String>();
         final String[] report = { "" };
         final int[] hiddenFavs = { 0 };
-        final Runnable[] fill = new Runnable[1], statusRun = new Runnable[1];
-        statusRun[0] = new Runnable() {
+        final HashSet<String> checkedKeys = new HashSet<String>();
+        final CheckList<FoundSdr> cl = new CheckList<FoundSdr>(a, new CheckList.Fmt<FoundSdr>() {
+            public String title(FoundSdr s) { return s.name.isEmpty() ? s.url : s.name; }
+            public String sub(FoundSdr s) {
+                return s.location + (s.country.isEmpty() ? "" : " — " + s.country) + " — " + s.type + " — " + Math.round(s.distanceKm) + " km"
+                    + (s.users.isEmpty() ? "" : " — " + s.users + " " + Lang.T("util.", "users"));
+            }
+        });
+        lv.setAdapter(cl);
+        col.addView(lv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+        col.addView(info);
+
+        final Runnable statusRun = new Runnable() {
             public void run() {
                 if (cache == null && report[0].isEmpty()) return;
                 info.setText(Lang.F("{0} récepteur(s) affiché(s), {1} coché(s), {2} déjà en favoris masqué(s)   —   sources : ", "{0} receiver(s) shown, {1} checked, {2} already in favorites hidden   —   sources: ",
-                    shown.size(), checkedKeys.size(), hiddenFavs[0]) + report[0]);
+                    cl.items.size(), cl.checked.size(), hiddenFavs[0]) + report[0]);
             }
         };
-        fill[0] = new Runnable() {
+        final Runnable fill = new Runnable() {
             public void run() {
-                shown.clear();
                 hiddenFavs[0] = 0;
+                ArrayList<FoundSdr> shown = new ArrayList<FoundSdr>();
                 if (cache != null) {
                     double max = 1000;
                     try { max = Double.parseDouble(dist.getText().toString().trim()); } catch (Exception e) { }
@@ -523,18 +570,37 @@ final class DlgWebSdr {
                         for (Favorite f : st.favorites) if (f.matches(s.url)) isFav = true;
                         if (isFav) { hiddenFavs[0]++; continue; }
                         shown.add(s);
-                        if (shown.size() >= 600) break;
                     }
+                    final int sortCol = sSort.getSelectedItemPosition();
+                    final boolean dsc = desc[0];
+                    Collections.sort(shown, new Comparator<FoundSdr>() {
+                        public int compare(FoundSdr x, FoundSdr y) {
+                            int c;
+                            switch (sortCol) {
+                                case 0: c = x.name.compareToIgnoreCase(y.name); break;
+                                case 1: c = x.location.compareToIgnoreCase(y.location); break;
+                                case 2: c = x.country.compareToIgnoreCase(y.country); break;
+                                case 3: c = x.type.compareToIgnoreCase(y.type); break;
+                                case 5: c = userCount(x) - userCount(y); break;
+                                default: c = Double.compare(x.distanceKm, y.distanceKm);
+                            }
+                            return dsc ? -c : c;
+                        }
+                    });
                 }
-                ArrayList<String> rows = new ArrayList<String>();
-                for (FoundSdr s : shown)
-                    rows.add(s.name + "\n" + s.location + (s.country.isEmpty() ? "" : " — " + s.country) + " — " + s.type + " — " + Math.round(s.distanceKm) + " km"
-                        + (s.users.isEmpty() ? "" : " — " + s.users + " " + Lang.T("util.", "users")));
-                lv.setAdapter(new ArrayAdapter<String>(a, android.R.layout.simple_list_item_multiple_choice, rows) {
-                    public View getView(int p, View v, ViewGroup g) { CheckedTextView t = (CheckedTextView) super.getView(p, v, g); t.setTextColor(Ui.fg()); t.setTextSize(14); t.setMinHeight(0); t.setMinimumHeight(Ui.dp(a, 56)); t.setSingleLine(false); t.setMaxLines(4); t.setPadding(t.getPaddingLeft(), Ui.dp(a, 6), t.getPaddingRight(), Ui.dp(a, 6)); return t; }
-                });
-                for (int i = 0; i < shown.size(); i++) if (checkedKeys.contains(Finder.urlKey(shown.get(i).url))) lv.setItemChecked(i, true);
-                statusRun[0].run();
+                for (FoundSdr s : shown) if (checkedKeys.contains(Finder.urlKey(s.url))) cl.checked.add(s);
+                cl.set(shown);
+                statusRun.run();
+            }
+        };
+        // Les cases cochées sont retenues par adresse : elles survivent aux filtres, au tri et à l'actualisation.
+        cl.onChange = new Runnable() {
+            public void run() {
+                for (FoundSdr s : cl.items) {
+                    String k = Finder.urlKey(s.url);
+                    if (cl.checked.contains(s)) checkedKeys.add(k); else checkedKeys.remove(k);
+                }
+                statusRun.run();
             }
         };
         final Runnable load = new Runnable() {
@@ -548,10 +614,11 @@ final class DlgWebSdr {
                             public void run() {
                                 if (!d.isShowing()) return;
                                 cache = list;
+                                cl.checked.clear();
                                 StringBuilder sb = new StringBuilder();
                                 for (String s : rep) { if (sb.length() > 0) sb.append(", "); sb.append(s); }
                                 report[0] = sb.toString();
-                                fill[0].run();
+                                fill.run();
                             }
                         });
                     }
@@ -561,27 +628,39 @@ final class DlgWebSdr {
         android.text.TextWatcher tw = new android.text.TextWatcher() {
             public void beforeTextChanged(CharSequence s, int a1, int b, int c) { }
             public void onTextChanged(CharSequence s, int a1, int b, int c) { }
-            public void afterTextChanged(android.text.Editable e) { saveChecks(lv, shown, checkedKeys); fill[0].run(); }
+            public void afterTextChanged(android.text.Editable e) { fill.run(); }
         };
         dist.addTextChangedListener(tw);
         filter.addTextChangedListener(tw);
-        sType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { saveChecks(lv, shown, checkedKeys); fill[0].run(); }
+        AdapterView.OnItemSelectedListener again = new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { fill.run(); }
             public void onNothingSelected(AdapterView<?> p) { }
+        };
+        sType.setOnItemSelectedListener(again);
+        sSort.setOnItemSelectedListener(again);
+        bOrder.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { desc[0] = !desc[0]; bOrder.setText(desc[0] ? "↓" : "↑"); fill.run(); }
         });
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
-                String k = Finder.urlKey(shown.get(pos).url);
-                if (lv.isItemChecked(pos)) checkedKeys.add(k); else checkedKeys.remove(k);
-                statusRun[0].run();
-            }
+            public void onItemClick(AdapterView<?> p, View v, int pos, long id) { cl.select(pos); }
         });
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            public boolean onItemLongClick(AdapterView<?> p, View v, int pos, long id) { d.dismiss(); a.openUrl(shown.get(pos).url); return true; }
+            public boolean onItemLongClick(AdapterView<?> p, View v, int pos, long id) { d.dismiss(); a.openUrl(cl.items.get(pos).url); return true; }
         });
 
         LinearLayout r1 = Ui.row(a);
-        r1.addView(Ui.button(a, Lang.T("Ajouter les cochés aux favoris", "Add checked to favorites"), new View.OnClickListener() {
+        r1.addView(Ui.button(a, Lang.T("Écouter la sélection", "Listen to selection"), new View.OnClickListener() {
+            public void onClick(View v) {
+                if (cl.selected == null) { Ui.message(a, "WebSDR", Lang.T("Sélectionnez d'abord un récepteur dans la liste.", "Please select a receiver in the list first.")); return; }
+                d.dismiss();
+                a.openUrl(cl.selected.url);
+            }
+        }), w(a, 1));
+        r1.addView(Ui.button(a, Lang.T("Tout cocher", "Check all"), new View.OnClickListener() { public void onClick(View v) { cl.checkAll(true); } }), w(a, 0.8f));
+        r1.addView(Ui.button(a, Lang.T("Tout décocher", "Uncheck all"), new View.OnClickListener() { public void onClick(View v) { cl.checkAll(false); } }), w(a, 0.8f));
+        col.addView(r1);
+        LinearLayout r2 = Ui.row(a);
+        r2.addView(Ui.button(a, Lang.T("Ajouter les cochés aux favoris", "Add checked to favorites"), new View.OnClickListener() {
             public void onClick(View v) {
                 if (checkedKeys.isEmpty()) { Ui.message(a, Lang.T("Ajouter aux favoris", "Add to favorites"), Lang.T("Cochez d'abord les récepteurs à ajouter.", "Please check the receivers to add first.")); return; }
                 String[] names = new String[st.favListCount];
@@ -590,8 +669,7 @@ final class DlgWebSdr {
                     public void chose(int list) {
                         int n = 0;
                         for (FoundSdr s : cache) {
-                            String key = Finder.urlKey(s.url);
-                            if (!checkedKeys.contains(key)) continue;
+                            if (!checkedKeys.contains(Finder.urlKey(s.url))) continue;
                             boolean dup = false;
                             for (Favorite f : st.favorites) if (f.list == list && f.matches(s.url)) dup = true;
                             if (dup) continue;
@@ -603,28 +681,19 @@ final class DlgWebSdr {
                             n++;
                         }
                         checkedKeys.clear();
+                        cl.checked.clear();
                         st.save();
-                        fill[0].run();
+                        fill.run();
                         Ui.message(a, Lang.T("Ajouter aux favoris", "Add to favorites"), Lang.F("{0} favori(s) ajouté(s) à « {1} ». Vous pouvez les renommer dans « Gérer les favoris… ».",
                             "{0} favorite(s) added to \"{1}\". You can rename them in \"Manage favorites…\".", n, st.favListLabel(list)));
                     }
                 });
             }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        col.addView(r1);
-        LinearLayout r2 = Ui.row(a);
-        r2.addView(Ui.button(a, Lang.T("Actualiser", "Refresh"), new View.OnClickListener() { public void onClick(View v) { load.run(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r2.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        }), w(a, 1.6f));
+        r2.addView(Ui.button(a, Lang.T("Actualiser", "Refresh"), new View.OnClickListener() { public void onClick(View v) { load.run(); } }), w(a, 1));
+        r2.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 0.8f));
         col.addView(r2);
         d.show();
-        if (cache == null) load.run(); else fill[0].run();
-    }
-
-    static void saveChecks(ListView lv, ArrayList<FoundSdr> shown, java.util.HashSet<String> keys) {
-        SparseBooleanArray s = lv.getCheckedItemPositions();
-        for (int i = 0; i < shown.size(); i++) {
-            String k = Finder.urlKey(shown.get(i).url);
-            if (s.get(i)) keys.add(k); else keys.remove(k);
-        }
+        if (cache == null) load.run(); else fill.run();
     }
 }

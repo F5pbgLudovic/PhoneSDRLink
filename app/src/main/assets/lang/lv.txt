@@ -462,3 +462,9 @@ The page crashed: reloading	Lapa avarēja: notiek pārlādēšana
 Phone call: WebSDR sound muted	Tālruņa zvans: WebSDR skaņa izslēgta
 PhoneSDRLink: updates	PhoneSDRLink: atjauninājumi
 You are using the latest version.	Jūs izmantojat jaunāko versiju.
+Sort by:	Kārtot pēc:
+🔒 Locked: press Lock to change	🔒 Bloķēts: lai mainītu, nospiediet Slēdzeni
+Mute	Izslēgt skaņu
+INIT: restarting the WebSDR	INIT: WebSDR tiek pārstartēts
+Lock	Slēdzene
+This page cannot be displayed in this app	Šo lapu šajā lietotnē nevar parādīt

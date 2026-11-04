@@ -462,3 +462,9 @@ The page crashed: reloading	Pagina s-a blocat: se reîncarcă
 Phone call: WebSDR sound muted	Apel telefonic: sunetul WebSDR este oprit
 PhoneSDRLink: updates	PhoneSDRLink: actualizări
 You are using the latest version.	Folosiți cea mai recentă versiune.
+Sort by:	Sortare după:
+🔒 Locked: press Lock to change	🔒 Blocat: apăsați Blocare pentru a modifica
+Mute	Mut
+INIT: restarting the WebSDR	INIT: se repornește WebSDR
+Lock	Blocare
+This page cannot be displayed in this app	Această pagină nu poate fi afișată în această aplicație

@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
     WebView web;
     LinearLayout root, controls;
     FrameLayout webFrame;
-    Button btnWeb, btnSet, btnMute, btnMode, btnScan, btnScanConf, btnMem, btnStep;
+    Button btnWeb, btnSet, btnMute, btnLock, btnMode, btnScan, btnScanConf, btnMem, btnStep;
     TextView tvFreq, tvStatus, tvPage;
     FreqBar bar;
     final Handler h = new Handler(Looper.getMainLooper());
@@ -68,7 +68,9 @@ public class MainActivity extends Activity {
     String mode;
     String sdrKind = "";
     long sdrF;
-    boolean muted, callMute, focusMute;
+    boolean muted, callMute, focusMute, locked;
+    int crashes;
+    long crashSince;
     ScriptHandler bridgeHandle, identityHandle;
     long settleUntil, targetUntil, target, scanHoldUntil, scanHoldHz;
     String updateUrl;
@@ -106,7 +108,8 @@ public class MainActivity extends Activity {
         build();
         setupWeb();
         refreshAll();
-        web.loadUrl(st.lastUrl);
+        String first = getIntent() != null ? getIntent().getStringExtra("url") : null;
+        web.loadUrl(first != null ? first : st.lastUrl);
         h.postDelayed(new Runnable() { public void run() { firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
         h.postDelayed(callWatch, 1000);
     }
@@ -142,6 +145,13 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onNewIntent(Intent i) {
+        super.onNewIntent(i);
+        String u = i.getStringExtra("url");
+        if (u != null) openUrl(u);
+    }
+
+    @Override
     public void onBackPressed() {
         if (web.canGoBack()) web.goBack(); else super.onBackPressed();
     }
@@ -160,16 +170,20 @@ public class MainActivity extends Activity {
 
         // Ligne 1 : WEBSDR, SET, Mute
         LinearLayout r1 = Ui.row(this);
-        btnWeb = Ui.button(this, "WEBSDR", new View.OnClickListener() { public void onClick(View v) { DlgWebSdr.show(MainActivity.this); } });
+        btnWeb = Ui.button(this, "WEBSDR", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgWebSdr.show(MainActivity.this); } });
         btnWeb.setTypeface(Typeface.DEFAULT_BOLD);
-        btnSet = Ui.button(this, "SET", new View.OnClickListener() { public void onClick(View v) { DlgSettings.show(MainActivity.this); } });
+        btnSet = Ui.button(this, "SET", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgSettings.show(MainActivity.this); } });
         btnSet.setTypeface(Typeface.DEFAULT_BOLD);
         btnMute = Ui.button(this, Lang.T("Muet", "Mute"), new View.OnClickListener() {
             public void onClick(View v) { muted = !muted; applyVolume(); updateButtons(); }
         });
         r1.addView(btnWeb, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
         r1.addView(btnSet, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
-        r1.addView(btnMute, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.4f, this, 2));
+        btnLock = Ui.button(this, "", new View.OnClickListener() {
+            public void onClick(View v) { locked = !locked; bar.locked = locked; updateButtons(); }
+        });
+        r1.addView(btnMute, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.7f, this, 2));
+        r1.addView(btnLock, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.7f, this, 2));
         controls.addView(r1);
 
         // Ligne 2 : fréquence (appui = clavier) et mode
@@ -181,8 +195,8 @@ public class MainActivity extends Activity {
         tvFreq.setTextSize(36);
         tvFreq.setSingleLine(true);
         tvFreq.setBackground(Ui.round(Ui.panel(), 10, this));
-        tvFreq.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { DlgKeypad.show(MainActivity.this); } });
-        btnMode = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { chooseMode(); } });
+        tvFreq.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgKeypad.show(MainActivity.this); } });
+        btnMode = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseMode(); } });
         btnMode.setTextSize(18);
         btnMode.setTypeface(Typeface.DEFAULT_BOLD);
         r2.addView(tvFreq, Ui.lp(0, Ui.dp(this, 64), 1, this, 2));
@@ -191,9 +205,9 @@ public class MainActivity extends Activity {
 
         // Ligne 3 : scan, conf scan, mémoires
         LinearLayout r3 = Ui.row(this);
-        btnScan = Ui.button(this, "▶ Scan", new View.OnClickListener() { public void onClick(View v) { onScanButton(); } });
-        btnScanConf = Ui.button(this, Lang.T("Conf scan", "Scan setup"), new View.OnClickListener() { public void onClick(View v) { DlgScan.show(MainActivity.this); } });
-        btnMem = Ui.button(this, Lang.T("Mémoires", "Memories"), new View.OnClickListener() { public void onClick(View v) { DlgMemory.show(MainActivity.this); } });
+        btnScan = Ui.button(this, "▶ Scan", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; onScanButton(); } });
+        btnScanConf = Ui.button(this, Lang.T("Conf scan", "Scan setup"), new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgScan.show(MainActivity.this); } });
+        btnMem = Ui.button(this, Lang.T("Mémoires", "Memories"), new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgMemory.show(MainActivity.this); } });
         r3.addView(btnScan, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
         r3.addView(btnScanConf, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
         r3.addView(btnMem, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
@@ -204,7 +218,7 @@ public class MainActivity extends Activity {
         bar = new FreqBar(this);
         bar.hint = Lang.T("◀ glisser : − fréquence | + fréquence ▶", "◀ swipe: − frequency | + frequency ▶");
         bar.setListener(new FreqBar.Listener() { public void onSteps(int n, double ms) { tuneBySteps(n, ms); } });
-        btnStep = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { chooseStep(); } });
+        btnStep = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseStep(); } });
         r4.addView(bar, Ui.lp(0, Ui.dp(this, 52), 1, this, 2));
         r4.addView(btnStep, Ui.lp(Ui.dp(this, 92), Ui.dp(this, 52), 0, this, 2));
         controls.addView(r4);
@@ -228,6 +242,7 @@ public class MainActivity extends Activity {
         LinearLayout zoom = new LinearLayout(this);
         zoom.setOrientation(LinearLayout.VERTICAL);
         Button plus = zoomButton("+", true), minus = zoomButton("−", false);
+        zoom.addView(initButton());
         zoom.addView(plus);
         zoom.addView(minus);
         FrameLayout.LayoutParams zp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.END);
@@ -238,6 +253,32 @@ public class MainActivity extends Activity {
         root.addView(webFrame);
         setContentView(root);
         layoutForOrientation();
+    }
+
+    // Rond « INIT » : relance le WebSDR (rechargement de la page) quand le son s'est arrêté.
+    Button initButton() {
+        Button b = Ui.button(this, "INIT", new View.OnClickListener() {
+            public void onClick(View v) {
+                sdrKind = "";
+                status(Lang.T("INIT : le WebSDR est relancé", "INIT: restarting the WebSDR"));
+                web.reload();
+            }
+        });
+        b.setTextSize(11);
+        b.setTypeface(Typeface.DEFAULT_BOLD);
+        b.setPadding(0, 0, 0, 0);
+        b.setBackground(Ui.round(0xAA000000, 24, this));
+        b.setTextColor(Color.WHITE);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(Ui.dp(this, 48), Ui.dp(this, 48));
+        p.setMargins(0, Ui.dp(this, 4), 0, 0);
+        b.setLayoutParams(p);
+        return b;
+    }
+
+    // Verrou : tant qu'il est rouge, aucune commande ne change rien (seuls Muet, Verrou, INIT, + et − restent actifs).
+    boolean blocked() {
+        if (locked) Ui.toast(this, Lang.T("🔒 Verrouillé : appuyez sur Verrou pour modifier", "🔒 Locked: press Lock to change"));
+        return locked;
     }
 
     Button zoomButton(String text, final boolean in) {
@@ -291,6 +332,8 @@ public class MainActivity extends Activity {
         boolean m = muted || callMute || focusMute;
         btnMute.setText(m ? Lang.T("🔇 Muet", "🔇 Muted") : Lang.T("Muet", "Mute"));
         Ui.paint(btnMute, muted, Ui.danger());
+        btnLock.setText(locked ? "🔒 " + Lang.T("Verrou", "Lock") : "🔓 " + Lang.T("Verrou", "Lock"));
+        Ui.paint(btnLock, locked, Ui.danger());
         btnScan.setText(scanning ? Lang.T("■ Arrêter le scan", "■ Stop scan") : "▶ Scan");
         Ui.paint(btnScan, scanning, Ui.danger());
     }
@@ -336,6 +379,12 @@ public class MainActivity extends Activity {
         CookieManager.getInstance().setAcceptThirdPartyCookies(web, true);
         web.addJavascriptInterface(new JsBridge(), "PhoneSdr");
         web.setBackgroundColor(Color.BLACK);
+        web.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, android.view.MotionEvent e) {
+                if (locked && e.getActionMasked() == android.view.MotionEvent.ACTION_DOWN) blocked();
+                return locked;
+            }
+        });
         installBridgeScripts();
         web.setWebViewClient(new WebViewClient() {
             @Override
@@ -354,9 +403,11 @@ public class MainActivity extends Activity {
             }
             @Override
             public boolean onRenderProcessGone(WebView v, RenderProcessGoneDetail d) {
-                status(Lang.T("La page a planté : rechargement", "The page crashed: reloading"));
-                h.post(new Runnable() { public void run() { web.reload(); } });
-                return false;
+                long now = System.currentTimeMillis();
+                if (now - crashSince > 30000) { crashSince = now; crashes = 0; }
+                if (++crashes <= 2) h.post(new Runnable() { public void run() { recreate(); } });
+                else status(Lang.T("La page ne peut pas s'afficher dans cette application", "This page cannot be displayed in this app"));
+                return true;
             }
         });
         web.setWebChromeClient(new WebChromeClient() {

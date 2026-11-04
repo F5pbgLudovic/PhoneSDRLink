@@ -462,3 +462,9 @@ The page crashed: reloading	Sidan kraschade: laddar om
 Phone call: WebSDR sound muted	Telefonsamtal: WebSDR-ljudet är avstängt
 PhoneSDRLink: updates	PhoneSDRLink: uppdateringar
 You are using the latest version.	Du använder den senaste versionen.
+Sort by:	Sortera efter:
+🔒 Locked: press Lock to change	🔒 Låst: tryck på Lås för att ändra
+Mute	Ljud av
+INIT: restarting the WebSDR	INIT: WebSDR startas om
+Lock	Lås
+This page cannot be displayed in this app	Den här sidan kan inte visas i den här appen

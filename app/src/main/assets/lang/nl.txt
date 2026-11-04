@@ -462,3 +462,9 @@ The page crashed: reloading	De pagina is vastgelopen: opnieuw laden
 Phone call: WebSDR sound muted	Telefoongesprek: geluid van de WebSDR gedempt
 PhoneSDRLink: updates	PhoneSDRLink: updates
 You are using the latest version.	U gebruikt de nieuwste versie.
+Sort by:	Sorteren op:
+🔒 Locked: press Lock to change	🔒 Vergrendeld: druk op Slot om te wijzigen
+Mute	Dempen
+INIT: restarting the WebSDR	INIT: WebSDR wordt opnieuw gestart
+Lock	Slot
+This page cannot be displayed in this app	Deze pagina kan niet in deze app worden weergegeven

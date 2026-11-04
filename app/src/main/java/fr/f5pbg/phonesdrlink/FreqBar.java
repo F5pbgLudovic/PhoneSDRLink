@@ -21,6 +21,7 @@ final class FreqBar extends View {
     private long lastMove;
     private boolean down;
     String hint = "";
+    boolean locked;
 
     FreqBar(Context c) {
         super(c);
@@ -31,6 +32,7 @@ final class FreqBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
+        if (locked) { if (e.getActionMasked() == MotionEvent.ACTION_DOWN) android.widget.Toast.makeText(getContext(), Lang.T("🔒 Verrouillé : appuyez sur Verrou pour modifier", "🔒 Locked: press Lock to change"), android.widget.Toast.LENGTH_SHORT).show(); return true; }
         switch (e.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 getParent().requestDisallowInterceptTouchEvent(true);

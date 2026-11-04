@@ -462,3 +462,9 @@ The page crashed: reloading	Die Seite ist abgestürzt: Neuladen
 Phone call: WebSDR sound muted	Telefonanruf: WebSDR-Ton stummgeschaltet
 PhoneSDRLink: updates	PhoneSDRLink: Updates
 You are using the latest version.	Sie verwenden die neueste Version.
+Sort by:	Sortieren nach:
+🔒 Locked: press Lock to change	🔒 Gesperrt: zum Ändern „Sperre“ drücken
+Mute	Stumm
+INIT: restarting the WebSDR	INIT: WebSDR wird neu gestartet
+Lock	Sperre
+This page cannot be displayed in this app	Diese Seite kann in dieser App nicht angezeigt werden

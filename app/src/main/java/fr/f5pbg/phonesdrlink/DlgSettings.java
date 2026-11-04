@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import java.io.File;
 import java.io.OutputStream;
 
@@ -24,6 +25,9 @@ final class DlgSettings {
         LinearLayout col = Ui.column(a);
         final Dialog d = Ui.window(a, "SET", Ui.scroll(a, col), false);
 
+        TextView ver = Ui.label(a, "PhoneSDRLink V" + a.versionName() + " @F5PBG");
+        ver.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        col.addView(ver);
         col.addView(toggle(a, Lang.T("Mode sombre", "Dark mode"), st.dark, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.dark = on; st.save(); d.dismiss(); a.recreate(); }
         }));
@@ -74,7 +78,6 @@ final class DlgSettings {
             public void onClick(View v) { d.dismiss(); reset(a); }
         });
         Ui.paint(reset, false, 0);
-        col.addView(Ui.small(a, "PhoneSDRLink V" + a.versionName() + "  —  F5PBG"));
         d.show();
     }
 

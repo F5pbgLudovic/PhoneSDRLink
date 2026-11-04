@@ -462,3 +462,9 @@ The page crashed: reloading	Az oldal összeomlott: újratöltés
 Phone call: WebSDR sound muted	Telefonhívás: a WebSDR hangja némítva
 PhoneSDRLink: updates	PhoneSDRLink: frissítések
 You are using the latest version.	A legújabb verziót használja.
+Sort by:	Rendezés:
+🔒 Locked: press Lock to change	🔒 Zárolva: módosításhoz nyomja meg a Zárat
+Mute	Némítás
+INIT: restarting the WebSDR	INIT: a WebSDR újraindítása
+Lock	Zár
+This page cannot be displayed in this app	Ez az oldal nem jeleníthető meg ebben az alkalmazásban

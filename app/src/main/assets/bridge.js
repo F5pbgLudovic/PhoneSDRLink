@@ -1,4 +1,12 @@
 (function () {
+  // La WebView Android n'a pas de reconnaissance vocale : une page qui la demande (UberSDR) faisait tomber le moteur de page.
+  try {
+    ['SpeechRecognition', 'webkitSpeechRecognition', 'SpeechGrammarList', 'webkitSpeechGrammarList', 'SpeechRecognitionEvent', 'webkitSpeechRecognitionEvent'].forEach(function (n) {
+      try { Object.defineProperty(window, n, { value: undefined, configurable: true, writable: true }); } catch (e) { }
+    });
+  } catch (e) { }
+})();
+(function () {
   if (window.top !== window || window.__sdrlink) return;
   var L = window.__sdrlink = { last: '', volume: 1, gains: [], ctxs: [] };
   var __post = function (m) { try { PhoneSdr.post(m); } catch (e) { } };

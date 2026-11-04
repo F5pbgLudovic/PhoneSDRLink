@@ -462,3 +462,9 @@ The page crashed: reloading	Stránka spadla: znovu se načítá
 Phone call: WebSDR sound muted	Telefonní hovor: zvuk WebSDR ztlumen
 PhoneSDRLink: updates	PhoneSDRLink: aktualizace
 You are using the latest version.	Používáte nejnovější verzi.
+Sort by:	Seřadit podle:
+🔒 Locked: press Lock to change	🔒 Zamčeno: pro změny stiskněte Zámek
+Mute	Ztlumit
+INIT: restarting the WebSDR	INIT: WebSDR se restartuje
+Lock	Zámek
+This page cannot be displayed in this app	Tuto stránku nelze v této aplikaci zobrazit

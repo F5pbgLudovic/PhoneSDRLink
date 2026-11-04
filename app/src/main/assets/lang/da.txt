@@ -462,3 +462,9 @@ The page crashed: reloading	Siden brød sammen: genindlæser
 Phone call: WebSDR sound muted	Telefonopkald: WebSDR-lyden er slået fra
 PhoneSDRLink: updates	PhoneSDRLink: opdateringer
 You are using the latest version.	Du bruger den nyeste version.
+Sort by:	Sortér efter:
+🔒 Locked: press Lock to change	🔒 Låst: tryk på Lås for at ændre
+Mute	Lyd fra
+INIT: restarting the WebSDR	INIT: WebSDR genstartes
+Lock	Lås
+This page cannot be displayed in this app	Denne side kan ikke vises i denne app
