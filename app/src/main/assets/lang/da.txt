@@ -1,0 +1,464 @@
+sound card not found	lydkort ikke fundet
+sound card unplugged or disabled	lydkort frakoblet eller deaktiveret
+output not found	udgang ikke fundet
+output already used in exclusive mode by another program	udgangen bruges allerede i eksklusiv tilstand af et andet program
+cannot open, error 	kan ikke åbnes, fejl 
+Name:	Navn:
+Address:	Adresse:
+Cancel	Annuller
+List:	Liste:
+Please enter a name and an address.	Angiv et navn og en adresse.
+Save to list:	Gem på liste:
+Rename list	Omdøb liste
+Favorite manager	Favoritstyring
+Add favorite…	Tilføj favorit…
+Import…	Importér…
+Export…	Eksportér…
+Selected / checked items	Valgte / afkrydsede elementer
+Remove…	Fjern…
+Rename…	Omdøb…
+Move up	Flyt op
+Move down	Flyt ned
+Check	Kontrol
+Check favorites	Kontrollér favoritter
+Check all	Afkryds alle
+Uncheck all	Fjern alle krydser
+Move to ▸	Flyt til ▸
+New list	Ny liste
+Delete list…	Slet listen…
+(right-click the list to rename it)	(højreklik på listen for at omdøbe den)
+Name	Navn
+Address	Adresse
+Status	Status
+List	Liste
+Listen to selection	Lyt til valgte
+Open	Åbn
+Close	Luk
+All lists	Alle lister
+Please select a favorite in the list first.	Vælg først en favorit på listen.
+Add favorite	Tilføj favorit
+checking…	kontrollerer…
+OK	OK
+invalid address	ugyldig adresse
+answers	svarer
+not found	ikke fundet
+answers (certificate)	svarer (certifikat)
+no answer	intet svar
+unknown host	ukendt vært
+connection refused	forbindelse afvist
+unreachable	kan ikke nås
+Import favorites	Importér favoritter
+Favorites (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|All files (*.*)|*.*	Favoritter (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|Alle filer (*.*)|*.*
+Export favorites	Eksportér favoritter
+Firefox / browser bookmarks (*.html)|*.html|CSV, Excel-readable (*.csv)|*.csv|Text (*.txt)|*.txt	Firefox / Browserbogmærker (*.html)|*.html|CSV, kan læses i Excel (*.csv)|*.csv|Tekst (*.txt)|*.txt
+This WebSDR is already in "{0}".	Denne WebSDR er allerede i ”{0}”.
+List {0}	Liste {0}
+Rename "{0}"…	Omdøb ”{0}”…
+List "{0}" added ({1}/{2}).	Listen “{0}” tilføjet ({1}/{2}).
+Delete the list "{0}" (empty)?	Slet listen “{0}” (tom)?
+Delete the list "{0}" and its {1} favorite(s)?	Slet listen “{0}” og dens {1} favorit(ter)?
+List "{0}" deleted.	Listen “{0}” slettet.
+{0} favorite(s) moved to "{1}".	{0} favorit(ter) flyttet til ”{1}”.
+{0} favorite(s) shown, {1} checked	{0} favorit(ter) vist, {1} afkrydset
+Remove favorite "{0}"?	Fjern favoritten ”{0}”?
+Remove the {0} checked favorites?	Fjern de {0} afkrydsede favoritter?
+Checking {0} address(es)…	Kontrollerer {0} adresse(r)…
+Checking… {0} left	Kontrollerer… {0} tilbage
+Check done: {1} duplicate(s) removed, {0} dead link(s) checked. Click "Remove…" to delete them.	Kontrol færdig: {1} dublet(ter) fjernet, {0} død(e) link(s) afkrydset. Klik på ”Fjern…” for at slette dem.
+{0} favorite(s) imported, {1} already present.	{0} favorit(ter) importeret, {1} fandtes allerede.
+{0} favorite(s) exported.	{0} favorit(ter) eksporteret.
+rigctld connection closed	rigctld-forbindelse lukket
+stopped	stoppet
+No rigctld at {0}:{1} (start rigctld, or tick "Start rigctld").	Ingen rigctld på {0}:{1} (start rigctld, eller sæt kryds i ”Start rigctld”).
+Invalid HRD answer	Ugyldigt HRD-svar
+HRD connection closed	HRD-forbindelse lukket
+No HRD server at {0}:{1} (enable the IP server in HRD Rig Control).	Ingen HRD-server på {0}:{1} (aktivér IP-serveren i HRD Rig Control).
+Import settings	Importér indstillinger
+What should be imported from this file?	Hvad skal importeres fra denne fil?
+Configuration (rig, interface, display, colours, language…)	Konfiguration (radio, interface, visning, farver, sprog…)
+WebSDR (favorites and favorite lists)	WebSDR (favoritter og favoritlister)
+Frequency memories	Frekvenshukommelser
+Scan (setting, skipped ranges and scan profiles)	Scanning (indstilling, områder der springes over og scanningsprofiler)
+ — not in the file	 — findes ikke i filen
+Favorites, memories and scan profiles already in SDRLink:	Favoritter, hukommelser og scanningsprofiler, der allerede er i SDRLink:
+keep them and add those of the file (no duplicates)	beholde dem og tilføje filens (uden dubletter)
+delete them and replace them with those of the file	slette dem og erstatte dem med filens
+SDRLink will then restart. The current settings are kept in settings.avant-import.ini.	SDRLink genstarter derefter. De nuværende indstillinger gemmes i settings.avant-import.ini.
+Import	Importér
+Cannot open the log: 	Kan ikke åbne loggen: 
+Export all settings…	Eksportér alle indstillinger…
+Import settings…	Importér indstillinger…
+Reset the program…	Nulstil programmet…
+Export or import all settings, for the same configuration on another computer (right-click: reset the program, button colour)	Eksportér eller importér alle indstillinger til samme opsætning på en anden computer (højreklik: nulstil programmet, knappens farve)
+Name or callsign given automatically to WebSDRs that ask for one before the audio (KiwiSDR, websdr.org). Click: change it (right-click: button colour)	Navn eller kaldesignal, der automatisk gives til WebSDR'er, som beder om et før lyden (KiwiSDR, websdr.org). Klik: skift det (højreklik: knappens farve)
+Right-click: receivers muted while transmitting	Højreklik: modtagere der gøres lydløse under sending
+Save: no known frequency (rig or WebSDR)	Save: ingen kendt frekvens (radio eller WebSDR)
+Store the current frequency…	Gem den aktuelle frekvens…
+Switch the audio to the next receiver (right-click: receiver to keep muted)	Skift lyden til næste modtager (højreklik: modtager, der forbliver slået fra)
+Colour when connected	Farve når forbundet
+Colour when disconnected	Farve når afbrudt
+Colour when on	Farve når til
+Colour when off	Farve når fra
+Colour when the scan is stopped	Farve når scanning er stoppet
+Colour while scanning	Farve under scanning
+Colour when receiving	Farve ved modtagelse
+Colour when transmitting (PTT on)	Farve ved sending (PTT til)
+Background colour	Baggrundsfarve
+Text colour	Tekstfarve
+Colour of the selected mode	Farve for valgt mode
+Colour of the other modes	Farve for de andre modes
+Colour when muted	Farve når lyden er slået fra
+Colour when the sound is on	Farve når lyden er til
+Export all SDRLink settings	Eksportér alle SDRLink-indstillinger
+SDRLink settings (*.ini)|*.ini	SDRLink-indstillinger (*.ini)|*.ini
+Cannot export the settings: 	Indstillingerne kan ikke eksporteres: 
+Import SDRLink settings	Importér SDRLink-indstillinger
+Cannot import the settings: 	Indstillingerne kan ikke importeres: 
+Import: this file does not contain SDRLink settings	Import: denne fil indeholder ingen SDRLink-indstillinger
+Full reset: all settings, favorites, memories, scans and colours will be lost.	Fuld nulstilling: alle indstillinger, favoritter, hukommelser, scanninger og farver går tabt.
+The checked items will be set back as at first installation.	De markerede elementer sættes tilbage som ved første installation.
+SDRLink will restart. Continue?	SDRLink genstarter. Fortsæt?
+Reset the program	Nulstil programmet
+Cannot reset: 	Nulstilling ikke mulig: 
+Button colour	Knapfarve
+RIG	TRX
+Disconnected	Afbrudt
+Connect	Forbind
+Disconnect	Afbryd
+Location of rigctld.exe (Hamlib)	Placering af rigctld.exe (Hamlib)
+Programs (*.exe)|*.exe	Programmer (*.exe)|*.exe
+Please choose a rig model.	Vælg en radiomodel.
+Invalid CI-V address (e.g. 70 for the IC-7000).	Ugyldig CI-V-adresse (f.eks. 70 for IC-7000).
+rigctld.exe (Hamlib) was not found. Set its location with the "…" button, or install Hamlib (free).\n\nOpen the Hamlib download page?	rigctld.exe (Hamlib) blev ikke fundet. Angiv placeringen med knappen ”…”, eller installér Hamlib (gratis).\n\nÅbn downloadsiden for Hamlib?
+Please choose the rig's COM port.	Vælg radioens COM-port.
+Cannot start rigctld: 	Kan ikke starte rigctld: 
+TX safety timeout (PTT button)	TX-sikkerhedstid (PTT-knap)
+Off	Fra
+PTT: connect the rig first	PTT: forbind radioen først
+transmitting	sender
+Receivers muted while transmitting:	Modtagere der gøres lydløse under sending:
+Rig (Mute TRX)	Radio (Lydløs TRX)
+Invalid frequency: type a value in kHz, e.g. 7074 or 14074.5	Ugyldig frekvens: skriv en værdi i kHz, f.eks. 7074 eller 14074.5
+Remove this value (pick it in the list first)	Fjern denne værdi (vælg den først på listen)
+RIG 	TRX 
+Cannot start WebView2 (Edge):\n	Kan ikke starte WebView2 (Edge):\n
+Name or callsign given to WebSDRs that ask for one (KiwiSDR, websdr.org):	Navn eller kaldesignal til WebSDR'er, der beder om et (KiwiSDR, websdr.org):
+The callsign cannot be empty.	Navnet må ikke være tomt.
+A name already typed on a site is kept. To give no name: a non-breaking space (Alt+255).	Et navn, der allerede er skrevet på et websted, bevares. For ikke at give et navn: et hårdt mellemrum (Alt+255).
+Invalid address: 	Ugyldig adresse: 
+SDRLINK cable: no virtual audio cable found. Install VB-CABLE (free): "SDRLINK cable" button.	SDRLINK-kabel: intet virtuelt lydkabel fundet. Installér VB-CABLE (gratis): knappen ”SDRLINK-kabel”.
+Output receiving the WebSDR audio:	Udgang, der modtager WebSDR-lyden:
+Name the other end of the cable "SDRLINK" (pick a virtual cable first)	Navngiv kablets anden ende ”SDRLINK” (vælg først et virtuelt kabel)
+Download VB-CABLE (free, vb-audio.com)…	Download VB-CABLE (gratis, vb-audio.com)…
+permission denied	adgang nægtet
+error	fejl
+SDRLINK cable	SDRLINK-kabel
+ (off) ▾	 (fra) ▾
+Mute TRX: connect the rig first	Lydløs TRX: forbind radioen først
+Rig volume not available with this rig or interface (OmniRig, HRD, FT-817/818…)	Radiolydstyrke er ikke tilgængelig med denne radio eller grænseflade (OmniRig, HRD, FT-817/818…)
+Mutes ignored by ⇄ (stay muted, two at most):	Lydløs, som ⇄ ignorerer (forbliver slået fra, højst to):
+None	Ingen
+HDSDR does not play through Windows sound (reception stopped, or audio through ASIO): SDRLink cannot mute it.	HDSDR afspiller ikke gennem Windows-lyden (modtagelse stoppet eller lyd via ASIO): SDRLink kan ikke slå lyden fra.
+ExpertSDR TCI port	TCI-port for ExpertSDR
+TCI server port (ExpertSDR, Options > TCI):	TCI-serverens port (ExpertSDR, Options > TCI):
+Add memory	Tilføj hukommelse
+Resume the scan	Genoptag scanningen
+Current "Scan setup" setting	Aktuel indstilling i "Scanningsopsætning"
+No scan while transmitting	Ingen scanning under sending
+Scan: set the start and end frequencies in "Scan setup"	Scanning: angiv start- og slutfrekvens i “Scanningsopsætning”
+Scan: all frequencies are in skipped ranges ("Scan setup")	Scanning: alle frekvenser ligger i områder, der springes over ("Scanningsopsætning")
+Scan: check memories in "Scan setup"	Scanning: markér hukommelser i “Scanningsopsætning”
+frequencies not set	frekvenser ikke angivet
+all frequencies are in skipped ranges	alle frekvenser ligger i områder, der springes over
+no memory checked	ingen hukommelser markeret
+Scan stopped	Scanning stoppet
+■ Stop scan	■ Stop scanning
+Rig sound card, recorded when Mute WebSDR, Mute ExpertSDR and Mute HDSDR are on:	Radioens lydkort, optages når Mute WebSDR, Mute ExpertSDR og Mute HDSDR er slået til:
+None (always the speakers)	Intet (altid højttalerne)
+REC button width	Bredde på REC-knappen
+Narrow	Smal
+Wide	Bred
+REC button colour	Farve på REC-knappen
+Navy blue (default)	Marineblå (standard)
+Navy blue	Marineblå
+Blue	Blå
+Sky blue	Himmelblå
+Teal	Petrolblå
+Green	Grøn
+Red	Rød
+Burgundy	Bordeaux
+Purple	Lilla
+Pink	Lyserød
+Brown	Brun
+Grey	Grå
+Black	Sort
+Yellow	Gul
+Orange	Orange
+White	Hvid
+Default	Standard
+Other colour…	Anden farve…
+REC: recording the speakers	REC: optager højttalerne
+Empty recording: nothing to save	Tom optagelse: intet at gemme
+Recording deleted	Optagelse slettet
+The file could not be written: 	Filen kunne ikke skrives: 
+Stop recording and save the sound	Stop optagelsen og gem lyden
+Record the sound heard in the speakers (right-click: rig sound card, colour)	Optag lyden fra højttalerne (højreklik: radioens lydkort, farve)
+(no memory used yet)	(ingen hukommelse brugt endnu)
+Memories…	Hukommelser…
+Clear this list	Ryd denne liste
+Text size	Tekststørrelse
+Window text size (100% = original size):	Vinduets tekststørrelse (100 % = oprindelig størrelse):
+(no message)	(ingen meddelelser)
+SDRLink: update available	SDRLink: opdatering tilgængelig
+SDRLink: updates	SDRLink: opdateringer
+Could not reach GitHub to check for updates.	Kunne ikke kontakte GitHub for at søge efter opdateringer.
+You are using the latest version of SDRLink.	Du bruger den nyeste version af SDRLink.
+Latest published version: unknown	Senest udgivne version: ukendt
+All versions (the latest one is marked “Latest”):	Alle versioner (den nyeste er markeret “Latest”):
+To stop these notices, untick “Check for updates”.	Fjern fluebenet i “Søg efter opdateringer” for ikke at blive mindet om det.
+Later	Senere
+Open the update page	Åbn siden med opdateringen
+Last {0} memories used	Seneste {0} brugte hukommelser
+ExpertSDR TCI port: {0}…	TCI-port for ExpertSDR: {0}…
+⚠ Update V{0} available: click to download it	⚠ Opdatering V{0} tilgængelig: klik for at hente den
+Settings exported to "{0}"	Indstillingerne er eksporteret til "{0}"
+Transmission stopped automatically after {0} (safety timeout, right-click PTT to change it)	Sending stoppet automatisk efter {0} (sikkerhedstid, højreklik på PTT for at ændre)
+Remove "{0}" from the list	Fjern ”{0}” fra listen
+Remove all ({0} values)	Fjern alle ({0} værdier)
+Remove all {0} frequencies from the list?	Fjern alle {0} frekvenser fra listen?
+"{0}" does not look like a virtual cable: the WebSDR audio will be played there all the time (and transmitted, if it is a radio's transmit sound card).\n\nUse this output anyway?	”{0}” ligner ikke et virtuelt kabel: WebSDR-lyden vil blive afspillet der hele tiden (og udsendt, hvis det er en radios lydkort til sending).\n\nBrug denne udgang alligevel?
+Name the other end of the cable "SDRLINK" ("{0}")…	Navngiv kablets anden ende ”SDRLINK” (”{0}”)…
+This cable was already renamed "{0}": it may already be used by other software (VoiceMeeter…). Renaming it "{1}" means selecting it again in that software.\n\nContinue?	Dette kabel er allerede omdøbt til ”{0}”: det bruges måske allerede af andet software (VoiceMeeter…). Hvis du omdøber det til ”{1}”, skal du vælge det igen i det software.\n\nFortsæt?
+The recording device "{0}" will be renamed "{1}".\n\nIt will show under this name in the audio inputs of WSJT-X, JTDX, fldigi… (restart them). Windows may ask for administrator permission.\n\nContinue?	Optageenheden ”{0}” omdøbes til ”{1}”.\n\nDen vises under dette navn blandt lydindgangene i WSJT-X, JTDX, fldigi… (genstart dem). Windows beder måske om administratortilladelse.\n\nFortsæt?
+Done: the audio input is now called "{0}". Restart WSJT-X to see it.	Færdig: lydindgangen hedder nu ”{0}”. Genstart WSJT-X for at se den.
+Renaming failed ({0}).\n\nBy hand: Sound control panel › Recording tab › "{1}" › Properties › name.	Omdøbning mislykkedes ({0}).\n\nManuelt: Kontrolpanelet Lyd › fanen Optagelse › ”{1}” › Egenskaber › navn.
+SDRLINK cable: WebSDR audio sent to "{0}"	SDRLINK-kabel: WebSDR-lyd sendes til ”{0}”
+SDRLINK cable: "{0}": {1}	SDRLINK-kabel: ”{0}”: {1}
+ExpertSDR is running but does not answer on TCI port {0}: right-click "WebSDR volume" to change the port.	ExpertSDR kører, men svarer ikke på TCI-port {0}: højreklik på "WebSDR-lydstyrke" for at ændre porten.
+SDRLink cannot mute ExpertSDR: ExpertSDR does not play through Windows sound (audio comes out of the radio or through ASIO), and its TCI server does not answer on port {0}.\n\nIn ExpertSDR, enable the TCI server (Options > TCI). If its port is not {0}, right-click Mute ExpertSDR to set it.	SDRLink kan ikke slå lyden fra i ExpertSDR: ExpertSDR afspiller ikke lyden via Windows (lyden kommer fra radioen eller via ASIO), og dens TCI-server svarer ikke på port {0}.\n\nAktivér TCI-serveren i ExpertSDR (Options > TCI). Hvis dens port ikke er {0}, skal du højreklikke på ”Lydløs ExpertSDR” for at angive den.
+"{0}" added to "{1}".	”{0}” føjet til ”{1}”.
+This page is not in "{0}".	Denne side er ikke i ”{0}”.
+Remove "{0}" from "{1}"?	Fjern ”{0}” fra ”{1}”?
+Unexpected error, written to the log: {0}	Uventet fejl, skrevet i loggen: {0}
+Memory "{0}" added to "{1}".	Hukommelsen “{0}” tilføjet til “{1}”.
+Memory "{0}": {1} kHz	Hukommelse “{0}”: {1} kHz
+at {0} kHz	fra {0} kHz
+from the start ({0} kHz): current frequency out of range	fra starten ({0} kHz): aktuel frekvens uden for området
+at memory {0}	fra hukommelse {0}
+from the start ({0}): current frequency not in the memories	fra starten ({0}): aktuel frekvens findes ikke i hukommelserne
+click in the page, stopped on {0} kHz	klik på siden, stoppet på {0} kHz
+Scan stopped: {0}	Scanning stoppet: {0}
+Scan: {0}	Scanning: {0}
+Cannot record: {0}	Kan ikke optage: {0}
+Rig sound card "{0}" not available ({1}): recording the speakers	Radioens lydkort "{0}" er ikke tilgængeligt ({1}): optager højttalerne
+Recording the sound of "{0}" (click REC to stop)	Optager lyden fra "{0}" (klik på REC for at stoppe)
+{0} (not connected)	{0} (ikke tilsluttet)
+REC: "{0}" will be recorded when only the rig is heard	REC: "{0}" optages, når kun radioen lyttes
+Writing "{0}": {1}%	Skriver "{0}": {1} %
+Recording saved: "{0}"	Optagelse gemt: "{0}"
+Last {0} messages (click: hide or show this kind of message again, ✓ = hidden)	Seneste {0} meddelelser (klik: skjul eller vis denne type meddelelse igen, ✓ = skjult)
+Show all hidden messages again ({0})	Vis alle skjulte meddelelser igen ({0})
+A new version of SDRLink is available: V{0}	En ny version af SDRLink er tilgængelig: V{0}
+Version in use: V{0}	Version i brug: V{0}
+Latest published version: V{0}	Senest udgivne version: V{0}
+Version {0} page (download, what's new):	Side for version {0} (download, nyheder):
+Interface:	Grænseflade:
+Brand:	Mærke:
+Model:	Model:
+Port:	Port:
+Baud rate:	Baudrate:
+Stop bits:	Stopbit:
+CI-V address (hex):	CI-V-adresse (hex):
+OmniRig rig:	OmniRig-radio:
+Host:	Vært:
+TX detection (HRD):	TX-detektering (HRD):
+Hamlib model no.:	Hamlib-modelnr.:
+Language:	Sprog:
+Sync:	Synk:
+WebSDR offset (Hz):	WebSDR-offset (Hz):
+restore after (ms):	gendan efter (ms):
+kHz:	kHz:
+Step:	Trin:
+WebSDR:	WebSDR:
+WebSDR volume:	WebSDR-lydstyrke:
+TRX volume:	TRX-lydstyrke:
+ExpertSDR volume:	ExpertSDR-lydstyrke:
+HDSDR volume:	HDSDR-lydstyrke:
+Open log	Åbn log
+Text size…	Tekststørrelse…
+Import/Export ▾	Import/Eksport ▾
+…	…
+Download Hamlib…	Download Hamlib…
+SDRLINK cable ▾	SDRLINK-kabel ▾
+Scan setup	Scanningsopsætning
+▶ Scan	▶ Scan
+QSY	QSY
+Save	Save
+Memories	Hukommelser
+▾	▾
+Go	Gå
+◀ Back	◀ Tilbage
+Reload	Genindlæs
+★ Add to favorites	★ Føj til favoritter
+Remove from favorites	Fjern fra favoritter
+Manage favorites…	Administrér favoritter…
+Find WebSDRs…	Find WebSDR'er…
+Mute WebSDR	Lydløs WebSDR
+Mute TRX	Lydløs TRX
+⇄	⇄
+Mute ExpertSDR	Lydløs ExpertSDR
+Mute HDSDR	Lydløs HDSDR
+Auto-connect at startup	Forbind automatisk ved start
+Dark mode	Mørk tilstand
+Check for updates	Søg efter opdateringer
+RTS	RTS
+DTR	DTR
+Start rigctld:	Start rigctld:
+Sync mode	Synk mode
+Mute WebSDR while transmitting	Lydløs WebSDR under sending
+Auto notch (DNF)	Auto-notch (DNF)
+Reduced view	Reduceret visning
+Mini view	Minivisning
+Always on top	Altid øverst
+PTT view	PTT-visning
+COM port (direct CAT)	COM-port (direkte CAT)
+OmniRig	OmniRig
+TCI	TCI
+Ham Radio Deluxe	Ham Radio Deluxe
+Hamlib (rigctld)	Hamlib (rigctld)
+MOX/TX/PTT buttons	MOX/TX/PTT-knapper
+MOX/VOX/TX/PTT buttons	MOX/VOX/TX/PTT-knapper
+Both ways	Begge veje
+Rig → WebSDR	TRX → WebSDR
+WebSDR → Rig	WebSDR → TRX
+100 Hz	100 Hz
+250 Hz	250 Hz
+500 Hz	500 Hz
+1 kHz	1 kHz
+2.5 kHz	2,5 kHz
+5 kHz	5 kHz
+10 kHz	10 kHz
+Frequency (kHz):	Frekvens (kHz):
+Mode:	Mode:
+(mode unchanged)	(mode uændret)
+Edit…	Rediger…
+Frequency (kHz)	Frekvens (kHz)
+Mode	Mode
+Select a memory first.	Vælg først en hukommelse.
+Edit memory	Rediger hukommelse
+{0} memory(ies). Click a memory to go there.	{0} hukommelse(r). Klik på en hukommelse for at gå dertil.
+Tuned to "{0}" ({1} kHz).	Indstillet på “{0}” ({1} kHz).
+Remove the memory "{0}"?	Fjern hukommelsen “{0}”?
+Delete the list "{0}" and its {1} memory(ies)?	Slet listen “{0}” og dens {1} hukommelse(r)?
+OmniRig is not installed (OmniRig.OmniRigX not found).	OmniRig er ikke installeret (OmniRig.OmniRigX ikke fundet).
+Dark mode colour	Farve i mørk tilstand
+Light mode colour	Farve i lys tilstand
+SDRLink needs Microsoft .NET Framework 4.6.2 or later (4.8 recommended).\nIt is not installed on this PC.\n\nDownload and install .NET Framework 4.8 now?\n(a restart may be required, then start SDRLink again)	SDRLink kræver Microsoft .NET Framework 4.6.2 eller nyere (4.8 anbefales).\nDet er ikke installeret på denne pc.\n\nDownload og installér .NET Framework 4.8 nu?\n(en genstart kan være nødvendig, start derefter SDRLink igen)
+SDRLink - missing component	SDRLink - manglende komponent
+SDRLink needs the Microsoft Edge WebView2 Runtime to display WebSDRs.\nIt is not installed on this PC.\n\nDownload and install WebView2 now? (free, about 2 MB)	SDRLink kræver Microsoft Edge WebView2 Runtime for at vise WebSDR'er.\nDen er ikke installeret på denne pc.\n\nDownload og installér WebView2 nu? (gratis, ca. 2 MB)
+Download or installation failed:\n	Download eller installation mislykkedes:\n
+\n\nThe official download page will open:\n	\n\nDen officielle downloadside åbnes:\n
+the audio output does not answer	lydudgangen svarer ikke
+recording too long for the WAV format (4 GB at most)	optagelsen er for lang til WAV-formatet (højst 4 GB)
+Save the recording	Gem optagelsen
+Folder:	Mappe:
+Format:	Format:
+Browse…	Gennemse…
+Save file	Gem
+Delete	Slet
+Delete this recording without saving it?	Slet denne optagelse uden at gemme den?
+compressed, plays everywhere	komprimeret, kan afspilles overalt
+lossless, large file	tabsfri, stor fil
+lossless, compressed	tabsfri, komprimeret
+Folder where the recording is saved	Mappe, hvor optagelsen gemmes
+Enter a name for the file.	Angiv et navn til filen.
+Cannot create the folder: 	Mappen kan ikke oprettes: 
+unsupported audio format ({0} bits, {1} Hz)	lydformatet understøttes ikke ({0} bit, {1} Hz)
+Windows MP3 encoder not available (0x{0:X8}): choose WAV or FLAC	Windows' MP3-koder er ikke tilgængelig (0x{0:X8}): vælg WAV eller FLAC
+Recording length: {0}	Optagelsens længde: {0}
+"{0}" already exists. Replace it?	"{0}" findes allerede. Erstat den?
+Full reset (all settings, memories and colours are lost)	Fuld nulstilling (alle indstillinger, hukommelser og farver går tabt)
+SDRLink goes back to how it was when first installed: starting WebSDR favorites, no memory, no scan, original colours, browser data deleted.	SDRLink bliver som ved første installation: start-favoritter for WebSDR, ingen hukommelser, ingen scanning, oprindelige farver, browserdata slettet.
+Partial reset:	Delvis nulstilling:
+Colours (buttons, REC, palette)	Farver (knapper, REC, palet)
+WebSDR (favorites and favorite lists, back to the starting ones)	WebSDR (favoritter og favoritlister, tilbage til start)
+Configuration (rig, interface, sync, audio, display, language, name…)	Opsætning (radio, interface, synkronisering, lyd, visning, sprog, navn…)
+Built-in browser data (cache, cookies, settings kept by the WebSDR sites)	Data i den indbyggede browser (cache, cookies, indstillinger gemt af WebSDR-siderne)
+Worth trying if the WebSDR pages no longer show (empty window, as if there were no Internet).	Værd at prøve, hvis WebSDR-siderne ikke længere vises (tomt vindue, som uden internet).
+Reset	Nulstil
+SDRLink will then restart. The current settings are kept in {0} (Import/Export can load them back). SDRLink updates never reset anything.	SDRLink genstarter derefter. De nuværende indstillinger gemmes i {0} (Import/Eksport kan indlæse dem igen). Opdateringer af SDRLink nulstiller aldrig noget.
+Connecting...	Forbinder...
+Connected, waiting for the rig...	Forbundet, venter på radioen...
+Rig online	Radio online
+The rig does not answer (check port, baud rate, CI-V address, CAT menu)	Radioen svarer ikke (kontrollér port, baudrate, CI-V-adresse, CAT-menu)
+Error: 	Fejl: 
+Profile:	Profil:
+Rename	Omdøb
+Scan type:	Scanningstype:
+Frequencies	Frekvenser
+Start (kHz):	Start (kHz):
+End (kHz):	Slut (kHz):
+Time on each frequency:	Tid på hver frekvens:
+Skipped ranges (from … to … kHz):	Områder der springes over (fra … til … kHz):
++ Skipped range	+ Område der springes over
+Memories to scan:	Hukommelser der skal scannes:
+Time on each memory:	Tid på hver hukommelse:
+(no memory: Memories button)	(ingen hukommelser: knappen Hukommelser)
+Start scan	Start scanning
+from	fra
+to	til
+First type a profile name in the "Profile" box.	Skriv først et profilnavn i feltet "Profil".
+First choose a profile in the list, then type its new name in the box and click Rename.	Vælg først en profil på listen, skriv derefter dens nye navn i feltet, og klik på Omdøb.
+Choose in the list the profile to delete.	Vælg den profil, der skal slettes, på listen.
+Enter different start and end frequencies, in kHz (e.g. 7000 and 7200).	Angiv forskellige start- og slutfrekvenser i kHz (f.eks. 7000 og 7200).
+All frequencies from start to end are in skipped ranges.	Alle frekvenser fra start til slut ligger i områder, der springes over.
+Check at least one memory to scan.	Markér mindst én hukommelse, der skal scannes.
+memories: {0}, {1}	hukommelser: {0}, {1}
+skipped ranges: {0}	områder der springes over: {0}
+{0} s	{0} s
+{0} min	{0} min
+Replace the profile "{0}" with the settings shown?	Erstat profilen "{0}" med de viste indstillinger?
+{0} profiles at most: delete one first.	Højst {0} profiler: slet en først.
+The profile "{0}" already exists.	Profilen "{0}" findes allerede.
+Delete the profile "{0}"?	Slet profilen "{0}"?
+Skipped range no. {0}: enter two frequencies in kHz (e.g. 7097 and 7103).	Område nr. {0}, der springes over: angiv to frekvenser i kHz (f.eks. 7097 og 7103).
+No TCI server at 	Ingen TCI-server på 
+TCI connection lost	TCI-forbindelse mistet
+unavailable	ikke tilgængelig
+unexpected format	uventet format
+Find WebSDRs (France and neighbouring countries)	Find WebSDR'er (Frankrig og nabolande)
+All	Alle
+Max distance from the centre of France (km):	Maks. afstand fra Frankrigs midte (km):
+Filter:	Filter:
+Type:	Type:
+Location	Sted
+Country	Land
+Users	Brug.
+Add checked to favorites	Føj afkrydsede til favoritter
+Refresh	Opdater
+Searching directories (websdr.org, KiwiSDR, ReceiverBook)…	Søger i kataloger (websdr.org, KiwiSDR, ReceiverBook)…
+Please select a receiver in the list first.	Vælg først en modtager på listen.
+Please check the receivers to add first.	Afkryds først de modtagere, der skal tilføjes.
+Add to favorites	Føj til favoritter
+{0} receiver(s) shown, {1} checked, {2} already in favorites hidden   —   sources: 	{0} modtager(e) vist, {1} afkrydset, {2} allerede i favoritter skjult   —   kilder: 
+{0} favorite(s) added to "{1}". You can rename them in "Manage favorites…".	{0} favorit(ter) føjet til ”{1}”. Du kan omdøbe dem i ”Administrér favoritter…”.
+Profile name	Profilnavn
+Noise reducer (DNR)	Støjreducering (DNR)
+Check at startup	Kontrollér ved start
+Name or callsign for WebSDRs	Navn eller kaldesignal til WebSDR
+Import: this file does not contain SDRLink or PhoneSDRLink settings	Import: filen indeholder ingen indstillinger fra SDRLink eller PhoneSDRLink
+Configuration (display, language, name…)	Konfiguration (visning, sprog, navn…)
+Favorites, memories and scan profiles already in the app:	Favoritter, hukommelser og scanningsprofiler, der allerede er i appen:
+Full reset (all settings, favorites and memories are lost)	Fuldstændig nulstilling (alle indstillinger, favoritter og hukommelser går tabt)
+Full reset: all settings, favorites, memories and scans will be lost.	Fuldstændig nulstilling: alle indstillinger, favoritter, hukommelser og scanninger går tabt.
+⚠ Warning	⚠ Advarsel
+Continue?	Fortsætte?
+WebSDR address	WebSDR-adresse
+Check a single favorite.	Markér kun én favorit.
+Tick to add to favorites; long-press a receiver to listen to it.	Markér for at tilføje til favoritter; tryk længe på en modtager for at lytte.
+◀ swipe: − frequency | + frequency ▶	◀ stryg: − frekvens | + frekvens ▶
+🔇 Muted	🔇 Lyd slukket
+The page crashed: reloading	Siden brød sammen: genindlæser
+Phone call: WebSDR sound muted	Telefonopkald: WebSDR-lyden er slået fra
+PhoneSDRLink: updates	PhoneSDRLink: opdateringer
+You are using the latest version.	Du bruger den nyeste version.

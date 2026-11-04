@@ -1,0 +1,464 @@
+sound card not found	η κάρτα ήχου δεν βρέθηκε
+sound card unplugged or disabled	η κάρτα ήχου αποσυνδέθηκε ή απενεργοποιήθηκε
+output not found	η έξοδος δεν βρέθηκε
+output already used in exclusive mode by another program	η έξοδος χρησιμοποιείται ήδη σε αποκλειστική λειτουργία από άλλο πρόγραμμα
+cannot open, error 	αδυναμία ανοίγματος, σφάλμα 
+Name:	Όνομα:
+Address:	Διεύθυνση:
+Cancel	Άκυρο
+List:	Λίστα:
+Please enter a name and an address.	Εισαγάγετε όνομα και διεύθυνση.
+Save to list:	Αποθήκευση στη λίστα:
+Rename list	Μετονομασία λίστας
+Favorite manager	Διαχείριση αγαπημένων
+Add favorite…	Προσθήκη αγαπημένου…
+Import…	Εισαγωγή…
+Export…	Εξαγωγή…
+Selected / checked items	Επιλεγμένα / σημειωμένα στοιχεία
+Remove…	Αφαίρεση…
+Rename…	Μετονομασία…
+Move up	Πάνω
+Move down	Κάτω
+Check	Έλεγχος
+Check favorites	Έλεγχος αγαπημένων
+Check all	Σήμανση όλων
+Uncheck all	Αποσήμανση όλων
+Move to ▸	Μετακίνηση σε ▸
+New list	Νέα λίστα
+Delete list…	Διαγραφή λίστας…
+(right-click the list to rename it)	(δεξί κλικ στη λίστα για μετονομασία)
+Name	Όνομα
+Address	Διεύθυνση
+Status	Κατάσταση
+List	Λίστα
+Listen to selection	Ακρόαση επιλογής
+Open	Άνοιγμα
+Close	Κλείσιμο
+All lists	Όλες οι λίστες
+Please select a favorite in the list first.	Επιλέξτε πρώτα ένα αγαπημένο από τη λίστα.
+Add favorite	Προσθήκη αγαπημένου
+checking…	έλεγχος…
+OK	OK
+invalid address	μη έγκυρη διεύθυνση
+answers	απαντά
+not found	δεν βρέθηκε
+answers (certificate)	απαντά (πιστοποιητικό)
+no answer	δεν απαντά
+unknown host	άγνωστος κεντρικός υπολογιστής
+connection refused	η σύνδεση απορρίφθηκε
+unreachable	μη προσβάσιμο
+Import favorites	Εισαγωγή αγαπημένων
+Favorites (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|All files (*.*)|*.*	Αγαπημένα (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|Όλα τα αρχεία (*.*)|*.*
+Export favorites	Εξαγωγή αγαπημένων
+Firefox / browser bookmarks (*.html)|*.html|CSV, Excel-readable (*.csv)|*.csv|Text (*.txt)|*.txt	Firefox / Σελιδοδείκτες προγράμματος περιήγησης (*.html)|*.html|CSV, αναγνώσιμο από Excel (*.csv)|*.csv|Κείμενο (*.txt)|*.txt
+This WebSDR is already in "{0}".	Αυτό το WebSDR υπάρχει ήδη στο «{0}».
+List {0}	Λίστα {0}
+Rename "{0}"…	Μετονομασία «{0}»…
+List "{0}" added ({1}/{2}).	Η λίστα «{0}» προστέθηκε ({1}/{2}).
+Delete the list "{0}" (empty)?	Διαγραφή της λίστας «{0}» (κενή);
+Delete the list "{0}" and its {1} favorite(s)?	Διαγραφή της λίστας «{0}» και των {1} αγαπημένων της;
+List "{0}" deleted.	Η λίστα «{0}» διαγράφηκε.
+{0} favorite(s) moved to "{1}".	{0} αγαπημένα μετακινήθηκαν στο «{1}».
+{0} favorite(s) shown, {1} checked	{0} αγαπημένα εμφανίζονται, {1} σημειωμένα
+Remove favorite "{0}"?	Αφαίρεση του αγαπημένου «{0}»;
+Remove the {0} checked favorites?	Αφαίρεση των {0} σημειωμένων αγαπημένων;
+Checking {0} address(es)…	Έλεγχος {0} διευθύνσεων…
+Checking… {0} left	Έλεγχος… απομένουν {0}
+Check done: {1} duplicate(s) removed, {0} dead link(s) checked. Click "Remove…" to delete them.	Ο έλεγχος ολοκληρώθηκε: αφαιρέθηκαν {1} διπλότυπα, σημειώθηκαν {0} νεκροί σύνδεσμοι. Κάντε κλικ στο «Αφαίρεση…» για να διαγραφούν.
+{0} favorite(s) imported, {1} already present.	Εισήχθησαν {0} αγαπημένα, {1} υπήρχαν ήδη.
+{0} favorite(s) exported.	Εξήχθησαν {0} αγαπημένα.
+rigctld connection closed	Η σύνδεση rigctld έκλεισε
+stopped	διακόπηκε
+No rigctld at {0}:{1} (start rigctld, or tick "Start rigctld").	Δεν υπάρχει rigctld στο {0}:{1} (εκκινήστε το rigctld ή επιλέξτε «Εκκίνηση rigctld»).
+Invalid HRD answer	Μη έγκυρη απάντηση HRD
+HRD connection closed	Η σύνδεση HRD έκλεισε
+No HRD server at {0}:{1} (enable the IP server in HRD Rig Control).	Δεν υπάρχει διακομιστής HRD στο {0}:{1} (ενεργοποιήστε τον διακομιστή IP στο HRD Rig Control).
+Import settings	Εισαγωγή ρυθμίσεων
+What should be imported from this file?	Τι πρέπει να εισαχθεί από αυτό το αρχείο;
+Configuration (rig, interface, display, colours, language…)	Διαμόρφωση (πομποδέκτης, διασύνδεση, εμφάνιση, χρώματα, γλώσσα…)
+WebSDR (favorites and favorite lists)	WebSDR (αγαπημένα και λίστες αγαπημένων)
+Frequency memories	Μνήμες συχνοτήτων
+Scan (setting, skipped ranges and scan profiles)	Σάρωση (ρύθμιση, περιοχές που παραλείπονται και προφίλ σάρωσης)
+ — not in the file	 — δεν υπάρχει στο αρχείο
+Favorites, memories and scan profiles already in SDRLink:	Αγαπημένα, μνήμες και προφίλ σάρωσης που υπάρχουν ήδη στο SDRLink:
+keep them and add those of the file (no duplicates)	διατήρηση και προσθήκη αυτών του αρχείου (χωρίς διπλότυπα)
+delete them and replace them with those of the file	διαγραφή τους και αντικατάσταση με αυτά του αρχείου
+SDRLink will then restart. The current settings are kept in settings.avant-import.ini.	Στη συνέχεια το SDRLink θα επανεκκινήσει. Οι τρέχουσες ρυθμίσεις φυλάσσονται στο settings.avant-import.ini.
+Import	Εισαγωγή
+Cannot open the log: 	Αδυναμία ανοίγματος ημερολογίου: 
+Export all settings…	Εξαγωγή όλων των ρυθμίσεων…
+Import settings…	Εισαγωγή ρυθμίσεων…
+Reset the program…	Επαναφορά του προγράμματος…
+Export or import all settings, for the same configuration on another computer (right-click: reset the program, button colour)	Εξαγωγή ή εισαγωγή όλων των ρυθμίσεων, για την ίδια διαμόρφωση σε άλλον υπολογιστή (δεξί κλικ: επαναφορά του προγράμματος, χρώμα κουμπιού)
+Name or callsign given automatically to WebSDRs that ask for one before the audio (KiwiSDR, websdr.org). Click: change it (right-click: button colour)	Όνομα ή χαρακτηριστικό που δίνεται αυτόματα στα WebSDR που το ζητούν πριν από τον ήχο (KiwiSDR, websdr.org). Κλικ: αλλαγή (δεξί κλικ: χρώμα κουμπιού)
+Right-click: receivers muted while transmitting	Δεξί κλικ: δέκτες σε σίγαση κατά την εκπομπή
+Save: no known frequency (rig or WebSDR)	Αποθήκευση: καμία γνωστή συχνότητα (πομποδέκτης ή WebSDR)
+Store the current frequency…	Αποθήκευση της τρέχουσας συχνότητας…
+Switch the audio to the next receiver (right-click: receiver to keep muted)	Μεταφορά του ήχου στον επόμενο δέκτη (δεξί κλικ: δέκτης που μένει σε σίγαση)
+Colour when connected	Χρώμα όταν είναι συνδεδεμένο
+Colour when disconnected	Χρώμα όταν είναι αποσυνδεδεμένο
+Colour when on	Χρώμα όταν είναι ενεργό
+Colour when off	Χρώμα όταν είναι ανενεργό
+Colour when the scan is stopped	Χρώμα με τη σάρωση σταματημένη
+Colour while scanning	Χρώμα κατά τη σάρωση
+Colour when receiving	Χρώμα στη λήψη
+Colour when transmitting (PTT on)	Χρώμα στην εκπομπή (PTT ενεργό)
+Background colour	Χρώμα φόντου
+Text colour	Χρώμα κειμένου
+Colour of the selected mode	Χρώμα του επιλεγμένου τρόπου
+Colour of the other modes	Χρώμα των άλλων τρόπων
+Colour when muted	Χρώμα με σίγαση
+Colour when the sound is on	Χρώμα με ενεργό ήχο
+Export all SDRLink settings	Εξαγωγή όλων των ρυθμίσεων του SDRLink
+SDRLink settings (*.ini)|*.ini	Ρυθμίσεις SDRLink (*.ini)|*.ini
+Cannot export the settings: 	Δεν είναι δυνατή η εξαγωγή των ρυθμίσεων: 
+Import SDRLink settings	Εισαγωγή ρυθμίσεων SDRLink
+Cannot import the settings: 	Δεν είναι δυνατή η εισαγωγή των ρυθμίσεων: 
+Import: this file does not contain SDRLink settings	Εισαγωγή: αυτό το αρχείο δεν περιέχει ρυθμίσεις SDRLink
+Full reset: all settings, favorites, memories, scans and colours will be lost.	Πλήρης επαναφορά: όλες οι ρυθμίσεις, τα αγαπημένα, οι μνήμες, οι σαρώσεις και τα χρώματα θα χαθούν.
+The checked items will be set back as at first installation.	Τα επιλεγμένα στοιχεία θα επανέλθουν όπως στην πρώτη εγκατάσταση.
+SDRLink will restart. Continue?	Το SDRLink θα επανεκκινηθεί. Συνέχεια;
+Reset the program	Επαναφορά του προγράμματος
+Cannot reset: 	Η επαναφορά δεν είναι δυνατή: 
+Button colour	Χρώμα κουμπιού
+RIG	TRX
+Disconnected	Αποσυνδέθηκε
+Connect	Σύνδεση
+Disconnect	Αποσύνδεση
+Location of rigctld.exe (Hamlib)	Θέση του rigctld.exe (Hamlib)
+Programs (*.exe)|*.exe	Προγράμματα (*.exe)|*.exe
+Please choose a rig model.	Επιλέξτε μοντέλο πομποδέκτη.
+Invalid CI-V address (e.g. 70 for the IC-7000).	Μη έγκυρη διεύθυνση CI-V (π.χ. 70 για το IC-7000).
+rigctld.exe (Hamlib) was not found. Set its location with the "…" button, or install Hamlib (free).\n\nOpen the Hamlib download page?	Το rigctld.exe (Hamlib) δεν βρέθηκε. Ορίστε τη θέση του με το κουμπί «…» ή εγκαταστήστε το Hamlib (δωρεάν).\n\nΆνοιγμα της σελίδας λήψης του Hamlib;
+Please choose the rig's COM port.	Επιλέξτε τη θύρα COM του πομποδέκτη.
+Cannot start rigctld: 	Αδυναμία εκκίνησης rigctld: 
+TX safety timeout (PTT button)	Χρονικό όριο ασφαλείας TX (κουμπί PTT)
+Off	Ανενεργό
+PTT: connect the rig first	PTT: συνδέστε πρώτα τον πομποδέκτη
+transmitting	εκπομπή
+Receivers muted while transmitting:	Δέκτες σε σίγαση κατά την εκπομπή:
+Rig (Mute TRX)	Πομποδέκτης (Σίγαση TRX)
+Invalid frequency: type a value in kHz, e.g. 7074 or 14074.5	Μη έγκυρη συχνότητα: πληκτρολογήστε τιμή σε kHz, π.χ. 7074 ή 14074.5
+Remove this value (pick it in the list first)	Αφαίρεση αυτής της τιμής (επιλέξτε την πρώτα στη λίστα)
+RIG 	TRX 
+Cannot start WebView2 (Edge):\n	Αδυναμία εκκίνησης WebView2 (Edge):\n
+Name or callsign given to WebSDRs that ask for one (KiwiSDR, websdr.org):	Όνομα ή χαρακτηριστικό για τα WebSDR που το ζητούν (KiwiSDR, websdr.org):
+The callsign cannot be empty.	Το όνομα δεν μπορεί να είναι κενό.
+A name already typed on a site is kept. To give no name: a non-breaking space (Alt+255).	Όνομα που έχει ήδη πληκτρολογηθεί σε έναν ιστότοπο διατηρείται. Για να μη δώσετε όνομα: ένα αδιάσπαστο κενό (Alt+255).
+Invalid address: 	Μη έγκυρη διεύθυνση: 
+SDRLINK cable: no virtual audio cable found. Install VB-CABLE (free): "SDRLINK cable" button.	Καλώδιο SDRLINK: δεν βρέθηκε εικονικό καλώδιο ήχου. Εγκαταστήστε το VB-CABLE (δωρεάν): κουμπί «Καλώδιο SDRLINK».
+Output receiving the WebSDR audio:	Έξοδος που λαμβάνει τον ήχο του WebSDR:
+Name the other end of the cable "SDRLINK" (pick a virtual cable first)	Ονομασία «SDRLINK» στο άλλο άκρο του καλωδίου (επιλέξτε πρώτα εικονικό καλώδιο)
+Download VB-CABLE (free, vb-audio.com)…	Λήψη VB-CABLE (δωρεάν, vb-audio.com)…
+permission denied	δεν επιτρέπεται η πρόσβαση
+error	σφάλμα
+SDRLINK cable	Καλώδιο SDRLINK
+ (off) ▾	 (ανενεργό) ▾
+Mute TRX: connect the rig first	Σίγαση TRX: συνδέστε πρώτα τον πομποδέκτη
+Rig volume not available with this rig or interface (OmniRig, HRD, FT-817/818…)	Η ένταση του πομποδέκτη δεν είναι διαθέσιμη με αυτόν τον πομποδέκτη ή τη διασύνδεση (OmniRig, HRD, FT-817/818…)
+Mutes ignored by ⇄ (stay muted, two at most):	Σιγάσεις που αγνοεί το ⇄ (μένουν σε σίγαση, έως δύο):
+None	Καμία
+HDSDR does not play through Windows sound (reception stopped, or audio through ASIO): SDRLink cannot mute it.	Το HDSDR δεν παίζει μέσω του ήχου των Windows (λήψη σταματημένη ή ήχος μέσω ASIO): το SDRLink δεν μπορεί να το θέσει σε σίγαση.
+ExpertSDR TCI port	Θύρα TCI του ExpertSDR
+TCI server port (ExpertSDR, Options > TCI):	Θύρα διακομιστή TCI (ExpertSDR, Options > TCI):
+Add memory	Προσθήκη μνήμης
+Resume the scan	Συνέχιση σάρωσης
+Current "Scan setup" setting	Τρέχουσα ρύθμιση της «Ρύθμιση σάρωσης»
+No scan while transmitting	Δεν γίνεται σάρωση κατά την εκπομπή
+Scan: set the start and end frequencies in "Scan setup"	Σάρωση: ορίστε αρχική και τελική συχνότητα στη «Ρύθμιση σάρωσης»
+Scan: all frequencies are in skipped ranges ("Scan setup")	Σάρωση: όλες οι συχνότητες βρίσκονται σε περιοχές που παραλείπονται («Ρύθμιση σάρωσης»)
+Scan: check memories in "Scan setup"	Σάρωση: επιλέξτε μνήμες στη «Ρύθμιση σάρωσης»
+frequencies not set	δεν έχουν οριστεί συχνότητες
+all frequencies are in skipped ranges	όλες οι συχνότητες βρίσκονται σε περιοχές που παραλείπονται
+no memory checked	δεν έχουν επιλεγεί μνήμες
+Scan stopped	Η σάρωση σταμάτησε
+■ Stop scan	■ Διακοπή σάρωσης
+Rig sound card, recorded when Mute WebSDR, Mute ExpertSDR and Mute HDSDR are on:	Κάρτα ήχου του πομποδέκτη, εγγράφεται όταν είναι ενεργά τα Mute WebSDR, Mute ExpertSDR και Mute HDSDR:
+None (always the speakers)	Καμία (πάντα τα ηχεία)
+REC button width	Πλάτος του κουμπιού REC
+Narrow	Στενό
+Wide	Φαρδύ
+REC button colour	Χρώμα του κουμπιού REC
+Navy blue (default)	Μπλε μαρέν (προεπιλογή)
+Navy blue	Ναυτικό μπλε
+Blue	Μπλε
+Sky blue	Γαλάζιο
+Teal	Πετρόλ
+Green	Πράσινο
+Red	Κόκκινο
+Burgundy	Μπορντό
+Purple	Μωβ
+Pink	Ροζ
+Brown	Καφέ
+Grey	Γκρι
+Black	Μαύρο
+Yellow	Κίτρινο
+Orange	Πορτοκαλί
+White	Λευκό
+Default	Προεπιλογή
+Other colour…	Άλλο χρώμα…
+REC: recording the speakers	REC: εγγραφή των ηχείων
+Empty recording: nothing to save	Κενή εγγραφή: τίποτα για αποθήκευση
+Recording deleted	Η εγγραφή διαγράφηκε
+The file could not be written: 	Δεν ήταν δυνατή η εγγραφή του αρχείου: 
+Stop recording and save the sound	Διακοπή εγγραφής και αποθήκευση του ήχου
+Record the sound heard in the speakers (right-click: rig sound card, colour)	Εγγραφή του ήχου των ηχείων (δεξί κλικ: κάρτα ήχου του πομποδέκτη, χρώμα)
+(no memory used yet)	(δεν έχει χρησιμοποιηθεί μνήμη)
+Memories…	Μνήμες…
+Clear this list	Εκκαθάριση αυτής της λίστας
+Text size	Μέγεθος κειμένου
+Window text size (100% = original size):	Μέγεθος κειμένου του παραθύρου (100 % = αρχικό μέγεθος):
+(no message)	(κανένα μήνυμα)
+SDRLink: update available	SDRLink: διαθέσιμη ενημέρωση
+SDRLink: updates	SDRLink: ενημερώσεις
+Could not reach GitHub to check for updates.	Δεν ήταν δυνατή η σύνδεση με το GitHub για έλεγχο ενημερώσεων.
+You are using the latest version of SDRLink.	Χρησιμοποιείτε την τελευταία έκδοση του SDRLink.
+Latest published version: unknown	Τελευταία δημοσιευμένη έκδοση: άγνωστη
+All versions (the latest one is marked “Latest”):	Όλες οι εκδόσεις (η τελευταία έχει την ένδειξη «Latest»):
+To stop these notices, untick “Check for updates”.	Για να μη βλέπετε αυτές τις ειδοποιήσεις, καταργήστε την επιλογή «Έλεγχος για ενημερώσεις».
+Later	Αργότερα
+Open the update page	Άνοιγμα της σελίδας ενημέρωσης
+Last {0} memories used	Τελευταίες {0} μνήμες που χρησιμοποιήθηκαν
+ExpertSDR TCI port: {0}…	Θύρα TCI του ExpertSDR: {0}…
+⚠ Update V{0} available: click to download it	⚠ Διαθέσιμη ενημέρωση V{0}: κάντε κλικ για λήψη
+Settings exported to "{0}"	Οι ρυθμίσεις εξήχθησαν στο «{0}»
+Transmission stopped automatically after {0} (safety timeout, right-click PTT to change it)	Η εκπομπή διακόπηκε αυτόματα μετά από {0} (χρονικό όριο ασφαλείας, δεξί κλικ στο PTT για αλλαγή)
+Remove "{0}" from the list	Αφαίρεση του «{0}» από τη λίστα
+Remove all ({0} values)	Αφαίρεση όλων ({0} τιμές)
+Remove all {0} frequencies from the list?	Αφαίρεση και των {0} συχνοτήτων από τη λίστα;
+"{0}" does not look like a virtual cable: the WebSDR audio will be played there all the time (and transmitted, if it is a radio's transmit sound card).\n\nUse this output anyway?	Το «{0}» δεν μοιάζει με εικονικό καλώδιο: ο ήχος του WebSDR θα αναπαράγεται εκεί συνεχώς (και θα εκπέμπεται, αν είναι η κάρτα ήχου εκπομπής ενός πομποδέκτη).\n\nΧρήση αυτής της εξόδου παρ' όλα αυτά;
+Name the other end of the cable "SDRLINK" ("{0}")…	Ονομασία «SDRLINK» στο άλλο άκρο του καλωδίου («{0}»)…
+This cable was already renamed "{0}": it may already be used by other software (VoiceMeeter…). Renaming it "{1}" means selecting it again in that software.\n\nContinue?	Αυτό το καλώδιο έχει ήδη μετονομαστεί σε «{0}»: ίσως χρησιμοποιείται ήδη από άλλο λογισμικό (VoiceMeeter…). Αν το μετονομάσετε σε «{1}», θα πρέπει να το επιλέξετε ξανά σε εκείνο το λογισμικό.\n\nΣυνέχεια;
+The recording device "{0}" will be renamed "{1}".\n\nIt will show under this name in the audio inputs of WSJT-X, JTDX, fldigi… (restart them). Windows may ask for administrator permission.\n\nContinue?	Η συσκευή εγγραφής «{0}» θα μετονομαστεί σε «{1}».\n\nΘα εμφανίζεται με αυτό το όνομα στις εισόδους ήχου των WSJT-X, JTDX, fldigi… (επανεκκινήστε τα). Τα Windows ενδέχεται να ζητήσουν δικαίωμα διαχειριστή.\n\nΣυνέχεια;
+Done: the audio input is now called "{0}". Restart WSJT-X to see it.	Ολοκληρώθηκε: η είσοδος ήχου ονομάζεται πλέον «{0}». Επανεκκινήστε το WSJT-X για να την δείτε.
+Renaming failed ({0}).\n\nBy hand: Sound control panel › Recording tab › "{1}" › Properties › name.	Η μετονομασία απέτυχε ({0}).\n\nΧειροκίνητα: Πίνακας Ελέγχου Ήχος › καρτέλα Εγγραφή › «{1}» › Ιδιότητες › όνομα.
+SDRLINK cable: WebSDR audio sent to "{0}"	Καλώδιο SDRLINK: ο ήχος του WebSDR στέλνεται στο «{0}»
+SDRLINK cable: "{0}": {1}	Καλώδιο SDRLINK: «{0}»: {1}
+ExpertSDR is running but does not answer on TCI port {0}: right-click "WebSDR volume" to change the port.	Το ExpertSDR εκτελείται αλλά δεν απαντά στη θύρα TCI {0}: δεξί κλικ στο «Ένταση WebSDR» για αλλαγή της θύρας.
+SDRLink cannot mute ExpertSDR: ExpertSDR does not play through Windows sound (audio comes out of the radio or through ASIO), and its TCI server does not answer on port {0}.\n\nIn ExpertSDR, enable the TCI server (Options > TCI). If its port is not {0}, right-click Mute ExpertSDR to set it.	Το SDRLink δεν μπορεί να κάνει σίγαση στο ExpertSDR: το ExpertSDR δεν αναπαράγει ήχο μέσω των Windows (ο ήχος βγαίνει από τον πομποδέκτη ή μέσω ASIO) και ο διακομιστής TCI του δεν απαντά στη θύρα {0}.\n\nΣτο ExpertSDR ενεργοποιήστε τον διακομιστή TCI (Options > TCI). Αν η θύρα του δεν είναι {0}, ορίστε την με δεξί κλικ στη «Σίγαση ExpertSDR».
+"{0}" added to "{1}".	Το «{0}» προστέθηκε στο «{1}».
+This page is not in "{0}".	Αυτή η σελίδα δεν υπάρχει στο «{0}».
+Remove "{0}" from "{1}"?	Αφαίρεση του «{0}» από το «{1}»;
+Unexpected error, written to the log: {0}	Απρόσμενο σφάλμα, καταγράφηκε στο αρχείο καταγραφής: {0}
+Memory "{0}" added to "{1}".	Η μνήμη «{0}» προστέθηκε στο «{1}».
+Memory "{0}": {1} kHz	Μνήμη «{0}»: {1} kHz
+at {0} kHz	από {0} kHz
+from the start ({0} kHz): current frequency out of range	από την αρχή ({0} kHz): η τρέχουσα συχνότητα είναι εκτός περιοχής
+at memory {0}	από τη μνήμη {0}
+from the start ({0}): current frequency not in the memories	από την αρχή ({0}): η τρέχουσα συχνότητα δεν είναι στις μνήμες
+click in the page, stopped on {0} kHz	κλικ στη σελίδα, διακοπή στα {0} kHz
+Scan stopped: {0}	Η σάρωση σταμάτησε: {0}
+Scan: {0}	Σάρωση: {0}
+Cannot record: {0}	Αδύνατη η εγγραφή: {0}
+Rig sound card "{0}" not available ({1}): recording the speakers	Η κάρτα ήχου του πομποδέκτη «{0}» δεν είναι διαθέσιμη ({1}): εγγραφή των ηχείων
+Recording the sound of "{0}" (click REC to stop)	Εγγραφή του ήχου από «{0}» (κλικ στο REC για διακοπή)
+{0} (not connected)	{0} (δεν είναι συνδεδεμένη)
+REC: "{0}" will be recorded when only the rig is heard	REC: η «{0}» θα εγγράφεται όταν ακούγεται μόνο ο πομποδέκτης
+Writing "{0}": {1}%	Εγγραφή «{0}»: {1}%
+Recording saved: "{0}"	Η εγγραφή αποθηκεύτηκε: «{0}»
+Last {0} messages (click: hide or show this kind of message again, ✓ = hidden)	Τελευταία {0} μηνύματα (κλικ: απόκρυψη ή επανεμφάνιση αυτού του είδους μηνύματος, ✓ = κρυφό)
+Show all hidden messages again ({0})	Επανεμφάνιση όλων των κρυφών μηνυμάτων ({0})
+A new version of SDRLink is available: V{0}	Είναι διαθέσιμη νέα έκδοση του SDRLink: V{0}
+Version in use: V{0}	Έκδοση σε χρήση: V{0}
+Latest published version: V{0}	Τελευταία δημοσιευμένη έκδοση: V{0}
+Version {0} page (download, what's new):	Σελίδα της έκδοσης {0} (λήψη, νέα χαρακτηριστικά):
+Interface:	Διασύνδεση:
+Brand:	Μάρκα:
+Model:	Μοντέλο:
+Port:	Θύρα:
+Baud rate:	Ταχύτητα:
+Stop bits:	Bit διακοπής:
+CI-V address (hex):	Διεύθυνση CI-V (hex):
+OmniRig rig:	Πομποδέκτης OmniRig:
+Host:	Κεντρ. υπολογ.:
+TX detection (HRD):	Ανίχνευση TX (HRD):
+Hamlib model no.:	Αρ. μοντέλου Hamlib:
+Language:	Γλώσσα:
+Sync:	Συγχρ.:
+WebSDR offset (Hz):	Μετατόπιση WebSDR (Hz):
+restore after (ms):	επαναφορά μετά (ms):
+kHz:	kHz:
+Step:	Βήμα:
+WebSDR:	WebSDR:
+WebSDR volume:	Ένταση WebSDR:
+TRX volume:	Ένταση TRX:
+ExpertSDR volume:	Ένταση ExpertSDR:
+HDSDR volume:	Ένταση HDSDR:
+Open log	Άνοιγμα ημερολογίου
+Text size…	Μέγεθος κειμένου…
+Import/Export ▾	Εισαγωγή/Εξαγωγή ▾
+…	…
+Download Hamlib…	Λήψη Hamlib…
+SDRLINK cable ▾	Καλώδιο SDRLINK ▾
+Scan setup	Ρύθμιση σάρωσης
+▶ Scan	▶ Σάρωση
+QSY	QSY
+Save	Αποθήκ.
+Memories	Μνήμες
+▾	▾
+Go	Μετάβαση
+◀ Back	◀ Πίσω
+Reload	Ανανέωση
+★ Add to favorites	★ Προσθήκη στα αγαπημένα
+Remove from favorites	Αφαίρεση από τα αγαπημένα
+Manage favorites…	Διαχείριση αγαπημένων…
+Find WebSDRs…	Εύρεση WebSDR…
+Mute WebSDR	Σίγαση WebSDR
+Mute TRX	Σίγαση TRX
+⇄	⇄
+Mute ExpertSDR	Σίγαση ExpertSDR
+Mute HDSDR	Σίγαση HDSDR
+Auto-connect at startup	Αυτόματη σύνδεση κατά την εκκίνηση
+Dark mode	Σκούρα λειτουργία
+Check for updates	Έλεγχος για ενημερώσεις
+RTS	RTS
+DTR	DTR
+Start rigctld:	Εκκίνηση rigctld:
+Sync mode	Συγχρ. διαμόρφωσης
+Mute WebSDR while transmitting	Σίγαση WebSDR κατά την εκπομπή
+Auto notch (DNF)	Αυτόματο notch (DNF)
+Reduced view	Μειωμένη προβολή
+Mini view	Μίνι προβολή
+Always on top	Πάντα στην κορυφή
+PTT view	Προβολή PTT
+COM port (direct CAT)	Θύρα COM (άμεσο CAT)
+OmniRig	OmniRig
+TCI	TCI
+Ham Radio Deluxe	Ham Radio Deluxe
+Hamlib (rigctld)	Hamlib (rigctld)
+MOX/TX/PTT buttons	Κουμπιά MOX/TX/PTT
+MOX/VOX/TX/PTT buttons	Κουμπιά MOX/VOX/TX/PTT
+Both ways	Αμφίδρομα
+Rig → WebSDR	TRX → WebSDR
+WebSDR → Rig	WebSDR → TRX
+100 Hz	100 Hz
+250 Hz	250 Hz
+500 Hz	500 Hz
+1 kHz	1 kHz
+2.5 kHz	2,5 kHz
+5 kHz	5 kHz
+10 kHz	10 kHz
+Frequency (kHz):	Συχνότητα (kHz):
+Mode:	Τρόπος:
+(mode unchanged)	(τρόπος αμετάβλητος)
+Edit…	Επεξεργασία…
+Frequency (kHz)	Συχνότητα (kHz)
+Mode	Τρόπος
+Select a memory first.	Επιλέξτε πρώτα μια μνήμη.
+Edit memory	Επεξεργασία μνήμης
+{0} memory(ies). Click a memory to go there.	{0} μνήμη(ες). Κάντε κλικ σε μια μνήμη για να μεταβείτε σε αυτή.
+Tuned to "{0}" ({1} kHz).	Συντονισμός στο «{0}» ({1} kHz).
+Remove the memory "{0}"?	Αφαίρεση της μνήμης «{0}»;
+Delete the list "{0}" and its {1} memory(ies)?	Διαγραφή της λίστας «{0}» και των {1} μνημών της;
+OmniRig is not installed (OmniRig.OmniRigX not found).	Το OmniRig δεν είναι εγκατεστημένο (δεν βρέθηκε το OmniRig.OmniRigX).
+Dark mode colour	Χρώμα σκούρας λειτουργίας
+Light mode colour	Χρώμα φωτεινής λειτουργίας
+SDRLink needs Microsoft .NET Framework 4.6.2 or later (4.8 recommended).\nIt is not installed on this PC.\n\nDownload and install .NET Framework 4.8 now?\n(a restart may be required, then start SDRLink again)	Το SDRLink απαιτεί Microsoft .NET Framework 4.6.2 ή νεότερο (συνιστάται το 4.8).\nΔεν είναι εγκατεστημένο σε αυτόν τον υπολογιστή.\n\nΛήψη και εγκατάσταση του .NET Framework 4.8 τώρα;\n(ίσως απαιτηθεί επανεκκίνηση· στη συνέχεια ξεκινήστε ξανά το SDRLink)
+SDRLink - missing component	SDRLink - λείπει στοιχείο
+SDRLink needs the Microsoft Edge WebView2 Runtime to display WebSDRs.\nIt is not installed on this PC.\n\nDownload and install WebView2 now? (free, about 2 MB)	Το SDRLink απαιτεί το Microsoft Edge WebView2 Runtime για την εμφάνιση των WebSDR.\nΔεν είναι εγκατεστημένο σε αυτόν τον υπολογιστή.\n\nΛήψη και εγκατάσταση του WebView2 τώρα; (δωρεάν, περίπου 2 MB)
+Download or installation failed:\n	Η λήψη ή η εγκατάσταση απέτυχε:\n
+\n\nThe official download page will open:\n	\n\nΘα ανοίξει η επίσημη σελίδα λήψης:\n
+the audio output does not answer	η έξοδος ήχου δεν αποκρίνεται
+recording too long for the WAV format (4 GB at most)	η εγγραφή είναι πολύ μεγάλη για τη μορφή WAV (έως 4 GB)
+Save the recording	Αποθήκευση της εγγραφής
+Folder:	Φάκελος:
+Format:	Μορφή:
+Browse…	Αναζήτηση…
+Save file	Αποθήκευση
+Delete	Διαγραφή
+Delete this recording without saving it?	Διαγραφή αυτής της εγγραφής χωρίς αποθήκευση;
+compressed, plays everywhere	συμπιεσμένο, αναπαράγεται παντού
+lossless, large file	χωρίς απώλειες, μεγάλο αρχείο
+lossless, compressed	χωρίς απώλειες, συμπιεσμένο
+Folder where the recording is saved	Φάκελος αποθήκευσης της εγγραφής
+Enter a name for the file.	Δώστε ένα όνομα για το αρχείο.
+Cannot create the folder: 	Δεν είναι δυνατή η δημιουργία του φακέλου: 
+unsupported audio format ({0} bits, {1} Hz)	μη υποστηριζόμενη μορφή ήχου ({0} bit, {1} Hz)
+Windows MP3 encoder not available (0x{0:X8}): choose WAV or FLAC	Ο κωδικοποιητής MP3 των Windows δεν είναι διαθέσιμος (0x{0:X8}): επιλέξτε WAV ή FLAC
+Recording length: {0}	Διάρκεια εγγραφής: {0}
+"{0}" already exists. Replace it?	Το «{0}» υπάρχει ήδη. Αντικατάσταση;
+Full reset (all settings, memories and colours are lost)	Πλήρης επαναφορά (χάνονται όλες οι ρυθμίσεις, οι μνήμες και τα χρώματα)
+SDRLink goes back to how it was when first installed: starting WebSDR favorites, no memory, no scan, original colours, browser data deleted.	Το SDRLink γίνεται όπως στην πρώτη του εγκατάσταση: αρχικά αγαπημένα WebSDR, καμία μνήμη, καμία σάρωση, αρχικά χρώματα, διαγραμμένα δεδομένα προγράμματος περιήγησης.
+Partial reset:	Μερική επαναφορά:
+Colours (buttons, REC, palette)	Χρώματα (κουμπιά, REC, παλέτα)
+WebSDR (favorites and favorite lists, back to the starting ones)	WebSDR (αγαπημένα και λίστες αγαπημένων, στα αρχικά)
+Configuration (rig, interface, sync, audio, display, language, name…)	Διαμόρφωση (πομποδέκτης, διασύνδεση, συγχρονισμός, ήχος, προβολή, γλώσσα, όνομα…)
+Built-in browser data (cache, cookies, settings kept by the WebSDR sites)	Δεδομένα ενσωματωμένου περιηγητή (cache, cookies, ρυθμίσεις των ιστοτόπων WebSDR)
+Worth trying if the WebSDR pages no longer show (empty window, as if there were no Internet).	Αξίζει να το δοκιμάσετε αν οι σελίδες των WebSDR δεν εμφανίζονται πια (κενό παράθυρο, σαν χωρίς Internet).
+Reset	Επαναφορά
+SDRLink will then restart. The current settings are kept in {0} (Import/Export can load them back). SDRLink updates never reset anything.	Στη συνέχεια το SDRLink θα επανεκκινηθεί. Οι τρέχουσες ρυθμίσεις φυλάσσονται στο {0} (η Εισαγωγή/Εξαγωγή μπορεί να τις φορτώσει ξανά). Οι ενημερώσεις του SDRLink δεν επαναφέρουν ποτέ τίποτα.
+Connecting...	Σύνδεση...
+Connected, waiting for the rig...	Συνδέθηκε, αναμονή για τον πομποδέκτη...
+Rig online	Πομποδέκτης σε σύνδεση
+The rig does not answer (check port, baud rate, CI-V address, CAT menu)	Ο πομποδέκτης δεν απαντά (ελέγξτε θύρα, ταχύτητα, διεύθυνση CI-V, μενού CAT)
+Error: 	Σφάλμα: 
+Profile:	Προφίλ:
+Rename	Μετονομασία
+Scan type:	Τύπος σάρωσης:
+Frequencies	Συχνότητες
+Start (kHz):	Αρχή (kHz):
+End (kHz):	Τέλος (kHz):
+Time on each frequency:	Χρόνος σε κάθε συχνότητα:
+Skipped ranges (from … to … kHz):	Περιοχές που παραλείπονται (από … έως … kHz):
++ Skipped range	+ Περιοχή που παραλείπεται
+Memories to scan:	Μνήμες για σάρωση:
+Time on each memory:	Χρόνος σε κάθε μνήμη:
+(no memory: Memories button)	(καμία μνήμη: κουμπί Μνήμες)
+Start scan	Έναρξη σάρωσης
+from	από
+to	έως
+First type a profile name in the "Profile" box.	Πληκτρολογήστε πρώτα ένα όνομα προφίλ στο πεδίο «Προφίλ».
+First choose a profile in the list, then type its new name in the box and click Rename.	Επιλέξτε πρώτα ένα προφίλ από τη λίστα, πληκτρολογήστε το νέο του όνομα στο πεδίο και πατήστε Μετονομασία.
+Choose in the list the profile to delete.	Επιλέξτε από τη λίστα το προφίλ που θα διαγραφεί.
+Enter different start and end frequencies, in kHz (e.g. 7000 and 7200).	Δώστε διαφορετική αρχική και τελική συχνότητα σε kHz (π.χ. 7000 και 7200).
+All frequencies from start to end are in skipped ranges.	Όλες οι συχνότητες από την αρχή ως το τέλος βρίσκονται σε περιοχές που παραλείπονται.
+Check at least one memory to scan.	Επιλέξτε τουλάχιστον μία μνήμη για σάρωση.
+memories: {0}, {1}	μνήμες: {0}, {1}
+skipped ranges: {0}	περιοχές που παραλείπονται: {0}
+{0} s	{0} s
+{0} min	{0} min
+Replace the profile "{0}" with the settings shown?	Αντικατάσταση του προφίλ «{0}» με τις ρυθμίσεις που εμφανίζονται;
+{0} profiles at most: delete one first.	Το πολύ {0} προφίλ: διαγράψτε πρώτα ένα.
+The profile "{0}" already exists.	Το προφίλ «{0}» υπάρχει ήδη.
+Delete the profile "{0}"?	Διαγραφή του προφίλ «{0}»;
+Skipped range no. {0}: enter two frequencies in kHz (e.g. 7097 and 7103).	Περιοχή που παραλείπεται αρ. {0}: δώστε δύο συχνότητες σε kHz (π.χ. 7097 και 7103).
+No TCI server at 	Δεν υπάρχει διακομιστής TCI στο 
+TCI connection lost	Η σύνδεση TCI χάθηκε
+unavailable	μη διαθέσιμο
+unexpected format	μη αναμενόμενη μορφή
+Find WebSDRs (France and neighbouring countries)	Εύρεση WebSDR (Γαλλία και γειτονικές χώρες)
+All	Όλα
+Max distance from the centre of France (km):	Μέγ. απόσταση από το κέντρο της Γαλλίας (km):
+Filter:	Φίλτρο:
+Type:	Τύπος:
+Location	Τοποθεσία
+Country	Χώρα
+Users	Χρήστες
+Add checked to favorites	Προσθήκη σημειωμένων στα αγαπημένα
+Refresh	Ανανέωση
+Searching directories (websdr.org, KiwiSDR, ReceiverBook)…	Αναζήτηση σε καταλόγους (websdr.org, KiwiSDR, ReceiverBook)…
+Please select a receiver in the list first.	Επιλέξτε πρώτα έναν δέκτη από τη λίστα.
+Please check the receivers to add first.	Επιλέξτε πρώτα τους δέκτες που θα προστεθούν.
+Add to favorites	Προσθήκη στα αγαπημένα
+{0} receiver(s) shown, {1} checked, {2} already in favorites hidden   —   sources: 	{0} δέκτες εμφανίζονται, {1} σημειωμένοι, {2} ήδη στα αγαπημένα κρυμμένα   —   πηγές: 
+{0} favorite(s) added to "{1}". You can rename them in "Manage favorites…".	Προστέθηκαν {0} αγαπημένα στο «{1}». Μπορείτε να τα μετονομάσετε στη «Διαχείριση αγαπημένων…».
+Profile name	Όνομα προφίλ
+Noise reducer (DNR)	Μείωση θορύβου (DNR)
+Check at startup	Έλεγχος κατά την εκκίνηση
+Name or callsign for WebSDRs	Όνομα ή διακριτικό για τα WebSDR
+Import: this file does not contain SDRLink or PhoneSDRLink settings	Εισαγωγή: αυτό το αρχείο δεν περιέχει ρυθμίσεις SDRLink ή PhoneSDRLink
+Configuration (display, language, name…)	Διαμόρφωση (οθόνη, γλώσσα, όνομα…)
+Favorites, memories and scan profiles already in the app:	Αγαπημένα, μνήμες και προφίλ σάρωσης που υπάρχουν ήδη στην εφαρμογή:
+Full reset (all settings, favorites and memories are lost)	Πλήρης επαναφορά (όλες οι ρυθμίσεις, τα αγαπημένα και οι μνήμες θα χαθούν)
+Full reset: all settings, favorites, memories and scans will be lost.	Πλήρης επαναφορά: όλες οι ρυθμίσεις, τα αγαπημένα, οι μνήμες και οι σαρώσεις θα χαθούν.
+⚠ Warning	⚠ Προσοχή
+Continue?	Συνέχεια;
+WebSDR address	Διεύθυνση WebSDR
+Check a single favorite.	Επιλέξτε μόνο ένα αγαπημένο.
+Tick to add to favorites; long-press a receiver to listen to it.	Επιλέξτε για προσθήκη στα αγαπημένα· πατήστε παρατεταμένα έναν δέκτη για να τον ακούσετε.
+◀ swipe: − frequency | + frequency ▶	◀ σύρετε: − συχνότητα | + συχνότητα ▶
+🔇 Muted	🔇 Σίγαση
+The page crashed: reloading	Η σελίδα κράτησε: επαναφόρτωση
+Phone call: WebSDR sound muted	Τηλεφωνική κλήση: ο ήχος του WebSDR σίγασε
+PhoneSDRLink: updates	PhoneSDRLink: ενημερώσεις
+You are using the latest version.	Χρησιμοποιείτε την τελευταία έκδοση.

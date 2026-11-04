@@ -1,0 +1,464 @@
+sound card not found	Soundkarte nicht gefunden
+sound card unplugged or disabled	Soundkarte getrennt oder deaktiviert
+output not found	Ausgabegerät nicht gefunden
+output already used in exclusive mode by another program	Ausgabegerät wird bereits von einem anderen Programm im exklusiven Modus verwendet
+cannot open, error 	Öffnen nicht möglich, Fehler 
+Name:	Name:
+Address:	Adresse:
+Cancel	Abbrechen
+List:	Liste:
+Please enter a name and an address.	Bitte geben Sie einen Namen und eine Adresse ein.
+Save to list:	In Liste speichern:
+Rename list	Liste umbenennen
+Favorite manager	Favoritenverwaltung
+Add favorite…	Favorit hinzufügen…
+Import…	Importieren…
+Export…	Exportieren…
+Selected / checked items	Ausgewählte / markierte Einträge
+Remove…	Entfernen…
+Rename…	Umbenennen…
+Move up	Nach oben
+Move down	Nach unten
+Check	Prüfung
+Check favorites	Favoriten prüfen
+Check all	Alle markieren
+Uncheck all	Alle abwählen
+Move to ▸	Verschieben nach ▸
+New list	Neue Liste
+Delete list…	Liste löschen…
+(right-click the list to rename it)	(Rechtsklick auf die Liste zum Umbenennen)
+Name	Name
+Address	Adresse
+Status	Status
+List	Liste
+Listen to selection	Auswahl anhören
+Open	Öffnen
+Close	Schließen
+All lists	Alle Listen
+Please select a favorite in the list first.	Bitte wählen Sie zuerst einen Favoriten in der Liste aus.
+Add favorite	Favorit hinzufügen
+checking…	wird geprüft…
+OK	OK
+invalid address	ungültige Adresse
+answers	antwortet
+not found	nicht gefunden
+answers (certificate)	antwortet (Zertifikat)
+no answer	keine Antwort
+unknown host	unbekannter Host
+connection refused	Verbindung abgelehnt
+unreachable	nicht erreichbar
+Import favorites	Favoriten importieren
+Favorites (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|All files (*.*)|*.*	Favoriten (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|Alle Dateien (*.*)|*.*
+Export favorites	Favoriten exportieren
+Firefox / browser bookmarks (*.html)|*.html|CSV, Excel-readable (*.csv)|*.csv|Text (*.txt)|*.txt	Firefox / Browser-Lesezeichen (*.html)|*.html|CSV, mit Excel lesbar (*.csv)|*.csv|Text (*.txt)|*.txt
+This WebSDR is already in "{0}".	Dieser WebSDR ist bereits in „{0}“.
+List {0}	Liste {0}
+Rename "{0}"…	„{0}“ umbenennen…
+List "{0}" added ({1}/{2}).	Liste „{0}“ hinzugefügt ({1}/{2}).
+Delete the list "{0}" (empty)?	Liste „{0}“ (leer) löschen?
+Delete the list "{0}" and its {1} favorite(s)?	Liste „{0}“ und ihre {1} Favoriten löschen?
+List "{0}" deleted.	Liste „{0}“ gelöscht.
+{0} favorite(s) moved to "{1}".	{0} Favorit(en) nach „{1}“ verschoben.
+{0} favorite(s) shown, {1} checked	{0} Favorit(en) angezeigt, {1} markiert
+Remove favorite "{0}"?	Favorit „{0}“ entfernen?
+Remove the {0} checked favorites?	Die {0} markierten Favoriten entfernen?
+Checking {0} address(es)…	{0} Adresse(n) werden geprüft…
+Checking… {0} left	Prüfung… noch {0}
+Check done: {1} duplicate(s) removed, {0} dead link(s) checked. Click "Remove…" to delete them.	Prüfung abgeschlossen: {1} Duplikat(e) entfernt, {0} tote(r) Link(s) markiert. Klicken Sie auf „Entfernen…“, um sie zu löschen.
+{0} favorite(s) imported, {1} already present.	{0} Favorit(en) importiert, {1} bereits vorhanden.
+{0} favorite(s) exported.	{0} Favorit(en) exportiert.
+rigctld connection closed	rigctld-Verbindung geschlossen
+stopped	gestoppt
+No rigctld at {0}:{1} (start rigctld, or tick "Start rigctld").	Kein rigctld unter {0}:{1} (starten Sie rigctld oder aktivieren Sie „rigctld starten“).
+Invalid HRD answer	Ungültige HRD-Antwort
+HRD connection closed	HRD-Verbindung geschlossen
+No HRD server at {0}:{1} (enable the IP server in HRD Rig Control).	Kein HRD-Server unter {0}:{1} (aktivieren Sie den IP-Server in HRD Rig Control).
+Import settings	Einstellungen importieren
+What should be imported from this file?	Was soll aus dieser Datei importiert werden?
+Configuration (rig, interface, display, colours, language…)	Konfiguration (Funkgerät, Schnittstelle, Anzeige, Farben, Sprache…)
+WebSDR (favorites and favorite lists)	WebSDR (Favoriten und Favoritenlisten)
+Frequency memories	Frequenzspeicher
+Scan (setting, skipped ranges and scan profiles)	Suchlauf (Einstellung, ausgelassene Bereiche und Suchlaufprofile)
+ — not in the file	 — nicht in der Datei
+Favorites, memories and scan profiles already in SDRLink:	Favoriten, Speicher und Suchlaufprofile, die bereits in SDRLink sind:
+keep them and add those of the file (no duplicates)	behalten und die der Datei hinzufügen (ohne Duplikate)
+delete them and replace them with those of the file	löschen und durch die der Datei ersetzen
+SDRLink will then restart. The current settings are kept in settings.avant-import.ini.	SDRLink startet anschließend neu. Die aktuellen Einstellungen bleiben in settings.avant-import.ini erhalten.
+Import	Importieren
+Cannot open the log: 	Logbuch kann nicht geöffnet werden: 
+Export all settings…	Alle Einstellungen exportieren…
+Import settings…	Einstellungen importieren…
+Reset the program…	Programm zurücksetzen…
+Export or import all settings, for the same configuration on another computer (right-click: reset the program, button colour)	Alle Einstellungen exportieren oder importieren, für dieselbe Konfiguration auf einem anderen Computer (Rechtsklick: Programm zurücksetzen, Farbe der Schaltfläche)
+Name or callsign given automatically to WebSDRs that ask for one before the audio (KiwiSDR, websdr.org). Click: change it (right-click: button colour)	Name oder Rufzeichen, das WebSDRs automatisch erhalten, die vor dem Ton danach fragen (KiwiSDR, websdr.org). Klick: ändern (Rechtsklick: Schaltflächenfarbe)
+Right-click: receivers muted while transmitting	Rechtsklick: beim Senden stummgeschaltete Empfänger
+Save: no known frequency (rig or WebSDR)	Save: keine Frequenz bekannt (TRX oder WebSDR)
+Store the current frequency…	Aktuelle Frequenz speichern…
+Switch the audio to the next receiver (right-click: receiver to keep muted)	Ton zum nächsten Empfänger umschalten (Rechtsklick: Empfänger, der stumm bleibt)
+Colour when connected	Farbe wenn verbunden
+Colour when disconnected	Farbe wenn getrennt
+Colour when on	Farbe wenn ein
+Colour when off	Farbe wenn aus
+Colour when the scan is stopped	Farbe bei gestopptem Scan
+Colour while scanning	Farbe während des Scans
+Colour when receiving	Farbe bei Empfang
+Colour when transmitting (PTT on)	Farbe beim Senden (PTT ein)
+Background colour	Hintergrundfarbe
+Text colour	Textfarbe
+Colour of the selected mode	Farbe der gewählten Betriebsart
+Colour of the other modes	Farbe der anderen Betriebsarten
+Colour when muted	Farbe wenn stummgeschaltet
+Colour when the sound is on	Farbe wenn Ton an
+Export all SDRLink settings	Alle SDRLink-Einstellungen exportieren
+SDRLink settings (*.ini)|*.ini	SDRLink-Einstellungen (*.ini)|*.ini
+Cannot export the settings: 	Export der Einstellungen nicht möglich: 
+Import SDRLink settings	SDRLink-Einstellungen importieren
+Cannot import the settings: 	Import der Einstellungen nicht möglich: 
+Import: this file does not contain SDRLink settings	Import: Diese Datei enthält keine SDRLink-Einstellungen
+Full reset: all settings, favorites, memories, scans and colours will be lost.	Vollständiges Zurücksetzen: Alle Einstellungen, Favoriten, Speicher, Suchläufe und Farben gehen verloren.
+The checked items will be set back as at first installation.	Die angekreuzten Elemente werden wie bei der ersten Installation zurückgesetzt.
+SDRLink will restart. Continue?	SDRLink startet neu. Fortfahren?
+Reset the program	Programm zurücksetzen
+Cannot reset: 	Zurücksetzen nicht möglich: 
+Button colour	Schaltflächenfarbe
+RIG	TRX
+Disconnected	Getrennt
+Connect	Verbinden
+Disconnect	Trennen
+Location of rigctld.exe (Hamlib)	Speicherort von rigctld.exe (Hamlib)
+Programs (*.exe)|*.exe	Programme (*.exe)|*.exe
+Please choose a rig model.	Bitte wählen Sie ein Transceiver-Modell.
+Invalid CI-V address (e.g. 70 for the IC-7000).	Ungültige CI-V-Adresse (z. B. 70 für den IC-7000).
+rigctld.exe (Hamlib) was not found. Set its location with the "…" button, or install Hamlib (free).\n\nOpen the Hamlib download page?	rigctld.exe (Hamlib) wurde nicht gefunden. Geben Sie den Speicherort mit der Schaltfläche „…“ an oder installieren Sie Hamlib (kostenlos).\n\nDownloadseite von Hamlib öffnen?
+Please choose the rig's COM port.	Bitte wählen Sie den COM-Port des Transceivers.
+Cannot start rigctld: 	rigctld kann nicht gestartet werden: 
+TX safety timeout (PTT button)	TX-Sicherheitszeit (PTT-Taste)
+Off	Aus
+PTT: connect the rig first	PTT: Bitte zuerst den TRX verbinden
+transmitting	Senden
+Receivers muted while transmitting:	Beim Senden stummgeschaltete Empfänger:
+Rig (Mute TRX)	TRX (TRX stumm)
+Invalid frequency: type a value in kHz, e.g. 7074 or 14074.5	Ungültige Frequenz: Geben Sie einen Wert in kHz ein, z. B. 7074 oder 14074.5
+Remove this value (pick it in the list first)	Diesen Wert entfernen (zuerst in der Liste auswählen)
+RIG 	TRX 
+Cannot start WebView2 (Edge):\n	WebView2 (Edge) kann nicht gestartet werden:\n
+Name or callsign given to WebSDRs that ask for one (KiwiSDR, websdr.org):	Name oder Rufzeichen für WebSDRs, die danach fragen (KiwiSDR, websdr.org):
+The callsign cannot be empty.	Der Name darf nicht leer sein.
+A name already typed on a site is kept. To give no name: a non-breaking space (Alt+255).	Ein auf einer Seite bereits eingegebener Name bleibt erhalten. Um keinen Namen anzugeben: ein geschütztes Leerzeichen (Alt+255).
+Invalid address: 	Ungültige Adresse: 
+SDRLINK cable: no virtual audio cable found. Install VB-CABLE (free): "SDRLINK cable" button.	SDRLINK-Kabel: kein virtuelles Audiokabel gefunden. Installieren Sie VB-CABLE (kostenlos): Schaltfläche „SDRLINK-Kabel“.
+Output receiving the WebSDR audio:	Ausgabe für den WebSDR-Ton:
+Name the other end of the cable "SDRLINK" (pick a virtual cable first)	Anderes Kabelende „SDRLINK“ nennen (zuerst ein virtuelles Kabel wählen)
+Download VB-CABLE (free, vb-audio.com)…	VB-CABLE herunterladen (kostenlos, vb-audio.com)…
+permission denied	Zugriff verweigert
+error	Fehler
+SDRLINK cable	SDRLINK-Kabel
+ (off) ▾	 (aus) ▾
+Mute TRX: connect the rig first	TRX stumm: Bitte zuerst den TRX verbinden
+Rig volume not available with this rig or interface (OmniRig, HRD, FT-817/818…)	TRX-Lautstärke mit diesem Gerät oder dieser Schnittstelle nicht verfügbar (OmniRig, HRD, FT-817/818…)
+Mutes ignored by ⇄ (stay muted, two at most):	Von ⇄ ignorierte Stummschaltungen (bleiben stumm, höchstens zwei):
+None	Keine
+HDSDR does not play through Windows sound (reception stopped, or audio through ASIO): SDRLink cannot mute it.	HDSDR gibt den Ton nicht über Windows aus (Empfang gestoppt oder Ton über ASIO): SDRLink kann es nicht stummschalten.
+ExpertSDR TCI port	TCI-Port von ExpertSDR
+TCI server port (ExpertSDR, Options > TCI):	TCI-Server-Port (ExpertSDR, Options > TCI):
+Add memory	Speicher hinzufügen
+Resume the scan	Suchlauf fortsetzen
+Current "Scan setup" setting	Aktuelle Einstellung von „Suchlauf einrichten“
+No scan while transmitting	Kein Suchlauf beim Senden
+Scan: set the start and end frequencies in "Scan setup"	Suchlauf: Start- und Endfrequenz unter „Suchlauf einrichten“ angeben
+Scan: all frequencies are in skipped ranges ("Scan setup")	Suchlauf: Alle Frequenzen liegen in ausgelassenen Bereichen („Suchlauf einrichten“)
+Scan: check memories in "Scan setup"	Suchlauf: Speicher unter „Suchlauf einrichten“ ankreuzen
+frequencies not set	Frequenzen nicht eingestellt
+all frequencies are in skipped ranges	alle Frequenzen liegen in ausgelassenen Bereichen
+no memory checked	kein Speicher angekreuzt
+Scan stopped	Suchlauf beendet
+■ Stop scan	■ Suchlauf beenden
+Rig sound card, recorded when Mute WebSDR, Mute ExpertSDR and Mute HDSDR are on:	Soundkarte des Funkgeräts, aufgenommen wenn Mute WebSDR, Mute ExpertSDR und Mute HDSDR aktiv sind:
+None (always the speakers)	Keine (immer die Lautsprecher)
+REC button width	Breite der REC-Taste
+Narrow	Schmal
+Wide	Breit
+REC button colour	Farbe der REC-Taste
+Navy blue (default)	Marineblau (Standard)
+Navy blue	Marineblau
+Blue	Blau
+Sky blue	Himmelblau
+Teal	Petrol
+Green	Grün
+Red	Rot
+Burgundy	Bordeaux
+Purple	Violett
+Pink	Rosa
+Brown	Braun
+Grey	Grau
+Black	Schwarz
+Yellow	Gelb
+Orange	Orange
+White	Weiß
+Default	Standard
+Other colour…	Andere Farbe…
+REC: recording the speakers	REC: Aufnahme der Lautsprecher
+Empty recording: nothing to save	Leere Aufnahme: nichts zu speichern
+Recording deleted	Aufnahme gelöscht
+The file could not be written: 	Die Datei konnte nicht geschrieben werden: 
+Stop recording and save the sound	Aufnahme beenden und Ton speichern
+Record the sound heard in the speakers (right-click: rig sound card, colour)	Den Ton aus den Lautsprechern aufnehmen (Rechtsklick: Soundkarte des Funkgeräts, Farbe)
+(no memory used yet)	(noch kein Speicher verwendet)
+Memories…	Speicher…
+Clear this list	Diese Liste leeren
+Text size	Textgröße
+Window text size (100% = original size):	Textgröße des Fensters (100 % = ursprüngliche Größe):
+(no message)	(keine Meldung)
+SDRLink: update available	SDRLink: Update verfügbar
+SDRLink: updates	SDRLink: Updates
+Could not reach GitHub to check for updates.	GitHub ist nicht erreichbar, die Suche nach Updates ist nicht möglich.
+You are using the latest version of SDRLink.	Sie verwenden die neueste Version von SDRLink.
+Latest published version: unknown	Neueste veröffentlichte Version: unbekannt
+All versions (the latest one is marked “Latest”):	Alle Versionen (die neueste ist mit „Latest“ markiert):
+To stop these notices, untick “Check for updates”.	Um diese Hinweise abzustellen, „Nach Updates suchen“ deaktivieren.
+Later	Später
+Open the update page	Update-Seite öffnen
+Last {0} memories used	Letzte {0} verwendete Speicher
+ExpertSDR TCI port: {0}…	TCI-Port von ExpertSDR: {0}…
+⚠ Update V{0} available: click to download it	⚠ Update V{0} verfügbar: zum Herunterladen klicken
+Settings exported to "{0}"	Einstellungen exportiert nach „{0}“
+Transmission stopped automatically after {0} (safety timeout, right-click PTT to change it)	Sendung nach {0} automatisch beendet (Sicherheitszeit, Rechtsklick auf PTT zum Ändern)
+Remove "{0}" from the list	„{0}“ aus der Liste entfernen
+Remove all ({0} values)	Alle entfernen ({0} Werte)
+Remove all {0} frequencies from the list?	Alle {0} Frequenzen aus der Liste entfernen?
+"{0}" does not look like a virtual cable: the WebSDR audio will be played there all the time (and transmitted, if it is a radio's transmit sound card).\n\nUse this output anyway?	„{0}“ scheint kein virtuelles Kabel zu sein: Der WebSDR-Ton wird dort ständig wiedergegeben (und gesendet, falls es die Sende-Soundkarte eines Funkgeräts ist).\n\nDiese Ausgabe trotzdem verwenden?
+Name the other end of the cable "SDRLINK" ("{0}")…	Anderes Kabelende „SDRLINK“ nennen („{0}“)…
+This cable was already renamed "{0}": it may already be used by other software (VoiceMeeter…). Renaming it "{1}" means selecting it again in that software.\n\nContinue?	Dieses Kabel wurde bereits in „{0}“ umbenannt: Es wird möglicherweise schon von anderer Software verwendet (VoiceMeeter…). Wenn Sie es in „{1}“ umbenennen, muss es dort neu ausgewählt werden.\n\nFortfahren?
+The recording device "{0}" will be renamed "{1}".\n\nIt will show under this name in the audio inputs of WSJT-X, JTDX, fldigi… (restart them). Windows may ask for administrator permission.\n\nContinue?	Das Aufnahmegerät „{0}“ wird in „{1}“ umbenannt.\n\nEs erscheint unter diesem Namen in den Audioeingängen von WSJT-X, JTDX, fldigi… (bitte neu starten). Windows fragt möglicherweise nach Administratorrechten.\n\nFortfahren?
+Done: the audio input is now called "{0}". Restart WSJT-X to see it.	Fertig: Der Audioeingang heißt jetzt „{0}“. Starten Sie WSJT-X neu, um ihn zu sehen.
+Renaming failed ({0}).\n\nBy hand: Sound control panel › Recording tab › "{1}" › Properties › name.	Umbenennen fehlgeschlagen ({0}).\n\nManuell: Systemsteuerung Sound › Registerkarte Aufnahme › „{1}“ › Eigenschaften › Name.
+SDRLINK cable: WebSDR audio sent to "{0}"	SDRLINK-Kabel: WebSDR-Ton wird an „{0}“ gesendet
+SDRLINK cable: "{0}": {1}	SDRLINK-Kabel: „{0}“: {1}
+ExpertSDR is running but does not answer on TCI port {0}: right-click "WebSDR volume" to change the port.	ExpertSDR läuft, antwortet aber nicht auf TCI-Port {0}: Rechtsklick auf „WebSDR-Lautstärke“, um den Port zu ändern.
+SDRLink cannot mute ExpertSDR: ExpertSDR does not play through Windows sound (audio comes out of the radio or through ASIO), and its TCI server does not answer on port {0}.\n\nIn ExpertSDR, enable the TCI server (Options > TCI). If its port is not {0}, right-click Mute ExpertSDR to set it.	SDRLink kann ExpertSDR nicht stummschalten: ExpertSDR gibt den Ton nicht über Windows aus (Ton kommt aus dem Gerät oder über ASIO), und sein TCI-Server antwortet nicht auf Port {0}.\n\nAktivieren Sie in ExpertSDR den TCI-Server (Options > TCI). Ist sein Port nicht {0}, stellen Sie ihn per Rechtsklick auf „ExpertSDR stumm“ ein.
+"{0}" added to "{1}".	„{0}“ zu „{1}“ hinzugefügt.
+This page is not in "{0}".	Diese Seite ist nicht in „{0}“.
+Remove "{0}" from "{1}"?	„{0}“ aus „{1}“ entfernen?
+Unexpected error, written to the log: {0}	Unerwarteter Fehler, im Protokoll vermerkt: {0}
+Memory "{0}" added to "{1}".	Speicher „{0}“ zu „{1}“ hinzugefügt.
+Memory "{0}": {1} kHz	Speicher „{0}“: {1} kHz
+at {0} kHz	ab {0} kHz
+from the start ({0} kHz): current frequency out of range	von vorn ({0} kHz): aktuelle Frequenz außerhalb des Bereichs
+at memory {0}	ab Speicher {0}
+from the start ({0}): current frequency not in the memories	von vorn ({0}): aktuelle Frequenz nicht in den Speichern
+click in the page, stopped on {0} kHz	Klick in die Seite, angehalten auf {0} kHz
+Scan stopped: {0}	Suchlauf beendet: {0}
+Scan: {0}	Suchlauf: {0}
+Cannot record: {0}	Aufnahme nicht möglich: {0}
+Rig sound card "{0}" not available ({1}): recording the speakers	Soundkarte des Funkgeräts „{0}“ nicht verfügbar ({1}): Aufnahme der Lautsprecher
+Recording the sound of "{0}" (click REC to stop)	Ton von „{0}“ wird aufgenommen (zum Beenden auf REC klicken)
+{0} (not connected)	{0} (nicht angeschlossen)
+REC: "{0}" will be recorded when only the rig is heard	REC: „{0}“ wird aufgenommen, wenn nur das Funkgerät gehört wird
+Writing "{0}": {1}%	Schreibe „{0}“: {1} %
+Recording saved: "{0}"	Aufnahme gespeichert: „{0}“
+Last {0} messages (click: hide or show this kind of message again, ✓ = hidden)	Letzte {0} Meldungen (Klick: diese Art von Meldung ausblenden oder wieder anzeigen, ✓ = ausgeblendet)
+Show all hidden messages again ({0})	Alle ausgeblendeten Meldungen wieder anzeigen ({0})
+A new version of SDRLink is available: V{0}	Eine neue Version von SDRLink ist verfügbar: V{0}
+Version in use: V{0}	Verwendete Version: V{0}
+Latest published version: V{0}	Neueste veröffentlichte Version: V{0}
+Version {0} page (download, what's new):	Seite der Version {0} (Download, Neuerungen):
+Interface:	Schnittstelle:
+Brand:	Hersteller:
+Model:	Modell:
+Port:	Port:
+Baud rate:	Baudrate:
+Stop bits:	Stoppbits:
+CI-V address (hex):	CI-V-Adresse (hex):
+OmniRig rig:	OmniRig-Rig:
+Host:	Host:
+TX detection (HRD):	TX-Erkennung (HRD):
+Hamlib model no.:	Hamlib-Modellnr.:
+Language:	Sprache:
+Sync:	Sync:
+WebSDR offset (Hz):	WebSDR-Offset (Hz):
+restore after (ms):	zurück nach (ms):
+kHz:	kHz:
+Step:	Schritt:
+WebSDR:	WebSDR:
+WebSDR volume:	WebSDR-Lautstärke:
+TRX volume:	TRX-Lautst.:
+ExpertSDR volume:	ExpertSDR-Lautstärke:
+HDSDR volume:	HDSDR-Lautstärke:
+Open log	Log öffnen
+Text size…	Textgröße…
+Import/Export ▾	Import/Export ▾
+…	…
+Download Hamlib…	Hamlib herunterladen…
+SDRLINK cable ▾	SDRLINK-Kabel ▾
+Scan setup	Suchlauf einrichten
+▶ Scan	▶ Suchlauf
+QSY	QSY
+Save	Save
+Memories	Speicher
+▾	▾
+Go	Los
+◀ Back	◀ Zurück
+Reload	Neu laden
+★ Add to favorites	★ Zu Favoriten
+Remove from favorites	Aus Favoriten entfernen
+Manage favorites…	Favoriten verwalten…
+Find WebSDRs…	WebSDRs suchen…
+Mute WebSDR	WebSDR stumm
+Mute TRX	TRX stumm
+⇄	⇄
+Mute ExpertSDR	ExpertSDR stumm
+Mute HDSDR	HDSDR stumm
+Auto-connect at startup	Beim Start automatisch verbinden
+Dark mode	Dunkelmodus
+Check for updates	Nach Updates suchen
+RTS	RTS
+DTR	DTR
+Start rigctld:	rigctld starten:
+Sync mode	Mode synchronisieren
+Mute WebSDR while transmitting	WebSDR beim Senden stumm
+Auto notch (DNF)	Auto-Notch (DNF)
+Reduced view	Reduzierte Ansicht
+Mini view	Mini-Ansicht
+Always on top	Immer im Vordergrund
+PTT view	PTT-Ansicht
+COM port (direct CAT)	COM-Port (direkt CAT)
+OmniRig	OmniRig
+TCI	TCI
+Ham Radio Deluxe	Ham Radio Deluxe
+Hamlib (rigctld)	Hamlib (rigctld)
+MOX/TX/PTT buttons	MOX/TX/PTT-Tasten
+MOX/VOX/TX/PTT buttons	MOX/VOX/TX/PTT-Tasten
+Both ways	Beide Richtungen
+Rig → WebSDR	TRX → WebSDR
+WebSDR → Rig	WebSDR → TRX
+100 Hz	100 Hz
+250 Hz	250 Hz
+500 Hz	500 Hz
+1 kHz	1 kHz
+2.5 kHz	2,5 kHz
+5 kHz	5 kHz
+10 kHz	10 kHz
+Frequency (kHz):	Frequenz (kHz):
+Mode:	Betriebsart:
+(mode unchanged)	(Betriebsart unverändert)
+Edit…	Bearbeiten…
+Frequency (kHz)	Frequenz (kHz)
+Mode	Betriebsart
+Select a memory first.	Wählen Sie zuerst einen Speicher.
+Edit memory	Speicher bearbeiten
+{0} memory(ies). Click a memory to go there.	{0} Speicher. Klicken Sie auf einen Speicher, um ihn einzustellen.
+Tuned to "{0}" ({1} kHz).	Eingestellt auf „{0}“ ({1} kHz).
+Remove the memory "{0}"?	Speicher „{0}“ entfernen?
+Delete the list "{0}" and its {1} memory(ies)?	Liste „{0}“ und ihre {1} Speicher löschen?
+OmniRig is not installed (OmniRig.OmniRigX not found).	OmniRig ist nicht installiert (OmniRig.OmniRigX nicht gefunden).
+Dark mode colour	Farbe Dunkelmodus
+Light mode colour	Farbe Hellmodus
+SDRLink needs Microsoft .NET Framework 4.6.2 or later (4.8 recommended).\nIt is not installed on this PC.\n\nDownload and install .NET Framework 4.8 now?\n(a restart may be required, then start SDRLink again)	SDRLink benötigt Microsoft .NET Framework 4.6.2 oder höher (4.8 empfohlen).\nEs ist auf diesem PC nicht installiert.\n\n.NET Framework 4.8 jetzt herunterladen und installieren?\n(eventuell ist ein Neustart erforderlich, danach SDRLink erneut starten)
+SDRLink - missing component	SDRLink - fehlende Komponente
+SDRLink needs the Microsoft Edge WebView2 Runtime to display WebSDRs.\nIt is not installed on this PC.\n\nDownload and install WebView2 now? (free, about 2 MB)	SDRLink benötigt die Microsoft Edge WebView2 Runtime, um WebSDRs anzuzeigen.\nSie ist auf diesem PC nicht installiert.\n\nWebView2 jetzt herunterladen und installieren? (kostenlos, ca. 2 MB)
+Download or installation failed:\n	Download oder Installation fehlgeschlagen:\n
+\n\nThe official download page will open:\n	\n\nDie offizielle Downloadseite wird geöffnet:\n
+the audio output does not answer	der Audioausgang antwortet nicht
+recording too long for the WAV format (4 GB at most)	Aufnahme zu lang für das WAV-Format (höchstens 4 GB)
+Save the recording	Aufnahme speichern
+Folder:	Ordner:
+Format:	Format:
+Browse…	Durchsuchen…
+Save file	Speichern
+Delete	Löschen
+Delete this recording without saving it?	Diese Aufnahme löschen, ohne sie zu speichern?
+compressed, plays everywhere	komprimiert, überall abspielbar
+lossless, large file	verlustfrei, große Datei
+lossless, compressed	verlustfrei, komprimiert
+Folder where the recording is saved	Ordner, in dem die Aufnahme gespeichert wird
+Enter a name for the file.	Geben Sie einen Dateinamen ein.
+Cannot create the folder: 	Ordner kann nicht erstellt werden: 
+unsupported audio format ({0} bits, {1} Hz)	Audioformat nicht unterstützt ({0} Bit, {1} Hz)
+Windows MP3 encoder not available (0x{0:X8}): choose WAV or FLAC	MP3-Encoder von Windows nicht verfügbar (0x{0:X8}): WAV oder FLAC wählen
+Recording length: {0}	Aufnahmedauer: {0}
+"{0}" already exists. Replace it?	„{0}“ existiert bereits. Ersetzen?
+Full reset (all settings, memories and colours are lost)	Vollständiges Zurücksetzen (alle Einstellungen, Speicher und Farben gehen verloren)
+SDRLink goes back to how it was when first installed: starting WebSDR favorites, no memory, no scan, original colours, browser data deleted.	SDRLink wird wie bei der ersten Installation: Start-Favoriten für WebSDR, keine Speicher, kein Suchlauf, ursprüngliche Farben, Browserdaten gelöscht.
+Partial reset:	Teilweises Zurücksetzen:
+Colours (buttons, REC, palette)	Farben (Schaltflächen, REC, Palette)
+WebSDR (favorites and favorite lists, back to the starting ones)	WebSDR (Favoriten und Favoritenlisten, auf den Anfangsstand zurückgesetzt)
+Configuration (rig, interface, sync, audio, display, language, name…)	Konfiguration (Funkgerät, Schnittstelle, Synchronisation, Ton, Anzeige, Sprache, Name…)
+Built-in browser data (cache, cookies, settings kept by the WebSDR sites)	Daten des eingebauten Browsers (Cache, Cookies, Einstellungen der WebSDR-Seiten)
+Worth trying if the WebSDR pages no longer show (empty window, as if there were no Internet).	Einen Versuch wert, wenn die WebSDR-Seiten nicht mehr angezeigt werden (leeres Fenster, wie ohne Internet).
+Reset	Zurücksetzen
+SDRLink will then restart. The current settings are kept in {0} (Import/Export can load them back). SDRLink updates never reset anything.	SDRLink startet danach neu. Die aktuellen Einstellungen werden in {0} aufbewahrt (Import/Export kann sie wieder laden). Updates von SDRLink setzen nie etwas zurück.
+Connecting...	Verbinden...
+Connected, waiting for the rig...	Verbunden, warte auf den TRX...
+Rig online	TRX online
+The rig does not answer (check port, baud rate, CI-V address, CAT menu)	Der TRX antwortet nicht (Port, Baudrate, CI-V-Adresse, CAT-Menü prüfen)
+Error: 	Fehler: 
+Profile:	Profil:
+Rename	Umbenennen
+Scan type:	Art des Suchlaufs:
+Frequencies	Frequenzen
+Start (kHz):	Start (kHz):
+End (kHz):	Ende (kHz):
+Time on each frequency:	Dauer je Frequenz:
+Skipped ranges (from … to … kHz):	Ausgelassene Bereiche (von … bis … kHz):
++ Skipped range	+ Ausgelassener Bereich
+Memories to scan:	Zu durchlaufende Speicher:
+Time on each memory:	Dauer je Speicher:
+(no memory: Memories button)	(keine Speicher: Schaltfläche Speicher)
+Start scan	Suchlauf starten
+from	von
+to	bis
+First type a profile name in the "Profile" box.	Geben Sie zuerst einen Profilnamen in das Feld „Profil“ ein.
+First choose a profile in the list, then type its new name in the box and click Rename.	Wählen Sie zuerst ein Profil in der Liste, geben Sie dann den neuen Namen in das Feld ein und klicken Sie auf Umbenennen.
+Choose in the list the profile to delete.	Wählen Sie in der Liste das zu löschende Profil.
+Enter different start and end frequencies, in kHz (e.g. 7000 and 7200).	Geben Sie unterschiedliche Start- und Endfrequenzen in kHz ein (z. B. 7000 und 7200).
+All frequencies from start to end are in skipped ranges.	Alle Frequenzen von Anfang bis Ende liegen in ausgelassenen Bereichen.
+Check at least one memory to scan.	Kreuzen Sie mindestens einen Speicher an.
+memories: {0}, {1}	Speicher: {0}, {1}
+skipped ranges: {0}	ausgelassene Bereiche: {0}
+{0} s	{0} s
+{0} min	{0} min
+Replace the profile "{0}" with the settings shown?	Profil „{0}“ durch die angezeigten Einstellungen ersetzen?
+{0} profiles at most: delete one first.	Höchstens {0} Profile: Löschen Sie zuerst eines.
+The profile "{0}" already exists.	Das Profil „{0}“ existiert bereits.
+Delete the profile "{0}"?	Profil „{0}“ löschen?
+Skipped range no. {0}: enter two frequencies in kHz (e.g. 7097 and 7103).	Ausgelassener Bereich Nr. {0}: Geben Sie zwei Frequenzen in kHz ein (z. B. 7097 und 7103).
+No TCI server at 	Kein TCI-Server unter 
+TCI connection lost	TCI-Verbindung verloren
+unavailable	nicht verfügbar
+unexpected format	unerwartetes Format
+Find WebSDRs (France and neighbouring countries)	WebSDRs suchen (Frankreich und Nachbarländer)
+All	Alle
+Max distance from the centre of France (km):	Max. Entfernung von der Mitte Frankreichs (km):
+Filter:	Filter:
+Type:	Typ:
+Location	Standort
+Country	Land
+Users	Nutzer
+Add checked to favorites	Markierte zu Favoriten
+Refresh	Aktualisieren
+Searching directories (websdr.org, KiwiSDR, ReceiverBook)…	Verzeichnisse werden durchsucht (websdr.org, KiwiSDR, ReceiverBook)…
+Please select a receiver in the list first.	Bitte wählen Sie zuerst einen Empfänger in der Liste aus.
+Please check the receivers to add first.	Markieren Sie zuerst die hinzuzufügenden Empfänger.
+Add to favorites	Zu Favoriten hinzufügen
+{0} receiver(s) shown, {1} checked, {2} already in favorites hidden   —   sources: 	{0} Empfänger angezeigt, {1} markiert, {2} bereits in Favoriten ausgeblendet   —   Quellen: 
+{0} favorite(s) added to "{1}". You can rename them in "Manage favorites…".	{0} Favorit(en) zu „{1}“ hinzugefügt. Sie können sie unter „Favoriten verwalten…“ umbenennen.
+Profile name	Profilname
+Noise reducer (DNR)	Rauschminderer (DNR)
+Check at startup	Beim Start prüfen
+Name or callsign for WebSDRs	Name oder Rufzeichen für WebSDRs
+Import: this file does not contain SDRLink or PhoneSDRLink settings	Import: Diese Datei enthält keine SDRLink- oder PhoneSDRLink-Einstellungen
+Configuration (display, language, name…)	Konfiguration (Anzeige, Sprache, Name…)
+Favorites, memories and scan profiles already in the app:	Favoriten, Speicher und Scan-Profile, die bereits in der App sind:
+Full reset (all settings, favorites and memories are lost)	Vollständiges Zurücksetzen (alle Einstellungen, Favoriten und Speicher gehen verloren)
+Full reset: all settings, favorites, memories and scans will be lost.	Vollständiges Zurücksetzen: Alle Einstellungen, Favoriten, Speicher und Scans gehen verloren.
+⚠ Warning	⚠ Warnung
+Continue?	Fortfahren?
+WebSDR address	WebSDR-Adresse
+Check a single favorite.	Wählen Sie nur einen Favoriten aus.
+Tick to add to favorites; long-press a receiver to listen to it.	Zum Hinzufügen zu den Favoriten ankreuzen; einen Empfänger lange drücken, um ihn zu hören.
+◀ swipe: − frequency | + frequency ▶	◀ Wischen: − Frequenz | + Frequenz ▶
+🔇 Muted	🔇 Stumm
+The page crashed: reloading	Die Seite ist abgestürzt: Neuladen
+Phone call: WebSDR sound muted	Telefonanruf: WebSDR-Ton stummgeschaltet
+PhoneSDRLink: updates	PhoneSDRLink: Updates
+You are using the latest version.	Sie verwenden die neueste Version.

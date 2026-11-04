@@ -1,0 +1,36 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'fr.f5pbg.phonesdrlink'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'fr.f5pbg.phonesdrlink'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+    signingConfigs {
+        release {
+            storeFile file('../phonesdrlink.jks')
+            storePassword 'phonesdrlink'
+            keyAlias 'phonesdrlink'
+            keyPassword 'phonesdrlink'
+        }
+    }
+    buildTypes {
+        release {
+            if (file('../phonesdrlink.jks').exists()) signingConfig signingConfigs.release
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lint { abortOnError false; checkReleaseBuilds false }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.11.0'
+}

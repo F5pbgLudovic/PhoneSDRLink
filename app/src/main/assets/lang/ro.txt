@@ -1,0 +1,464 @@
+sound card not found	placa de sunet nu a fost găsită
+sound card unplugged or disabled	placa de sunet deconectată sau dezactivată
+output not found	ieșire negăsită
+output already used in exclusive mode by another program	ieșire deja folosită în mod exclusiv de alt program
+cannot open, error 	nu se poate deschide, eroare 
+Name:	Nume:
+Address:	Adresă:
+Cancel	Anulare
+List:	Listă:
+Please enter a name and an address.	Introduceți un nume și o adresă.
+Save to list:	Salvare în listă:
+Rename list	Redenumire listă
+Favorite manager	Gestionare favorite
+Add favorite…	Adăugare favorit…
+Import…	Import…
+Export…	Export…
+Selected / checked items	Elemente selectate / bifate
+Remove…	Eliminare…
+Rename…	Redenumire…
+Move up	Mutare sus
+Move down	Mutare jos
+Check	Verificare
+Check favorites	Verificare favorite
+Check all	Bifează tot
+Uncheck all	Debifează tot
+Move to ▸	Mutare în ▸
+New list	Listă nouă
+Delete list…	Șterge lista…
+(right-click the list to rename it)	(clic dreapta pe listă pentru a o redenumi)
+Name	Nume
+Address	Adresă
+Status	Stare
+List	Listă
+Listen to selection	Ascultare selecție
+Open	Deschidere
+Close	Închidere
+All lists	Toate listele
+Please select a favorite in the list first.	Selectați mai întâi un favorit din listă.
+Add favorite	Adăugare favorit
+checking…	verificare…
+OK	OK
+invalid address	adresă nevalidă
+answers	răspunde
+not found	negăsit
+answers (certificate)	răspunde (certificat)
+no answer	nu răspunde
+unknown host	gazdă necunoscută
+connection refused	conexiune refuzată
+unreachable	inaccesibil
+Import favorites	Import favorite
+Favorites (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|All files (*.*)|*.*	Favorite (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|Toate fișierele (*.*)|*.*
+Export favorites	Export favorite
+Firefox / browser bookmarks (*.html)|*.html|CSV, Excel-readable (*.csv)|*.csv|Text (*.txt)|*.txt	Firefox / Marcaje browser (*.html)|*.html|CSV, compatibil Excel (*.csv)|*.csv|Text (*.txt)|*.txt
+This WebSDR is already in "{0}".	Acest WebSDR este deja în „{0}”.
+List {0}	Lista {0}
+Rename "{0}"…	Redenumire „{0}”…
+List "{0}" added ({1}/{2}).	Lista „{0}” a fost adăugată ({1}/{2}).
+Delete the list "{0}" (empty)?	Ștergeți lista „{0}” (goală)?
+Delete the list "{0}" and its {1} favorite(s)?	Ștergeți lista „{0}” și cele {1} favorite ale ei?
+List "{0}" deleted.	Lista „{0}” a fost ștearsă.
+{0} favorite(s) moved to "{1}".	{0} favorit(e) mutat(e) în „{1}”.
+{0} favorite(s) shown, {1} checked	{0} favorit(e) afișat(e), {1} bifat(e)
+Remove favorite "{0}"?	Eliminați favoritul „{0}”?
+Remove the {0} checked favorites?	Eliminați cele {0} favorite bifate?
+Checking {0} address(es)…	Verificare {0} adresă(e)…
+Checking… {0} left	Verificare… mai rămân {0}
+Check done: {1} duplicate(s) removed, {0} dead link(s) checked. Click "Remove…" to delete them.	Verificare terminată: {1} duplicat(e) eliminat(e), {0} link(uri) inactiv(e) bifate. Faceți clic pe „Eliminare…” pentru a le șterge.
+{0} favorite(s) imported, {1} already present.	{0} favorit(e) importat(e), {1} deja existent(e).
+{0} favorite(s) exported.	{0} favorit(e) exportat(e).
+rigctld connection closed	Conexiune rigctld închisă
+stopped	oprit
+No rigctld at {0}:{1} (start rigctld, or tick "Start rigctld").	Niciun rigctld la {0}:{1} (porniți rigctld sau bifați „Pornire rigctld”).
+Invalid HRD answer	Răspuns HRD nevalid
+HRD connection closed	Conexiune HRD închisă
+No HRD server at {0}:{1} (enable the IP server in HRD Rig Control).	Niciun server HRD la {0}:{1} (activați serverul IP în HRD Rig Control).
+Import settings	Importă setări
+What should be imported from this file?	Ce trebuie importat din acest fișier?
+Configuration (rig, interface, display, colours, language…)	Configurație (stație, interfață, afișare, culori, limbă…)
+WebSDR (favorites and favorite lists)	WebSDR (favorite și liste de favorite)
+Frequency memories	Memorii de frecvențe
+Scan (setting, skipped ranges and scan profiles)	Scanare (setare, intervale omise și profiluri de scanare)
+ — not in the file	 — lipsește din fișier
+Favorites, memories and scan profiles already in SDRLink:	Favorite, memorii și profiluri de scanare deja existente în SDRLink:
+keep them and add those of the file (no duplicates)	păstrați-le și adăugați-le pe cele din fișier (fără dubluri)
+delete them and replace them with those of the file	ștergeți-le și înlocuiți-le cu cele din fișier
+SDRLink will then restart. The current settings are kept in settings.avant-import.ini.	SDRLink va reporni apoi. Setările actuale sunt păstrate în settings.avant-import.ini.
+Import	Importă
+Cannot open the log: 	Nu se poate deschide jurnalul: 
+Export all settings…	Exportă toate setările…
+Import settings…	Importă setări…
+Reset the program…	Resetare program…
+Export or import all settings, for the same configuration on another computer (right-click: reset the program, button colour)	Exportați sau importați toate setările, pentru aceeași configurație pe alt calculator (clic dreapta: resetare program, culoarea butonului)
+Name or callsign given automatically to WebSDRs that ask for one before the audio (KiwiSDR, websdr.org). Click: change it (right-click: button colour)	Nume sau indicativ dat automat receptoarelor WebSDR care îl cer înainte de sunet (KiwiSDR, websdr.org). Clic: schimbare (clic dreapta: culoarea butonului)
+Right-click: receivers muted while transmitting	Clic dreapta: receptoare puse pe mut în emisie
+Save: no known frequency (rig or WebSDR)	Salvare: nicio frecvență cunoscută (stație sau WebSDR)
+Store the current frequency…	Memorează frecvența actuală…
+Switch the audio to the next receiver (right-click: receiver to keep muted)	Comută sunetul la receptorul următor (clic dreapta: receptor care rămâne fără sunet)
+Colour when connected	Culoare când este conectat
+Colour when disconnected	Culoare când este deconectat
+Colour when on	Culoare când este activat
+Colour when off	Culoare când este dezactivat
+Colour when the scan is stopped	Culoare cu scanarea oprită
+Colour while scanning	Culoare în timpul scanării
+Colour when receiving	Culoare la recepție
+Colour when transmitting (PTT on)	Culoare la emisie (PTT activat)
+Background colour	Culoarea fundalului
+Text colour	Culoarea textului
+Colour of the selected mode	Culoarea modului selectat
+Colour of the other modes	Culoarea celorlalte moduri
+Colour when muted	Culoare cu sunetul oprit
+Colour when the sound is on	Culoare cu sunetul pornit
+Export all SDRLink settings	Exportă toate setările SDRLink
+SDRLink settings (*.ini)|*.ini	Setări SDRLink (*.ini)|*.ini
+Cannot export the settings: 	Setările nu pot fi exportate: 
+Import SDRLink settings	Importă setări SDRLink
+Cannot import the settings: 	Setările nu pot fi importate: 
+Import: this file does not contain SDRLink settings	Import: acest fișier nu conține setări SDRLink
+Full reset: all settings, favorites, memories, scans and colours will be lost.	Resetare totală: toate setările, favoritele, memoriile, scanările și culorile vor fi pierdute.
+The checked items will be set back as at first installation.	Elementele bifate vor reveni ca la prima instalare.
+SDRLink will restart. Continue?	SDRLink va reporni. Continuați?
+Reset the program	Resetare program
+Cannot reset: 	Resetare imposibilă: 
+Button colour	Culoarea butonului
+RIG	STAȚIE
+Disconnected	Deconectat
+Connect	Conectare
+Disconnect	Deconectare
+Location of rigctld.exe (Hamlib)	Locația rigctld.exe (Hamlib)
+Programs (*.exe)|*.exe	Programe (*.exe)|*.exe
+Please choose a rig model.	Alegeți un model de stație.
+Invalid CI-V address (e.g. 70 for the IC-7000).	Adresă CI-V nevalidă (de ex. 70 pentru IC-7000).
+rigctld.exe (Hamlib) was not found. Set its location with the "…" button, or install Hamlib (free).\n\nOpen the Hamlib download page?	rigctld.exe (Hamlib) nu a fost găsit. Indicați locația cu butonul „…” sau instalați Hamlib (gratuit).\n\nDeschideți pagina de descărcare Hamlib?
+Please choose the rig's COM port.	Alegeți portul COM al stației.
+Cannot start rigctld: 	Nu se poate porni rigctld: 
+TX safety timeout (PTT button)	Limită de siguranță TX (buton PTT)
+Off	Dezactivat
+PTT: connect the rig first	PTT: conectați mai întâi stația
+transmitting	emisie
+Receivers muted while transmitting:	Receptoare puse pe mut în emisie:
+Rig (Mute TRX)	Stație (Mut TRX)
+Invalid frequency: type a value in kHz, e.g. 7074 or 14074.5	Frecvență nevalidă: introduceți o valoare în kHz, de ex. 7074 sau 14074.5
+Remove this value (pick it in the list first)	Eliminare valoare (alegeți-o mai întâi din listă)
+RIG 	STAȚIE 
+Cannot start WebView2 (Edge):\n	Nu se poate porni WebView2 (Edge):\n
+Name or callsign given to WebSDRs that ask for one (KiwiSDR, websdr.org):	Nume sau indicativ pentru receptoarele WebSDR care îl cer (KiwiSDR, websdr.org):
+The callsign cannot be empty.	Numele nu poate fi gol.
+A name already typed on a site is kept. To give no name: a non-breaking space (Alt+255).	Un nume deja tastat pe un site este păstrat. Pentru a nu da niciun nume: un spațiu neseparabil (Alt+255).
+Invalid address: 	Adresă nevalidă: 
+SDRLINK cable: no virtual audio cable found. Install VB-CABLE (free): "SDRLINK cable" button.	Cablu SDRLINK: nu s-a găsit niciun cablu audio virtual. Instalați VB-CABLE (gratuit): butonul „Cablu SDRLINK”.
+Output receiving the WebSDR audio:	Ieșirea care primește sunetul WebSDR:
+Name the other end of the cable "SDRLINK" (pick a virtual cable first)	Numește „SDRLINK” celălalt capăt al cablului (alegeți mai întâi un cablu virtual)
+Download VB-CABLE (free, vb-audio.com)…	Descărcare VB-CABLE (gratuit, vb-audio.com)…
+permission denied	permisiune refuzată
+error	eroare
+SDRLINK cable	Cablu SDRLINK
+ (off) ▾	 (oprit) ▾
+Mute TRX: connect the rig first	Mut TRX: conectați mai întâi stația
+Rig volume not available with this rig or interface (OmniRig, HRD, FT-817/818…)	Volumul stației nu este disponibil cu această stație sau interfață (OmniRig, HRD, FT-817/818…)
+Mutes ignored by ⇄ (stay muted, two at most):	Dezactivări de sunet ignorate de ⇄ (rămân fără sunet, cel mult două):
+None	Niciuna
+HDSDR does not play through Windows sound (reception stopped, or audio through ASIO): SDRLink cannot mute it.	HDSDR nu redă prin sunetul Windows (recepție oprită sau sunet prin ASIO): SDRLink nu îi poate opri sunetul.
+ExpertSDR TCI port	Portul TCI al ExpertSDR
+TCI server port (ExpertSDR, Options > TCI):	Portul serverului TCI (ExpertSDR, Options > TCI):
+Add memory	Adaugă memorie
+Resume the scan	Reluare scanare
+Current "Scan setup" setting	Setarea actuală din „Configurare scanare”
+No scan while transmitting	Nu se poate scana în timpul emisiei
+Scan: set the start and end frequencies in "Scan setup"	Scanare: indicați frecvențele de început și de sfârșit în „Configurare scanare”
+Scan: all frequencies are in skipped ranges ("Scan setup")	Scanare: toate frecvențele sunt în intervale omise („Configurare scanare”)
+Scan: check memories in "Scan setup"	Scanare: bifați memorii în „Configurare scanare”
+frequencies not set	frecvențe nesetate
+all frequencies are in skipped ranges	toate frecvențele sunt în intervale omise
+no memory checked	nicio memorie bifată
+Scan stopped	Scanare oprită
+■ Stop scan	■ Oprește scanarea
+Rig sound card, recorded when Mute WebSDR, Mute ExpertSDR and Mute HDSDR are on:	Placa de sunet a stației, înregistrată când Mute WebSDR, Mute ExpertSDR și Mute HDSDR sunt active:
+None (always the speakers)	Niciuna (întotdeauna difuzoarele)
+REC button width	Lățimea butonului REC
+Narrow	Îngust
+Wide	Lat
+REC button colour	Culoarea butonului REC
+Navy blue (default)	Bleumarin (implicit)
+Navy blue	Bleumarin
+Blue	Albastru
+Sky blue	Bleu
+Teal	Verde-albăstrui
+Green	Verde
+Red	Roșu
+Burgundy	Bordo
+Purple	Violet
+Pink	Roz
+Brown	Maro
+Grey	Gri
+Black	Negru
+Yellow	Galben
+Orange	Portocaliu
+White	Alb
+Default	Implicit
+Other colour…	Altă culoare…
+REC: recording the speakers	REC: înregistrarea difuzoarelor
+Empty recording: nothing to save	Înregistrare goală: nimic de salvat
+Recording deleted	Înregistrare ștearsă
+The file could not be written: 	Fișierul nu a putut fi scris: 
+Stop recording and save the sound	Oprește înregistrarea și salvează sunetul
+Record the sound heard in the speakers (right-click: rig sound card, colour)	Înregistrează sunetul auzit în difuzoare (clic dreapta: placa de sunet a stației, culoare)
+(no memory used yet)	(nicio memorie folosită încă)
+Memories…	Memorii…
+Clear this list	Golește această listă
+Text size	Dimensiunea textului
+Window text size (100% = original size):	Dimensiunea textului ferestrei (100 % = dimensiunea inițială):
+(no message)	(niciun mesaj)
+SDRLink: update available	SDRLink: actualizare disponibilă
+SDRLink: updates	SDRLink: actualizări
+Could not reach GitHub to check for updates.	Nu s-a putut contacta GitHub pentru căutarea actualizărilor.
+You are using the latest version of SDRLink.	Folosiți cea mai recentă versiune a SDRLink.
+Latest published version: unknown	Ultima versiune publicată: necunoscută
+All versions (the latest one is marked “Latest”):	Toate versiunile (cea mai recentă este marcată „Latest”):
+To stop these notices, untick “Check for updates”.	Pentru a nu mai primi aceste anunțuri, debifați „Caută actualizări”.
+Later	Mai târziu
+Open the update page	Deschide pagina actualizării
+Last {0} memories used	Ultimele {0} memorii folosite
+ExpertSDR TCI port: {0}…	Portul TCI al ExpertSDR: {0}…
+⚠ Update V{0} available: click to download it	⚠ Actualizarea V{0} este disponibilă: faceți clic pentru a o descărca
+Settings exported to "{0}"	Setări exportate în „{0}”
+Transmission stopped automatically after {0} (safety timeout, right-click PTT to change it)	Emisie oprită automat după {0} (limită de siguranță, clic dreapta pe PTT pentru a o modifica)
+Remove "{0}" from the list	Eliminare „{0}” din listă
+Remove all ({0} values)	Eliminare toate ({0} valori)
+Remove all {0} frequencies from the list?	Eliminați toate cele {0} frecvențe din listă?
+"{0}" does not look like a virtual cable: the WebSDR audio will be played there all the time (and transmitted, if it is a radio's transmit sound card).\n\nUse this output anyway?	„{0}” nu pare a fi un cablu virtual: sunetul WebSDR va fi redat acolo permanent (și emis, dacă este placa de sunet de emisie a unei stații).\n\nFolosiți totuși această ieșire?
+Name the other end of the cable "SDRLINK" ("{0}")…	Numește „SDRLINK” celălalt capăt al cablului („{0}”)…
+This cable was already renamed "{0}": it may already be used by other software (VoiceMeeter…). Renaming it "{1}" means selecting it again in that software.\n\nContinue?	Acest cablu a fost deja redenumit „{0}”: poate fi deja folosit de alt program (VoiceMeeter…). Redenumirea în „{1}” va necesita selectarea lui din nou în acel program.\n\nContinuați?
+The recording device "{0}" will be renamed "{1}".\n\nIt will show under this name in the audio inputs of WSJT-X, JTDX, fldigi… (restart them). Windows may ask for administrator permission.\n\nContinue?	Dispozitivul de înregistrare „{0}” va fi redenumit „{1}”.\n\nVa apărea cu acest nume în intrările audio din WSJT-X, JTDX, fldigi… (reporniți-le). Windows poate cere permisiune de administrator.\n\nContinuați?
+Done: the audio input is now called "{0}". Restart WSJT-X to see it.	Gata: intrarea audio se numește acum „{0}”. Reporniți WSJT-X pentru a o vedea.
+Renaming failed ({0}).\n\nBy hand: Sound control panel › Recording tab › "{1}" › Properties › name.	Redenumirea a eșuat ({0}).\n\nManual: Panou de control Sunet › fila Înregistrare › „{1}” › Proprietăți › nume.
+SDRLINK cable: WebSDR audio sent to "{0}"	Cablu SDRLINK: sunetul WebSDR trimis la „{0}”
+SDRLINK cable: "{0}": {1}	Cablu SDRLINK: „{0}”: {1}
+ExpertSDR is running but does not answer on TCI port {0}: right-click "WebSDR volume" to change the port.	ExpertSDR rulează, dar nu răspunde pe portul TCI {0}: clic dreapta pe „Volum WebSDR” pentru a schimba portul.
+SDRLink cannot mute ExpertSDR: ExpertSDR does not play through Windows sound (audio comes out of the radio or through ASIO), and its TCI server does not answer on port {0}.\n\nIn ExpertSDR, enable the TCI server (Options > TCI). If its port is not {0}, right-click Mute ExpertSDR to set it.	SDRLink nu poate opri sunetul ExpertSDR: ExpertSDR nu redă sunetul prin Windows (sunetul iese din aparat sau prin ASIO), iar serverul său TCI nu răspunde pe portul {0}.\n\nÎn ExpertSDR, activați serverul TCI (Options > TCI). Dacă portul său nu este {0}, faceți clic dreapta pe „Mut ExpertSDR” pentru a-l indica.
+"{0}" added to "{1}".	„{0}” adăugat în „{1}”.
+This page is not in "{0}".	Această pagină nu este în „{0}”.
+Remove "{0}" from "{1}"?	Eliminați „{0}” din „{1}”?
+Unexpected error, written to the log: {0}	Eroare neașteptată, notată în jurnal: {0}
+Memory "{0}" added to "{1}".	Memoria „{0}” a fost adăugată la „{1}”.
+Memory "{0}": {1} kHz	Memoria „{0}”: {1} kHz
+at {0} kHz	de la {0} kHz
+from the start ({0} kHz): current frequency out of range	de la început ({0} kHz): frecvența curentă este în afara intervalului
+at memory {0}	de la memoria {0}
+from the start ({0}): current frequency not in the memories	de la început ({0}): frecvența curentă nu este în memorii
+click in the page, stopped on {0} kHz	clic în pagină, oprit pe {0} kHz
+Scan stopped: {0}	Scanare oprită: {0}
+Scan: {0}	Scanare: {0}
+Cannot record: {0}	Înregistrare imposibilă: {0}
+Rig sound card "{0}" not available ({1}): recording the speakers	Placa de sunet a stației „{0}” nu este disponibilă ({1}): înregistrarea difuzoarelor
+Recording the sound of "{0}" (click REC to stop)	Se înregistrează sunetul de la „{0}” (clic pe REC pentru a opri)
+{0} (not connected)	{0} (neconectată)
+REC: "{0}" will be recorded when only the rig is heard	REC: „{0}” va fi înregistrată când se ascultă doar stația
+Writing "{0}": {1}%	Se scrie „{0}”: {1} %
+Recording saved: "{0}"	Înregistrare salvată: „{0}”
+Last {0} messages (click: hide or show this kind of message again, ✓ = hidden)	Ultimele {0} mesaje (clic: ascundeți sau reafișați acest tip de mesaj, ✓ = ascuns)
+Show all hidden messages again ({0})	Reafișează toate mesajele ascunse ({0})
+A new version of SDRLink is available: V{0}	Este disponibilă o versiune nouă a SDRLink: V{0}
+Version in use: V{0}	Versiunea folosită: V{0}
+Latest published version: V{0}	Ultima versiune publicată: V{0}
+Version {0} page (download, what's new):	Pagina versiunii {0} (descărcare, noutăți):
+Interface:	Interfață:
+Brand:	Marcă:
+Model:	Model:
+Port:	Port:
+Baud rate:	Viteză:
+Stop bits:	Biți de stop:
+CI-V address (hex):	Adresă CI-V (hex):
+OmniRig rig:	Stație OmniRig:
+Host:	Gazdă:
+TX detection (HRD):	Detecție TX (HRD):
+Hamlib model no.:	Nr. model Hamlib:
+Language:	Limbă:
+Sync:	Sincr.:
+WebSDR offset (Hz):	Decalaj WebSDR (Hz):
+restore after (ms):	revenire după (ms):
+kHz:	kHz:
+Step:	Pas:
+WebSDR:	WebSDR:
+WebSDR volume:	Volum WebSDR:
+TRX volume:	Volum TRX:
+ExpertSDR volume:	Volum ExpertSDR:
+HDSDR volume:	Volum HDSDR:
+Open log	Deschidere jurnal
+Text size…	Dimensiunea textului…
+Import/Export ▾	Import/Export ▾
+…	…
+Download Hamlib…	Descărcare Hamlib…
+SDRLINK cable ▾	Cablu SDRLINK ▾
+Scan setup	Configurare scanare
+▶ Scan	▶ Scanare
+QSY	QSY
+Save	Salvare
+Memories	Memorii
+▾	▾
+Go	Mergi
+◀ Back	◀ Înapoi
+Reload	Reîncărcare
+★ Add to favorites	★ Adăugare la favorite
+Remove from favorites	Eliminare din favorite
+Manage favorites…	Gestionare favorite…
+Find WebSDRs…	Căutare WebSDR…
+Mute WebSDR	Mut WebSDR
+Mute TRX	Mut TRX
+⇄	⇄
+Mute ExpertSDR	Mut ExpertSDR
+Mute HDSDR	Mut HDSDR
+Auto-connect at startup	Conectare automată la pornire
+Dark mode	Mod întunecat
+Check for updates	Caută actualizări
+RTS	RTS
+DTR	DTR
+Start rigctld:	Pornire rigctld:
+Sync mode	Sincronizare mod
+Mute WebSDR while transmitting	Mut WebSDR în emisie
+Auto notch (DNF)	Notch auto (DNF)
+Reduced view	Afișare redusă
+Mini view	Afișare mini
+Always on top	Mereu deasupra
+PTT view	Afișare PTT
+COM port (direct CAT)	Port COM (CAT direct)
+OmniRig	OmniRig
+TCI	TCI
+Ham Radio Deluxe	Ham Radio Deluxe
+Hamlib (rigctld)	Hamlib (rigctld)
+MOX/TX/PTT buttons	Butoane MOX/TX/PTT
+MOX/VOX/TX/PTT buttons	Butoane MOX/VOX/TX/PTT
+Both ways	Bidirecțional
+Rig → WebSDR	Stație → WebSDR
+WebSDR → Rig	WebSDR → Stație
+100 Hz	100 Hz
+250 Hz	250 Hz
+500 Hz	500 Hz
+1 kHz	1 kHz
+2.5 kHz	2,5 kHz
+5 kHz	5 kHz
+10 kHz	10 kHz
+Frequency (kHz):	Frecvență (kHz):
+Mode:	Mod:
+(mode unchanged)	(mod neschimbat)
+Edit…	Modifică…
+Frequency (kHz)	Frecvență (kHz)
+Mode	Mod
+Select a memory first.	Selectați mai întâi o memorie.
+Edit memory	Modifică memoria
+{0} memory(ies). Click a memory to go there.	{0} memorie(i). Faceți clic pe o memorie pentru a merge la ea.
+Tuned to "{0}" ({1} kHz).	Acordat pe „{0}” ({1} kHz).
+Remove the memory "{0}"?	Eliminați memoria „{0}”?
+Delete the list "{0}" and its {1} memory(ies)?	Ștergeți lista „{0}” și cele {1} memorii ale ei?
+OmniRig is not installed (OmniRig.OmniRigX not found).	OmniRig nu este instalat (OmniRig.OmniRigX negăsit).
+Dark mode colour	Culoare mod întunecat
+Light mode colour	Culoare mod luminos
+SDRLink needs Microsoft .NET Framework 4.6.2 or later (4.8 recommended).\nIt is not installed on this PC.\n\nDownload and install .NET Framework 4.8 now?\n(a restart may be required, then start SDRLink again)	SDRLink necesită Microsoft .NET Framework 4.6.2 sau mai nou (recomandat 4.8).\nNu este instalat pe acest PC.\n\nDescărcați și instalați .NET Framework 4.8 acum?\n(poate fi necesară o repornire, apoi porniți din nou SDRLink)
+SDRLink - missing component	SDRLink - componentă lipsă
+SDRLink needs the Microsoft Edge WebView2 Runtime to display WebSDRs.\nIt is not installed on this PC.\n\nDownload and install WebView2 now? (free, about 2 MB)	SDRLink necesită Microsoft Edge WebView2 Runtime pentru a afișa WebSDR-urile.\nNu este instalat pe acest PC.\n\nDescărcați și instalați WebView2 acum? (gratuit, circa 2 MB)
+Download or installation failed:\n	Descărcarea sau instalarea a eșuat:\n
+\n\nThe official download page will open:\n	\n\nSe va deschide pagina oficială de descărcare:\n
+the audio output does not answer	ieșirea audio nu răspunde
+recording too long for the WAV format (4 GB at most)	înregistrare prea lungă pentru formatul WAV (cel mult 4 GB)
+Save the recording	Salvează înregistrarea
+Folder:	Dosar:
+Format:	Format:
+Browse…	Răsfoiește…
+Save file	Salvează
+Delete	Șterge
+Delete this recording without saving it?	Ștergeți această înregistrare fără a o salva?
+compressed, plays everywhere	comprimat, se redă oriunde
+lossless, large file	fără pierderi, fișier mare
+lossless, compressed	fără pierderi, comprimat
+Folder where the recording is saved	Dosarul în care se salvează înregistrarea
+Enter a name for the file.	Introduceți un nume pentru fișier.
+Cannot create the folder: 	Dosarul nu poate fi creat: 
+unsupported audio format ({0} bits, {1} Hz)	format audio neacceptat ({0} biți, {1} Hz)
+Windows MP3 encoder not available (0x{0:X8}): choose WAV or FLAC	Codorul MP3 din Windows nu este disponibil (0x{0:X8}): alegeți WAV sau FLAC
+Recording length: {0}	Durata înregistrării: {0}
+"{0}" already exists. Replace it?	„{0}” există deja. Îl înlocuiți?
+Full reset (all settings, memories and colours are lost)	Resetare totală (se pierd toate setările, memoriile și culorile)
+SDRLink goes back to how it was when first installed: starting WebSDR favorites, no memory, no scan, original colours, browser data deleted.	SDRLink redevine ca la prima instalare: favorite WebSDR inițiale, nicio memorie, nicio scanare, culori originale, datele browserului șterse.
+Partial reset:	Resetare parțială:
+Colours (buttons, REC, palette)	Culori (butoane, REC, paletă)
+WebSDR (favorites and favorite lists, back to the starting ones)	WebSDR (favorite și liste de favorite, readuse la cele inițiale)
+Configuration (rig, interface, sync, audio, display, language, name…)	Configurație (stație, interfață, sincronizare, sunet, afișare, limbă, nume…)
+Built-in browser data (cache, cookies, settings kept by the WebSDR sites)	Datele browserului integrat (cache, cookie-uri, setări păstrate de site-urile WebSDR)
+Worth trying if the WebSDR pages no longer show (empty window, as if there were no Internet).	Merită încercat dacă paginile WebSDR nu se mai afișează (fereastră goală, ca fără internet).
+Reset	Resetare
+SDRLink will then restart. The current settings are kept in {0} (Import/Export can load them back). SDRLink updates never reset anything.	SDRLink va reporni apoi. Setările actuale sunt păstrate în {0} (Import/Export le poate reîncărca). Actualizările SDRLink nu resetează niciodată nimic.
+Connecting...	Conectare...
+Connected, waiting for the rig...	Conectat, se așteaptă stația...
+Rig online	Stație online
+The rig does not answer (check port, baud rate, CI-V address, CAT menu)	Stația nu răspunde (verificați portul, viteza, adresa CI-V, meniul CAT)
+Error: 	Eroare: 
+Profile:	Profil:
+Rename	Redenumire
+Scan type:	Tip de scanare:
+Frequencies	Frecvențe
+Start (kHz):	Început (kHz):
+End (kHz):	Sfârșit (kHz):
+Time on each frequency:	Timp pe fiecare frecvență:
+Skipped ranges (from … to … kHz):	Intervale omise (de la … la … kHz):
++ Skipped range	+ Interval omis
+Memories to scan:	Memorii de scanat:
+Time on each memory:	Timp pe fiecare memorie:
+(no memory: Memories button)	(nicio memorie: butonul Memorii)
+Start scan	Pornește scanarea
+from	de la
+to	la
+First type a profile name in the "Profile" box.	Scrieți mai întâi un nume de profil în caseta „Profil”.
+First choose a profile in the list, then type its new name in the box and click Rename.	Alegeți mai întâi un profil din listă, apoi scrieți noul nume în casetă și faceți clic pe Redenumire.
+Choose in the list the profile to delete.	Alegeți din listă profilul de șters.
+Enter different start and end frequencies, in kHz (e.g. 7000 and 7200).	Indicați frecvențe de început și de sfârșit diferite, în kHz (de ex. 7000 și 7200).
+All frequencies from start to end are in skipped ranges.	Toate frecvențele de la început la sfârșit sunt în intervale omise.
+Check at least one memory to scan.	Bifați cel puțin o memorie de scanat.
+memories: {0}, {1}	memorii: {0}, {1}
+skipped ranges: {0}	intervale omise: {0}
+{0} s	{0} s
+{0} min	{0} min
+Replace the profile "{0}" with the settings shown?	Înlocuiți profilul „{0}” cu setările afișate?
+{0} profiles at most: delete one first.	Cel mult {0} profiluri: ștergeți mai întâi unul.
+The profile "{0}" already exists.	Profilul „{0}” există deja.
+Delete the profile "{0}"?	Ștergeți profilul „{0}”?
+Skipped range no. {0}: enter two frequencies in kHz (e.g. 7097 and 7103).	Intervalul omis nr. {0}: indicați două frecvențe în kHz (de ex. 7097 și 7103).
+No TCI server at 	Niciun server TCI la 
+TCI connection lost	Conexiune TCI pierdută
+unavailable	indisponibil
+unexpected format	format neașteptat
+Find WebSDRs (France and neighbouring countries)	Căutare WebSDR (Franța și țările vecine)
+All	Toate
+Max distance from the centre of France (km):	Distanța max. față de centrul Franței (km):
+Filter:	Filtru:
+Type:	Tip:
+Location	Locație
+Country	Țară
+Users	Utiliz.
+Add checked to favorites	Adăugare bifate la favorite
+Refresh	Reîmprospătare
+Searching directories (websdr.org, KiwiSDR, ReceiverBook)…	Căutare în directoare (websdr.org, KiwiSDR, ReceiverBook)…
+Please select a receiver in the list first.	Selectați mai întâi un receptor din listă.
+Please check the receivers to add first.	Bifați mai întâi receptoarele de adăugat.
+Add to favorites	Adăugare la favorite
+{0} receiver(s) shown, {1} checked, {2} already in favorites hidden   —   sources: 	{0} receptor(i) afișat(i), {1} bifat(i), {2} deja în favorite ascuns(e)   —   surse: 
+{0} favorite(s) added to "{1}". You can rename them in "Manage favorites…".	{0} favorit(e) adăugat(e) în „{1}”. Le puteți redenumi în „Gestionare favorite…”.
+Profile name	Numele profilului
+Noise reducer (DNR)	Reducere de zgomot (DNR)
+Check at startup	Verifică la pornire
+Name or callsign for WebSDRs	Nume sau indicativ pentru WebSDR-uri
+Import: this file does not contain SDRLink or PhoneSDRLink settings	Import: acest fișier nu conține setări SDRLink sau PhoneSDRLink
+Configuration (display, language, name…)	Configurare (afișare, limbă, nume…)
+Favorites, memories and scan profiles already in the app:	Favoritele, memoriile și profilurile de scanare deja prezente în aplicație:
+Full reset (all settings, favorites and memories are lost)	Resetare completă (toate setările, favoritele și memoriile se pierd)
+Full reset: all settings, favorites, memories and scans will be lost.	Resetare completă: toate setările, favoritele, memoriile și scanările vor fi pierdute.
+⚠ Warning	⚠ Atenție
+Continue?	Continuați?
+WebSDR address	Adresa WebSDR
+Check a single favorite.	Bifați un singur favorit.
+Tick to add to favorites; long-press a receiver to listen to it.	Bifați pentru a adăuga la favorite; apăsați lung un receptor pentru a-l asculta.
+◀ swipe: − frequency | + frequency ▶	◀ glisați: − frecvență | + frecvență ▶
+🔇 Muted	🔇 Fără sunet
+The page crashed: reloading	Pagina s-a blocat: se reîncarcă
+Phone call: WebSDR sound muted	Apel telefonic: sunetul WebSDR este oprit
+PhoneSDRLink: updates	PhoneSDRLink: actualizări
+You are using the latest version.	Folosiți cea mai recentă versiune.

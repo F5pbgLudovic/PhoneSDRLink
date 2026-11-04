@@ -1,0 +1,464 @@
+sound card not found	skaņas karte nav atrasta
+sound card unplugged or disabled	skaņas karte atvienota vai atspējota
+output not found	izeja nav atrasta
+output already used in exclusive mode by another program	izeju ekskluzīvajā režīmā jau izmanto cita programma
+cannot open, error 	nevar atvērt, kļūda 
+Name:	Nosaukums:
+Address:	Adrese:
+Cancel	Atcelt
+List:	Saraksts:
+Please enter a name and an address.	Lūdzu, ievadiet nosaukumu un adresi.
+Save to list:	Saglabāt sarakstā:
+Rename list	Pārdēvēt sarakstu
+Favorite manager	Izlases pārvaldnieks
+Add favorite…	Pievienot izlasei…
+Import…	Importēt…
+Export…	Eksportēt…
+Selected / checked items	Atlasītie / atzīmētie vienumi
+Remove…	Noņemt…
+Rename…	Pārdēvēt…
+Move up	Uz augšu
+Move down	Uz leju
+Check	Pārbaude
+Check favorites	Pārbaudīt izlasi
+Check all	Atzīmēt visus
+Uncheck all	Noņemt atzīmes
+Move to ▸	Pārvietot uz ▸
+New list	Jauns saraksts
+Delete list…	Dzēst sarakstu…
+(right-click the list to rename it)	(ar peles labo pogu noklikšķiniet uz saraksta, lai to pārdēvētu)
+Name	Nosaukums
+Address	Adrese
+Status	Statuss
+List	Saraksts
+Listen to selection	Klausīties atlasīto
+Open	Atvērt
+Close	Aizvērt
+All lists	Visi saraksti
+Please select a favorite in the list first.	Vispirms sarakstā atlasiet izlases vienumu.
+Add favorite	Pievienot izlasei
+checking…	pārbauda…
+OK	OK
+invalid address	nederīga adrese
+answers	atbild
+not found	nav atrasts
+answers (certificate)	atbild (sertifikāts)
+no answer	neatbild
+unknown host	nezināms resursdators
+connection refused	savienojums atteikts
+unreachable	nav sasniedzams
+Import favorites	Importēt izlasi
+Favorites (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|All files (*.*)|*.*	Izlase (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|Visi faili (*.*)|*.*
+Export favorites	Eksportēt izlasi
+Firefox / browser bookmarks (*.html)|*.html|CSV, Excel-readable (*.csv)|*.csv|Text (*.txt)|*.txt	Firefox / Pārlūka grāmatzīmes (*.html)|*.html|CSV, lasāms ar Excel (*.csv)|*.csv|Teksts (*.txt)|*.txt
+This WebSDR is already in "{0}".	Šis WebSDR jau ir sarakstā "{0}".
+List {0}	Saraksts {0}
+Rename "{0}"…	Pārdēvēt "{0}"…
+List "{0}" added ({1}/{2}).	Saraksts “{0}” pievienots ({1}/{2}).
+Delete the list "{0}" (empty)?	Dzēst sarakstu “{0}” (tukšs)?
+Delete the list "{0}" and its {1} favorite(s)?	Dzēst sarakstu “{0}” un tā {1} izlases vienumus?
+List "{0}" deleted.	Saraksts “{0}” dzēsts.
+{0} favorite(s) moved to "{1}".	Uz "{1}" pārvietoti izlases vienumi: {0}.
+{0} favorite(s) shown, {1} checked	Parādīti izlases vienumi: {0}, atzīmēti: {1}
+Remove favorite "{0}"?	Vai noņemt izlases vienumu "{0}"?
+Remove the {0} checked favorites?	Vai noņemt atzīmētos izlases vienumus ({0})?
+Checking {0} address(es)…	Pārbauda adreses: {0}…
+Checking… {0} left	Pārbauda… atlicis: {0}
+Check done: {1} duplicate(s) removed, {0} dead link(s) checked. Click "Remove…" to delete them.	Pārbaude pabeigta: noņemti dublikāti – {1}, atzīmētas nedarbīgas saites – {0}. Noklikšķiniet uz "Noņemt…", lai tās dzēstu.
+{0} favorite(s) imported, {1} already present.	Importēti izlases vienumi: {0}, jau bija: {1}.
+{0} favorite(s) exported.	Eksportēti izlases vienumi: {0}.
+rigctld connection closed	rigctld savienojums aizvērts
+stopped	apturēts
+No rigctld at {0}:{1} (start rigctld, or tick "Start rigctld").	Nav rigctld adresē {0}:{1} (palaidiet rigctld vai atzīmējiet "Palaist rigctld").
+Invalid HRD answer	Nederīga HRD atbilde
+HRD connection closed	HRD savienojums aizvērts
+No HRD server at {0}:{1} (enable the IP server in HRD Rig Control).	Nav HRD servera adresē {0}:{1} (iespējojiet IP serveri programmā HRD Rig Control).
+Import settings	Importēt iestatījumus
+What should be imported from this file?	Ko importēt no šī faila?
+Configuration (rig, interface, display, colours, language…)	Konfigurācija (raidītājs, saskarne, attēlojums, krāsas, valoda…)
+WebSDR (favorites and favorite lists)	WebSDR (izlase un izlases saraksti)
+Frequency memories	Frekvenču atmiņas
+Scan (setting, skipped ranges and scan profiles)	Skenēšana (iestatījums, izlaižamie diapazoni un skenēšanas profili)
+ — not in the file	 — failā nav
+Favorites, memories and scan profiles already in SDRLink:	Izlase, atmiņas un skenēšanas profili, kas jau ir SDRLink:
+keep them and add those of the file (no duplicates)	saglabāt tos un pievienot faila datus (bez dublikātiem)
+delete them and replace them with those of the file	dzēst tos un aizstāt ar faila datiem
+SDRLink will then restart. The current settings are kept in settings.avant-import.ini.	Pēc tam SDRLink tiks restartēts. Pašreizējie iestatījumi tiek saglabāti failā settings.avant-import.ini.
+Import	Importēt
+Cannot open the log: 	Nevar atvērt žurnālu: 
+Export all settings…	Eksportēt visus iestatījumus…
+Import settings…	Importēt iestatījumus…
+Reset the program…	Atiestatīt programmu…
+Export or import all settings, for the same configuration on another computer (right-click: reset the program, button colour)	Eksportēt vai importēt visus iestatījumus tai pašai konfigurācijai citā datorā (labais klikšķis: atiestatīt programmu, pogas krāsa)
+Name or callsign given automatically to WebSDRs that ask for one before the audio (KiwiSDR, websdr.org). Click: change it (right-click: button colour)	Vārds vai izsaukuma signāls, ko automātiski nodod WebSDR, kas to prasa pirms skaņas (KiwiSDR, websdr.org). Klikšķis: mainīt (labais klikšķis: pogas krāsa)
+Right-click: receivers muted while transmitting	Labais klikšķis: uztvērēji, kas raidīšanas laikā tiek klusināti
+Save: no known frequency (rig or WebSDR)	Saglabāt: nav zināmas frekvences (raiduztvērējs vai WebSDR)
+Store the current frequency…	Saglabāt pašreizējo frekvenci…
+Switch the audio to the next receiver (right-click: receiver to keep muted)	Pārslēgt skaņu uz nākamo uztvērēju (labais klikšķis: uztvērējs, kas paliek apklusināts)
+Colour when connected	Krāsa, kad savienots
+Colour when disconnected	Krāsa, kad atvienots
+Colour when on	Krāsa, kad ieslēgts
+Colour when off	Krāsa, kad izslēgts
+Colour when the scan is stopped	Krāsa, kad skenēšana apturēta
+Colour while scanning	Krāsa skenēšanas laikā
+Colour when receiving	Krāsa uztveršanā
+Colour when transmitting (PTT on)	Krāsa raidīšanā (PTT ieslēgts)
+Background colour	Fona krāsa
+Text colour	Teksta krāsa
+Colour of the selected mode	Izvēlētā darba veida krāsa
+Colour of the other modes	Pārējo darba veidu krāsa
+Colour when muted	Krāsa, kad skaņa izslēgta
+Colour when the sound is on	Krāsa, kad skaņa ieslēgta
+Export all SDRLink settings	Eksportēt visus SDRLink iestatījumus
+SDRLink settings (*.ini)|*.ini	SDRLink iestatījumi (*.ini)|*.ini
+Cannot export the settings: 	Iestatījumus nevar eksportēt: 
+Import SDRLink settings	Importēt SDRLink iestatījumus
+Cannot import the settings: 	Iestatījumus nevar importēt: 
+Import: this file does not contain SDRLink settings	Imports: šajā failā nav SDRLink iestatījumu
+Full reset: all settings, favorites, memories, scans and colours will be lost.	Pilna atiestatīšana: visi iestatījumi, izlase, atmiņas, skenēšanas un krāsas tiks zaudētas.
+The checked items will be set back as at first installation.	Atzīmētie elementi tiks atjaunoti kā pēc pirmās instalēšanas.
+SDRLink will restart. Continue?	SDRLink tiks restartēta. Turpināt?
+Reset the program	Atiestatīt programmu
+Cannot reset: 	Atiestatīt nav iespējams: 
+Button colour	Pogas krāsa
+RIG	RADIO
+Disconnected	Atvienots
+Connect	Savienot
+Disconnect	Atvienot
+Location of rigctld.exe (Hamlib)	rigctld.exe (Hamlib) atrašanās vieta
+Programs (*.exe)|*.exe	Programmas (*.exe)|*.exe
+Please choose a rig model.	Lūdzu, izvēlieties raiduztvērēja modeli.
+Invalid CI-V address (e.g. 70 for the IC-7000).	Nederīga CI-V adrese (piem., 70 modelim IC-7000).
+rigctld.exe (Hamlib) was not found. Set its location with the "…" button, or install Hamlib (free).\n\nOpen the Hamlib download page?	rigctld.exe (Hamlib) netika atrasts. Norādiet tā atrašanās vietu ar pogu "…" vai instalējiet Hamlib (bez maksas).\n\nVai atvērt Hamlib lejupielādes lapu?
+Please choose the rig's COM port.	Lūdzu, izvēlieties raiduztvērēja COM portu.
+Cannot start rigctld: 	Nevar palaist rigctld: 
+TX safety timeout (PTT button)	TX drošības taimauts (poga PTT)
+Off	Izslēgts
+PTT: connect the rig first	PTT: vispirms pievienojiet raiduztvērēju
+transmitting	raidīšana
+Receivers muted while transmitting:	Uztvērēji, kas raidīšanas laikā tiek klusināti:
+Rig (Mute TRX)	Raiduztvērējs (Klusināt TRX)
+Invalid frequency: type a value in kHz, e.g. 7074 or 14074.5	Nederīga frekvence: ievadiet vērtību kHz, piem., 7074 vai 14074.5
+Remove this value (pick it in the list first)	Noņemt šo vērtību (vispirms izvēlieties to sarakstā)
+RIG 	RADIO 
+Cannot start WebView2 (Edge):\n	Nevar palaist WebView2 (Edge):\n
+Name or callsign given to WebSDRs that ask for one (KiwiSDR, websdr.org):	Vārds vai izsaukuma signāls WebSDR, kas to prasa (KiwiSDR, websdr.org):
+The callsign cannot be empty.	Vārds nevar būt tukšs.
+A name already typed on a site is kept. To give no name: a non-breaking space (Alt+255).	Vietnē jau ievadīts vārds tiek saglabāts. Lai nenorādītu vārdu: nedalāmā atstarpe (Alt+255).
+Invalid address: 	Nederīga adrese: 
+SDRLINK cable: no virtual audio cable found. Install VB-CABLE (free): "SDRLINK cable" button.	SDRLINK kabelis: virtuālais audio kabelis nav atrasts. Instalējiet VB-CABLE (bez maksas): poga "SDRLINK kabelis".
+Output receiving the WebSDR audio:	Izeja, kas saņem WebSDR skaņu:
+Name the other end of the cable "SDRLINK" (pick a virtual cable first)	Nosaukt kabeļa otru galu "SDRLINK" (vispirms izvēlieties virtuālo kabeli)
+Download VB-CABLE (free, vb-audio.com)…	Lejupielādēt VB-CABLE (bez maksas, vb-audio.com)…
+permission denied	atļauja liegta
+error	kļūda
+SDRLINK cable	SDRLINK kabelis
+ (off) ▾	 (izsl.) ▾
+Mute TRX: connect the rig first	Klusināt TRX: vispirms pievienojiet raiduztvērēju
+Rig volume not available with this rig or interface (OmniRig, HRD, FT-817/818…)	Raiduztvērēja skaļums nav pieejams ar šo raiduztvērēju vai saskarni (OmniRig, HRD, FT-817/818…)
+Mutes ignored by ⇄ (stay muted, two at most):	Apklusināšanas, ko ⇄ ignorē (paliek apklusinātas, ne vairāk kā divas):
+None	Nav
+HDSDR does not play through Windows sound (reception stopped, or audio through ASIO): SDRLink cannot mute it.	HDSDR neatskaņo caur Windows skaņu (uztveršana apturēta vai skaņa caur ASIO): SDRLink nevar to apklusināt.
+ExpertSDR TCI port	ExpertSDR TCI ports
+TCI server port (ExpertSDR, Options > TCI):	TCI servera ports (ExpertSDR, Options > TCI):
+Add memory	Pievienot atmiņu
+Resume the scan	Turpināt skenēšanu
+Current "Scan setup" setting	Pašreizējais iestatījums logā „Skenēšanas iestatījumi“
+No scan while transmitting	Raidīšanas laikā skenēt nevar
+Scan: set the start and end frequencies in "Scan setup"	Skenēšana: norādiet sākuma un beigu frekvenci logā “Skenēšanas iestatījumi”
+Scan: all frequencies are in skipped ranges ("Scan setup")	Skenēšana: visas frekvences ir izlaižamajos diapazonos („Skenēšanas iestatījumi“)
+Scan: check memories in "Scan setup"	Skenēšana: atzīmējiet atmiņas logā “Skenēšanas iestatījumi”
+frequencies not set	frekvences nav iestatītas
+all frequencies are in skipped ranges	visas frekvences ir izlaižamajos diapazonos
+no memory checked	nav atzīmēta neviena atmiņa
+Scan stopped	Skenēšana apturēta
+■ Stop scan	■ Apturēt skenēšanu
+Rig sound card, recorded when Mute WebSDR, Mute ExpertSDR and Mute HDSDR are on:	Raidītāja skaņas karte, ierakstīta, kad ieslēgti Mute WebSDR, Mute ExpertSDR un Mute HDSDR:
+None (always the speakers)	Nav (vienmēr skaļruņi)
+REC button width	REC pogas platums
+Narrow	Šaurs
+Wide	Plats
+REC button colour	REC pogas krāsa
+Navy blue (default)	Tumši zila (noklusējums)
+Navy blue	Tumši zila
+Blue	Zila
+Sky blue	Debeszila
+Teal	Zilganzaļa
+Green	Zaļa
+Red	Sarkana
+Burgundy	Bordo
+Purple	Violeta
+Pink	Rozā
+Brown	Brūna
+Grey	Pelēka
+Black	Melna
+Yellow	Dzeltena
+Orange	Oranža
+White	Balta
+Default	Noklusējums
+Other colour…	Cita krāsa…
+REC: recording the speakers	REC: ieraksta skaļruņus
+Empty recording: nothing to save	Tukšs ieraksts: nav ko saglabāt
+Recording deleted	Ieraksts izdzēsts
+The file could not be written: 	Failu neizdevās ierakstīt: 
+Stop recording and save the sound	Apturēt ierakstīšanu un saglabāt skaņu
+Record the sound heard in the speakers (right-click: rig sound card, colour)	Ierakstīt skaļruņos dzirdamo skaņu (labais klikšķis: raidītāja skaņas karte, krāsa)
+(no memory used yet)	(atmiņa vēl nav izmantota)
+Memories…	Atmiņas…
+Clear this list	Notīrīt šo sarakstu
+Text size	Teksta lielums
+Window text size (100% = original size):	Loga teksta lielums (100 % = sākotnējais lielums):
+(no message)	(nav ziņojumu)
+SDRLink: update available	SDRLink: pieejams atjauninājums
+SDRLink: updates	SDRLink: atjauninājumi
+Could not reach GitHub to check for updates.	Neizdevās sazināties ar GitHub, lai pārbaudītu atjauninājumus.
+You are using the latest version of SDRLink.	Jūs izmantojat jaunāko SDRLink versiju.
+Latest published version: unknown	Jaunākā publicētā versija: nezināma
+All versions (the latest one is marked “Latest”):	Visas versijas (jaunākā ir atzīmēta ar “Latest”):
+To stop these notices, untick “Check for updates”.	Lai vairs nesaņemtu šos paziņojumus, noņemiet atzīmi “Pārbaudīt atjauninājumus”.
+Later	Vēlāk
+Open the update page	Atvērt atjauninājuma lapu
+Last {0} memories used	Pēdējās {0} izmantotās atmiņas
+ExpertSDR TCI port: {0}…	ExpertSDR TCI ports: {0}…
+⚠ Update V{0} available: click to download it	⚠ Pieejams atjauninājums V{0}: noklikšķiniet, lai lejupielādētu
+Settings exported to "{0}"	Iestatījumi eksportēti uz “{0}”
+Transmission stopped automatically after {0} (safety timeout, right-click PTT to change it)	Raidīšana automātiski apturēta pēc {0} (drošības taimauts; lai to mainītu, ar peles labo pogu noklikšķiniet uz PTT)
+Remove "{0}" from the list	Noņemt "{0}" no saraksta
+Remove all ({0} values)	Noņemt visu (vērtības: {0})
+Remove all {0} frequencies from the list?	Vai noņemt no saraksta visas frekvences ({0})?
+"{0}" does not look like a virtual cable: the WebSDR audio will be played there all the time (and transmitted, if it is a radio's transmit sound card).\n\nUse this output anyway?	"{0}" neizskatās pēc virtuālā kabeļa: WebSDR skaņa tur tiks atskaņota visu laiku (un pārraidīta ēterā, ja tā ir raiduztvērēja raidīšanas skaņas karte).\n\nVai tomēr izmantot šo izeju?
+Name the other end of the cable "SDRLINK" ("{0}")…	Nosaukt kabeļa otru galu "SDRLINK" ("{0}")…
+This cable was already renamed "{0}": it may already be used by other software (VoiceMeeter…). Renaming it "{1}" means selecting it again in that software.\n\nContinue?	Šis kabelis jau ir pārdēvēts par "{0}": to, iespējams, jau izmanto cita programmatūra (VoiceMeeter…). Ja to pārdēvēsiet par "{1}", tas šajā programmatūrā būs jāizvēlas no jauna.\n\nVai turpināt?
+The recording device "{0}" will be renamed "{1}".\n\nIt will show under this name in the audio inputs of WSJT-X, JTDX, fldigi… (restart them). Windows may ask for administrator permission.\n\nContinue?	Ierakstīšanas ierīce "{0}" tiks pārdēvēta par "{1}".\n\nAr šo nosaukumu tā būs redzama WSJT-X, JTDX, fldigi… audio ieejās (restartējiet tās). Windows var pieprasīt administratora atļauju.\n\nVai turpināt?
+Done: the audio input is now called "{0}". Restart WSJT-X to see it.	Gatavs: audio ieeja tagad saucas "{0}". Restartējiet WSJT-X, lai to redzētu.
+Renaming failed ({0}).\n\nBy hand: Sound control panel › Recording tab › "{1}" › Properties › name.	Pārdēvēšana neizdevās ({0}).\n\nManuāli: skaņas vadības panelis › cilne Ierakstīšana › "{1}" › Rekvizīti › nosaukums.
+SDRLINK cable: WebSDR audio sent to "{0}"	SDRLINK kabelis: WebSDR skaņa tiek sūtīta uz "{0}"
+SDRLINK cable: "{0}": {1}	SDRLINK kabelis: "{0}": {1}
+ExpertSDR is running but does not answer on TCI port {0}: right-click "WebSDR volume" to change the port.	ExpertSDR darbojas, bet neatbild TCI portā {0}: lai mainītu portu, ar peles labo pogu noklikšķiniet uz “WebSDR skaļums”.
+SDRLink cannot mute ExpertSDR: ExpertSDR does not play through Windows sound (audio comes out of the radio or through ASIO), and its TCI server does not answer on port {0}.\n\nIn ExpertSDR, enable the TCI server (Options > TCI). If its port is not {0}, right-click Mute ExpertSDR to set it.	SDRLink nevar klusināt ExpertSDR: ExpertSDR neatskaņo skaņu caur Windows (skaņa nāk no raidītāja vai caur ASIO), un tā TCI serveris neatbild portā {0}.\n\nExpertSDR ieslēdziet TCI serveri (Options > TCI). Ja tā ports nav {0}, iestatiet to, ar peles labo pogu noklikšķinot uz "Klusināt ExpertSDR".
+"{0}" added to "{1}".	"{0}" pievienots sarakstam "{1}".
+This page is not in "{0}".	Šīs lapas nav sarakstā "{0}".
+Remove "{0}" from "{1}"?	Vai noņemt "{0}" no "{1}"?
+Unexpected error, written to the log: {0}	Negaidīta kļūda, ierakstīta žurnālā: {0}
+Memory "{0}" added to "{1}".	Atmiņa “{0}” pievienota sarakstam “{1}”.
+Memory "{0}": {1} kHz	Atmiņa “{0}”: {1} kHz
+at {0} kHz	no {0} kHz
+from the start ({0} kHz): current frequency out of range	no sākuma ({0} kHz): pašreizējā frekvence ir ārpus diapazona
+at memory {0}	no atmiņas {0}
+from the start ({0}): current frequency not in the memories	no sākuma ({0}): pašreizējās frekvences nav atmiņās
+click in the page, stopped on {0} kHz	klikšķis lapā, apturēts uz {0} kHz
+Scan stopped: {0}	Skenēšana apturēta: {0}
+Scan: {0}	Skenēšana: {0}
+Cannot record: {0}	Nevar ierakstīt: {0}
+Rig sound card "{0}" not available ({1}): recording the speakers	Raidītāja skaņas karte “{0}” nav pieejama ({1}): ieraksta skaļruņus
+Recording the sound of "{0}" (click REC to stop)	Notiek “{0}” skaņas ierakstīšana (lai apturētu, noklikšķiniet uz REC)
+{0} (not connected)	{0} (nav pievienota)
+REC: "{0}" will be recorded when only the rig is heard	REC: “{0}” tiks ierakstīta, kad klausās tikai raidītāju
+Writing "{0}": {1}%	Raksta “{0}”: {1}%
+Recording saved: "{0}"	Ieraksts saglabāts: “{0}”
+Last {0} messages (click: hide or show this kind of message again, ✓ = hidden)	Pēdējie {0} ziņojumi (klikšķis: paslēpt vai atkal rādīt šāda veida ziņojumu, ✓ = paslēpts)
+Show all hidden messages again ({0})	Atkal rādīt visus paslēptos ziņojumus ({0})
+A new version of SDRLink is available: V{0}	Pieejama jauna SDRLink versija: V{0}
+Version in use: V{0}	Izmantotā versija: V{0}
+Latest published version: V{0}	Jaunākā publicētā versija: V{0}
+Version {0} page (download, what's new):	Versijas {0} lapa (lejupielāde, jaunumi):
+Interface:	Saskarne:
+Brand:	Ražotājs:
+Model:	Modelis:
+Port:	Ports:
+Baud rate:	Bodu ātrums:
+Stop bits:	Stopbiti:
+CI-V address (hex):	CI-V adrese (hex):
+OmniRig rig:	OmniRig iekārta:
+Host:	Hosts:
+TX detection (HRD):	TX noteikšana (HRD):
+Hamlib model no.:	Hamlib modeļa nr.:
+Language:	Valoda:
+Sync:	Sinhr.:
+WebSDR offset (Hz):	WebSDR nobīde (Hz):
+restore after (ms):	atjaunot pēc (ms):
+kHz:	kHz:
+Step:	Solis:
+WebSDR:	WebSDR:
+WebSDR volume:	WebSDR skaļums:
+TRX volume:	TRX skaļums:
+ExpertSDR volume:	ExpertSDR skaļums:
+HDSDR volume:	HDSDR skaļums:
+Open log	Atvērt žurnālu
+Text size…	Teksta lielums…
+Import/Export ▾	Imports/Eksports ▾
+…	…
+Download Hamlib…	Lejupielādēt Hamlib…
+SDRLINK cable ▾	SDRLINK kabelis ▾
+Scan setup	Skenēšanas iestatījumi
+▶ Scan	▶ Skenēt
+QSY	QSY
+Save	Saglabāt
+Memories	Atmiņas
+▾	▾
+Go	Atvērt
+◀ Back	◀ Atpakaļ
+Reload	Pārlādēt
+★ Add to favorites	★ Pievienot izlasei
+Remove from favorites	Noņemt no izlases
+Manage favorites…	Pārvaldīt izlasi…
+Find WebSDRs…	Meklēt WebSDR…
+Mute WebSDR	Klusināt WebSDR
+Mute TRX	Klusināt TRX
+⇄	⇄
+Mute ExpertSDR	Klusināt ExpertSDR
+Mute HDSDR	Klusināt HDSDR
+Auto-connect at startup	Autom. savienot startējot
+Dark mode	Tumšais režīms
+Check for updates	Pārbaudīt atjauninājumus
+RTS	RTS
+DTR	DTR
+Start rigctld:	Palaist rigctld:
+Sync mode	Sinhronizēt režīmu
+Mute WebSDR while transmitting	Klusināt WebSDR raidīšanas laikā
+Auto notch (DNF)	Autom. notch (DNF)
+Reduced view	Samazināts skats
+Mini view	Mini skats
+Always on top	Vienmēr virspusē
+PTT view	PTT skats
+COM port (direct CAT)	COM ports (tiešais CAT)
+OmniRig	OmniRig
+TCI	TCI
+Ham Radio Deluxe	Ham Radio Deluxe
+Hamlib (rigctld)	Hamlib (rigctld)
+MOX/TX/PTT buttons	MOX/TX/PTT pogas
+MOX/VOX/TX/PTT buttons	MOX/VOX/TX/PTT pogas
+Both ways	Abos virzienos
+Rig → WebSDR	TRX → WebSDR
+WebSDR → Rig	WebSDR → TRX
+100 Hz	100 Hz
+250 Hz	250 Hz
+500 Hz	500 Hz
+1 kHz	1 kHz
+2.5 kHz	2,5 kHz
+5 kHz	5 kHz
+10 kHz	10 kHz
+Frequency (kHz):	Frekvence (kHz):
+Mode:	Režīms:
+(mode unchanged)	(režīms nemainīts)
+Edit…	Rediģēt…
+Frequency (kHz)	Frekvence (kHz)
+Mode	Režīms
+Select a memory first.	Vispirms izvēlieties atmiņu.
+Edit memory	Rediģēt atmiņu
+{0} memory(ies). Click a memory to go there.	{0} atmiņa(s). Noklikšķiniet uz atmiņas, lai pārietu uz to.
+Tuned to "{0}" ({1} kHz).	Noskaņots uz “{0}” ({1} kHz).
+Remove the memory "{0}"?	Noņemt atmiņu “{0}”?
+Delete the list "{0}" and its {1} memory(ies)?	Dzēst sarakstu “{0}” un tā {1} atmiņas?
+OmniRig is not installed (OmniRig.OmniRigX not found).	OmniRig nav instalēts (OmniRig.OmniRigX nav atrasts).
+Dark mode colour	Tumšā režīma krāsa
+Light mode colour	Gaišā režīma krāsa
+SDRLink needs Microsoft .NET Framework 4.6.2 or later (4.8 recommended).\nIt is not installed on this PC.\n\nDownload and install .NET Framework 4.8 now?\n(a restart may be required, then start SDRLink again)	SDRLink nepieciešams Microsoft .NET Framework 4.6.2 vai jaunāks (ieteicams 4.8).\nTas nav instalēts šajā datorā.\n\nVai lejupielādēt un instalēt .NET Framework 4.8 tagad?\n(var būt nepieciešama restartēšana, pēc tam vēlreiz palaidiet SDRLink)
+SDRLink - missing component	SDRLink - trūkst komponenta
+SDRLink needs the Microsoft Edge WebView2 Runtime to display WebSDRs.\nIt is not installed on this PC.\n\nDownload and install WebView2 now? (free, about 2 MB)	SDRLink nepieciešams Microsoft Edge WebView2 Runtime, lai parādītu WebSDR.\nTas nav instalēts šajā datorā.\n\nVai lejupielādēt un instalēt WebView2 tagad? (bez maksas, apm. 2 MB)
+Download or installation failed:\n	Lejupielāde vai instalēšana neizdevās:\n
+\n\nThe official download page will open:\n	\n\nTiks atvērta oficiālā lejupielādes lapa:\n
+the audio output does not answer	audio izeja neatbild
+recording too long for the WAV format (4 GB at most)	ieraksts ir pārāk garš WAV formātam (ne vairāk kā 4 GB)
+Save the recording	Saglabāt ierakstu
+Folder:	Mape:
+Format:	Formāts:
+Browse…	Pārlūkot…
+Save file	Saglabāt
+Delete	Dzēst
+Delete this recording without saving it?	Vai dzēst šo ierakstu, to nesaglabājot?
+compressed, plays everywhere	saspiests, atskaņojams visur
+lossless, large file	bez zudumiem, liels fails
+lossless, compressed	bez zudumiem, saspiests
+Folder where the recording is saved	Mape, kurā saglabāt ierakstu
+Enter a name for the file.	Ievadiet faila nosaukumu.
+Cannot create the folder: 	Nevar izveidot mapi: 
+unsupported audio format ({0} bits, {1} Hz)	neatbalstīts audio formāts ({0} biti, {1} Hz)
+Windows MP3 encoder not available (0x{0:X8}): choose WAV or FLAC	Windows MP3 kodētājs nav pieejams (0x{0:X8}): izvēlieties WAV vai FLAC
+Recording length: {0}	Ieraksta ilgums: {0}
+"{0}" already exists. Replace it?	“{0}” jau pastāv. Aizstāt?
+Full reset (all settings, memories and colours are lost)	Pilna atiestatīšana (zūd visi iestatījumi, atmiņas un krāsas)
+SDRLink goes back to how it was when first installed: starting WebSDR favorites, no memory, no scan, original colours, browser data deleted.	SDRLink kļūst kā pēc pirmās instalēšanas: sākotnējā WebSDR izlase, nav atmiņu, nav skenēšanas, sākotnējās krāsas, pārlūka dati dzēsti.
+Partial reset:	Daļēja atiestatīšana:
+Colours (buttons, REC, palette)	Krāsas (pogas, REC, palete)
+WebSDR (favorites and favorite lists, back to the starting ones)	WebSDR (izlase un izlases saraksti, atjaunoti uz sākotnējiem)
+Configuration (rig, interface, sync, audio, display, language, name…)	Konfigurācija (stacija, saskarne, sinhronizācija, skaņa, attēlojums, valoda, vārds…)
+Built-in browser data (cache, cookies, settings kept by the WebSDR sites)	Iebūvētā pārlūka dati (kešatmiņa, sīkfaili, WebSDR vietņu saglabātie iestatījumi)
+Worth trying if the WebSDR pages no longer show (empty window, as if there were no Internet).	Vērts mēģināt, ja WebSDR lapas vairs netiek rādītas (tukšs logs, it kā nebūtu interneta).
+Reset	Atiestatīt
+SDRLink will then restart. The current settings are kept in {0} (Import/Export can load them back). SDRLink updates never reset anything.	Pēc tam SDRLink tiks restartēta. Pašreizējie iestatījumi tiek saglabāti failā {0} (Imports/eksports var tos ielādēt atkal). SDRLink atjauninājumi nekad neko neatiestata.
+Connecting...	Savieno...
+Connected, waiting for the rig...	Savienots, gaida raiduztvērēju...
+Rig online	Raiduztvērējs tiešsaistē
+The rig does not answer (check port, baud rate, CI-V address, CAT menu)	Raiduztvērējs neatbild (pārbaudiet portu, bodu ātrumu, CI-V adresi, CAT izvēlni)
+Error: 	Kļūda: 
+Profile:	Profils:
+Rename	Pārdēvēt
+Scan type:	Skenēšanas veids:
+Frequencies	Frekvences
+Start (kHz):	Sākums (kHz):
+End (kHz):	Beigas (kHz):
+Time on each frequency:	Laiks katrā frekvencē:
+Skipped ranges (from … to … kHz):	Izlaižamie diapazoni (no … līdz … kHz):
++ Skipped range	+ Izlaižamais diapazons
+Memories to scan:	Skenējamās atmiņas:
+Time on each memory:	Laiks katrā atmiņā:
+(no memory: Memories button)	(nav atmiņu: poga Atmiņas)
+Start scan	Sākt skenēšanu
+from	no
+to	līdz
+First type a profile name in the "Profile" box.	Vispirms laukā „Profils“ ierakstiet profila nosaukumu.
+First choose a profile in the list, then type its new name in the box and click Rename.	Vispirms sarakstā izvēlieties profilu, tad laukā ierakstiet tā jauno nosaukumu un noklikšķiniet uz Pārdēvēt.
+Choose in the list the profile to delete.	Sarakstā izvēlieties dzēšamo profilu.
+Enter different start and end frequencies, in kHz (e.g. 7000 and 7200).	Norādiet atšķirīgas sākuma un beigu frekvences kHz (piem., 7000 un 7200).
+All frequencies from start to end are in skipped ranges.	Visas frekvences no sākuma līdz beigām ir izlaižamajos diapazonos.
+Check at least one memory to scan.	Atzīmējiet vismaz vienu skenējamu atmiņu.
+memories: {0}, {1}	atmiņas: {0}, {1}
+skipped ranges: {0}	izlaižamie diapazoni: {0}
+{0} s	{0} s
+{0} min	{0} min
+Replace the profile "{0}" with the settings shown?	Aizstāt profilu „{0}“ ar parādītajiem iestatījumiem?
+{0} profiles at most: delete one first.	Ne vairāk kā {0} profili: vispirms izdzēsiet vienu.
+The profile "{0}" already exists.	Profils „{0}“ jau pastāv.
+Delete the profile "{0}"?	Dzēst profilu „{0}“?
+Skipped range no. {0}: enter two frequencies in kHz (e.g. 7097 and 7103).	Izlaižamais diapazons Nr. {0}: ievadiet divas frekvences kHz (piem., 7097 un 7103).
+No TCI server at 	Nav TCI servera adresē 
+TCI connection lost	TCI savienojums zaudēts
+unavailable	nav pieejams
+unexpected format	negaidīts formāts
+Find WebSDRs (France and neighbouring countries)	Meklēt WebSDR (Francija un kaimiņvalstis)
+All	Visi
+Max distance from the centre of France (km):	Maks. attālums no Francijas centra (km):
+Filter:	Filtrs:
+Type:	Tips:
+Location	Vieta
+Country	Valsts
+Users	Lietot.
+Add checked to favorites	Pievienot atzīmētos izlasei
+Refresh	Atsvaidzināt
+Searching directories (websdr.org, KiwiSDR, ReceiverBook)…	Meklē katalogos (websdr.org, KiwiSDR, ReceiverBook)…
+Please select a receiver in the list first.	Vispirms sarakstā atlasiet uztvērēju.
+Please check the receivers to add first.	Vispirms atzīmējiet pievienojamos uztvērējus.
+Add to favorites	Pievienot izlasei
+{0} receiver(s) shown, {1} checked, {2} already in favorites hidden   —   sources: 	Parādīti uztvērēji: {0}, atzīmēti: {1}, paslēpti (jau izlasē) – {2}   —   avoti: 
+{0} favorite(s) added to "{1}". You can rename them in "Manage favorites…".	Sarakstam "{1}" pievienoti izlases vienumi: {0}. Tos var pārdēvēt sadaļā "Pārvaldīt izlasi…".
+Profile name	Profila nosaukums
+Noise reducer (DNR)	Trokšņa mazinātājs (DNR)
+Check at startup	Pārbaudīt startējot
+Name or callsign for WebSDRs	WebSDR piešķirtais vārds vai izsaukuma signāls
+Import: this file does not contain SDRLink or PhoneSDRLink settings	Imports: šajā failā nav SDRLink vai PhoneSDRLink iestatījumu
+Configuration (display, language, name…)	Konfigurācija (attēlojums, valoda, vārds…)
+Favorites, memories and scan profiles already in the app:	Lietotnē jau esošie izlases ieraksti, atmiņas un skenēšanas profili:
+Full reset (all settings, favorites and memories are lost)	Pilnīga atiestatīšana (visi iestatījumi, izlases ieraksti un atmiņas tiks zaudēti)
+Full reset: all settings, favorites, memories and scans will be lost.	Pilnīga atiestatīšana: visi iestatījumi, izlases ieraksti, atmiņas un skenēšanas tiks zaudēti.
+⚠ Warning	⚠ Brīdinājums
+Continue?	Turpināt?
+WebSDR address	WebSDR adrese
+Check a single favorite.	Atzīmējiet tikai vienu izlases ierakstu.
+Tick to add to favorites; long-press a receiver to listen to it.	Atzīmējiet, lai pievienotu izlasei; ilgi turiet uztvērēju, lai to klausītos.
+◀ swipe: − frequency | + frequency ▶	◀ velciet: − frekvence | + frekvence ▶
+🔇 Muted	🔇 Izslēgta skaņa
+The page crashed: reloading	Lapa avarēja: notiek pārlādēšana
+Phone call: WebSDR sound muted	Tālruņa zvans: WebSDR skaņa izslēgta
+PhoneSDRLink: updates	PhoneSDRLink: atjauninājumi
+You are using the latest version.	Jūs izmantojat jaunāko versiju.

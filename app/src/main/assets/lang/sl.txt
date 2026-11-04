@@ -1,0 +1,464 @@
+sound card not found	zvočne kartice ni mogoče najti
+sound card unplugged or disabled	zvočna kartica izklopljena ali onemogočena
+output not found	izhoda ni mogoče najti
+output already used in exclusive mode by another program	izhod že uporablja drug program v izključnem načinu
+cannot open, error 	ni mogoče odpreti, napaka 
+Name:	Ime:
+Address:	Naslov:
+Cancel	Prekliči
+List:	Seznam:
+Please enter a name and an address.	Vnesite ime in naslov.
+Save to list:	Shrani na seznam:
+Rename list	Preimenuj seznam
+Favorite manager	Upravitelj priljubljenih
+Add favorite…	Dodaj priljubljeno…
+Import…	Uvozi…
+Export…	Izvozi…
+Selected / checked items	Izbrani / označeni elementi
+Remove…	Odstrani…
+Rename…	Preimenuj…
+Move up	Premakni gor
+Move down	Premakni dol
+Check	Preverjanje
+Check favorites	Preveri priljubljene
+Check all	Označi vse
+Uncheck all	Odznači vse
+Move to ▸	Premakni v ▸
+New list	Nov seznam
+Delete list…	Izbriši seznam…
+(right-click the list to rename it)	(seznam preimenujete z desnim klikom nanj)
+Name	Ime
+Address	Naslov
+Status	Stanje
+List	Seznam
+Listen to selection	Poslušaj izbrano
+Open	Odpri
+Close	Zapri
+All lists	Vsi seznami
+Please select a favorite in the list first.	Najprej izberite priljubljeno na seznamu.
+Add favorite	Dodaj priljubljeno
+checking…	preverjanje…
+OK	V redu
+invalid address	neveljaven naslov
+answers	odgovarja
+not found	ni najdeno
+answers (certificate)	odgovarja (potrdilo)
+no answer	ni odgovora
+unknown host	neznan gostitelj
+connection refused	povezava zavrnjena
+unreachable	nedosegljivo
+Import favorites	Uvozi priljubljene
+Favorites (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|All files (*.*)|*.*	Priljubljene (*.csv;*.txt;*.html;*.htm)|*.csv;*.txt;*.html;*.htm|Vse datoteke (*.*)|*.*
+Export favorites	Izvozi priljubljene
+Firefox / browser bookmarks (*.html)|*.html|CSV, Excel-readable (*.csv)|*.csv|Text (*.txt)|*.txt	Firefox / Zaznamki brskalnika (*.html)|*.html|CSV, berljiv v Excelu (*.csv)|*.csv|Besedilo (*.txt)|*.txt
+This WebSDR is already in "{0}".	Ta WebSDR je že v »{0}«.
+List {0}	Seznam {0}
+Rename "{0}"…	Preimenuj »{0}«…
+List "{0}" added ({1}/{2}).	Seznam »{0}« dodan ({1}/{2}).
+Delete the list "{0}" (empty)?	Izbrišem seznam »{0}« (prazen)?
+Delete the list "{0}" and its {1} favorite(s)?	Izbrišem seznam »{0}« in njegovih {1} priljubljenih?
+List "{0}" deleted.	Seznam »{0}« izbrisan.
+{0} favorite(s) moved to "{1}".	Premaknjene priljubljene v »{1}«: {0}.
+{0} favorite(s) shown, {1} checked	Prikazane priljubljene: {0}, označene: {1}
+Remove favorite "{0}"?	Odstranim priljubljeno »{0}«?
+Remove the {0} checked favorites?	Odstranim označene priljubljene ({0})?
+Checking {0} address(es)…	Preverjanje naslovov ({0})…
+Checking… {0} left	Preverjanje… preostalo: {0}
+Check done: {1} duplicate(s) removed, {0} dead link(s) checked. Click "Remove…" to delete them.	Preverjanje končano. Odstranjeni dvojniki: {1}, označene mrtve povezave: {0}. Kliknite »Odstrani…«, da jih izbrišete.
+{0} favorite(s) imported, {1} already present.	Uvožene priljubljene: {0}, že obstoječe: {1}.
+{0} favorite(s) exported.	Izvožene priljubljene: {0}.
+rigctld connection closed	Povezava z rigctld zaprta
+stopped	ustavljeno
+No rigctld at {0}:{1} (start rigctld, or tick "Start rigctld").	Na {0}:{1} ni rigctld (zaženite rigctld ali označite »Zaženi rigctld«).
+Invalid HRD answer	Neveljaven odgovor HRD
+HRD connection closed	Povezava s HRD zaprta
+No HRD server at {0}:{1} (enable the IP server in HRD Rig Control).	Na {0}:{1} ni strežnika HRD (omogočite strežnik IP v HRD Rig Control).
+Import settings	Uvozi nastavitve
+What should be imported from this file?	Kaj naj se uvozi iz te datoteke?
+Configuration (rig, interface, display, colours, language…)	Konfiguracija (postaja, vmesnik, prikaz, barve, jezik…)
+WebSDR (favorites and favorite lists)	WebSDR (priljubljene in seznami priljubljenih)
+Frequency memories	Frekvenčni pomnilniki
+Scan (setting, skipped ranges and scan profiles)	Iskanje (nastavitev, izpuščena območja in profili iskanja)
+ — not in the file	 — ni v datoteki
+Favorites, memories and scan profiles already in SDRLink:	Priljubljene, pomnilniki in profili iskanja, ki so že v SDRLink:
+keep them and add those of the file (no duplicates)	jih obdržati in dodati tiste iz datoteke (brez podvojitev)
+delete them and replace them with those of the file	jih izbrisati in nadomestiti s tistimi iz datoteke
+SDRLink will then restart. The current settings are kept in settings.avant-import.ini.	SDRLink se bo nato znova zagnal. Trenutne nastavitve se ohranijo v settings.avant-import.ini.
+Import	Uvozi
+Cannot open the log: 	Dnevnika ni mogoče odpreti: 
+Export all settings…	Izvozi vse nastavitve…
+Import settings…	Uvozi nastavitve…
+Reset the program…	Ponastavi program…
+Export or import all settings, for the same configuration on another computer (right-click: reset the program, button colour)	Izvoz ali uvoz vseh nastavitev za enako konfiguracijo na drugem računalniku (desni klik: ponastavi program, barva gumba)
+Name or callsign given automatically to WebSDRs that ask for one before the audio (KiwiSDR, websdr.org). Click: change it (right-click: button colour)	Ime ali klicni znak, ki se samodejno poda sprejemnikom WebSDR, ki ga zahtevajo pred zvokom (KiwiSDR, websdr.org). Klik: sprememba (desni klik: barva gumba)
+Right-click: receivers muted while transmitting	Desni klik: sprejemniki, utišani med oddajanjem
+Save: no known frequency (rig or WebSDR)	Shrani: frekvenca ni znana (TRX ali WebSDR)
+Store the current frequency…	Shrani trenutno frekvenco…
+Switch the audio to the next receiver (right-click: receiver to keep muted)	Preklopi zvok na naslednji sprejemnik (desni klik: sprejemnik, ki ostane utišan)
+Colour when connected	Barva ob povezavi
+Colour when disconnected	Barva ob prekinjeni povezavi
+Colour when on	Barva ob vklopu
+Colour when off	Barva ob izklopu
+Colour when the scan is stopped	Barva ob ustavljenem iskanju
+Colour while scanning	Barva med iskanjem
+Colour when receiving	Barva pri sprejemu
+Colour when transmitting (PTT on)	Barva pri oddaji (PTT vklopljen)
+Background colour	Barva ozadja
+Text colour	Barva besedila
+Colour of the selected mode	Barva izbranega načina
+Colour of the other modes	Barva drugih načinov
+Colour when muted	Barva ob utišanem zvoku
+Colour when the sound is on	Barva ob vklopljenem zvoku
+Export all SDRLink settings	Izvozi vse nastavitve SDRLink
+SDRLink settings (*.ini)|*.ini	Nastavitve SDRLink (*.ini)|*.ini
+Cannot export the settings: 	Nastavitev ni mogoče izvoziti: 
+Import SDRLink settings	Uvozi nastavitve SDRLink
+Cannot import the settings: 	Nastavitev ni mogoče uvoziti: 
+Import: this file does not contain SDRLink settings	Uvoz: ta datoteka ne vsebuje nastavitev SDRLink
+Full reset: all settings, favorites, memories, scans and colours will be lost.	Popolna ponastavitev: vse nastavitve, priljubljene, pomnilniki, iskanja in barve bodo izgubljeni.
+The checked items will be set back as at first installation.	Označeni elementi bodo vrnjeni kot ob prvi namestitvi.
+SDRLink will restart. Continue?	SDRLink se bo znova zagnal. Nadaljujem?
+Reset the program	Ponastavi program
+Cannot reset: 	Ponastavitev ni mogoča: 
+Button colour	Barva gumba
+RIG	TRX
+Disconnected	Prekinjeno
+Connect	Poveži
+Disconnect	Prekini
+Location of rigctld.exe (Hamlib)	Mesto rigctld.exe (Hamlib)
+Programs (*.exe)|*.exe	Programi (*.exe)|*.exe
+Please choose a rig model.	Izberite model postaje.
+Invalid CI-V address (e.g. 70 for the IC-7000).	Neveljaven naslov CI-V (npr. 70 za IC-7000).
+rigctld.exe (Hamlib) was not found. Set its location with the "…" button, or install Hamlib (free).\n\nOpen the Hamlib download page?	rigctld.exe (Hamlib) ni bil najden. Nastavite njegovo mesto z gumbom »…« ali namestite Hamlib (brezplačno).\n\nŽelite odpreti stran za prenos Hamlib?
+Please choose the rig's COM port.	Izberite vrata COM postaje.
+Cannot start rigctld: 	Ni mogoče zagnati rigctld: 
+TX safety timeout (PTT button)	Varnostna časovna omejitev TX (gumb PTT)
+Off	Izkl.
+PTT: connect the rig first	PTT: najprej povežite postajo
+transmitting	oddajanje
+Receivers muted while transmitting:	Sprejemniki, utišani med oddajanjem:
+Rig (Mute TRX)	Postaja (Utišaj TRX)
+Invalid frequency: type a value in kHz, e.g. 7074 or 14074.5	Neveljavna frekvenca: vnesite vrednost v kHz, npr. 7074 ali 14074.5
+Remove this value (pick it in the list first)	Odstrani to vrednost (najprej jo izberite na seznamu)
+RIG 	TRX 
+Cannot start WebView2 (Edge):\n	Ni mogoče zagnati WebView2 (Edge):\n
+Name or callsign given to WebSDRs that ask for one (KiwiSDR, websdr.org):	Ime ali klicni znak za sprejemnike WebSDR, ki ga zahtevajo (KiwiSDR, websdr.org):
+The callsign cannot be empty.	Ime ne sme biti prazno.
+A name already typed on a site is kept. To give no name: a non-breaking space (Alt+255).	Ime, že vpisano na strani, se ohrani. Če ne želite podati imena: nedeljivi presledek (Alt+255).
+Invalid address: 	Neveljaven naslov: 
+SDRLINK cable: no virtual audio cable found. Install VB-CABLE (free): "SDRLINK cable" button.	Kabel SDRLINK: navideznega zvočnega kabla ni mogoče najti. Namestite VB-CABLE (brezplačno): gumb »Kabel SDRLINK«.
+Output receiving the WebSDR audio:	Izhod, ki prejema zvok WebSDR:
+Name the other end of the cable "SDRLINK" (pick a virtual cable first)	Poimenuj drugi konec kabla »SDRLINK« (najprej izberite navidezni kabel)
+Download VB-CABLE (free, vb-audio.com)…	Prenesi VB-CABLE (brezplačno, vb-audio.com)…
+permission denied	dostop zavrnjen
+error	napaka
+SDRLINK cable	Kabel SDRLINK
+ (off) ▾	 (izkl.) ▾
+Mute TRX: connect the rig first	Utišaj TRX: najprej povežite postajo
+Rig volume not available with this rig or interface (OmniRig, HRD, FT-817/818…)	Glasnost postaje ni na voljo pri tej postaji ali vmesniku (OmniRig, HRD, FT-817/818…)
+Mutes ignored by ⇄ (stay muted, two at most):	Utišanja, ki jih ⇄ prezre (ostanejo utišana, največ dve):
+None	Brez
+HDSDR does not play through Windows sound (reception stopped, or audio through ASIO): SDRLink cannot mute it.	HDSDR ne predvaja prek zvoka Windows (sprejem ustavljen ali zvok prek ASIO): SDRLink ga ne more utišati.
+ExpertSDR TCI port	Vrata TCI programa ExpertSDR
+TCI server port (ExpertSDR, Options > TCI):	Vrata strežnika TCI (ExpertSDR, Options > TCI):
+Add memory	Dodaj pomnilnik
+Resume the scan	Nadaljuj iskanje
+Current "Scan setup" setting	Trenutna nastavitev v »Nastavitve iskanja«
+No scan while transmitting	Med oddajanjem iskanje ni mogoče
+Scan: set the start and end frequencies in "Scan setup"	Iskanje: vnesite začetno in končno frekvenco v »Nastavitve iskanja«
+Scan: all frequencies are in skipped ranges ("Scan setup")	Iskanje: vse frekvence so v izpuščenih območjih (»Nastavitve iskanja«)
+Scan: check memories in "Scan setup"	Iskanje: označite pomnilnike v »Nastavitve iskanja«
+frequencies not set	frekvence niso nastavljene
+all frequencies are in skipped ranges	vse frekvence so v izpuščenih območjih
+no memory checked	noben pomnilnik ni označen
+Scan stopped	Iskanje ustavljeno
+■ Stop scan	■ Ustavi iskanje
+Rig sound card, recorded when Mute WebSDR, Mute ExpertSDR and Mute HDSDR are on:	Zvočna kartica postaje, posneta ko so vklopljeni Mute WebSDR, Mute ExpertSDR in Mute HDSDR:
+None (always the speakers)	Nobena (vedno zvočniki)
+REC button width	Širina gumba REC
+Narrow	Ozko
+Wide	Široko
+REC button colour	Barva gumba REC
+Navy blue (default)	Mornarsko modra (privzeto)
+Navy blue	Mornarsko modra
+Blue	Modra
+Sky blue	Nebesno modra
+Teal	Modrozelena
+Green	Zelena
+Red	Rdeča
+Burgundy	Bordo
+Purple	Vijolična
+Pink	Rožnata
+Brown	Rjava
+Grey	Siva
+Black	Črna
+Yellow	Rumena
+Orange	Oranžna
+White	Bela
+Default	Privzeto
+Other colour…	Druga barva…
+REC: recording the speakers	REC: snemanje zvočnikov
+Empty recording: nothing to save	Prazen posnetek: nič za shranjevanje
+Recording deleted	Posnetek izbrisan
+The file could not be written: 	Datoteke ni bilo mogoče zapisati: 
+Stop recording and save the sound	Ustavi snemanje in shrani zvok
+Record the sound heard in the speakers (right-click: rig sound card, colour)	Posnemi zvok, ki se sliši v zvočnikih (desni klik: zvočna kartica postaje, barva)
+(no memory used yet)	(noben pomnilnik še ni bil uporabljen)
+Memories…	Pomnilniki…
+Clear this list	Počisti ta seznam
+Text size	Velikost besedila
+Window text size (100% = original size):	Velikost besedila okna (100 % = izvirna velikost):
+(no message)	(ni sporočil)
+SDRLink: update available	SDRLink: na voljo je posodobitev
+SDRLink: updates	SDRLink: posodobitve
+Could not reach GitHub to check for updates.	Povezava z GitHubom za preverjanje posodobitev ni uspela.
+You are using the latest version of SDRLink.	Uporabljate najnovejšo različico SDRLink.
+Latest published version: unknown	Zadnja objavljena različica: neznana
+All versions (the latest one is marked “Latest”):	Vse različice (najnovejša je označena z »Latest«):
+To stop these notices, untick “Check for updates”.	Če ne želite več teh obvestil, počistite »Preveri posodobitve«.
+Later	Pozneje
+Open the update page	Odpri stran posodobitve
+Last {0} memories used	Zadnjih {0} uporabljenih pomnilnikov
+ExpertSDR TCI port: {0}…	Vrata TCI programa ExpertSDR: {0}…
+⚠ Update V{0} available: click to download it	⚠ Na voljo je posodobitev V{0}: kliknite za prenos
+Settings exported to "{0}"	Nastavitve izvožene v »{0}«
+Transmission stopped automatically after {0} (safety timeout, right-click PTT to change it)	Oddajanje samodejno ustavljeno po {0} (varnostna omejitev, spremenite jo z desnim klikom na PTT)
+Remove "{0}" from the list	Odstrani »{0}« s seznama
+Remove all ({0} values)	Odstrani vse (vrednosti: {0})
+Remove all {0} frequencies from the list?	Odstranim vse frekvence s seznama ({0})?
+"{0}" does not look like a virtual cable: the WebSDR audio will be played there all the time (and transmitted, if it is a radio's transmit sound card).\n\nUse this output anyway?	»{0}« ni videti kot navidezni kabel: zvok WebSDR se bo tam ves čas predvajal (in oddajal, če je to oddajna zvočna kartica postaje).\n\nŽelite vseeno uporabiti ta izhod?
+Name the other end of the cable "SDRLINK" ("{0}")…	Poimenuj drugi konec kabla »SDRLINK« (»{0}«)…
+This cable was already renamed "{0}": it may already be used by other software (VoiceMeeter…). Renaming it "{1}" means selecting it again in that software.\n\nContinue?	Ta kabel je že preimenovan v »{0}«: morda ga že uporablja druga programska oprema (VoiceMeeter…). Če ga preimenujete v »{1}«, ga boste morali v tej programski opremi znova izbrati.\n\nŽelite nadaljevati?
+The recording device "{0}" will be renamed "{1}".\n\nIt will show under this name in the audio inputs of WSJT-X, JTDX, fldigi… (restart them). Windows may ask for administrator permission.\n\nContinue?	Snemalna naprava »{0}« bo preimenovana v »{1}«.\n\nPod tem imenom bo prikazana med zvočnimi vhodi WSJT-X, JTDX, fldigi… (znova jih zaženite). Windows lahko zahteva skrbniško dovoljenje.\n\nŽelite nadaljevati?
+Done: the audio input is now called "{0}". Restart WSJT-X to see it.	Končano: zvočni vhod se zdaj imenuje »{0}«. Znova zaženite WSJT-X, da ga boste videli.
+Renaming failed ({0}).\n\nBy hand: Sound control panel › Recording tab › "{1}" › Properties › name.	Preimenovanje ni uspelo ({0}).\n\nRočno: Nadzorna plošča Zvok › zavihek Snemanje › »{1}« › Lastnosti › ime.
+SDRLINK cable: WebSDR audio sent to "{0}"	Kabel SDRLINK: zvok WebSDR se pošilja v »{0}«
+SDRLINK cable: "{0}": {1}	Kabel SDRLINK: »{0}«: {1}
+ExpertSDR is running but does not answer on TCI port {0}: right-click "WebSDR volume" to change the port.	ExpertSDR teče, vendar se ne odziva na vratih TCI {0}: za spremembo vrat desno kliknite »Glasnost WebSDR«.
+SDRLink cannot mute ExpertSDR: ExpertSDR does not play through Windows sound (audio comes out of the radio or through ASIO), and its TCI server does not answer on port {0}.\n\nIn ExpertSDR, enable the TCI server (Options > TCI). If its port is not {0}, right-click Mute ExpertSDR to set it.	SDRLink ne more utišati programa ExpertSDR: ExpertSDR ne predvaja zvoka prek sistema Windows (zvok prihaja iz radijske postaje ali prek ASIO), njegov strežnik TCI pa se ne odziva na vratih {0}.\n\nV programu ExpertSDR vklopite strežnik TCI (Options > TCI). Če njegova vrata niso {0}, jih nastavite z desnim klikom na »Utišaj ExpertSDR«.
+"{0}" added to "{1}".	»{0}« dodano v »{1}«.
+This page is not in "{0}".	Te strani ni v »{0}«.
+Remove "{0}" from "{1}"?	Odstranim »{0}« iz »{1}«?
+Unexpected error, written to the log: {0}	Nepričakovana napaka, zapisana v dnevnik: {0}
+Memory "{0}" added to "{1}".	Pomnilnik »{0}« dodan v »{1}«.
+Memory "{0}": {1} kHz	Pomnilnik »{0}«: {1} kHz
+at {0} kHz	od {0} kHz
+from the start ({0} kHz): current frequency out of range	od začetka ({0} kHz): trenutna frekvenca je zunaj območja
+at memory {0}	od pomnilnika {0}
+from the start ({0}): current frequency not in the memories	od začetka ({0}): trenutne frekvence ni v pomnilnikih
+click in the page, stopped on {0} kHz	klik na stran, ustavljeno na {0} kHz
+Scan stopped: {0}	Iskanje ustavljeno: {0}
+Scan: {0}	Iskanje: {0}
+Cannot record: {0}	Snemanje ni mogoče: {0}
+Rig sound card "{0}" not available ({1}): recording the speakers	Zvočna kartica postaje »{0}« ni na voljo ({1}): snemanje zvočnikov
+Recording the sound of "{0}" (click REC to stop)	Snemanje zvoka iz »{0}« (za ustavitev kliknite REC)
+{0} (not connected)	{0} (ni priključena)
+REC: "{0}" will be recorded when only the rig is heard	REC: »{0}« bo posneta, ko se posluša samo postaja
+Writing "{0}": {1}%	Zapisovanje »{0}«: {1} %
+Recording saved: "{0}"	Posnetek shranjen: »{0}«
+Last {0} messages (click: hide or show this kind of message again, ✓ = hidden)	Zadnjih {0} sporočil (klik: skrij ali znova prikaži to vrsto sporočila, ✓ = skrito)
+Show all hidden messages again ({0})	Znova prikaži vsa skrita sporočila ({0})
+A new version of SDRLink is available: V{0}	Na voljo je nova različica SDRLink: V{0}
+Version in use: V{0}	Uporabljena različica: V{0}
+Latest published version: V{0}	Zadnja objavljena različica: V{0}
+Version {0} page (download, what's new):	Stran različice {0} (prenos, novosti):
+Interface:	Vmesnik:
+Brand:	Znamka:
+Model:	Model:
+Port:	Vrata:
+Baud rate:	Hitrost:
+Stop bits:	Stop biti:
+CI-V address (hex):	Naslov CI-V (hex):
+OmniRig rig:	Postaja OmniRig:
+Host:	Gostitelj:
+TX detection (HRD):	Zaznavanje TX (HRD):
+Hamlib model no.:	Št. modela Hamlib:
+Language:	Jezik:
+Sync:	Sinhr.:
+WebSDR offset (Hz):	Zamik WebSDR (Hz):
+restore after (ms):	obnovi po (ms):
+kHz:	kHz:
+Step:	Korak:
+WebSDR:	WebSDR:
+WebSDR volume:	Glasnost WebSDR:
+TRX volume:	Glasnost TRX:
+ExpertSDR volume:	Glasnost ExpertSDR:
+HDSDR volume:	Glasnost HDSDR:
+Open log	Odpri dnevnik
+Text size…	Velikost besedila…
+Import/Export ▾	Uvoz/Izvoz ▾
+…	…
+Download Hamlib…	Prenesi Hamlib…
+SDRLINK cable ▾	Kabel SDRLINK ▾
+Scan setup	Nastavitve iskanja
+▶ Scan	▶ Iskanje
+QSY	QSY
+Save	Shrani
+Memories	Pomnilniki
+▾	▾
+Go	Pojdi
+◀ Back	◀ Nazaj
+Reload	Znova naloži
+★ Add to favorites	★ Dodaj med priljubljene
+Remove from favorites	Odstrani iz priljubljenih
+Manage favorites…	Upravljaj priljubljene…
+Find WebSDRs…	Poišči WebSDR…
+Mute WebSDR	Utišaj WebSDR
+Mute TRX	Utišaj TRX
+⇄	⇄
+Mute ExpertSDR	Utišaj ExpertSDR
+Mute HDSDR	Utišaj HDSDR
+Auto-connect at startup	Samodejno poveži ob zagonu
+Dark mode	Temni način
+Check for updates	Preveri posodobitve
+RTS	RTS
+DTR	DTR
+Start rigctld:	Zaženi rigctld:
+Sync mode	Sinhroniziraj način
+Mute WebSDR while transmitting	Utišaj WebSDR med oddajanjem
+Auto notch (DNF)	Samodejni notch (DNF)
+Reduced view	Zmanjšan prikaz
+Mini view	Mini prikaz
+Always on top	Vedno na vrhu
+PTT view	PTT prikaz
+COM port (direct CAT)	Vrata COM (neposredni CAT)
+OmniRig	OmniRig
+TCI	TCI
+Ham Radio Deluxe	Ham Radio Deluxe
+Hamlib (rigctld)	Hamlib (rigctld)
+MOX/TX/PTT buttons	Gumbi MOX/TX/PTT
+MOX/VOX/TX/PTT buttons	Gumbi MOX/VOX/TX/PTT
+Both ways	Obojesmerno
+Rig → WebSDR	TRX → WebSDR
+WebSDR → Rig	WebSDR → TRX
+100 Hz	100 Hz
+250 Hz	250 Hz
+500 Hz	500 Hz
+1 kHz	1 kHz
+2.5 kHz	2,5 kHz
+5 kHz	5 kHz
+10 kHz	10 kHz
+Frequency (kHz):	Frekvenca (kHz):
+Mode:	Način:
+(mode unchanged)	(način nespremenjen)
+Edit…	Uredi…
+Frequency (kHz)	Frekvenca (kHz)
+Mode	Način
+Select a memory first.	Najprej izberite pomnilnik.
+Edit memory	Uredi pomnilnik
+{0} memory(ies). Click a memory to go there.	{0} pomnilnik(ov). Kliknite pomnilnik, da se nastavite nanj.
+Tuned to "{0}" ({1} kHz).	Nastavljeno na »{0}« ({1} kHz).
+Remove the memory "{0}"?	Odstranim pomnilnik »{0}«?
+Delete the list "{0}" and its {1} memory(ies)?	Izbrišem seznam »{0}« in njegovih {1} pomnilnikov?
+OmniRig is not installed (OmniRig.OmniRigX not found).	OmniRig ni nameščen (OmniRig.OmniRigX ni bil najden).
+Dark mode colour	Barva temnega načina
+Light mode colour	Barva svetlega načina
+SDRLink needs Microsoft .NET Framework 4.6.2 or later (4.8 recommended).\nIt is not installed on this PC.\n\nDownload and install .NET Framework 4.8 now?\n(a restart may be required, then start SDRLink again)	SDRLink potrebuje Microsoft .NET Framework 4.6.2 ali novejši (priporočeno 4.8).\nNa tem računalniku ni nameščen.\n\nŽelite zdaj prenesti in namestiti .NET Framework 4.8?\n(morda bo potreben ponovni zagon, nato znova zaženite SDRLink)
+SDRLink - missing component	SDRLink - manjkajoča komponenta
+SDRLink needs the Microsoft Edge WebView2 Runtime to display WebSDRs.\nIt is not installed on this PC.\n\nDownload and install WebView2 now? (free, about 2 MB)	SDRLink za prikaz WebSDR potrebuje Microsoft Edge WebView2 Runtime.\nNa tem računalniku ni nameščen.\n\nŽelite zdaj prenesti in namestiti WebView2? (brezplačno, približno 2 MB)
+Download or installation failed:\n	Prenos ali namestitev ni uspela:\n
+\n\nThe official download page will open:\n	\n\nOdprla se bo uradna stran za prenos:\n
+the audio output does not answer	zvočni izhod se ne odziva
+recording too long for the WAV format (4 GB at most)	posnetek je predolg za format WAV (največ 4 GB)
+Save the recording	Shrani posnetek
+Folder:	Mapa:
+Format:	Oblika:
+Browse…	Prebrskaj…
+Save file	Shrani
+Delete	Izbriši
+Delete this recording without saving it?	Želite izbrisati ta posnetek, ne da bi ga shranili?
+compressed, plays everywhere	stisnjeno, predvaja se povsod
+lossless, large file	brez izgub, velika datoteka
+lossless, compressed	brez izgub, stisnjeno
+Folder where the recording is saved	Mapa, v katero se shrani posnetek
+Enter a name for the file.	Vnesite ime datoteke.
+Cannot create the folder: 	Mape ni mogoče ustvariti: 
+unsupported audio format ({0} bits, {1} Hz)	nepodprta oblika zvoka ({0} bitov, {1} Hz)
+Windows MP3 encoder not available (0x{0:X8}): choose WAV or FLAC	Kodirnik MP3 sistema Windows ni na voljo (0x{0:X8}): izberite WAV ali FLAC
+Recording length: {0}	Dolžina posnetka: {0}
+"{0}" already exists. Replace it?	»{0}« že obstaja. Ga želite zamenjati?
+Full reset (all settings, memories and colours are lost)	Popolna ponastavitev (izgubijo se vse nastavitve, pomnilniki in barve)
+SDRLink goes back to how it was when first installed: starting WebSDR favorites, no memory, no scan, original colours, browser data deleted.	SDRLink postane kot ob prvi namestitvi: začetne priljubljene WebSDR, brez pomnilnikov, brez iskanja, prvotne barve, izbrisani podatki brskalnika.
+Partial reset:	Delna ponastavitev:
+Colours (buttons, REC, palette)	Barve (gumbi, REC, paleta)
+WebSDR (favorites and favorite lists, back to the starting ones)	WebSDR (priljubljene in seznami priljubljenih, vrnjeni na začetne)
+Configuration (rig, interface, sync, audio, display, language, name…)	Konfiguracija (postaja, vmesnik, sinhronizacija, zvok, prikaz, jezik, ime…)
+Built-in browser data (cache, cookies, settings kept by the WebSDR sites)	Podatki vgrajenega brskalnika (predpomnilnik, piškotki, nastavitve, ki jih hranijo strani WebSDR)
+Worth trying if the WebSDR pages no longer show (empty window, as if there were no Internet).	Vredno poskusiti, če se strani WebSDR ne prikazujejo več (prazno okno, kot brez interneta).
+Reset	Ponastavi
+SDRLink will then restart. The current settings are kept in {0} (Import/Export can load them back). SDRLink updates never reset anything.	SDRLink se bo nato znova zagnal. Trenutne nastavitve se hranijo v {0} (Uvoz/izvoz jih lahko znova naloži). Posodobitve SDRLink nikoli ničesar ne ponastavijo.
+Connecting...	Povezovanje...
+Connected, waiting for the rig...	Povezano, čakanje na postajo...
+Rig online	Postaja povezana
+The rig does not answer (check port, baud rate, CI-V address, CAT menu)	Postaja se ne odziva (preverite vrata, hitrost, naslov CI-V, meni CAT)
+Error: 	Napaka: 
+Profile:	Profil:
+Rename	Preimenuj
+Scan type:	Vrsta iskanja:
+Frequencies	Frekvence
+Start (kHz):	Začetek (kHz):
+End (kHz):	Konec (kHz):
+Time on each frequency:	Čas na vsaki frekvenci:
+Skipped ranges (from … to … kHz):	Izpuščena območja (od … do … kHz):
++ Skipped range	+ Izpuščeno območje
+Memories to scan:	Pomnilniki za iskanje:
+Time on each memory:	Čas na vsakem pomnilniku:
+(no memory: Memories button)	(ni pomnilnikov: gumb Pomnilniki)
+Start scan	Začni iskanje
+from	od
+to	do
+First type a profile name in the "Profile" box.	Najprej vpišite ime profila v polje »Profil«.
+First choose a profile in the list, then type its new name in the box and click Rename.	Najprej na seznamu izberite profil, nato v polje vpišite njegovo novo ime in kliknite Preimenuj.
+Choose in the list the profile to delete.	Na seznamu izberite profil, ki ga želite izbrisati.
+Enter different start and end frequencies, in kHz (e.g. 7000 and 7200).	Vnesite različni začetno in končno frekvenco v kHz (npr. 7000 in 7200).
+All frequencies from start to end are in skipped ranges.	Vse frekvence od začetka do konca so v izpuščenih območjih.
+Check at least one memory to scan.	Označite vsaj en pomnilnik za iskanje.
+memories: {0}, {1}	pomnilniki: {0}, {1}
+skipped ranges: {0}	izpuščena območja: {0}
+{0} s	{0} s
+{0} min	{0} min
+Replace the profile "{0}" with the settings shown?	Zamenjam profil »{0}« s prikazanimi nastavitvami?
+{0} profiles at most: delete one first.	Največ {0} profilov: najprej izbrišite enega.
+The profile "{0}" already exists.	Profil »{0}« že obstaja.
+Delete the profile "{0}"?	Izbrišem profil »{0}«?
+Skipped range no. {0}: enter two frequencies in kHz (e.g. 7097 and 7103).	Izpuščeno območje št. {0}: vnesite dve frekvenci v kHz (npr. 7097 in 7103).
+No TCI server at 	Ni strežnika TCI na 
+TCI connection lost	Povezava TCI izgubljena
+unavailable	ni na voljo
+unexpected format	nepričakovana oblika
+Find WebSDRs (France and neighbouring countries)	Poišči WebSDR (Francija in sosednje države)
+All	Vse
+Max distance from the centre of France (km):	Najv. razdalja od središča Francije (km):
+Filter:	Filter:
+Type:	Vrsta:
+Location	Lokacija
+Country	Država
+Users	Upor.
+Add checked to favorites	Dodaj označene med priljubljene
+Refresh	Osveži
+Searching directories (websdr.org, KiwiSDR, ReceiverBook)…	Iskanje po imenikih (websdr.org, KiwiSDR, ReceiverBook)…
+Please select a receiver in the list first.	Najprej izberite sprejemnik na seznamu.
+Please check the receivers to add first.	Najprej označite sprejemnike, ki jih želite dodati.
+Add to favorites	Dodaj med priljubljene
+{0} receiver(s) shown, {1} checked, {2} already in favorites hidden   —   sources: 	Prikazani sprejemniki: {0}, označeni: {1}, skrite (že med priljubljenimi): {2}   —   viri: 
+{0} favorite(s) added to "{1}". You can rename them in "Manage favorites…".	Dodane priljubljene: {0} (seznam »{1}«). Preimenujete jih lahko v »Upravljaj priljubljene…«.
+Profile name	Ime profila
+Noise reducer (DNR)	Zmanjševalnik šuma (DNR)
+Check at startup	Preveri ob zagonu
+Name or callsign for WebSDRs	Ime ali klicni znak za WebSDR
+Import: this file does not contain SDRLink or PhoneSDRLink settings	Uvoz: ta datoteka ne vsebuje nastavitev SDRLink ali PhoneSDRLink
+Configuration (display, language, name…)	Konfiguracija (prikaz, jezik, ime…)
+Favorites, memories and scan profiles already in the app:	Priljubljene, pomnilniki in profili iskanja, ki so že v aplikaciji:
+Full reset (all settings, favorites and memories are lost)	Popolna ponastavitev (vse nastavitve, priljubljene in pomnilniki bodo izgubljeni)
+Full reset: all settings, favorites, memories and scans will be lost.	Popolna ponastavitev: vse nastavitve, priljubljene, pomnilniki in iskanja bodo izgubljeni.
+⚠ Warning	⚠ Opozorilo
+Continue?	Nadaljujem?
+WebSDR address	Naslov WebSDR
+Check a single favorite.	Označite samo eno priljubljeno.
+Tick to add to favorites; long-press a receiver to listen to it.	Označite za dodajanje med priljubljene; dolgo pritisnite sprejemnik, da ga poslušate.
+◀ swipe: − frequency | + frequency ▶	◀ podrsajte: − frekvenca | + frekvenca ▶
+🔇 Muted	🔇 Utišano
+The page crashed: reloading	Stran se je sesula: ponovno nalaganje
+Phone call: WebSDR sound muted	Telefonski klic: zvok WebSDR utišan
+PhoneSDRLink: updates	PhoneSDRLink: posodobitve
+You are using the latest version.	Uporabljate najnovejšo različico.
