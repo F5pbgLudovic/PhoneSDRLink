@@ -7,6 +7,7 @@ Application Android (APK) qui reprend les fonctions de réception de SDRLink, sa
 * Sources : `app\src\main\java\fr\f5pbg\phonesdrlink` (Java pur, un seul écran).
   * `MainActivity` : écran, WebView, état (fréquence, mode), scan, son (focus audio, appel, volume du téléphone), REC, verrou, zoom du spectre, mises à jour.
   * `Store` : tous les réglages (`settings.ini`, même format que SDRLink PC : un export de SDRLink PC s'importe), favoris, mémoires, profils de scan.
+  * `PlayService` : service de premier plan (notification, verrou processeur + Wi-Fi) lancé au démarrage, arrêté à la fermeture : son fluide écran éteint. `MainActivity` n'appelle plus `web.onPause()` ni n'abandonne le focus audio à la mise en pause.
   * `Finder` : annuaires websdr.org / KiwiSDR / ReceiverBook. `Dlg*` : fenêtres (WEBSDR, favoris, recherche, mémoires, scan, SET, clavier). `CheckList` : liste à cases. `Ui`, `FreqBar`, `Lang`.
 * `app\src\main\assets\bridge.js` : pont JavaScript injecté dans chaque page (dérivé de `WebSdrBridge.cs` de SDRLink) : détection du type de WebSDR, lecture/réglage fréquence et mode, démarrage automatique du son, chaîne audio (notch automatique, réducteur de bruit, gain), volume de la page, REC MP3, zoom du spectre, viewport 1000 px, désactivation de la reconnaissance vocale (qui faisait tomber UberSDR).
 * `assets\lang\xx.txt` : 23 langues (anglais → traduction, comme SDRLink). `assets\default-favorites.txt` : favoris de départ (liste « HF »). `assets\lame.min.js` : encodeur MP3 lamejs (LGPL-3.0).
@@ -25,8 +26,10 @@ Application Android (APK) qui reprend les fonctions de réception de SDRLink, sa
 * **1.0** (4 nov. 2026) : première version.
 * **1.1** (4 nov. 2026) : bouton Muet + Verrou, INIT, REC MP3 (+ appui long vers le dossier), liste de recherche et gestion des favoris refaites comme SDRLink, favoris HF par défaut, grandes cases dans la liste WEBSDR (position conservée), pas sur la ligne Scan, écran toujours allumé, zoom du spectre 1 kHz/mm, volume de la page recopié depuis le volume du téléphone, page 1000 px à zoom libre (panneaux OpenWebRX/Kiwi), plantage UberSDR corrigé (reconnaissance vocale), notch automatique qui coupait le son (NaN) corrigé, noms de favoris sur une ligne.
 
+* **1.2** (4 nov. 2026) : son fluide écran éteint / téléphone verrouillé (PlayService, plus de `web.onPause()`, priorité du moteur de rendu). Bug corrigé : le son disparaissait au réveil, car `requestFocus()` créait une nouvelle demande à chaque `onResume` et l'ancienne recevait une perte de focus qui mettait `focusMute` à vrai ; la même demande est maintenant réutilisée. Mesures adb : service au premier plan, verrou `PhoneSDRLink:play`, pas de veille de la chaîne audio, volume interne de la page à 1 après chaque réveil. Testée à l'oreille par F5PBG : « ça a l'air ok », le DNF fonctionne parfaitement, effet du DNR discret.
+
 ## Points ouverts
 
-* Pas essayés sur le vrai téléphone : scan, mémoires, favoris (import/export, vérification), coupure pendant un appel, notch/DNR à l'oreille, PhantomSDR (pas de zoom du spectre : aucune commande trouvée), mise à jour (aucune version plus récente à détecter).
+* Pas essayés sur le vrai téléphone : scan, mémoires, favoris (import/export, vérification), coupure pendant un appel, PhantomSDR (pas de zoom du spectre : aucune commande trouvée), mise à jour (aucune version plus récente à détecter).
 * Le volume de la page et le volume du téléphone se multiplient (téléphone bas = son très bas) ; à ajuster si F5PBG le demande.
 * Pas de licence sur le dépôt.

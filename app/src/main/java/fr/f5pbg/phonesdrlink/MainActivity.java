@@ -121,6 +121,12 @@ public class MainActivity extends Activity {
         web.loadUrl(first != null ? first : st.lastUrl);
         h.postDelayed(new Runnable() { public void run() { firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
         h.postDelayed(callWatch, 1000);
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission("android.permission.POST_NOTIFICATIONS") != android.content.pm.PackageManager.PERMISSION_GRANTED)
+            requestPermissions(new String[] { "android.permission.POST_NOTIFICATIONS" }, 7);
+        try {
+            Intent svc = new Intent(this, PlayService.class);
+            if (Build.VERSION.SDK_INT >= 26) startForegroundService(svc); else startService(svc);
+        } catch (Exception e) { }
     }
 
     @Override
@@ -135,9 +141,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        web.onPause();
+        // Pas de web.onPause() ni d'abandon du focus audio : le son continue, fluide, écran éteint (PlayService garde le processus actif).
         try { unregisterReceiver(volReceiver); } catch (Exception e) { }
-        if (focusReq != null) audio.abandonAudioFocusRequest(focusReq);
         st.freqHz = freq;
         st.mode = mode;
         st.save();
@@ -146,6 +151,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         h.removeCallbacksAndMessages(null);
+        stopService(new Intent(this, PlayService.class));
+        if (focusReq != null) audio.abandonAudioFocusRequest(focusReq);
         if (web != null) { web.destroy(); }
         super.onDestroy();
     }
@@ -400,6 +407,7 @@ public class MainActivity extends Activity {
     void setupWeb() {
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
+        if (Build.VERSION.SDK_INT >= 26) web.setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT, false);
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
         s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
@@ -856,6 +864,15 @@ public class MainActivity extends Activity {
     };
 
     void requestFocus() {
+        if (focusReq != null) {
+            // Même demande qu'avant (pas de nouvelle : l'ancienne recevrait une perte de focus et couperait le son).
+            if (audio.requestAudioFocus(focusReq) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED && focusMute) {
+                focusMute = false;
+                applyVolume();
+                updateButtons();
+            }
+            return;
+        }
         AudioAttributes attrs = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build();
         focusReq = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).setAudioAttributes(attrs).setWillPauseWhenDucked(false)
             .setOnAudioFocusChangeListener(new AudioManager.OnAudioFocusChangeListener() {

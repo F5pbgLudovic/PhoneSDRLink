@@ -12,6 +12,7 @@
 * **Zoom du spectre** automatique : 3 kHz de spectre pour environ 3 mm d'écran (websdr.org, KiwiSDR, OpenWebRX, UberSDR).
 * **SET** : mode sombre, notch automatique (DNF), réducteur de bruit (DNR), écran toujours allumé, langue (23), mise à jour, nom donné aux WebSDR, import/export des réglages (compatible SDRLink pour PC), réinitialisation.
 * Le volume du WebSDR suit les touches de volume du téléphone ; le son est coupé pendant un appel ; portrait et paysage automatiques.
+* **Écran éteint** : l'écoute continue, sans saccades (service de lecture avec notification « Écoute du WebSDR en cours »). Si le son saccade quand même (téléphone à batterie très stricte : OnePlus, Xiaomi…), mettre la batterie de PhoneSDRLink sur « Sans restriction » (Paramètres › Applications › PhoneSDRLink › Batterie). Android 13 ou plus : accepter les notifications.
 
 ## Installer sur un smartphone Android
 
@@ -46,7 +47,7 @@ Bibliothèque embarquée : [lamejs](https://github.com/zhuker/lamejs) (encodeur 
 
 **English** — Android app (APK) by radio amateur F5PBG, built on the receiving side of [SDRLink](https://github.com/F5pbgLudovic/SDRLink) without the rig control: listen to a WebSDR (websdr.org, KiwiSDR, OpenWebRX, UberSDR, PhantomSDR) from a smartphone.
 
-**Features**: favorite lists, automatic search of the public directories, frequency keypad (1.8–440 MHz), modes, swipe tuning bar (100 Hz–1 kHz steps), frequency/memory scan with named profiles, **REC to MP3** (`Music/PhoneSDRLink`, long-press opens the folder), mute, lock, INIT (restart the WebSDR), page zoom, automatic spectrum zoom (3 kHz ≈ 3 mm), auto notch, noise reducer, keep-screen-on, 23 languages, settings import/export (compatible with SDRLink for PC), dark mode, update check. The page volume follows the phone volume keys; sound is muted during a phone call; portrait/landscape follow the phone.
+**Features**: favorite lists, automatic search of the public directories, frequency keypad (1.8–440 MHz), modes, swipe tuning bar (100 Hz–1 kHz steps), frequency/memory scan with named profiles, **REC to MP3** (`Music/PhoneSDRLink`, long-press opens the folder), mute, lock, INIT (restart the WebSDR), page zoom, automatic spectrum zoom (3 kHz ≈ 3 mm), auto notch, noise reducer, keep-screen-on, 23 languages, settings import/export (compatible with SDRLink for PC), dark mode, update check. The page volume follows the phone volume keys; sound is muted during a phone call; portrait/landscape follow the phone. Listening continues smoothly with the screen off (foreground service + notification; on aggressive-battery phones set the app's battery to "Unrestricted").
 
 **Install** (Android 8+): download `PhoneSDRLink-x.y.apk` from the [latest release](https://github.com/F5pbgLudovic/PhoneSDRLink/releases/latest), open it, allow "install unknown apps" for the app you opened it from, tap Install. Update by installing the new APK over the old one.
 
