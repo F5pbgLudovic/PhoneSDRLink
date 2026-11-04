@@ -6,7 +6,7 @@ Application Android (APK) qui reprend les fonctions de réception de SDRLink, sa
 
 * Sources : `app\src\main\java\fr\f5pbg\phonesdrlink` (Java pur, un seul écran).
   * `MainActivity` : écran, WebView, état (fréquence, mode), scan, son (focus audio, appel, volume du téléphone), REC, verrou, zoom du spectre, mises à jour.
-  * `Store` : tous les réglages (`settings.ini`, même format que SDRLink PC : un export de SDRLink PC s'importe), favoris, mémoires, profils de scan.
+  * `Store` : tous les réglages (`settings.ini`, même format que SDRLink PC : un export de SDRLink PC s'importe : SET › Importer des réglages…, détail dans le README, essayé avec un vrai fichier le 4 nov. 2026 : 166 favoris, 5 listes, 3 mémoires, 2 profils), favoris, mémoires, profils de scan.
   * `PlayService` : service de premier plan (notification, verrou processeur + Wi-Fi) lancé au démarrage, arrêté à la fermeture : son fluide écran éteint. `MainActivity` n'appelle plus `web.onPause()` ni n'abandonne le focus audio à la mise en pause.
   * `Finder` : annuaires websdr.org / KiwiSDR / ReceiverBook. `Dlg*` : fenêtres (WEBSDR, favoris, recherche, mémoires, scan, SET, clavier). `CheckList` : liste à cases. `Ui`, `FreqBar`, `Lang`.
 * `app\src\main\assets\bridge.js` : pont JavaScript injecté dans chaque page (dérivé de `WebSdrBridge.cs` de SDRLink) : détection du type de WebSDR, lecture/réglage fréquence et mode, démarrage automatique du son, chaîne audio (notch automatique, réducteur de bruit, gain), volume de la page, REC MP3, zoom du spectre, viewport 1000 px, désactivation de la reconnaissance vocale (qui faisait tomber UberSDR).

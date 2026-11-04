@@ -14,6 +14,21 @@
 * Le volume du WebSDR suit les touches de volume du téléphone ; le son est coupé pendant un appel ; portrait et paysage automatiques.
 * **Écran éteint** : l'écoute continue, sans saccades (service de lecture avec notification « Écoute du WebSDR en cours »). Si le son saccade quand même (téléphone à batterie très stricte : OnePlus, Xiaomi…), mettre la batterie de PhoneSDRLink sur « Sans restriction » (Paramètres › Applications › PhoneSDRLink › Batterie). Android 13 ou plus : accepter les notifications.
 
+## Reprendre ses réglages de SDRLink (PC) dans PhoneSDRLink
+
+Les réglages de SDRLink pour PC s'importent dans PhoneSDRLink (même format de fichier `settings.ini`) : favoris WebSDR et listes de favoris, mémoires de fréquences, profils de scan, zones non scannées, langue, mode sombre, nom donné aux WebSDR.
+
+1. Dans **SDRLink sur PC** : exporter tous les réglages vers un fichier `.ini` (le fichier de travail est aussi `%APPDATA%\SDRLink\settings.ini`).
+2. Copier ce fichier sur le téléphone (câble USB, Drive, e-mail… ; par exemple dans « Téléchargements »).
+3. Dans **PhoneSDRLink** : **SET › Importer des réglages…**, choisir le fichier (dans le sélecteur de fichiers : menu en haut à gauche › Télécharger).
+4. Cocher ce qu'il faut importer :
+   * **Configuration** (affichage, langue, nom…) ;
+   * **WebSDR** (favoris et listes de favoris, avec leurs noms) ;
+   * **Mémoires de fréquences** ;
+   * **Scan** (réglage, zones non scannées, profils de scan nommés).
+5. Choisir : **garder les éléments déjà dans l'application et ajouter ceux du fichier** (sans doublons : même adresse dans la même liste, même nom de profil) ou **les supprimer et les remplacer** par ceux du fichier.
+
+Les catégories absentes du fichier sont grisées. Dans l'autre sens, **SET › Exporter tous les réglages…** crée un fichier `PhoneSDRLink-settings.ini` qui sert de sauvegarde (à réimporter dans PhoneSDRLink après une réinstallation ou sur un autre téléphone). Essayé avec un vrai fichier de SDRLink pour PC : 166 favoris, 5 listes, 3 mémoires et 2 profils de scan repris correctement.
 ## Installer sur un smartphone Android
 
 Android 8 ou plus. L'application n'est pas dans le Play Store : on installe le fichier APK à la main.
@@ -53,4 +68,5 @@ Bibliothèque embarquée : [lamejs](https://github.com/zhuker/lamejs) (encodeur 
 
 **Antivirus / Play Protect warnings**: an APK from outside the Play Store signed by an unknown author is often flagged "suspicious" (heuristic, based on rarity). The app only needs Internet, network state and audio settings. In Play Protect tap **More details › Install anyway**; in AVG/Avast/Norton choose **Cancel/Ignore** (not Uninstall) and add PhoneSDRLink to the antivirus exceptions. The SHA-256 of each APK is in the release notes, and the full source is in this repository, so you can also build it yourself (see *Compiler / Build*).
 
+**Importing your SDRLink (PC) settings**: SDRLink for PC settings import into PhoneSDRLink (same `settings.ini` format): favorite WebSDRs and favorite lists, frequency memories, scan profiles and skipped ranges, language, dark mode, WebSDR nickname. In SDRLink for PC export all settings to an `.ini` file (the working file is also `%APPDATA%\SDRLink\settings.ini`), copy it to the phone, then in PhoneSDRLink use **SET › Import settings…**, tick what to import (Configuration, WebSDR, Memories, Scan) and choose to keep the existing items and add the file's (no duplicates) or to replace them. **SET › Export all settings…** writes a `PhoneSDRLink-settings.ini` backup that can be re-imported the same way.
 73 de F5PBG
