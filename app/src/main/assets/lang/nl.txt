@@ -472,3 +472,4 @@ Keep the screen on	Scherm niet uitschakelen
 Spectrum zoom (1 kHz per mm)	Spectrumzoom (1 kHz per mm)
 Cannot record: no audio	Opnemen niet mogelijk: geen geluid
 Cannot record: 	Opnemen niet mogelijk:
+The recordings are in Music/PhoneSDRLink	De opnamen staan in Muziek/PhoneSDRLink

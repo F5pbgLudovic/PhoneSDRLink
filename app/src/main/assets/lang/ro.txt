@@ -472,3 +472,4 @@ Keep the screen on	Nu stinge ecranul
 Spectrum zoom (1 kHz per mm)	Zoom spectru (1 kHz pe mm)
 Cannot record: no audio	Înregistrare imposibilă: fără sunet
 Cannot record: 	Înregistrare imposibilă:
+The recordings are in Music/PhoneSDRLink	Înregistrările sunt în Muzică/PhoneSDRLink

@@ -472,3 +472,4 @@ Keep the screen on	Να μην σβήνει η οθόνη
 Spectrum zoom (1 kHz per mm)	Μεγέθυνση φάσματος (1 kHz ανά mm)
 Cannot record: no audio	Η εγγραφή δεν είναι δυνατή: δεν υπάρχει ήχος
 Cannot record: 	Η εγγραφή δεν είναι δυνατή:
+The recordings are in Music/PhoneSDRLink	Οι εγγραφές βρίσκονται στο Μουσική/PhoneSDRLink

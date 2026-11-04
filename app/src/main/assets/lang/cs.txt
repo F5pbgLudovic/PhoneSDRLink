@@ -472,3 +472,4 @@ Keep the screen on	Nevypínat obrazovku
 Spectrum zoom (1 kHz per mm)	Zoom spektra (1 kHz na mm)
 Cannot record: no audio	Nahrávání není možné: žádný zvuk
 Cannot record: 	Nahrávání není možné:
+The recordings are in Music/PhoneSDRLink	Nahrávky jsou ve složce Hudba/PhoneSDRLink

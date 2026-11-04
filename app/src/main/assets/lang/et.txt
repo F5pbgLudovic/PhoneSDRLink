@@ -472,3 +472,4 @@ Keep the screen on	Ära lülita ekraani välja
 Spectrum zoom (1 kHz per mm)	Spektri suum (1 kHz mm kohta)
 Cannot record: no audio	Salvestamine pole võimalik: heli puudub
 Cannot record: 	Salvestamine pole võimalik:
+The recordings are in Music/PhoneSDRLink	Salvestused asuvad kaustas Muusika/PhoneSDRLink

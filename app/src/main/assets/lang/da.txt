@@ -472,3 +472,4 @@ Keep the screen on	Sluk ikke skærmen
 Spectrum zoom (1 kHz per mm)	Spektrumzoom (1 kHz pr. mm)
 Cannot record: no audio	Kan ikke optage: ingen lyd
 Cannot record: 	Kan ikke optage:
+The recordings are in Music/PhoneSDRLink	Optagelserne ligger i Musik/PhoneSDRLink

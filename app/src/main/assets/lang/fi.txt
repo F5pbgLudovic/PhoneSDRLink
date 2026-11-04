@@ -472,3 +472,4 @@ Keep the screen on	Älä sammuta näyttöä
 Spectrum zoom (1 kHz per mm)	Spektrin zoomaus (1 kHz / mm)
 Cannot record: no audio	Tallennus ei onnistu: ei ääntä
 Cannot record: 	Tallennus ei onnistu:
+The recordings are in Music/PhoneSDRLink	Tallenteet ovat kansiossa Musiikki/PhoneSDRLink

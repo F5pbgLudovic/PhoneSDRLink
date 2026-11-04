@@ -1,4 +1,20 @@
 (function () {
+  // Mise en page « ordinateur » et zoom permis : beaucoup de WebSDR (KiwiSDR, OpenWebRX…) s'ajustent à la largeur de l'écran et
+  // interdisent le zoom (viewport « device-width » + user-scalable=no) : leurs fenêtres de réglage cachent alors le haut de la page
+  // et les boutons + et − n'ont aucun effet. On impose une largeur de 1000 pixels CSS (la page est réduite pour tenir) et le zoom libre.
+  if (window.top !== window) return;
+  var WANT = 'width=1000, minimum-scale=0.1, maximum-scale=10, user-scalable=yes';
+  var apply = function () {
+    var head = document.head || document.documentElement;
+    if (!head) return;
+    var all = document.querySelectorAll('meta[name=viewport]');   // le dernier gagne : on les corrige tous
+    if (!all.length) { var n = document.createElement('meta'); n.name = 'viewport'; head.appendChild(n); all = [n]; }
+    for (var i = 0; i < all.length; i++) if (all[i].getAttribute('content') !== WANT) all[i].setAttribute('content', WANT);
+  };
+  apply();
+  try { new MutationObserver(apply).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['content'] }); } catch (e) { }
+  document.addEventListener('DOMContentLoaded', apply);
+})();(function () {
   // La WebView Android n'a pas de reconnaissance vocale : une page qui la demande (UberSDR) faisait tomber le moteur de page.
   try {
     ['SpeechRecognition', 'webkitSpeechRecognition', 'SpeechGrammarList', 'webkitSpeechGrammarList', 'SpeechRecognitionEvent', 'webkitSpeechRecognitionEvent'].forEach(function (n) {

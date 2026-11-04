@@ -472,3 +472,4 @@ Keep the screen on	Stäng inte av skärmen
 Spectrum zoom (1 kHz per mm)	Spektrumzoom (1 kHz per mm)
 Cannot record: no audio	Kan inte spela in: inget ljud
 Cannot record: 	Kan inte spela in:
+The recordings are in Music/PhoneSDRLink	Inspelningarna finns i Musik/PhoneSDRLink

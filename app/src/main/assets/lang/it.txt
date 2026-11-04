@@ -472,3 +472,4 @@ Keep the screen on	Impedisci lo spegnimento dello schermo
 Spectrum zoom (1 kHz per mm)	Zoom dello spettro (1 kHz per mm)
 Cannot record: no audio	Impossibile registrare: nessun audio
 Cannot record: 	Impossibile registrare:
+The recordings are in Music/PhoneSDRLink	Le registrazioni sono in Musica/PhoneSDRLink

@@ -472,3 +472,4 @@ Keep the screen on	Nie wygaszaj ekranu
 Spectrum zoom (1 kHz per mm)	Powiększenie widma (1 kHz na mm)
 Cannot record: no audio	Nie można nagrywać: brak dźwięku
 Cannot record: 	Nie można nagrywać:
+The recordings are in Music/PhoneSDRLink	Nagrania znajdują się w Muzyka/PhoneSDRLink

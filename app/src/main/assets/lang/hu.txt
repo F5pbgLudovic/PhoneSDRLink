@@ -472,3 +472,4 @@ Keep the screen on	A képernyő ne kapcsoljon ki
 Spectrum zoom (1 kHz per mm)	Spektrum nagyítása (1 kHz/mm)
 Cannot record: no audio	A felvétel nem lehetséges: nincs hang
 Cannot record: 	A felvétel nem lehetséges:
+The recordings are in Music/PhoneSDRLink	A felvételek a Zene/PhoneSDRLink mappában vannak

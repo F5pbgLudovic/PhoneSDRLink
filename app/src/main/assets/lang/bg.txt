@@ -472,3 +472,4 @@ Keep the screen on	Без изключване на екрана
 Spectrum zoom (1 kHz per mm)	Увеличение на спектъра (1 kHz на mm)
 Cannot record: no audio	Записът е невъзможен: няма звук
 Cannot record: 	Записът е невъзможен:
+The recordings are in Music/PhoneSDRLink	Записите са в Музика/PhoneSDRLink

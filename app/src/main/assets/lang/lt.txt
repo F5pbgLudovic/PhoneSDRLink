@@ -472,3 +472,4 @@ Keep the screen on	Neišjungti ekrano
 Spectrum zoom (1 kHz per mm)	Spektro didinimas (1 kHz per mm)
 Cannot record: no audio	Įrašyti neįmanoma: nėra garso
 Cannot record: 	Įrašyti neįmanoma:
+The recordings are in Music/PhoneSDRLink	Įrašai yra aplanke Muzika/PhoneSDRLink

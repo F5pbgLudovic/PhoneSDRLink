@@ -472,3 +472,4 @@ Keep the screen on	Impedir que o ecrã se apague
 Spectrum zoom (1 kHz per mm)	Zoom do espetro (1 kHz por mm)
 Cannot record: no audio	Não é possível gravar: sem som
 Cannot record: 	Não é possível gravar:
+The recordings are in Music/PhoneSDRLink	As gravações estão em Música/PhoneSDRLink

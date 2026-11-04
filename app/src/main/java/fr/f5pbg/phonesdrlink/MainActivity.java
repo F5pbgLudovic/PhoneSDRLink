@@ -178,6 +178,7 @@ public class MainActivity extends Activity {
             } catch (Exception e) { android.util.Log.i("PSDR", "dump: " + e); }
         }
         if (i.getBooleanExtra("rec", false)) onRecButton();
+        if (i.getBooleanExtra("openrec", false)) openRecordings();
         String code = i.getStringExtra("js");
         if (code != null) web.evaluateJavascript("(function(){try{Promise.resolve((0, eval)(" + org.json.JSONObject.quote(code) + ")).then(function(v){PhoneSdr.post(\"dbg|\"+(typeof v===\"string\"?v:JSON.stringify(v)))},function(e){PhoneSdr.post(\"dbg|ERR \"+e)})}catch(e){PhoneSdr.post(\"dbg|ERR \"+e)}})()", null);
     }
@@ -209,6 +210,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) { muted = !muted; applyVolume(); updateButtons(); }
         });
         btnRec = Ui.button(this, "● REC", new View.OnClickListener() { public void onClick(View v) { onRecButton(); } });
+        btnRec.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { openRecordings(); return true; } });
         r1.addView(btnWeb, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.05f, this, 2));
         r1.addView(btnSet, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.7f, this, 2));
         r1.addView(btnRec, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.95f, this, 2));
@@ -883,6 +885,27 @@ public class MainActivity extends Activity {
             h.postDelayed(this, 1000);
         }
     };
+
+    // Appui long sur REC : ouvre le dossier Musique/PhoneSDRLink dans l'application Fichiers du téléphone ; à défaut, le dernier
+    // enregistrement dans un lecteur audio.
+    void openRecordings() {
+        try {
+            android.net.Uri dir = android.provider.DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", "primary:Music/PhoneSDRLink");
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setDataAndType(dir, android.provider.DocumentsContract.Document.MIME_TYPE_DIR);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            return;
+        } catch (Exception e) { }
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setType("audio/*");
+            i.setDataAndType(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, "vnd.android.cursor.dir/audio");
+            startActivity(i);
+        } catch (Exception e) {
+            status(Lang.T("Les enregistrements sont dans Musique/PhoneSDRLink", "The recordings are in Music/PhoneSDRLink"));
+        }
+    }
 
     void onRecButton() {
         if (recPending) return;

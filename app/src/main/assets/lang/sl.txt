@@ -472,3 +472,4 @@ Keep the screen on	Ne ugasni zaslona
 Spectrum zoom (1 kHz per mm)	Povečava spektra (1 kHz na mm)
 Cannot record: no audio	Snemanje ni mogoče: ni zvoka
 Cannot record: 	Snemanje ni mogoče:
+The recordings are in Music/PhoneSDRLink	Posnetki so v mapi Glasba/PhoneSDRLink

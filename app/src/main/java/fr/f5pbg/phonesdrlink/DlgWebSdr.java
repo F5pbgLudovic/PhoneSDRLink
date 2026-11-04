@@ -35,6 +35,18 @@ import java.util.regex.Pattern;
 final class DlgWebSdr {
     static final Handler UI = new Handler(Looper.getMainLooper());
     static List<FoundSdr> cache;
+    // Position dans la liste des favoris (par liste) : on retrouve la même place en rouvrant la fenêtre.
+    static final HashMap<Integer, int[]> LIST_POS = new HashMap<Integer, int[]>();
+
+    static void savePos(ListView lv, int list) {
+        View c = lv.getChildAt(0);
+        LIST_POS.put(list, new int[] { lv.getFirstVisiblePosition(), c == null ? 0 : c.getTop() });
+    }
+
+    static void restorePos(final ListView lv, int list) {
+        final int[] p = LIST_POS.get(list);
+        if (p != null) lv.post(new Runnable() { public void run() { lv.setSelectionFromTop(p[0], p[1]); } });
+    }
 
     static LinearLayout.LayoutParams w(MainActivity a, float weight) { return Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, weight, a, 2); }
 
@@ -87,7 +99,7 @@ final class DlgWebSdr {
             }
         };
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (!filling[0]) { st.curFavList = pos; fill[0].run(); } }
+            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (!filling[0]) { savePos(lv, st.curFavList); st.curFavList = pos; fill[0].run(); restorePos(lv, pos); } }
             public void onNothingSelected(AdapterView<?> p) { }
         });
         lv.setDivider(null);
@@ -130,8 +142,9 @@ final class DlgWebSdr {
         }), w(a, 1));
         r3.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 1));
         col.addView(r3);
-        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { st.save(); } });
+        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { savePos(lv, st.curFavList); st.save(); } });
         fill[0].run();
+        restorePos(lv, st.curFavList);
         d.show();
     }
 

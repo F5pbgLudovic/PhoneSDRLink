@@ -472,3 +472,4 @@ Keep the screen on	Bildschirm nicht ausschalten
 Spectrum zoom (1 kHz per mm)	Spektrum-Zoom (1 kHz pro mm)
 Cannot record: no audio	Aufnahme nicht möglich: kein Ton
 Cannot record: 	Aufnahme nicht möglich:
+The recordings are in Music/PhoneSDRLink	Die Aufnahmen befinden sich in Musik/PhoneSDRLink

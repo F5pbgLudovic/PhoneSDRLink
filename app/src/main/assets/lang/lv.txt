@@ -472,3 +472,4 @@ Keep the screen on	Neizslēgt ekrānu
 Spectrum zoom (1 kHz per mm)	Spektra tālummaiņa (1 kHz uz mm)
 Cannot record: no audio	Ierakstīšana nav iespējama: nav skaņas
 Cannot record: 	Ierakstīšana nav iespējama:
+The recordings are in Music/PhoneSDRLink	Ieraksti atrodas mapē Mūzika/PhoneSDRLink
