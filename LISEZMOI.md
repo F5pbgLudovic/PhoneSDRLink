@@ -28,6 +28,8 @@ Application Android (APK) qui reprend les fonctions de réception de SDRLink, sa
 
 * **1.2** (4 nov. 2026) : son fluide écran éteint / téléphone verrouillé (PlayService, plus de `web.onPause()`, priorité du moteur de rendu). Bug corrigé : le son disparaissait au réveil, car `requestFocus()` créait une nouvelle demande à chaque `onResume` et l'ancienne recevait une perte de focus qui mettait `focusMute` à vrai ; la même demande est maintenant réutilisée. Mesures adb : service au premier plan, verrou `PhoneSDRLink:play`, pas de veille de la chaîne audio, volume interne de la page à 1 après chaque réveil. Testée à l'oreille par F5PBG : « ça a l'air ok », le DNF fonctionne parfaitement, effet du DNR discret.
 
+* **1.3** (4 nov. 2026, publiée ; essayée à l'oreille par F5PBG : le son ne craque plus) : saccades écran éteint, surtout au lancement d'un REC. Cause : les WebSDR demandent la latence minimale (piste audio « rapide » de 8 ms) ; mesuré : 7 à 8 sous-alimentations de la sortie audio en 40 s écran éteint. Correction dans `bridge.js` : `AudioContext` enveloppé pour imposer `latencyHint:'playback'` (piste normale d'environ 80 ms) et tampon du ScriptProcessor du REC porté de 4096 à 16384. Mesuré après : 0 sous-alimentation en 40 s avec REC écran éteint.
+
 ## Points ouverts
 
 * Pas essayés sur le vrai téléphone : scan, mémoires, favoris (import/export, vérification), coupure pendant un appel, PhantomSDR (pas de zoom du spectre : aucune commande trouvée), mise à jour (aucune version plus récente à détecter).

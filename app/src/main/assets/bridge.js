@@ -30,6 +30,22 @@
   // Son du WebSDR : tout ce que la page envoie vers la sortie audio passe par une entrée commune, puis
   // par le notch automatique et le réducteur de bruit (s'ils sont actifs), puis par le gain réglable (Mute).
   // Installé avant les scripts de la page, donc valable pour tous les types de WebSDR.
+  // Les WebSDR demandent la latence minimale (piste audio « rapide » de 8 ms) : le moindre à-coup du processeur, écran éteint
+  // ou au lancement d'un REC, donne une saccade. On demande une grande mémoire tampon ('playback') ; la latence ne gêne pas l'écoute.
+  ['AudioContext', 'webkitAudioContext'].forEach(function (n) {
+    try {
+      var O = window[n];
+      if (!O || !window.Proxy) return;
+      window[n] = new Proxy(O, {
+        construct: function (t, a) {
+          var o = {}, k;
+          if (a[0] && typeof a[0] === 'object') for (k in a[0]) o[k] = a[0][k];
+          if (o.latencyHint === undefined) o.latencyHint = 'playback';
+          return Reflect.construct(t, [o]);
+        }
+      });
+    } catch (e) { }
+  });
   if (window.AudioNode && window.AudioDestinationNode) {
     var origConnect = AudioNode.prototype.connect, origDisconnect = AudioNode.prototype.disconnect;
     var master = function (ctx) {
@@ -325,7 +341,7 @@
       r.worker = null;
       try { (0, eval)(lameSrc); r.enc = new lamejs.Mp3Encoder(1, ctx.sampleRate, kbps); } catch (e2) { __post('rec|err|encoder'); return; }
     }
-    var sp = r.sp = ctx.createScriptProcessor(4096, 1, 1), silent = ctx.createGain();
+    var sp = r.sp = ctx.createScriptProcessor(16384, 1, 1), silent = ctx.createGain();
     sp.channelCount = 1;
     sp.channelCountMode = 'explicit';
     silent.gain.value = 0;
