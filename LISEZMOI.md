@@ -1,10 +1,32 @@
-# PhoneSDRLink (F5PBG)
+# PhoneSDRLink (F5PBG) — notes de projet
 
-Application Android (APK) qui reprend les fonctions de réception de SDRLink, sans la télécommande du poste.
-Compatible Android 8 et plus (testé visé : OnePlus Nord et plus récents).
+Application Android (APK) qui reprend les fonctions de réception de SDRLink, sans la télécommande du poste. Notice d'utilisation et d'installation : [README.md](README.md).
 
-* Sources : `app\src\main` (Java, sans bibliothèque sauf androidx.webkit). Pont JavaScript vers les WebSDR : `assets\bridge.js` (dérivé de SDRLink).
-* Compiler : `.\build.ps1` → `dist\PhoneSDRLink-<version>.apk` (chaîne JDK 17 + Gradle + SDK Android installée dans `toolchain\`, non versionnée).
-* Signature : `phonesdrlink.jks` (mot de passe `phonesdrlink`) — **à conserver** : sans cette clé, une nouvelle version ne pourra plus s'installer par-dessus l'ancienne.
-* Langues : `assets\lang\xx.txt` (anglais → traduction, même format que SDRLink), 23 langues.
-* Réglages : fichier `settings.ini` de l'application, même format que SDRLink PC (un export de SDRLink PC peut être importé).
+## Où est quoi
+
+* Sources : `app\src\main\java\fr\f5pbg\phonesdrlink` (Java pur, un seul écran).
+  * `MainActivity` : écran, WebView, état (fréquence, mode), scan, son (focus audio, appel, volume du téléphone), REC, verrou, zoom du spectre, mises à jour.
+  * `Store` : tous les réglages (`settings.ini`, même format que SDRLink PC : un export de SDRLink PC s'importe), favoris, mémoires, profils de scan.
+  * `Finder` : annuaires websdr.org / KiwiSDR / ReceiverBook. `Dlg*` : fenêtres (WEBSDR, favoris, recherche, mémoires, scan, SET, clavier). `CheckList` : liste à cases. `Ui`, `FreqBar`, `Lang`.
+* `app\src\main\assets\bridge.js` : pont JavaScript injecté dans chaque page (dérivé de `WebSdrBridge.cs` de SDRLink) : détection du type de WebSDR, lecture/réglage fréquence et mode, démarrage automatique du son, chaîne audio (notch automatique, réducteur de bruit, gain), volume de la page, REC MP3, zoom du spectre, viewport 1000 px, désactivation de la reconnaissance vocale (qui faisait tomber UberSDR).
+* `assets\lang\xx.txt` : 23 langues (anglais → traduction, comme SDRLink). `assets\default-favorites.txt` : favoris de départ (liste « HF »). `assets\lame.min.js` : encodeur MP3 lamejs (LGPL-3.0).
+* Chaîne de compilation : `toolchain\` (non versionnée) ← `tools\install-toolchain.ps1`. Compiler : `.\build.ps1`.
+* Signature : `phonesdrlink.jks` (mot de passe `phonesdrlink`), **non publiée** : à garder dans la sauvegarde ; sans elle une mise à jour ne s'installe plus par-dessus l'ancienne version.
+
+## Règles de travail
+
+* Demander à F5PBG avant d'ajouter une fonction de SDRLink qu'il n'a pas citée.
+* Publier (GitHub, release) seulement sur demande.
+* Tout nouveau texte : `Lang.T("français", "English")`, puis ajouter la ligne `English<TAB>traduction` aux 21 fichiers de `assets\lang` (attention aux espaces de fin de clé).
+* Essais sur le vrai téléphone par adb (voir README, « Outils de mise au point ») ; contrôler le premier plan (`dumpsys window | grep mCurrentFocus`) avant tout `input tap`, F5PBG utilise parfois le téléphone en même temps.
+
+## Historique
+
+* **1.0** (4 nov. 2026) : première version.
+* **1.1** (4 nov. 2026) : bouton Muet + Verrou, INIT, REC MP3 (+ appui long vers le dossier), liste de recherche et gestion des favoris refaites comme SDRLink, favoris HF par défaut, grandes cases dans la liste WEBSDR (position conservée), pas sur la ligne Scan, écran toujours allumé, zoom du spectre 1 kHz/mm, volume de la page recopié depuis le volume du téléphone, page 1000 px à zoom libre (panneaux OpenWebRX/Kiwi), plantage UberSDR corrigé (reconnaissance vocale), notch automatique qui coupait le son (NaN) corrigé, noms de favoris sur une ligne.
+
+## Points ouverts
+
+* Pas essayés sur le vrai téléphone : scan, mémoires, favoris (import/export, vérification), coupure pendant un appel, notch/DNR à l'oreille, PhantomSDR (pas de zoom du spectre : aucune commande trouvée), mise à jour (aucune version plus récente à détecter).
+* Le volume de la page et le volume du téléphone se multiplient (téléphone bas = son très bas) ; à ajuster si F5PBG le demande.
+* Pas de licence sur le dépôt.
