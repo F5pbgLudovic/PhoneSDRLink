@@ -509,3 +509,21 @@ Update installation cancelled or failed	Naujinimo diegimas atšauktas arba nepav
 Search the list…	Ieškoti sąraše…
 Bandwidth in kHz (0.1 to 15)	Pralaidumo juosta kHz (nuo 0,1 iki 15)
 Invalid value (0.1 to 15 kHz).	Netinkama reikšmė (nuo 0,1 iki 15 kHz).
+Automatic WebSDR reset	Automatinis WebSDR atstatymas
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Iš naujo įkelia WebSDR, jei garso nėra 30 s (išskyrus nulinį garsą arba nutildymą).
+No sound for 30 s: the WebSDR is reloaded.	Garso nėra 30 s: WebSDR įkeliamas iš naujo.
+Main screen colours:	Pagrindinio ekrano spalvos:
+Button background	Mygtukų fonas
+Button text	Mygtukų tekstas
+Frequency text	Dažnio tekstas
+Frequency background	Dažnio fonas
+Tuning bar foreground	Derinimo juostos priekinis planas
+Tuning bar background	Derinimo juostos fonas
+Default colours	Numatytosios spalvos
+Choose a colour	Pasirinkite spalvą
+Same colour as its counterpart (text would vanish): pick another one	Ta pati spalva kaip ir poros (tekstas išnyktų): pasirinkite kitą
+Colours	Spalvos
+Colours…	Spalvos…
+General background	Bendras fonas
+Custom colour (RGB)	Pasirinktinė spalva (RGB)
+G	G

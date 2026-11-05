@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -58,6 +59,7 @@ public class MainActivity extends Activity {
     WebView web;
     LinearLayout root, controls;
     FrameLayout webFrame;
+    LinearLayout right, barRow, zoomBox;
     Button btnWeb, btnSet, btnRec, btnMute, btnLock, btnMode, btnScan, btnScanConf, btnMem, btnStep;
     TextView tvFreq, tvStatus, tvPage;
     FreqBar bar;
@@ -106,6 +108,7 @@ public class MainActivity extends Activity {
         st = Store.I;
         Lang.set(this, st.language);
         Ui.dark = st.dark;
+        Ui.loadColors(st);
         setTheme(st.dark ? android.R.style.Theme_DeviceDefault_NoActionBar : android.R.style.Theme_DeviceDefault_Light_NoActionBar);
         super.onCreate(b);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -119,6 +122,7 @@ public class MainActivity extends Activity {
         applyKeepScreen();
         setupWeb();
         refreshAll();
+        if (Ui.reopenColors) { Ui.reopenColors = false; h.post(new Runnable() { public void run() { DlgSettings.showColors(MainActivity.this); } }); }
         String first = getIntent() != null ? getIntent().getStringExtra("url") : null;
         web.loadUrl(first != null ? first : st.lastUrl);
         h.postDelayed(new Runnable() { public void run() { firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
@@ -138,6 +142,8 @@ public class MainActivity extends Activity {
         requestFocus();
         registerReceiver(volReceiver, new android.content.IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
         applyPhoneVolume();
+        h.removeCallbacks(watchRun);
+        h.postDelayed(watchRun, 5000);
     }
 
     @Override
@@ -234,13 +240,36 @@ public class MainActivity extends Activity {
 
         // Ligne 2 : fréquence (appui = clavier) et mode
         LinearLayout r2 = Ui.row(this);
-        tvFreq = new TextView(this);
-        tvFreq.setTextColor(Ui.accent());
+        tvFreq = new TextView(this) {
+            // Nom de l'application en tout petit sous la fréquence, centré, sans changer la taille de la case ; s'il ne rentre pas, rien n'est écrit.
+            final android.graphics.Paint tiny = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+            @Override
+            protected void onDraw(android.graphics.Canvas c) {
+                super.onDraw(c);
+                android.text.Layout l = getLayout();
+                if (l == null || getText().length() == 0) return;
+                String s = "PhoneSDRLink V" + versionName() + " @F5PBG 2026";
+                float dm = getResources().getDisplayMetrics().scaledDensity, dp = getResources().getDisplayMetrics().density;
+                float top = (getHeight() - l.getHeight()) / 2f + l.getLineBaseline(0);   // bas des chiffres
+                tiny.setTypeface(Typeface.DEFAULT);
+                tiny.setColor(Ui.cFreqTx != 0 ? Ui.cFreqTx : Ui.sub());
+                for (float sz = 7; sz >= 5.5f; sz -= 0.5f) {
+                    tiny.setTextSize(sz * dm);
+                    float base = getHeight() - 2 * dp - tiny.descent();
+                    if (base + tiny.ascent() >= top + dp && tiny.measureText(s) <= getWidth() - 8 * dp) {
+                        // Le texte de la fréquence est centré par défilement interne de la vue : on suit ce décalage.
+                        c.drawText(s, getScrollX() + (getWidth() - tiny.measureText(s)) / 2f, getScrollY() + base, tiny);
+                        return;
+                    }
+                }
+            }
+        };
+        tvFreq.setTextColor(Ui.freqTx());
         tvFreq.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tvFreq.setGravity(Gravity.CENTER);
         tvFreq.setTextSize(36);
         tvFreq.setSingleLine(true);
-        tvFreq.setBackground(Ui.round(Ui.panel(), 10, this));
+        tvFreq.setBackground(Ui.round(Ui.freqBg(), 10, this));
         tvFreq.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgKeypad.show(MainActivity.this); } });
         btnMode = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseMode(); } });
         btnMode.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { chooseBandwidth(); return true; } });
@@ -264,12 +293,14 @@ public class MainActivity extends Activity {
         controls.addView(r3);
 
         // Ligne 4 : barre à glisser, sur toute la largeur
-        LinearLayout r4 = Ui.row(this);
+        barRow = Ui.row(this);
+        final LinearLayout r4 = barRow;
         bar = new FreqBar(this);
         bar.hint = Lang.T("◀ glisser : − fréquence | + fréquence ▶", "◀ swipe: − frequency | + frequency ▶");
         bar.setListener(new FreqBar.Listener() { public void onSteps(int n, double ms) { tuneBySteps(n, ms); } });
         r4.addView(bar, Ui.lp(0, Ui.dp(this, 52), 1, this, 2));
         controls.addView(r4);
+        bar.onLong = new Runnable() { public void run() { chooseBarPlace(); } };
         tvStatus = Ui.small(this, "");
         tvStatus.setPadding(Ui.dp(this, 6), Ui.dp(this, 2), Ui.dp(this, 6), 0);
         tvStatus.setMinLines(1);
@@ -292,16 +323,71 @@ public class MainActivity extends Activity {
         zoom.addView(initButton());
         zoom.addView(plus);
         zoom.addView(minus);
-        FrameLayout.LayoutParams zp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.END);
-        zp.setMargins(0, 0, Ui.dp(this, 10), Ui.dp(this, 10));
-        webFrame.addView(zoom, zp);
+        zoomBox = zoom;
+        holdThen(plus, new Runnable() { public void run() { chooseZoomSide(); } });
+        holdThen(minus, new Runnable() { public void run() { chooseZoomSide(); } });
+        right = new LinearLayout(this);
+        right.setOrientation(LinearLayout.VERTICAL);
+        right.addView(webFrame, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+        placeZoom();
 
         root.addView(controls);
-        root.addView(webFrame);
+        root.addView(right);
         setContentView(root);
+        placeBar();
         layoutForOrientation();
     }
 
+    // Appui de 3 secondes sans lâcher sur un bouton : exécute r (le clic normal est alors ignoré).
+    void holdThen(final View v, final Runnable r) {
+        final boolean[] fired = { false };
+        final Runnable fire = new Runnable() { public void run() { fired[0] = true; v.setPressed(false); r.run(); } };
+        v.setOnTouchListener(new View.OnTouchListener() {
+            float x0, y0;
+            public boolean onTouch(View b, MotionEvent e) {
+                switch (e.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN: fired[0] = false; x0 = e.getX(); y0 = e.getY(); h.postDelayed(fire, 3000); break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (Math.abs(e.getX() - x0) > Ui.dp(MainActivity.this, 12) || Math.abs(e.getY() - y0) > Ui.dp(MainActivity.this, 12)) h.removeCallbacks(fire);
+                        break;
+                    case MotionEvent.ACTION_UP: h.removeCallbacks(fire); if (fired[0]) { fired[0] = false; return true; } break;
+                    case MotionEvent.ACTION_CANCEL: h.removeCallbacks(fire); break;
+                }
+                return false;
+            }
+        });
+    }
+
+    // Les trois boutons INIT, + et − : à droite (position d'origine) ou à gauche ; plus hauts quand la barre est en bas.
+    void placeZoom() {
+        if (zoomBox == null) return;
+        if (zoomBox.getParent() != null) ((ViewGroup) zoomBox.getParent()).removeView(zoomBox);
+        FrameLayout.LayoutParams zp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | (st.zoomLeft ? Gravity.START : Gravity.END));
+        int m = Ui.dp(this, 10);
+        zp.setMargins(st.zoomLeft ? m : 0, 0, st.zoomLeft ? 0 : m, st.barBottom ? Ui.dp(this, 28) : m);
+        webFrame.addView(zoomBox, zp);
+    }
+
+    void chooseZoomSide() {
+        Ui.choose(this, Lang.T("Boutons INIT + −", "INIT + − buttons"), new String[] { Lang.T("À gauche de l'écran", "Left of the screen"), Lang.T("À droite de l'écran", "Right of the screen") }, new Ui.Index() {
+            public void chose(int i) { st.zoomLeft = i == 0; st.save(); placeZoom(); }
+        });
+    }
+
+    // La barre de réglage : au-dessus du WebSDR (haut) ou tout en bas de l'écran.
+    void placeBar() {
+        if (barRow == null) return;
+        if (barRow.getParent() != null) ((ViewGroup) barRow.getParent()).removeView(barRow);
+        if (st.barBottom) right.addView(barRow, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        else controls.addView(barRow, 3);
+        placeZoom();
+    }
+
+    void chooseBarPlace() {
+        Ui.choose(this, Lang.T("Barre de réglage", "Tuning bar"), new String[] { Lang.T("Haut (où elle est)", "Top (where it is)"), Lang.T("Bas de l'écran", "Bottom of the screen") }, new Ui.Index() {
+            public void chose(int i) { st.barBottom = i == 1; st.save(); placeBar(); }
+        });
+    }
     // Rond « INIT » : relance le WebSDR (rechargement de la page) quand le son s'est arrêté.
     Button initButton() {
         Button b = Ui.button(this, "INIT", new View.OnClickListener() {
@@ -351,7 +437,7 @@ public class MainActivity extends Activity {
         root.setOrientation(land ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
         if (controls.getParent() == root) root.removeView(controls);
         if (controls.getParent() instanceof ScrollView) ((ScrollView) controls.getParent()).removeView(controls);
-        View old = root.getChildAt(0) != webFrame ? root.getChildAt(0) : null;
+        View old = root.getChildAt(0) != right ? root.getChildAt(0) : null;
         if (old != null) root.removeView(old);
         View top;
         if (land) {
@@ -359,10 +445,10 @@ public class MainActivity extends Activity {
             sv.addView(controls);
             top = sv;
             root.addView(top, 0, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.42f));
-            webFrame.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.58f));
+            right.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.58f));
         } else {
             root.addView(controls, 0, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            webFrame.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+            right.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         }
         tvFreq.setTextSize(land ? 30 : 36);
     }
@@ -567,9 +653,37 @@ public class MainActivity extends Activity {
         js("if(window.__sdrlink)__sdrlink.setVolume(" + (m ? 0 : 1) + ");");
     }
 
+    // « Réinitialisation automatique WEBSDR » : si la page reste 30 s sans produire de son alors que le volume n'est pas à zéro
+    // (téléphone, mute de l'application, curseur de la page), la page est rechargée ; 3 essais de suite au plus par WebSDR.
+    int autoTries;
+    final Runnable watchRun = new Runnable() {
+        public void run() {
+            h.postDelayed(this, 5000);
+            if (!st.autoReload || sdrKind.isEmpty() || muted || callMute || focusMute || audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0 || autoTries >= 3) return;
+            web.evaluateJavascript("(function(){try{return window.__sdrlink?__sdrlink.silentMs():-1}catch(e){return -1}})()", new android.webkit.ValueCallback<String>() {
+                public void onReceiveValue(String v) {
+                    long ms;
+                    try { ms = Long.parseLong(v.trim()); } catch (Exception e) { return; }
+                    if (ms >= 30000 && st.autoReload && !muted && !callMute && !focusMute) {
+                        autoTries++;
+                        status(Lang.T("Plus de son depuis 30 s : le WebSDR est rechargé.", "No sound for 30 s: the WebSDR is reloaded."));
+                        web.reload();
+                    }
+                }
+            });
+        }
+    };
+
+    // Le notch automatique n'est pas appliqué en CW ni en DATA (la coche reste telle que l'opérateur l'a mise).
+    boolean notchNow() { return st.autoNotch && !"CW".equals(mode) && !(mode != null && mode.startsWith("DATA")); }
+
+    boolean notchSent;
+
     void applyAudio() {
         applyVolume();
-        js("if(window.__sdrlink){__sdrlink.setNotch(" + st.autoNotch + ");__sdrlink.setDnr(" + st.autoDnr + ");}");
+        notchSent = notchNow();
+        js("if(window.__sdrlink)__sdrlink.setWatch(" + st.autoReload + ");");
+        js("if(window.__sdrlink){__sdrlink.setNotch(" + notchSent + "," + st.notchLevel + ");__sdrlink.setDnr(" + st.autoDnr + "," + st.dnrLevel + ");}");
     }
 
     static String toSdr(String m) {
@@ -646,6 +760,7 @@ public class MainActivity extends Activity {
         if (url.isEmpty()) return;
         if (!url.contains("://")) url = "http://" + url;
         sdrKind = "";
+        autoTries = 0;
         bwHz = st.bwFor(mode);   // nouveau WebSDR : la largeur retenue pour le mode (appliquée au premier état de la page)
         captureScale = true;
         updateDisplays();
@@ -731,6 +846,7 @@ public class MainActivity extends Activity {
     // push : la largeur est aussi annoncée à la page (réappliquée par L.set après le changement de mode).
     void syncBw(boolean push) {
         bwHz = st.bwFor(mode);
+        if (notchNow() != notchSent) applyAudio();
         if (push) js("if(window.__sdrlink)__sdrlink.bw=" + bwHz + ";");
     }
 
@@ -766,9 +882,11 @@ public class MainActivity extends Activity {
     }
 
     void chooseStep() {
-        String[] names = new String[Store.STEPS.length];
-        for (int i = 0; i < names.length; i++) names[i] = stepText(Store.STEPS[i]);
-        Ui.choose(this, Lang.T("Pas :", "Step:"), names, new Ui.Index() { public void chose(int i) { st.setStepFor(mode, Store.STEPS[i]); updateDisplays(); st.save(); } });
+        boolean ssb = "USB".equals(mode) || "LSB".equals(mode);
+        final int[] steps = new int[ssb ? Store.STEPS.length : Store.STEPS.length - 1];
+        String[] names = new String[steps.length];
+        for (int i = 0, k = 0; i < Store.STEPS.length; i++) if (ssb || Store.STEPS[i] != 1) { steps[k] = Store.STEPS[i]; names[k++] = stepText(Store.STEPS[i]); }
+        Ui.choose(this, Lang.T("Pas :", "Step:"), names, new Ui.Index() { public void chose(int i) { st.setStepFor(mode, steps[i]); updateDisplays(); st.save(); } });
     }
 
     void tuneMemory(Memory m) {
@@ -988,7 +1106,7 @@ public class MainActivity extends Activity {
     // Largeurs proposées selon le mode (Hz) ; « filtre d'origine » et « autre valeur » sont toujours ajoutés.
     static int[] bwChoices(String m) {
         if ("CW".equals(m)) return new int[] { 100, 200, 300, 400, 500, 800 };
-        if ("USB".equals(m) || "LSB".equals(m)) return new int[] { 2100, 2400, 2800, 2900, 3000, 4000, 5000 };
+        if ("USB".equals(m) || "LSB".equals(m)) return new int[] { 2100, 2400, 2600, 2800, 2900, 3000, 4000, 5000 };
         if ("AM".equals(m)) return new int[] { 6000, 8000, 10000 };
         if ("FM".equals(m)) return new int[] { 8000, 10000, 12000, 15000 };
         return new int[] { 200, 300, 500, 2100, 2400, 2800, 3000, 4000 };   // DATA

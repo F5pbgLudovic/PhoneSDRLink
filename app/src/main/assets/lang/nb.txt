@@ -509,3 +509,21 @@ Update installation cancelled or failed	Installasjonen av oppdateringen ble avbr
 Search the list…	Søk i listen…
 Bandwidth in kHz (0.1 to 15)	Båndbredde i kHz (0,1 til 15)
 Invalid value (0.1 to 15 kHz).	Ugyldig verdi (0,1 til 15 kHz).
+Automatic WebSDR reset	Automatisk tilbakestilling av WebSDR
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Laster WebSDR på nytt hvis lyden har uteblitt i 30 s (unntatt ved volum null eller dempet lyd).
+No sound for 30 s: the WebSDR is reloaded.	Ingen lyd på 30 s: WebSDR lastes på nytt.
+Main screen colours:	Farger på hovedskjermen:
+Button background	Knappebakgrunn
+Button text	Knappetekst
+Frequency text	Frekvenstekst
+Frequency background	Frekvensbakgrunn
+Tuning bar foreground	Forgrunn på innstillingslinjen
+Tuning bar background	Bakgrunn på innstillingslinjen
+Default colours	Standardfarger
+Choose a colour	Velg en farge
+Same colour as its counterpart (text would vanish): pick another one	Samme farge som motstykket (teksten ville forsvinne): velg en annen
+Colours	Farger
+Colours…	Farger…
+General background	Generell bakgrunn
+Custom colour (RGB)	Egendefinert farge (RGB)
+G	G

@@ -509,3 +509,21 @@ Update installation cancelled or failed	Namestitev posodobitve je bila preklican
 Search the list…	Iskanje po seznamu…
 Bandwidth in kHz (0.1 to 15)	Pasovna širina v kHz (0,1 do 15)
 Invalid value (0.1 to 15 kHz).	Neveljavna vrednost (0,1 do 15 kHz).
+Automatic WebSDR reset	Samodejna ponastavitev WebSDR
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Znova naloži WebSDR, če zvoka ni 30 s (razen pri glasnosti nič ali utišanju).
+No sound for 30 s: the WebSDR is reloaded.	Brez zvoka 30 s: WebSDR se znova naloži.
+Main screen colours:	Barve glavnega zaslona:
+Button background	Ozadje gumbov
+Button text	Besedilo gumbov
+Frequency text	Besedilo frekvence
+Frequency background	Ozadje frekvence
+Tuning bar foreground	Ospredje nastavitvene vrstice
+Tuning bar background	Ozadje nastavitvene vrstice
+Default colours	Privzete barve
+Choose a colour	Izberite barvo
+Same colour as its counterpart (text would vanish): pick another one	Enaka barva kot nasprotni element (besedilo bi izginilo): izberite drugo
+Colours	Barve
+Colours…	Barve…
+General background	Splošno ozadje
+Custom colour (RGB)	Barva po meri (RGB)
+G	G

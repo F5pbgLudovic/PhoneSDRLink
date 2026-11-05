@@ -27,11 +27,21 @@ import java.util.List;
 final class Ui {
     static boolean dark = true;
 
-    static int bg() { return dark ? 0xFF101418 : 0xFFF2F4F7; }
+    static int bg() { return cBg != 0 ? cBg : dark ? 0xFF101418 : 0xFFF2F4F7; }
     static int panel() { return dark ? 0xFF1B2128 : 0xFFFFFFFF; }
     static int fg() { return dark ? 0xFFE8ECF0 : 0xFF14181C; }
     static int sub() { return dark ? 0xFF9AA5B1 : 0xFF5A6570; }
-    static int btn() { return dark ? 0xFF2B3540 : 0xFFDDE3EA; }
+    // Couleurs choisies dans SET (0 = couleur d'origine du thème).
+    static boolean reopenColors;
+    static int cBtnBg, cBtnTx, cFreqTx, cFreqBg, cBarFg, cBarBg, cBg;
+    static int btn() { return cBtnBg != 0 ? cBtnBg : dark ? 0xFF2B3540 : 0xFFDDE3EA; }
+    static int btnTx() { return cBtnTx != 0 ? cBtnTx : fg(); }
+    static int freqTx() { return cFreqTx != 0 ? cFreqTx : accent(); }
+    static int freqBg() { return cFreqBg != 0 ? cFreqBg : panel(); }
+    static int barBg() { return cBarBg != 0 ? cBarBg : btn(); }
+    static int barFgTicks() { return cBarFg != 0 ? cBarFg : sub(); }
+    static int barFgText() { return cBarFg != 0 ? cBarFg : fg(); }
+    static void loadColors(Store s) { cBtnBg = s.colBtnBg; cBtnTx = s.colBtnTx; cFreqTx = s.colFreqTx; cFreqBg = s.colFreqBg; cBarFg = s.colBarFg; cBarBg = s.colBarBg; cBg = s.colBg; }
     static int accent() { return dark ? 0xFF4FC3F7 : 0xFF0B5FA5; }
     static int on() { return dark ? 0xFF2E7D32 : 0xFF2E7D32; }
     static int danger() { return 0xFFC62828; }
@@ -50,7 +60,7 @@ final class Ui {
         b.setText(text);
         b.setAllCaps(false);
         b.setTextSize(14);
-        b.setTextColor(fg());
+        b.setTextColor(btnTx());
         b.setBackground(round(btn(), 10, c));
         b.setMinHeight(dp(c, 44));
         b.setMinimumHeight(dp(c, 44));
@@ -66,7 +76,7 @@ final class Ui {
     static void paint(Button b, boolean active, int activeColor) {
         Context c = b.getContext();
         b.setBackground(round(active ? activeColor : btn(), 10, c));
-        b.setTextColor(active ? Color.WHITE : fg());
+        b.setTextColor(active ? Color.WHITE : btnTx());
     }
 
     static TextView label(Context c, String text) {

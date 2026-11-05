@@ -16,6 +16,19 @@ final class Favorite {
     String name, url;
     int volume = -1;
     int list;
+    // Dernières vérifications (ms) : dernière réponse du serveur (0 = jamais vue), première absence de réponse depuis (0 = aucune).
+    long lastOk, firstFail;
+    static final long WEEK = 7L * 24 * 3600 * 1000, MONTH = 30L * 24 * 3600 * 1000;
+
+    // 0 = pas d'information, 1 = répond (vert), 2 = ne répond pas depuis moins d'une semaine ou durée inconnue,
+    // 3 = sans réponse depuis une semaine (orange), 4 = depuis un mois (rouge).
+    int health(long now) {
+        if (firstFail > 0) {
+            long ref = lastOk > 0 ? lastOk : firstFail;
+            return now - ref >= MONTH ? 4 : now - ref >= WEEK ? 3 : 2;
+        }
+        return lastOk > 0 ? 1 : 0;
+    }
 
     Favorite(String name, String url) {
         this.url = url == null ? "" : url.trim();
@@ -181,7 +194,7 @@ final class ScanProfile {
 // Tous les réglages de PHONESDRLINK, enregistrés dans settings.ini (même format « clé=valeur » que SDRLink pour PC :
 // un fichier d'export de SDRLink peut être importé, les clés inconnues sont ignorées).
 final class Store {
-    static final int[] STEPS = { 10, 50, 100, 250, 500, 1000, 10000 };
+    static final int[] STEPS = { 1, 10, 50, 100, 250, 500, 1000, 10000 };   // 1 Hz : proposé seulement en USB et LSB
     static final long MIN_HZ = 1800000L, MAX_HZ = 440000000L;
     static final int IMP_CONFIG = 1, IMP_WEBSDR = 2, IMP_MEMS = 4, IMP_SCAN = 8;
 
@@ -191,7 +204,9 @@ final class Store {
 
     // Configuration
     String language = "";
-    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen, spectrumZoom = true;
+    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen, spectrumZoom = true, autoReload, barBottom, zoomLeft;
+    int colBtnBg, colBtnTx, colFreqTx, colFreqBg, colBarFg, colBarBg, colBg;   // couleurs choisies (0 = couleur d'origine)
+    int notchLevel = 1, dnrLevel = 1;   // 1 = réglage d'origine, 10 = le plus fort
     String callsign = "PhoneSDRLink";
     String lastUrl = "http://websdr.ewi.utwente.nl:8901/";
     long freqHz = 7100000L;
@@ -279,6 +294,7 @@ final class Store {
     }
 
     void defaultsConfig() {
+        notchLevel = 1; dnrLevel = 1; autoReload = false; barBottom = false; zoomLeft = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = 0;
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
@@ -309,6 +325,7 @@ final class Store {
     void parse(String text, int cats) {
         boolean favSeen = false, memSeen = false;
         ArrayList<Favorite> favs = new ArrayList<Favorite>();
+        ArrayList<String[]> states = new ArrayList<String[]>();
         ArrayList<Memory> mems = new ArrayList<Memory>(), rec = new ArrayList<Memory>();
         ArrayList<long[]> skips = new ArrayList<long[]>();
         ArrayList<ScanProfile> profs = new ArrayList<ScanProfile>();
@@ -330,6 +347,18 @@ final class Store {
                 else if (k.equals("DarkMode")) dark = v.trim().equals("1");
                 else if (k.equals("AutoNotch")) autoNotch = v.trim().equals("1");
                 else if (k.equals("AutoDnr")) autoDnr = v.trim().equals("1");
+                else if (k.equals("PhoneNotchLevel")) notchLevel = Math.max(1, Math.min(10, toInt(v, 1)));
+                else if (k.equals("PhoneDnrLevel")) dnrLevel = Math.max(1, Math.min(10, toInt(v, 1)));
+                else if (k.equals("PhoneAutoReload")) autoReload = v.trim().equals("1");
+                else if (k.equals("PhoneBarBottom")) barBottom = v.trim().equals("1");
+                else if (k.equals("PhoneZoomLeft")) zoomLeft = v.trim().equals("1");
+                else if (k.equals("PhoneColBtnBg")) colBtnBg = hexColor(v);
+                else if (k.equals("PhoneColBtnTx")) colBtnTx = hexColor(v);
+                else if (k.equals("PhoneColFreqTx")) colFreqTx = hexColor(v);
+                else if (k.equals("PhoneColFreqBg")) colFreqBg = hexColor(v);
+                else if (k.equals("PhoneColBarFg")) colBarFg = hexColor(v);
+                else if (k.equals("PhoneColBarBg")) colBarBg = hexColor(v);
+                else if (k.equals("PhoneColBg")) colBg = hexColor(v);
                 else if (k.equals("KeepScreen")) keepScreen = v.trim().equals("1");
                 else if (k.equals("SpecZoom")) spectrumZoom = !v.trim().equals("0");
                 else if (k.equals("CheckUpdates")) checkUpdates = !v.trim().equals("0");
@@ -349,6 +378,7 @@ final class Store {
             }
             if (web) {
                 if (k.equals("Fav")) { if (v.length() > 0) { favs.add(Favorite.fromSetting(v)); favSeen = true; } }
+                else if (k.equals("PhoneFavState")) { String[] q = v.split("\\|", -1); if (q.length >= 3) states.add(q); }   // « adresse|dernière réponse|première absence »
                 else if (k.equals("ListCount")) favCount = Math.max(1, Math.min(Favorite.MAX_LISTS, toInt(v, 4)));
                 else if (k.equals("CurrentList")) curFavList = Math.max(0, Math.min(Favorite.MAX_LISTS - 1, toInt(v, 0)));
                 else if (k.equals("FirstSearch")) firstSearchDone = !v.trim().equals("0");
@@ -383,6 +413,11 @@ final class Store {
             favListCount = favCount;
             for (Favorite f : favorites) favListCount = Math.max(favListCount, f.list + 1);
             curFavList = Math.min(curFavList, favListCount - 1);
+            for (String[] q : states) {
+                int cut = q.length - 2;
+                String url = Favorite.join(q, 0, cut);
+                for (Favorite f : favorites) if (f.url.equals(url)) { f.lastOk = toLong(q[cut], 0); f.firstFail = toLong(q[cut + 1], 0); }
+            }
         }
         if ((cats & IMP_MEMS) != 0 && (memSeen || !rec.isEmpty())) {
             memories.clear(); memories.addAll(mems);
@@ -402,7 +437,7 @@ final class Store {
         Store t = new Store();
         t.favorites.clear();
         t.parse(text, cats & ~IMP_CONFIG | (cats & IMP_CONFIG));
-        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; callsign = t.callsign; checkUpdates = t.checkUpdates; }
+        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; callsign = t.callsign; checkUpdates = t.checkUpdates; }
         if ((cats & IMP_WEBSDR) != 0) {
             for (int i = 0; i < Favorite.MAX_LISTS; i++) if (!t.favListNames[i].equals("Liste " + (i + 1)) && favListNames[i].equals("Liste " + (i + 1))) favListNames[i] = t.favListNames[i];
             for (Favorite f : t.favorites) {
@@ -437,6 +472,18 @@ final class Store {
         line(sb, "DarkMode", dark ? 1 : 0);
         line(sb, "AutoNotch", autoNotch ? 1 : 0);
         line(sb, "AutoDnr", autoDnr ? 1 : 0);
+        line(sb, "PhoneNotchLevel", notchLevel);
+        line(sb, "PhoneDnrLevel", dnrLevel);
+        line(sb, "PhoneAutoReload", autoReload ? 1 : 0);
+        line(sb, "PhoneBarBottom", barBottom ? 1 : 0);
+        line(sb, "PhoneZoomLeft", zoomLeft ? 1 : 0);
+        line(sb, "PhoneColBtnBg", String.format("%08X", colBtnBg));
+        line(sb, "PhoneColBtnTx", String.format("%08X", colBtnTx));
+        line(sb, "PhoneColFreqTx", String.format("%08X", colFreqTx));
+        line(sb, "PhoneColFreqBg", String.format("%08X", colFreqBg));
+        line(sb, "PhoneColBarFg", String.format("%08X", colBarFg));
+        line(sb, "PhoneColBarBg", String.format("%08X", colBarBg));
+        line(sb, "PhoneColBg", String.format("%08X", colBg));
         line(sb, "KeepScreen", keepScreen ? 1 : 0);
         line(sb, "SpecZoom", spectrumZoom ? 1 : 0);
         line(sb, "CheckUpdates", checkUpdates ? 1 : 0);
@@ -457,6 +504,7 @@ final class Store {
         for (int i = 0; i < favListCount; i++) line(sb, "List" + (i + 1), favListNames[i]);
         line(sb, "CurrentList", curFavList);
         for (Favorite f : favorites) line(sb, "Fav", f.toSetting());
+        for (Favorite f : favorites) if (f.lastOk > 0 || f.firstFail > 0) line(sb, "PhoneFavState", f.url + "|" + f.lastOk + "|" + f.firstFail);
         line(sb, "MemListCount", memListCount);
         line(sb, "MemCurrentList", curMemList);
         for (int i = 0; i < memListCount; i++) line(sb, "MemList" + (i + 1), memListNames[i]);
@@ -473,6 +521,7 @@ final class Store {
         return sb.toString();
     }
 
+    static int hexColor(String v) { try { return (int) Long.parseLong(v.trim(), 16); } catch (Exception e) { return 0; } }
     static void line(StringBuilder sb, String k, Object v) { sb.append(k).append('=').append(v).append("\r\n"); }
 
     void save() {

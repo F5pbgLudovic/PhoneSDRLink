@@ -24,10 +24,12 @@ final class DlgMemory {
         final Dialog d = Ui.window(a, Lang.T("Mémoires…", "Memories…"), col, true);
         final Spinner sp = Ui.spinner(a, new ArrayList<String>());
         final ListView lv = new ListView(a);
+        lv.setDivider(null);
         final TextView info = Ui.small(a, "");
         final ArrayList<Memory> shown = new ArrayList<Memory>();
         final Runnable[] fill = new Runnable[1];
         final boolean[] filling = { false };
+        final String[] query = { "" };
 
         fill[0] = new Runnable() {
             public void run() {
@@ -47,10 +49,32 @@ final class DlgMemory {
                 shown.clear();
                 if (sel == 0) shown.addAll(st.recent);
                 else for (Memory m : st.memories) if (m.list == sel - 1) shown.add(m);
+                if (!query[0].isEmpty()) {
+                    for (int k = shown.size() - 1; k >= 0; k--) {
+                        Memory m = shown.get(k);
+                        String hay = (m.label() + " " + Memory.kHz(m.hz) + " " + m.mode).toLowerCase();
+                        if (!hay.contains(query[0])) shown.remove(k);
+                    }
+                }
                 ArrayList<String> rows = new ArrayList<String>();
-                for (Memory m : shown) rows.add(m.label() + "   —   " + Memory.kHz(m.hz) + " kHz" + (m.mode.isEmpty() ? "" : " " + MainActivity.modeLabel(m.mode)) + (m.scan ? "   ⟳" : ""));
+                for (Memory m : shown) rows.add(m.label() + "   —   " + Memory.kHz(m.hz) + " kHz" + (m.mode.isEmpty() ? "" : "  " + MainActivity.modeLabel(m.mode)) + (m.scan ? "   ⟳" : ""));
                 lv.setAdapter(new ArrayAdapter<String>(a, android.R.layout.simple_list_item_1, rows) {
-                    public View getView(int p, View v, ViewGroup g) { TextView t = (TextView) super.getView(p, v, g); t.setTextColor(Ui.fg()); t.setTextSize(15); return t; }
+                    public View getView(int p, View v, ViewGroup g) {
+                        // Une case (bouton arrondi) par mémoire.
+                        LinearLayout box = new LinearLayout(a);
+                        box.setPadding(Ui.dp(a, 4), Ui.dp(a, 4), Ui.dp(a, 4), Ui.dp(a, 4));
+                        TextView t = new TextView(a);
+                        t.setText(getItem(p));
+                        t.setTextColor(Ui.fg());
+                        t.setTextSize(16);
+                        t.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+                        t.setGravity(Gravity.CENTER_VERTICAL);
+                        t.setMinHeight(Ui.dp(a, 52));
+                        t.setPadding(Ui.dp(a, 16), Ui.dp(a, 8), Ui.dp(a, 16), Ui.dp(a, 8));
+                        t.setBackground(Ui.round(Ui.btn(), 14, a));
+                        box.addView(t, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        return box;
+                    }
                 });
                 info.setText(Lang.F("{0} mémoire(s). Appuyez sur une mémoire pour y aller (appui long : modifier).", "{0} memory(ies). Click a memory to go there.", shown.size()));
             }
@@ -77,7 +101,27 @@ final class DlgMemory {
             }
         });
 
-        col.addView(sp);
+        // Loupe à droite du nom de la liste : filtre les mémoires affichées (nom, fréquence ou mode).
+        LinearLayout lr = Ui.row(a);
+        lr.addView(sp, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        final EditText find = Ui.edit(a, "", Lang.T("Rechercher dans la liste…", "Search the list…"), InputType.TYPE_CLASS_TEXT);
+        find.setVisibility(View.GONE);
+        find.addTextChangedListener(new android.text.TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int x, int y, int z) { }
+            public void onTextChanged(CharSequence s, int x, int y, int z) { }
+            public void afterTextChanged(android.text.Editable s) { query[0] = s.toString().trim().toLowerCase(); fill[0].run(); }
+        });
+        lr.addView(Ui.button(a, "🔍", new View.OnClickListener() {
+            public void onClick(View v) {
+                if (find.getVisibility() == View.VISIBLE) { find.setText(""); find.setVisibility(View.GONE); return; }
+                find.setVisibility(View.VISIBLE);
+                find.requestFocus();
+                android.view.inputmethod.InputMethodManager im = (android.view.inputmethod.InputMethodManager) a.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                if (im != null) im.showSoftInput(find, 0);
+            }
+        }), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        col.addView(lr);
+        col.addView(find);
         col.addView(lv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         col.addView(info);
         LinearLayout r1 = Ui.row(a);

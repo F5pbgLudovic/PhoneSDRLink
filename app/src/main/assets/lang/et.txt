@@ -509,3 +509,21 @@ Update installation cancelled or failed	Uuenduse installimine tühistati või eb
 Search the list…	Otsi loendist…
 Bandwidth in kHz (0.1 to 15)	Ribalaius kHz (0,1 kuni 15)
 Invalid value (0.1 to 15 kHz).	Kehtetu väärtus (0,1 kuni 15 kHz).
+Automatic WebSDR reset	WebSDR-i automaatne lähtestamine
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Laeb WebSDR-i uuesti, kui heli on 30 s puudunud (välja arvatud helitugevus null või summutus).
+No sound for 30 s: the WebSDR is reloaded.	Heli puudub 30 s: WebSDR laaditakse uuesti.
+Main screen colours:	Põhiekraani värvid:
+Button background	Nuppude taust
+Button text	Nuppude tekst
+Frequency text	Sageduse tekst
+Frequency background	Sageduse taust
+Tuning bar foreground	Häälestusriba esiplaan
+Tuning bar background	Häälestusriba taust
+Default colours	Vaikevärvid
+Choose a colour	Valige värv
+Same colour as its counterpart (text would vanish): pick another one	Sama värv mis vastaval elemendil (tekst kaoks): valige teine
+Colours	Värvid
+Colours…	Värvid…
+General background	Üldine taust
+Custom colour (RGB)	Kohandatud värv (RGB)
+G	G

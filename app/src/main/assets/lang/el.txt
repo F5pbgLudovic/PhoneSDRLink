@@ -509,3 +509,21 @@ Update installation cancelled or failed	Η εγκατάσταση της ενη�
 Search the list…	Αναζήτηση στη λίστα…
 Bandwidth in kHz (0.1 to 15)	Εύρος ζώνης σε kHz (0,1 έως 15)
 Invalid value (0.1 to 15 kHz).	Μη έγκυρη τιμή (0,1 έως 15 kHz).
+Automatic WebSDR reset	Αυτόματη επαναφορά WebSDR
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Επαναφορτώνει το WebSDR αν χαθεί ο ήχος για 30 s (εκτός αν η ένταση είναι μηδέν ή σε σίγαση).
+No sound for 30 s: the WebSDR is reloaded.	Κανένας ήχος για 30 s: το WebSDR επαναφορτώνεται.
+Main screen colours:	Χρώματα κύριας οθόνης:
+Button background	Φόντο κουμπιών
+Button text	Κείμενο κουμπιών
+Frequency text	Κείμενο συχνότητας
+Frequency background	Φόντο συχνότητας
+Tuning bar foreground	Πρώτο πλάνο μπάρας συντονισμού
+Tuning bar background	Φόντο μπάρας συντονισμού
+Default colours	Προεπιλεγμένα χρώματα
+Choose a colour	Επιλέξτε χρώμα
+Same colour as its counterpart (text would vanish): pick another one	Ίδιο χρώμα με το αντίστοιχο (το κείμενο θα χαθεί): επιλέξτε άλλο
+Colours	Χρώματα
+Colours…	Χρώματα…
+General background	Γενικό φόντο
+Custom colour (RGB)	Προσαρμοσμένο χρώμα (RGB)
+G	G

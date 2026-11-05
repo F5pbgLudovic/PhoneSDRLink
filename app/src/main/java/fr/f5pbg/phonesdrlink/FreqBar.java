@@ -23,6 +23,10 @@ final class FreqBar extends View {
     private boolean down;
     String hint = "";
     boolean locked;
+    Runnable onLong;            // appui de 3 secondes sans bouger
+    private boolean longDone;
+    private float downX, downY;
+    private final Runnable longRun = new Runnable() { public void run() { longDone = true; down = false; carry = 0; invalidate(); if (onLong != null) onLong.run(); } };
 
     FreqBar(Context c) {
         super(c);
@@ -79,6 +83,7 @@ final class FreqBar extends View {
         switch (e.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 stopFling();
+                longDone = false; downX = e.getX(); downY = e.getY(); removeCallbacks(longRun); postDelayed(longRun, 3000);
                 vt.clear();
                 vt.addMovement(e);
                 getParent().requestDisallowInterceptTouchEvent(true);
@@ -89,6 +94,8 @@ final class FreqBar extends View {
                 invalidate();
                 return true;
             case MotionEvent.ACTION_MOVE: {
+                if (longDone) return true;
+                if (Math.abs(e.getX() - downX) > Ui.dp(getContext(), 12) || Math.abs(e.getY() - downY) > Ui.dp(getContext(), 12)) removeCallbacks(longRun);
                 float dx = e.getX() - lastX;
                 lastX = e.getX();
                 shift = (shift + dx) % (pxPerStep * 4);
@@ -106,6 +113,8 @@ final class FreqBar extends View {
             }
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL: {
+                removeCallbacks(longRun);
+                if (longDone) { longDone = false; if (vt != null) { vt.recycle(); vt = null; } return true; }
                 down = false;
                 float v = 0;
                 if (e.getActionMasked() == MotionEvent.ACTION_UP) {
@@ -132,18 +141,18 @@ final class FreqBar extends View {
     protected void onDraw(Canvas c) {
         float w = getWidth(), h = getHeight(), rad = Ui.dp(getContext(), 10);
         p.setStyle(Paint.Style.FILL);
-        p.setColor(down ? Ui.accent() : Ui.btn());
+        p.setColor(down ? Ui.accent() : Ui.barBg());
         r.set(0, 0, w, h);
         c.drawRoundRect(r, rad, rad, p);
         // Graduations qui suivent le doigt
-        p.setColor(down ? 0xFF0B2A3A : Ui.sub());
+        p.setColor(down ? 0xFF0B2A3A : Ui.barFgTicks());
         p.setStrokeWidth(Ui.dp(getContext(), 1.5f));
         float step = pxPerStep * 4, top = h * 0.2f, bottom = h * 0.45f;
         for (float x = (shift % step) - step; x < w + step; x += step) {
             c.drawLine(x, top, x, bottom, p);
             for (int k = 1; k < 4; k++) c.drawLine(x + k * pxPerStep, top, x + k * pxPerStep, top + (bottom - top) * 0.5f, p);
         }
-        p.setColor(down ? 0xFF05202D : Ui.fg());
+        p.setColor(down ? 0xFF05202D : Ui.barFgText());
         p.setTextAlign(Paint.Align.CENTER);
         p.setTextSize(Ui.dp(getContext(), 13));
         c.drawText(hint, w / 2, h * 0.82f, p);

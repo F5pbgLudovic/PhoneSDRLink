@@ -261,8 +261,16 @@ final class DlgWebSdr {
             public String title(Favorite f) { return f.name; }
             public String sub(Favorite f) { return f.url + (status.containsKey(f) ? "   [" + status.get(f) + "]" : ""); }
         });
+        // Couleur d'état d'après les vérifications : vert = répond ; orange = sans réponse depuis une semaine ; rouge = depuis un mois.
+        cl.tint = new CheckList.Tint<Favorite>() {
+            public int color(Favorite f) {
+                int s = f.health(System.currentTimeMillis());
+                return s == 1 ? 0xFF43A047 : s == 3 ? 0xFFFF9800 : s == 4 ? 0xFFE53935 : 0;
+            }
+        };
         lv.setAdapter(cl);
         final boolean[] filling = { false };
+        final String[] query = { "" };
         final Runnable[] fill = new Runnable[1];
         final Runnable infoRun = new Runnable() {
             public void run() { info.setText(Lang.F("{0} favori(s) affiché(s), {1} coché(s)", "{0} favorite(s) shown, {1} checked", cl.items.size(), cl.checked.size())); }
@@ -279,7 +287,11 @@ final class DlgWebSdr {
                 sp.setSelection(Math.min(st.curFavList, st.favListCount));
                 filling[0] = false;
                 ArrayList<Favorite> shown = new ArrayList<Favorite>();
-                for (Favorite f : st.favorites) if (st.curFavList >= st.favListCount || f.list == st.curFavList) shown.add(f);
+                for (Favorite f : st.favorites) {
+                    if (!(st.curFavList >= st.favListCount || f.list == st.curFavList)) continue;
+                    if (!query[0].isEmpty() && !(f.name.toLowerCase().contains(query[0]) || f.url.toLowerCase().contains(query[0]))) continue;
+                    shown.add(f);
+                }
                 cl.set(shown);
                 infoRun.run();
             }
@@ -291,7 +303,27 @@ final class DlgWebSdr {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> p, View v, int pos, long id) { cl.select(pos); }
         });
-        col.addView(sp);
+        // Loupe à droite du nom de la liste (comme dans la fenêtre WEBSDR) : filtre la liste en cours (nom ou adresse).
+        LinearLayout lr = Ui.row(a);
+        lr.addView(sp, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        final EditText find = Ui.edit(a, "", Lang.T("Rechercher dans la liste…", "Search the list…"), InputType.TYPE_CLASS_TEXT);
+        find.setVisibility(View.GONE);
+        find.addTextChangedListener(new android.text.TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int x, int y, int z) { }
+            public void onTextChanged(CharSequence s, int x, int y, int z) { }
+            public void afterTextChanged(android.text.Editable s) { query[0] = s.toString().trim().toLowerCase(); fill[0].run(); }
+        });
+        lr.addView(Ui.button(a, "🔍", new View.OnClickListener() {
+            public void onClick(View v) {
+                if (find.getVisibility() == View.VISIBLE) { find.setText(""); find.setVisibility(View.GONE); return; }
+                find.setVisibility(View.VISIBLE);
+                find.requestFocus();
+                android.view.inputmethod.InputMethodManager im = (android.view.inputmethod.InputMethodManager) a.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                if (im != null) im.showSoftInput(find, 0);
+            }
+        }), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        col.addView(lr);
+        col.addView(find);
         col.addView(lv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         col.addView(info);
 
@@ -326,7 +358,7 @@ final class DlgWebSdr {
                 a.openUrl(c.get(0).url);
                 info.setText("♪ " + Lang.F("Écoute de « {0} »", "Listening to \"{0}\"", c.get(0).name));
             }
-        }), w(a, 1.4f));
+        }), w(a, 1.0f));
         r2.addView(Ui.button(a, Lang.T("Déplacer vers ▸", "Move to ▸"), new View.OnClickListener() {
             public void onClick(View v) {
                 final ArrayList<Favorite> c = cl.checkedOrSelected();
@@ -345,6 +377,11 @@ final class DlgWebSdr {
         }), w(a, 1));
         r2.addView(Ui.button(a, "▲", new View.OnClickListener() { public void onClick(View v) { move(st, cl.checkedOrSelected(), -1); fill[0].run(); } }), w(a, 0.5f));
         r2.addView(Ui.button(a, "▼", new View.OnClickListener() { public void onClick(View v) { move(st, cl.checkedOrSelected(), 1); fill[0].run(); } }), w(a, 0.5f));
+        android.widget.Button top = Ui.button(a, "▲▲", new View.OnClickListener() { public void onClick(View v) { moveTop(st, cl.checkedOrSelected()); fill[0].run(); } });
+        top.setSingleLine(true);
+        top.setPadding(0, 0, 0, 0);
+        top.setTextSize(13);   // les deux flèches tiennent sur une ligne, même dimension de touche que ▲ et ▼
+        r2.addView(top, w(a, 0.5f));
         col.addView(r2);
 
         LinearLayout r3 = Ui.row(a);
@@ -425,6 +462,23 @@ final class DlgWebSdr {
         st.save();
     }
 
+    // Met les favoris choisis tout en haut de leur liste (leur ordre entre eux est conservé).
+    static void moveTop(final Store st, ArrayList<Favorite> sel) {
+        ArrayList<Favorite> order = new ArrayList<Favorite>(sel);
+        Collections.sort(order, new Comparator<Favorite>() {
+            public int compare(Favorite x, Favorite y) { return st.favorites.indexOf(y) - st.favorites.indexOf(x); }
+        });
+        for (Favorite f : order) {   // du plus bas au plus haut : le plus haut finit en premier
+            int first = -1;
+            for (int i = 0; i < st.favorites.size(); i++) if (st.favorites.get(i).list == f.list) { first = i; break; }
+            int cur = st.favorites.indexOf(f);
+            if (first < 0 || cur <= first) continue;
+            st.favorites.remove(cur);
+            st.favorites.add(first, f);
+        }
+        st.save();
+    }
+
     // Vérifie les adresses (réponse du serveur) ; retire les doublons ; coche les liens morts pour que « Supprimer… » les retire.
     static void checkFavorites(final MainActivity a, final CheckList<Favorite> cl, final HashMap<Favorite, String> status,
                                final TextView info, final Runnable refresh) {
@@ -449,13 +503,20 @@ final class DlgWebSdr {
                     UI.post(new Runnable() {
                         public void run() {
                             status.put(f, s);
-                            if (!s.equals(Lang.T("répond", "answers")) && !s.equals(Lang.T("répond (certificat)", "answers (certificate)"))) dead.add(f);
+                            long now = System.currentTimeMillis();
+                            if (!s.equals(Lang.T("répond", "answers")) && !s.equals(Lang.T("répond (certificat)", "answers (certificate)"))) {
+                                dead.add(f);
+                                if (f.firstFail == 0) f.firstFail = now;   // l'ancienneté est mesurée depuis la dernière réponse connue (sinon depuis ce constat)
+                            } else {
+                                f.lastOk = now;   // il répond : vert, compteur remis à zéro
+                                f.firstFail = 0;
+                            }
                             left[0]--;
                             info.setText(Lang.F("Vérification… {0} restant(s)", "Checking… {0} left", left[0]));
                             if (left[0] == 0) {
                                 cl.checked.clear();
                                 cl.checked.addAll(dead);
-                                cl.notifyDataSetChanged();
+                                cl.notifyDataSetChanged();   // couleurs d'état mises à jour
                                 info.setText(Lang.F("Vérification terminée : {1} doublon(s) retiré(s), {0} lien(s) mort(s). Appuyez sur « Supprimer… » pour les retirer.",
                                     "Check done: {1} duplicate(s) removed, {0} dead link(s) checked. Click \"Remove…\" to delete them.", dead.size(), dups));
                                 st.save();

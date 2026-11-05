@@ -24,6 +24,8 @@ final class CheckList<T> extends BaseAdapter {
     final HashSet<T> checked = new HashSet<T>();
     T selected;
     Runnable onChange;
+    interface Tint<T> { int color(T t); }
+    Tint<T> tint;
 
     CheckList(Context c, Fmt<T> f) { ctx = c; fmt = f; }
 
@@ -99,6 +101,8 @@ final class CheckList<T> extends BaseAdapter {
         String s = fmt.sub(item);
         sub.setText(s);
         sub.setTextColor(Ui.sub());
+        int tc = tint == null ? 0 : tint.color(item);   // couleur d'état (vert, orange, rouge) ; 0 = couleurs normales
+        if (tc != 0) { title.setTextColor(tc); sub.setTextColor(tc); }
         sub.setVisibility(s == null || s.isEmpty() ? View.GONE : View.VISIBLE);
         cb.setOnCheckedChangeListener(null);
         cb.setChecked(checked.contains(item));

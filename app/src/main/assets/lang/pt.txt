@@ -509,3 +509,21 @@ Update installation cancelled or failed	Instalação da atualização cancelada 
 Search the list…	Pesquisar na lista…
 Bandwidth in kHz (0.1 to 15)	Largura de banda em kHz (0,1 a 15)
 Invalid value (0.1 to 15 kHz).	Valor inválido (0,1 a 15 kHz).
+Automatic WebSDR reset	Reinício automático do WebSDR
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Recarrega o WebSDR se o som se perder durante 30 s (exceto com volume zero ou sem som).
+No sound for 30 s: the WebSDR is reloaded.	Sem som há 30 s: o WebSDR é recarregado.
+Main screen colours:	Cores do ecrã principal:
+Button background	Fundo dos botões
+Button text	Texto dos botões
+Frequency text	Texto da frequência
+Frequency background	Fundo da frequência
+Tuning bar foreground	Primeiro plano da barra de sintonia
+Tuning bar background	Fundo da barra de sintonia
+Default colours	Cores predefinidas
+Choose a colour	Escolha uma cor
+Same colour as its counterpart (text would vanish): pick another one	Mesma cor do seu par (o texto desapareceria): escolha outra
+Colours	Cores
+Colours…	Cores…
+General background	Fundo geral
+Custom colour (RGB)	Cor personalizada (RGB)
+G	G

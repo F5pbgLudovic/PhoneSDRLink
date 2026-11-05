@@ -509,3 +509,21 @@ Update installation cancelled or failed	Installatie van de update geannuleerd of
 Search the list…	Zoeken in de lijst…
 Bandwidth in kHz (0.1 to 15)	Bandbreedte in kHz (0,1 tot 15)
 Invalid value (0.1 to 15 kHz).	Ongeldige waarde (0,1 tot 15 kHz).
+Automatic WebSDR reset	Automatische reset van de WebSDR
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Laadt de WebSDR opnieuw als het geluid 30 s wegvalt (behalve bij volume nul of gedempt).
+No sound for 30 s: the WebSDR is reloaded.	Al 30 s geen geluid: de WebSDR wordt opnieuw geladen.
+Main screen colours:	Kleuren van het hoofdscherm:
+Button background	Achtergrond van de knoppen
+Button text	Tekst van de knoppen
+Frequency text	Tekst van de frequentie
+Frequency background	Achtergrond van de frequentie
+Tuning bar foreground	Voorgrond van de afstemlijn
+Tuning bar background	Achtergrond van de afstemlijn
+Default colours	Standaardkleuren
+Choose a colour	Kies een kleur
+Same colour as its counterpart (text would vanish): pick another one	Zelfde kleur als het tegenstuk (tekst zou verdwijnen): kies een andere
+Colours	Kleuren
+Colours…	Kleuren…
+General background	Algemene achtergrond
+Custom colour (RGB)	Aangepaste kleur (RGB)
+G	G

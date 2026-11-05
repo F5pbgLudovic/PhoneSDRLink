@@ -61,6 +61,7 @@
         L.ctxs.push(ctx);
         if (L.notchOn) notch(ctx, true);
         if (L.dnrOn) dnr(ctx, true);
+        if (L.watchOn) watch(ctx);
       }
       return ctx.__sdrlinkIn;
     };
@@ -68,7 +69,11 @@
     // Notch automatique (comme le DNF des Yaesu) : un analyseur repère les raies stables (porteuses, sifflements)
     // et jusqu'à 4 filtres coupe-bande étroits les suivent. Le chant et la parole bougent trop pour être retenus.
     // Seul le haut-parleur est filtré : le câble SDRLINK reçoit le son brut, pour les logiciels de décodage.
-    var NOTCHES = 4, HOLD = 6, RELEASE = 10, ABOVE = 18;
+    // 8 filtres au maximum ; le niveau 1 (réglage d'origine) en utilise 4. Niveaux 2 à 10 : de plus en plus de filtres, seuil de
+    // détection plus bas (raies moins marquées retenues), détection plus rapide, filtres plus larges.
+    var NOTCHES = 8, RELEASE = 10;
+    var NL_COUNT = [4, 4, 5, 5, 6, 6, 7, 7, 8, 8], NL_ABOVE = [18, 16, 14, 12, 10, 9, 8, 7, 6, 5], NL_HOLD = [6, 6, 5, 5, 4, 4, 3, 3, 3, 2], NL_WIDTH = [40, 48, 56, 64, 72, 80, 90, 100, 110, 120];
+    var nAct = 4, HOLD = 6, ABOVE = 18, nWidth = 40;
     var notch = function (ctx, on) {
       var n = ctx.__sdrlinkNotch, input = ctx.__sdrlinkIn, out = ctx.__sdrlinkOut;
       if (!input || !ctx.createBiquadFilter || !ctx.createAnalyser) return;
@@ -113,7 +118,9 @@
     // niveau de chaque bande 20 fois par seconde et suit son plancher de bruit ; une bande qui ne dépasse pas ce plancher
     // de plus de 6 dB est atténuée (jusqu'à 14 dB), une bande qui porte un signal passe intacte. Le travail du signal est fait
     // par les filtres du navigateur ; le script ne règle que 16 gains, ce qui reste très léger pour le téléphone.
-    var BANDS_N = 16, DNR_LO = 150, DNR_HI = 4500, DNR_OPEN = 6, DNR_MAX = 14;
+    var BANDS_N = 16, DNR_LO = 150, DNR_HI = 4500, DNR_OPEN = 6, DNR_MAX = 14, DNR_SLOPE = 2.3;
+    // Niveau 1 = réglage d'origine ; niveaux 2 à 10 : une bande est jugée « bruit » plus facilement (seuil jusqu'à 12 dB)
+    // et atténuée plus fort (jusqu'à 30 dB).
     var dnr = function (ctx, on) {
       var d = ctx.__sdrlinkDnr;
       if (!ctx.__sdrlinkIn || !ctx.createBiquadFilter || !ctx.createAnalyser) return;
@@ -154,13 +161,15 @@
         if (lvl < -130) { d.g[k].gain.setTargetAtTime(1, ctx.currentTime, 0.05); continue; }   // silence : rien à faire
         if (isNaN(d.floor[k]) || lvl < d.floor[k]) d.floor[k] = lvl; else d.floor[k] += 0.025;   // remontée lente : 0,5 dB par seconde
         var excess = lvl - d.floor[k];
-        var att = excess >= DNR_OPEN ? 0 : Math.min(DNR_MAX, (DNR_OPEN - excess) * 2.3);
+        var att = excess >= DNR_OPEN ? 0 : Math.min(DNR_MAX, (DNR_OPEN - excess) * DNR_SLOPE);
         d.att[k] += (att - d.att[k]) * 0.5;
         d.g[k].gain.setTargetAtTime(Math.pow(10, -d.att[k] / 20), ctx.currentTime, 0.04);
       }
     };
     L.dnrOn = false;
-    L.setDnr = function (on) {
+    L.setDnr = function (on, lvl) {
+      lvl = Math.max(1, Math.min(10, lvl | 0 || 1)) - 1;
+      DNR_OPEN = 6 + lvl * 0.67; DNR_MAX = 14 + lvl * 1.8; DNR_SLOPE = 2.3 + lvl * 0.13;
       L.dnrOn = !!on;
       for (var i = 0; i < L.ctxs.length; i++) dnr(L.ctxs[i], L.dnrOn);
     };
@@ -205,7 +214,7 @@
       n.cnt = cnt;
       peaks.sort(function (a, b) { return n.avg[b] - n.avg[a]; });
       var used = [];
-      for (var s = 0; s < NOTCHES; s++) {
+      for (var s = 0; s < nAct; s++) {
         var sl = n.slots[s];
         if (sl.bin < 0) continue;
         var best = -1;
@@ -217,7 +226,7 @@
       }
       for (var q = 0; q < peaks.length; q++) {
         if (used.indexOf(peaks[q]) >= 0) continue;
-        for (var t = 0; t < NOTCHES; t++) {
+        for (var t = 0; t < nAct; t++) {
           if (n.slots[t].bin >= 0) continue;
           used.push(peaks[q]);
           place(ctx, n, t, peaks[q], hz);
@@ -233,7 +242,7 @@
       n.slots[s].bin = bin;
       n.slots[s].miss = 0;
       n.f[s].frequency.setTargetAtTime(f, ctx.currentTime, n.slots[s].placed ? 0.05 : 0.005);
-      n.f[s].Q.value = Math.max(5, f / 40);
+      n.f[s].Q.value = Math.max(5, f / nWidth);
       n.slots[s].placed = true;
     };
     // Contrôle de santé : la sonde reçoit des NaN quand un filtre est devenu fou ; on le reconstruit alors à neuf.
@@ -254,7 +263,11 @@
       ctx.__sdrlinkDnr = null;
       dnr(ctx, true);
     };    L.notchOn = false;
-    L.setNotch = function (on) {
+    L.setNotch = function (on, lvl) {
+      lvl = Math.max(1, Math.min(10, lvl | 0 || 1)) - 1;
+      var old = nAct;
+      nAct = NL_COUNT[lvl]; ABOVE = NL_ABOVE[lvl]; HOLD = NL_HOLD[lvl]; nWidth = NL_WIDTH[lvl];
+      if (nAct < old) for (var c = 0; c < L.ctxs.length; c++) { var nn = L.ctxs[c].__sdrlinkNotch; if (nn) for (var j = nAct; j < NOTCHES; j++) release(L.ctxs[c], nn, j); }
       L.notchOn = !!on;
       for (var i = 0; i < L.ctxs.length; i++) notch(L.ctxs[i], L.notchOn);
     };
@@ -270,6 +283,55 @@
         }
       }
     }, 100);
+    // Surveillance du son (SET : « Réinitialisation automatique WEBSDR ») : un analyseur sur l'entrée commune (avant volume, mute,
+    // notch et réducteur de bruit) mesure le niveau chaque seconde ; L.lastSound = dernier instant où la page a produit du son.
+    L.watchOn = false;
+    L.lastSound = Date.now();
+    var watch = function (ctx) {
+      if (ctx.__sdrlinkWatch || !ctx.__sdrlinkIn || !ctx.createAnalyser) return;
+      var a = ctx.__sdrlinkWatch = ctx.createAnalyser();
+      a.fftSize = 2048;
+      origConnect.call(ctx.__sdrlinkIn, a);
+      a.buf = new Float32Array(a.fftSize);
+    };
+    L.setWatch = function (on) {
+      L.watchOn = !!on;
+      L.lastSound = Date.now();
+      if (L.watchOn) for (var i = 0; i < L.ctxs.length; i++) watch(L.ctxs[i]);
+    };
+    setInterval(function () {
+      if (!L.watchOn) return;
+      var running = false, now = Date.now();
+      for (var i = 0; i < L.ctxs.length; i++) {
+        var c = L.ctxs[i], a = c.__sdrlinkWatch;
+        if (!a || c.state !== 'running') continue;
+        running = true;
+        try {
+          a.getFloatTimeDomainData(a.buf);
+          for (var k = 0; k < a.buf.length; k++) if (Math.abs(a.buf[k]) > 0.00005) { L.lastSound = now; break; }
+        } catch (e) { }
+      }
+      if (!running) L.lastSound = now;   // pas de son lancé par la page : rien à réinitialiser
+    }, 1000);
+    // Durée (ms) sans son ; -2 si le curseur de volume de la page est à zéro (réglage de l'opérateur) ; -1 si rien à surveiller.
+    L.silentMs = function () {
+      if (!L.watchOn) return -1;
+      try {
+        var k = detect(), el = null;
+        if (k === 'websdr') el = document.getElementById('volumecontrol2');
+        else if (k === 'owrx' || k === 'owrx+') el = document.getElementById('openwebrx-panel-volume');
+        else if (k === 'kiwi') el = document.querySelector('input.id-input-volume');
+        else if (k === 'phantom') el = L.phantomVolume();
+        if (el && parseFloat(el.value) <= parseFloat(el.min || 0)) return -2;
+        // Bouton « mute » de la page enfoncé par l'opérateur (case cochée, bouton actif) : pas de perte de son.
+        var m = document.querySelectorAll('[id*=mute i],[class*=mute i],[name*=mute i],[aria-label*=mute i],[title*=mute i]');
+        for (var i = 0; i < m.length; i++) {
+          var e2 = m[i], cls = String(e2.className && e2.className.baseVal !== undefined ? e2.className.baseVal : e2.className);
+          if (e2.checked === true || e2.getAttribute('aria-pressed') === 'true' || /(^|[\s_-])(muted|active|on|pressed|selected|checked)([\s_-]|$)/i.test(cls)) return -2;
+        }
+      } catch (e) { }
+      return Date.now() - L.lastSound;
+    };
     AudioNode.prototype.connect = function (dest) {
       if (dest instanceof AudioDestinationNode) arguments[0] = master(dest.context);
       return origConnect.apply(this, arguments);

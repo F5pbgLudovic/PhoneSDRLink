@@ -509,3 +509,21 @@ Update installation cancelled or failed	A frissítés telepítése megszakadt va
 Search the list…	Keresés a listában…
 Bandwidth in kHz (0.1 to 15)	Sávszélesség kHz-ben (0,1 és 15 között)
 Invalid value (0.1 to 15 kHz).	Érvénytelen érték (0,1 és 15 kHz között).
+Automatic WebSDR reset	A WebSDR automatikus újraindítása
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Újratölti a WebSDR-t, ha 30 s-ig nincs hang (kivéve nulla hangerő vagy némítás esetén).
+No sound for 30 s: the WebSDR is reloaded.	30 s óta nincs hang: a WebSDR újratöltődik.
+Main screen colours:	A főképernyő színei:
+Button background	Gombok háttere
+Button text	Gombok szövege
+Frequency text	Frekvencia szövege
+Frequency background	Frekvencia háttere
+Tuning bar foreground	Hangolósáv előtere
+Tuning bar background	Hangolósáv háttere
+Default colours	Alapértelmezett színek
+Choose a colour	Válasszon színt
+Same colour as its counterpart (text would vanish): pick another one	Ugyanaz a szín, mint a párjáé (a szöveg eltűnne): válasszon másikat
+Colours	Színek
+Colours…	Színek…
+General background	Általános háttér
+Custom colour (RGB)	Egyéni szín (RGB)
+G	G

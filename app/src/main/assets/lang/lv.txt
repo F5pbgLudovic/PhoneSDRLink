@@ -509,3 +509,21 @@ Update installation cancelled or failed	Atjauninājuma instalēšana atcelta vai
 Search the list…	Meklēt sarakstā…
 Bandwidth in kHz (0.1 to 15)	Joslas platums kHz (no 0,1 līdz 15)
 Invalid value (0.1 to 15 kHz).	Nederīga vērtība (no 0,1 līdz 15 kHz).
+Automatic WebSDR reset	Automātiska WebSDR atiestatīšana
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Pārlādē WebSDR, ja skaņas nav 30 s (izņemot nulles skaļumu vai izslēgtu skaņu).
+No sound for 30 s: the WebSDR is reloaded.	Skaņas nav 30 s: WebSDR tiek pārlādēts.
+Main screen colours:	Galvenā ekrāna krāsas:
+Button background	Pogu fons
+Button text	Pogu teksts
+Frequency text	Frekvences teksts
+Frequency background	Frekvences fons
+Tuning bar foreground	Noskaņošanas joslas priekšplāns
+Tuning bar background	Noskaņošanas joslas fons
+Default colours	Noklusējuma krāsas
+Choose a colour	Izvēlieties krāsu
+Same colour as its counterpart (text would vanish): pick another one	Tāda pati krāsa kā pārim (teksts pazustu): izvēlieties citu
+Colours	Krāsas
+Colours…	Krāsas…
+General background	Vispārējais fons
+Custom colour (RGB)	Pielāgota krāsa (RGB)
+G	G

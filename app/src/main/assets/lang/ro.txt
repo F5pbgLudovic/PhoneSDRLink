@@ -509,3 +509,21 @@ Update installation cancelled or failed	Instalarea actualizării a fost anulată
 Search the list…	Căutați în listă…
 Bandwidth in kHz (0.1 to 15)	Lățimea de bandă în kHz (0,1 la 15)
 Invalid value (0.1 to 15 kHz).	Valoare invalidă (0,1 la 15 kHz).
+Automatic WebSDR reset	Reinițializare automată WebSDR
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Reîncarcă WebSDR dacă sunetul lipsește 30 s (în afară de volum zero sau mut).
+No sound for 30 s: the WebSDR is reloaded.	Fără sunet de 30 s: WebSDR se reîncarcă.
+Main screen colours:	Culorile ecranului principal:
+Button background	Fundalul butoanelor
+Button text	Textul butoanelor
+Frequency text	Textul frecvenței
+Frequency background	Fundalul frecvenței
+Tuning bar foreground	Prim-planul barei de acord
+Tuning bar background	Fundalul barei de acord
+Default colours	Culori implicite
+Choose a colour	Alegeți o culoare
+Same colour as its counterpart (text would vanish): pick another one	Aceeași culoare ca perechea sa (textul ar dispărea): alegeți alta
+Colours	Culori
+Colours…	Culori…
+General background	Fundal general
+Custom colour (RGB)	Culoare personalizată (RGB)
+G	G

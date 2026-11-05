@@ -509,3 +509,21 @@ Update installation cancelled or failed	Инсталирането на акту
 Search the list…	Търсене в списъка…
 Bandwidth in kHz (0.1 to 15)	Широчина на лентата в kHz (0,1 до 15)
 Invalid value (0.1 to 15 kHz).	Невалидна стойност (0,1 до 15 kHz).
+Automatic WebSDR reset	Автоматично рестартиране на WebSDR
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Презарежда WebSDR, ако звукът е изчезнал за 30 s (освен при нулева сила на звука или заглушаване).
+No sound for 30 s: the WebSDR is reloaded.	Няма звук от 30 s: WebSDR се презарежда.
+Main screen colours:	Цветове на главния екран:
+Button background	Фон на бутоните
+Button text	Текст на бутоните
+Frequency text	Текст на честотата
+Frequency background	Фон на честотата
+Tuning bar foreground	Преден план на лентата
+Tuning bar background	Фон на лентата
+Default colours	Цветове по подразбиране
+Choose a colour	Изберете цвят
+Same colour as its counterpart (text would vanish): pick another one	Същият цвят като съседния (текстът ще изчезне): изберете друг
+Colours	Цветове
+Colours…	Цветове…
+General background	Общ фон
+Custom colour (RGB)	Свой цвят (RGB)
+G	G

@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebStorage;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.graphics.Color;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -40,12 +43,19 @@ final class DlgSettings {
         col.addView(toggle(a, Lang.T("Zoom du spectre (1 kHz par mm)", "Spectrum zoom (1 kHz per mm)"), st.spectrumZoom, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.spectrumZoom = on; st.save(); if (on) a.applySpectrumZoom(); }
         }));
-        col.addView(toggle(a, Lang.T("Notch automatique (DNF)", "Auto notch (DNF)"), st.autoNotch, new CompoundButton.OnCheckedChangeListener() {
+        col.addView(levelRow(a, toggle(a, Lang.T("Notch automatique (DNF)", "Auto notch (DNF)"), st.autoNotch, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.autoNotch = on; st.save(); a.applyAudio(); }
-        }));
-        col.addView(toggle(a, Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)"), st.autoDnr, new CompoundButton.OnCheckedChangeListener() {
+        }), st.notchLevel, new Ui.Index() { public void chose(int i) { st.notchLevel = i + 1; st.save(); a.applyAudio(); } }));
+        col.addView(levelRow(a, toggle(a, Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)"), st.autoDnr, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.autoDnr = on; st.save(); a.applyAudio(); }
+        }), st.dnrLevel, new Ui.Index() { public void chose(int i) { st.dnrLevel = i + 1; st.save(); a.applyAudio(); } }));
+        col.addView(toggle(a, Lang.T("Réinitialisation automatique WEBSDR", "Automatic WebSDR reset"), st.autoReload, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.autoReload = on; st.save(); a.applyAudio(); }
         }));
+        col.addView(Ui.small(a, Lang.T("Recharge le WebSDR si le son est coupé depuis 30 s (sauf volume à zéro ou mute).", "Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).")));
+        add(col, a, Lang.T("Couleurs…", "Colours…"), new View.OnClickListener() {
+            public void onClick(View v) { d.dismiss(); showColors(a); }
+        });
 
         add(col, a, Lang.T("Langue :", "Language:") + " " + name(st.language), new View.OnClickListener() {
             public void onClick(View v) {
@@ -93,6 +103,151 @@ final class DlgSettings {
     static String name(String code) {
         for (int i = 0; i < Lang.CODES.length; i++) if (Lang.CODES[i].equals(code)) return Lang.NAMES[i];
         return code;
+    }
+
+    // Coche suivie d'un petit menu déroulant de niveau (1 = réglage d'origine, 10 = le plus fort).
+
+    // ---- Couleurs de l'écran (boutons, fréquence, réglette) ----
+    static final int[] PALETTE = {
+        0xFF000000, 0xFF333333, 0xFF666666, 0xFF999999, 0xFFCCCCCC, 0xFFFFFFFF,
+        0xFF7F0000, 0xFFC62828, 0xFFF44336, 0xFFFF7043, 0xFFFF9800, 0xFFFFC107,
+        0xFFFFEB3B, 0xFFCDDC39, 0xFF8BC34A, 0xFF4CAF50, 0xFF2E7D32, 0xFF004D40,
+        0xFF009688, 0xFF00BCD4, 0xFF4FC3F7, 0xFF2196F3, 0xFF0B5FA5, 0xFF1A237E,
+        0xFF3F51B5, 0xFF673AB7, 0xFF9C27B0, 0xFFE91E63, 0xFF880E4F, 0xFF795548 };
+
+    // Couleurs interdites : un texte ne peut pas prendre la couleur de son fond ; le fond général ne peut pas prendre celle du fond des boutons.
+    static boolean forb(int id, int c) {
+        switch (id) {
+            case 0: return c == Ui.btnTx() || c == Ui.bg();
+            case 1: return c == Ui.btn();
+            case 2: return c == Ui.freqBg();
+            case 3: return c == Ui.freqTx();
+            case 4: return c == Ui.barBg();
+            case 5: return c == Ui.barFgText();
+            default: return c == Ui.btn();
+        }
+    }
+    static void setColor(Store st, int id, int c) {
+        switch (id) { case 0: st.colBtnBg = c; break; case 1: st.colBtnTx = c; break; case 2: st.colFreqTx = c; break; case 3: st.colFreqBg = c; break; case 4: st.colBarFg = c; break; case 5: st.colBarBg = c; break; default: st.colBg = c; }
+    }
+
+    static void showColors(MainActivity a) {
+        LinearLayout col = Ui.column(a);
+        Dialog cd = Ui.window(a, Lang.T("Couleurs", "Colours"), Ui.scroll(a, col), false);
+        colors(col, a, cd);
+        cd.show();
+    }
+
+    static void colors(LinearLayout col, final MainActivity a, final Dialog d) {
+        final Store st = a.st;
+        col.addView(Ui.small(a, Lang.T("Couleurs de l'écran principal :", "Main screen colours:")));
+        String[] fr = { "Arrière plan général", "Arrière plan boutons", "Texte boutons", "Texte fréquence", "Arrière plan fréquence", "Avant plan réglette", "Arrière plan réglette" };
+        String[] en = { "General background", "Button background", "Button text", "Frequency text", "Frequency background", "Tuning bar foreground", "Tuning bar background" };
+        for (int i = 0; i < 7; i++) {
+            final int id = i == 0 ? 6 : i - 1;   // « Arrière plan général » en premier
+            Button b = Ui.button(a, Lang.T(fr[i], en[i]), new View.OnClickListener() {
+                public void onClick(View v) { pick(a, d, id); }
+            });
+            if (id == 6) {
+                android.graphics.drawable.GradientDrawable g = Ui.round(Ui.bg(), 10, a);
+                g.setStroke(Ui.dp(a, 1), 0x88888888);
+                b.setBackground(g);
+                int bgc = Ui.bg(), lum = (Color.red(bgc) * 30 + Color.green(bgc) * 59 + Color.blue(bgc) * 11) / 100;
+                b.setTextColor(lum > 128 ? Color.BLACK : Color.WHITE);
+            }
+            if (id == 2 || id == 3) { b.setTextColor(Ui.freqTx()); b.setBackground(Ui.round(Ui.freqBg(), 10, a)); }
+            if (id == 4 || id == 5) { b.setTextColor(Ui.barFgText()); b.setBackground(Ui.round(Ui.barBg(), 10, a)); }
+            col.addView(b, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        }
+        col.addView(Ui.button(a, Lang.T("Couleurs par défaut", "Default colours"), new View.OnClickListener() {
+            public void onClick(View v) {
+                st.colBtnBg = st.colBtnTx = st.colFreqTx = st.colFreqBg = st.colBarFg = st.colBarBg = st.colBg = 0;
+                applyColors(a, d, null);
+            }
+        }), Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+    }
+
+    static void applyColors(MainActivity a, Dialog settings, Dialog palette) {
+        a.st.save();
+        Ui.loadColors(a.st);
+        if (palette != null) palette.dismiss();
+        settings.dismiss();
+        Ui.reopenColors = true;
+        a.recreate();
+    }
+
+    // Palette de couleurs : la couleur de son vis-à-vis (texte/fond) est grisée et refusée, sinon le texte ne se verrait plus.
+    static void pick(final MainActivity a, final Dialog settings, final int id) {
+        LinearLayout col = Ui.column(a);
+        final Dialog p = Ui.window(a, Lang.T("Choisir une couleur", "Choose a colour"), Ui.scroll(a, col), false);
+        for (int r = 0; r < PALETTE.length / 6; r++) {
+            LinearLayout row = Ui.row(a);
+            for (int k = 0; k < 6; k++) {
+                final int c = PALETTE[r * 6 + k];
+                View sw = new View(a);
+                android.graphics.drawable.GradientDrawable g = Ui.round(c, 8, a);
+                g.setStroke(Ui.dp(a, 1), 0x88888888);
+                sw.setBackground(g);
+                boolean same = forb(id, c);
+                sw.setAlpha(same ? 0.2f : 1f);
+                sw.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        if (forb(id, c)) { Ui.toast(a, Lang.T("Même couleur que son vis-à-vis (texte invisible) : choisissez-en une autre", "Same colour as its counterpart (text would vanish): pick another one")); return; }
+                        setColor(a.st, id, c);
+                        applyColors(a, settings, p);
+                    }
+                });
+                row.addView(sw, Ui.lp(0, Ui.dp(a, 48), 1, a, 3));
+            }
+            col.addView(row);
+        }
+        // Couleur personnalisée : trois valeurs de 0 à 255 (rouge, vert, bleu).
+        int cur;
+        switch (id) { case 0: cur = Ui.btn(); break; case 1: cur = Ui.btnTx(); break; case 2: cur = Ui.freqTx(); break; case 3: cur = Ui.freqBg(); break; case 4: cur = Ui.barFgText(); break; case 5: cur = Ui.barBg(); break; default: cur = Ui.bg(); }
+        final android.widget.EditText[] rgb = new android.widget.EditText[3];
+        final LinearLayout custom = Ui.row(a);
+        String[] hints = { "R", Lang.T("V", "G"), "B" };
+        int[] init = { Color.red(cur), Color.green(cur), Color.blue(cur) };
+        for (int i = 0; i < 3; i++) {
+            rgb[i] = Ui.edit(a, String.valueOf(init[i]), hints[i] + " (0-255)", android.text.InputType.TYPE_CLASS_NUMBER);
+            rgb[i].setGravity(Gravity.CENTER);
+            custom.addView(rgb[i], Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 3));
+        }
+        custom.addView(Ui.button(a, "OK", new View.OnClickListener() {
+            public void onClick(View v) {
+                int[] n = new int[3];
+                for (int i = 0; i < 3; i++) {
+                    try { n[i] = Math.max(0, Math.min(255, Integer.parseInt(rgb[i].getText().toString().trim()))); } catch (Exception e) { n[i] = 0; }
+                }
+                int c = Color.rgb(n[0], n[1], n[2]);
+                if (forb(id, c)) { Ui.toast(a, Lang.T("Même couleur que son vis-à-vis (texte invisible) : choisissez-en une autre", "Same colour as its counterpart (text would vanish): pick another one")); return; }
+                setColor(a.st, id, c);
+                applyColors(a, settings, p);
+            }
+        }), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 3));
+        custom.setVisibility(View.GONE);
+        CheckBox use = Ui.check(a, Lang.T("Couleur personnalisée (RVB)", "Custom colour (RGB)"), false);
+        use.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { custom.setVisibility(on ? View.VISIBLE : View.GONE); }
+        });
+        col.addView(use);
+        col.addView(custom);
+        p.show();
+    }
+    static LinearLayout levelRow(MainActivity a, CheckBox box, int level, final Ui.Index onChoose) {
+        LinearLayout r = Ui.row(a);
+        r.addView(box, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        java.util.ArrayList<String> n = new java.util.ArrayList<String>();
+        for (int i = 1; i <= 10; i++) n.add(String.valueOf(i));
+        final Spinner s = Ui.spinner(a, n);
+        s.setSelection(Math.max(0, Math.min(9, level - 1)));
+        final int[] cur = { level - 1 };
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (pos != cur[0]) { cur[0] = pos; onChoose.chose(pos); } }
+            public void onNothingSelected(AdapterView<?> p) { }
+        });
+        r.addView(s, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return r;
     }
 
     static CheckBox toggle(MainActivity a, String text, boolean on, CompoundButton.OnCheckedChangeListener l) {

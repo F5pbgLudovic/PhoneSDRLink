@@ -509,3 +509,21 @@ Update installation cancelled or failed	Päivityksen asennus peruttiin tai epäo
 Search the list…	Hae luettelosta…
 Bandwidth in kHz (0.1 to 15)	Kaistanleveys kHz (0,1–15)
 Invalid value (0.1 to 15 kHz).	Virheellinen arvo (0,1–15 kHz).
+Automatic WebSDR reset	WebSDR:n automaattinen nollaus
+Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).	Lataa WebSDR:n uudelleen, jos ääni on poissa 30 s (paitsi jos äänenvoimakkuus on nolla tai mykistetty).
+No sound for 30 s: the WebSDR is reloaded.	Ei ääntä 30 s: WebSDR ladataan uudelleen.
+Main screen colours:	Pääruudun värit:
+Button background	Painikkeiden tausta
+Button text	Painikkeiden teksti
+Frequency text	Taajuuden teksti
+Frequency background	Taajuuden tausta
+Tuning bar foreground	Virityspalkin etuala
+Tuning bar background	Virityspalkin tausta
+Default colours	Oletusvärit
+Choose a colour	Valitse väri
+Same colour as its counterpart (text would vanish): pick another one	Sama väri kuin vastineella (teksti katoaisi): valitse toinen
+Colours	Värit
+Colours…	Värit…
+General background	Yleinen tausta
+Custom colour (RGB)	Oma väri (RGB)
+G	G
