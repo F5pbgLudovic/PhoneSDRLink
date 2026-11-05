@@ -436,6 +436,47 @@
     else { var f = r.enc.flush(); if (f.length) r.send(new Uint8Array(f.buffer)); __post('mp3end'); }
   };
   function ctx_of(r) { return r.ctx.__sdrlinkIn; }
+  // Décodeurs numériques (FT8, FreeDV RADE) : le son brut de la page (avant volume, muet, notch et réducteur de bruit) est
+  // ramené à `rate` Hz (moyenne par intervalle, qui fait aussi office de filtre) puis envoyé en base64 (16 bits petit-boutiste).
+  L.dec = null;
+  L.decStart = function (rate) {
+    L.decStop();
+    var ctx = null, i;
+    for (i = 0; i < L.ctxs.length; i++) if (L.ctxs[i].state === 'running') { ctx = L.ctxs[i]; break; }
+    if (!ctx || !ctx.createScriptProcessor || !ctx.__sdrlinkIn) { __post('dec|err|noaudio'); return; }
+    var r = { ctx: ctx }, sp = r.sp = ctx.createScriptProcessor(8192, 1, 1), silent = r.silent = ctx.createGain();
+    var ratio = ctx.sampleRate / rate, phase = 0, acc = 0, cnt = 0;
+    sp.channelCount = 1;
+    sp.channelCountMode = 'explicit';
+    silent.gain.value = 0;
+    origConnect.call(ctx.__sdrlinkIn, sp);
+    origConnect.call(sp, silent);
+    origConnect.call(silent, ctx.destination);
+    sp.onaudioprocess = function (e) {
+      var d = e.inputBuffer.getChannelData(0), out = new Int16Array(Math.ceil(d.length / ratio) + 2), n = 0, j, v;
+      for (j = 0; j < d.length; j++) {
+        acc += d[j]; cnt++; phase++;
+        if (phase >= ratio) {
+          phase -= ratio;
+          v = acc / cnt; acc = 0; cnt = 0;
+          out[n++] = Math.max(-1, Math.min(1, v)) * 32767 | 0;
+        }
+      }
+      if (!n) return;
+      var bytes = new Uint8Array(out.buffer, 0, n * 2), s = '';
+      for (j = 0; j < bytes.length; j += 8192) s += String.fromCharCode.apply(null, bytes.subarray(j, j + 8192));
+      __post('dec|d|' + btoa(s));
+    };
+    L.dec = r;
+    __post('dec|ok|' + ctx.sampleRate);
+  };
+  L.decStop = function () {
+    var r = L.dec;
+    if (!r) return;
+    L.dec = null;
+    try { r.sp.onaudioprocess = null; origDisconnect.call(r.sp); origDisconnect.call(ctx_of(r), r.sp); } catch (e) { }
+    try { origDisconnect.call(r.silent); } catch (e) { }
+  };
   // Zoom du spectre : la largeur de la cascade affichée est ramenée à une échelle fixe sur l'écran (kHzParMm : 1 = 3 kHz de
   // spectre pour 3 mm de téléphone). Les WebSDR zooment par paliers (puissances de 2 ou presque) : on prend le palier le plus
   // proche. webPx = largeur de la WebView en pixels, xdpi = pixels par pouce de l'écran.
@@ -654,7 +695,8 @@
         UberSDR.command('tune', args).catch(function () { });
       } else if (k === 'kiwi') {
         var km = mode === 'fm' ? 'nbfm' : mode;
-        ext_tune(hz ? hz / 1000 : null, km || ext_get_mode());
+        // Sans zoom précisé, ext_tune « zoome sur la bande » (le spectre se dézoomait pendant le réglage, puis la garde le remettait) : ext_zoom.CUR garde le zoom actuel.
+        ext_tune(hz ? hz / 1000 : null, km || ext_get_mode(), typeof ext_zoom === 'object' ? ext_zoom.CUR : undefined, 0);
       } else if (k === 'websdr') {
         if (mode && mode.toUpperCase() !== String(window.mode).toUpperCase()) set_mode(mode);
         if (hz) {

@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	Išeiti iš programos
 Quit PhoneSDRLink? The sound and the scan stop.	Išeiti iš PhoneSDRLink? Garsas ir skenavimas sustos.
 Quit	Išeiti
+FT8 / FreeDV decoder…	FT8 / FreeDV dekoderis…
+Decoder	Dekoderis
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR garsas analizuojamas nuolat, net ir išjungus garsą. FT8: USB arba DATA režimas, FT8 dažniu (7.074, 14.074 MHz…); telefono laikrodis turi būti tikslus. FreeDV RADE: USB režimas, RADE signalu (14.236 MHz…); dekoduota kalba pakeičia WebSDR garsą.
+UTC time · DT (s) · audio frequency (Hz) · message	UTC laikas · DT (s) · garso dažnis (Hz) · pranešimas
+Starting…	Paleidžiama…
+FT8: listening	FT8: klausoma
+Decoder not available on this phone	Dekoderis šiame telefone nepasiekiamas
+Decoder stopped	Dekoderis sustabdytas
+No sound to decode in this page	Šiame puslapyje nėra garso dekodavimui
+FreeDV RADE needs a 64-bit phone	FreeDV RADE reikia 64 bitų telefono
+in sync (SNR {0} dB)	sinchronizuota (SNR {0} dB)
+signal lost	signalas prarastas
+in sync	sinchronizuota
+offset	poslinkis
+searching for the signal…	ieškoma signalo…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} intervalų, {1} pranešimų, vėlavimas {2} s
+Stop	Stop
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	FT8 / FT4 / CW / RTTY / FreeDV dekoderis…
+Decoder colours (the two FT8 / FT4 periods):	Dekoderio spalvos (du FT8 / FT4 periodai):
+Decoder: period 1	Dekoderis: 1 periodas
+Decoder: period 2	Dekoderis: 2 periodas
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR garsas analizuojamas nuolat, net ir išjungus garsą. FT8 / FT4: USB arba DATA režimas, FT8 ar FT4 dažniu (7.074 / 7.0475, 14.074 / 14.080 MHz…); telefono laikrodis turi būti tikslus. CW: CW arba USB režimas, CW signalu. RTTY: USB arba LSB režimas (ne siauresnis kaip 500 Hz), RTTY signalu (14.080–14.099 MHz…). FreeDV RADE: USB režimas, RADE signalu (14.236 MHz…); dekoduota kalba pakeičia WebSDR garsą.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	UTC laikas · DT (s) · garso dažnis (Hz) · pranešimas (FT8, FT4); UTC laikas · tekstas (CW, RTTY)
+Show the latest messages on the main screen	Rodyti naujausius pranešimus pagrindiniame ekrane
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} intervalų, {1} pranešimų, vėlavimas {2} s
+listening	klausoma
+reversed	apverstas
+Settings (SET)…	Nustatymai (SET)…
+CW settings (applied immediately):	CW nustatymai (taikomi iš karto):
+Automatic tone	Automatinis tonas
+Automatic speed	Automatinis greitis
+Tone: {0} Hz	Tonas: {0} Hz
+Filter: {0} Hz	Filtras: {0} Hz
+Speed: {0} WPM	Greitis: {0} WPM
+Detection threshold: {0} %	Aptikimo slenkstis: {0} %
+Squelch (signal / noise): ×{0}	Squelch (signalas / triukšmas): ×{0}
+Letter gap: {0} dots	Tarpas tarp raidžių: {0} taškų
+Word gap: {0} dots	Tarpas tarp žodžių: {0} taškų
+Default values	Numatytosios reikšmės
+Filter follows the speed	Filtras seka greitį
+Drift tracking (AFC)	Dreifo sekimas (AFC)
+AGC (fading): {0}	AGC (nykimas): {0}
+slow	lėtas
+medium	vidutinis
+fast	greitas
+RTTY settings (applied immediately):	RTTY nustatymai (taikomi iš karto):
+Speed (baud rate)	Greitis (baudai)
+Shift between the two tones	Skirtumas tarp dviejų tonų
+Polarity	Poliškumas
+Automatic	Automatinis
+Normal (mark = low tone)	Normalus (mark = žemas tonas)
+Reversed	Atvirkštinis
+Automatic frequency	Automatinis dažnis
+Low tone: {0} Hz	Žemas tonas: {0} Hz
+A space returns to letters (UOS)	Tarpas grąžina į raides (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Nuolat įprastas klausymas; kai tik dekoduojami FreeDV RADE kadrai, garsas persijungia į dekoduotą kalbą. Pristabdoma, kol veikia kitas dekoderis, ir atnaujinama jam sustojus.

@@ -33,7 +33,10 @@ final class Ui {
     static int sub() { return dark ? 0xFF9AA5B1 : 0xFF5A6570; }
     // Couleurs choisies dans SET (0 = couleur d'origine du thème).
     static boolean reopenColors;
-    static int cBtnBg, cBtnTx, cFreqTx, cFreqBg, cBarFg, cBarBg, cBg;
+    static int cBtnBg, cBtnTx, cFreqTx, cFreqBg, cBarFg, cBarBg, cBg, cFt8A, cFt8B;
+    // Décodeur : les deux périodes (paire et impaire) de FT8 / FT4 s'affichent en deux couleurs.
+    static int ft8A() { return cFt8A != 0 ? cFt8A : dark ? 0xFFFFD54F : 0xFF8D6E00; }
+    static int ft8B() { return cFt8B != 0 ? cFt8B : dark ? 0xFFFFFFFF : 0xFF14181C; }
     static int btn() { return cBtnBg != 0 ? cBtnBg : dark ? 0xFF2B3540 : 0xFFDDE3EA; }
     static int btnTx() { return cBtnTx != 0 ? cBtnTx : fg(); }
     static int freqTx() { return cFreqTx != 0 ? cFreqTx : accent(); }
@@ -41,7 +44,7 @@ final class Ui {
     static int barBg() { return cBarBg != 0 ? cBarBg : btn(); }
     static int barFgTicks() { return cBarFg != 0 ? cBarFg : sub(); }
     static int barFgText() { return cBarFg != 0 ? cBarFg : fg(); }
-    static void loadColors(Store s) { cBtnBg = s.colBtnBg; cBtnTx = s.colBtnTx; cFreqTx = s.colFreqTx; cFreqBg = s.colFreqBg; cBarFg = s.colBarFg; cBarBg = s.colBarBg; cBg = s.colBg; }
+    static void loadColors(Store s) { cBtnBg = s.colBtnBg; cBtnTx = s.colBtnTx; cFreqTx = s.colFreqTx; cFreqBg = s.colFreqBg; cBarFg = s.colBarFg; cBarBg = s.colBarBg; cBg = s.colBg; cFt8A = s.colFt8A; cFt8B = s.colFt8B; }
     static int accent() { return dark ? 0xFF4FC3F7 : 0xFF0B5FA5; }
     static int on() { return dark ? 0xFF2E7D32 : 0xFF2E7D32; }
     static int danger() { return 0xFFC62828; }

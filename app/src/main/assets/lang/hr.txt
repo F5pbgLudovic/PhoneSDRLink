@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	Izlaz iz aplikacije
 Quit PhoneSDRLink? The sound and the scan stop.	Izaći iz PhoneSDRLinka? Zvuk i skeniranje se zaustavljaju.
 Quit	Izađi
+FT8 / FreeDV decoder…	FT8 / FreeDV dekoder…
+Decoder	Dekoder
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Zvuk WebSDR-a neprekidno se analizira, čak i kad je utišan. FT8: način USB ili DATA, na FT8 frekvenciji (7.074, 14.074 MHz…); sat telefona mora biti točan. FreeDV RADE: način USB, na RADE signalu (14.236 MHz…); dekodirani govor zamjenjuje zvuk WebSDR-a.
+UTC time · DT (s) · audio frequency (Hz) · message	UTC vrijeme · DT (s) · audio frekvencija (Hz) · poruka
+Starting…	Pokretanje…
+FT8: listening	FT8: osluškuje
+Decoder not available on this phone	Dekoder nije dostupan na ovom telefonu
+Decoder stopped	Dekoder zaustavljen
+No sound to decode in this page	Na ovoj stranici nema zvuka za dekodiranje
+FreeDV RADE needs a 64-bit phone	FreeDV RADE zahtijeva 64-bitni telefon
+in sync (SNR {0} dB)	sinkronizirano (SNR {0} dB)
+signal lost	signal izgubljen
+in sync	sinkronizirano
+offset	pomak
+searching for the signal…	traženje signala…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} ciklusa, {1} poruka, kašnjenje {2} s
+Stop	Zaustavi
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	FT8 / FT4 / CW / RTTY / FreeDV dekoder…
+Decoder colours (the two FT8 / FT4 periods):	Boje dekodera (dva razdoblja FT8 / FT4):
+Decoder: period 1	Dekoder: razdoblje 1
+Decoder: period 2	Dekoder: razdoblje 2
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Zvuk WebSDR-a neprekidno se analizira, čak i kad je utišan. FT8 / FT4: način USB ili DATA, na FT8 ili FT4 frekvenciji (7.074 / 7.0475, 14.074 / 14.080 MHz…); sat telefona mora biti točan. CW: način CW ili USB, na CW signalu. RTTY: način USB ili LSB (najmanje 500 Hz širine), na RTTY signalu (14.080 do 14.099 MHz…). FreeDV RADE: način USB, na RADE signalu (14.236 MHz…); dekodirani govor zamjenjuje zvuk WebSDR-a.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	UTC vrijeme · DT (s) · audio frekvencija (Hz) · poruka (FT8, FT4); UTC vrijeme · tekst (CW, RTTY)
+Show the latest messages on the main screen	Prikaži posljednje poruke na glavnom zaslonu
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} ciklusa, {1} poruka, kašnjenje {2} s
+listening	osluškuje
+reversed	obrnuto
+Settings (SET)…	Postavke (SET)…
+CW settings (applied immediately):	CW postavke (primjenjuju se odmah):
+Automatic tone	Automatski ton
+Automatic speed	Automatska brzina
+Tone: {0} Hz	Ton: {0} Hz
+Filter: {0} Hz	Filtar: {0} Hz
+Speed: {0} WPM	Brzina: {0} WPM
+Detection threshold: {0} %	Prag detekcije: {0} %
+Squelch (signal / noise): ×{0}	Squelch (signal / šum): ×{0}
+Letter gap: {0} dots	Razmak slova: {0} točaka
+Word gap: {0} dots	Razmak riječi: {0} točaka
+Default values	Zadane vrijednosti
+Filter follows the speed	Filtar prati brzinu
+Drift tracking (AFC)	Praćenje pomaka (AFC)
+AGC (fading): {0}	AGC (fading): {0}
+slow	sporo
+medium	srednje
+fast	brzo
+RTTY settings (applied immediately):	RTTY postavke (primjenjuju se odmah):
+Speed (baud rate)	Brzina (baud)
+Shift between the two tones	Razmak između dva tona
+Polarity	Polaritet
+Automatic	Automatski
+Normal (mark = low tone)	Normalno (mark = niski ton)
+Reversed	Obrnuto
+Automatic frequency	Automatska frekvencija
+Low tone: {0} Hz	Niski ton: {0} Hz
+A space returns to letters (UOS)	Razmak vraća na slova (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Stalno uobičajeno slušanje; čim se dekodiraju okviri FreeDV RADE, zvuk prelazi na dekodirani govor. Pauzirano dok je aktivan drugi dekoder i nastavlja se čim se on zaustavi.

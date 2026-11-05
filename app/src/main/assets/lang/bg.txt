@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	Изход от приложението
 Quit PhoneSDRLink? The sound and the scan stop.	Изход от PhoneSDRLink? Звукът и сканирането спират.
 Quit	Изход
+FT8 / FreeDV decoder…	Декодер FT8 / FreeDV…
+Decoder	Декодер
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Звукът на WebSDR се анализира непрекъснато, дори когато е заглушен. FT8: режим USB или DATA, на честота FT8 (7.074, 14.074 MHz…); часовникът на телефона трябва да е точен. FreeDV RADE: режим USB, на RADE сигнал (14.236 MHz…); декодираната реч замества звука на WebSDR.
+UTC time · DT (s) · audio frequency (Hz) · message	UTC време · DT (s) · звукова честота (Hz) · съобщение
+Starting…	Стартиране…
+FT8: listening	FT8: слушане
+Decoder not available on this phone	Декодерът не е наличен на този телефон
+Decoder stopped	Декодерът е спрян
+No sound to decode in this page	Няма звук за декодиране в тази страница
+FreeDV RADE needs a 64-bit phone	FreeDV RADE изисква 64-битов телефон
+in sync (SNR {0} dB)	синхронизиран (SNR {0} dB)
+signal lost	сигналът е изгубен
+in sync	синхронизиран
+offset	отклонение
+searching for the signal…	търсене на сигнал…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} цикъла, {1} съобщения, закъснение {2} s
+Stop	Стоп
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	Декодер FT8 / FT4 / CW / RTTY / FreeDV…
+Decoder colours (the two FT8 / FT4 periods):	Цветове на декодера (двата периода FT8 / FT4):
+Decoder: period 1	Декодер: период 1
+Decoder: period 2	Декодер: период 2
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Звукът на WebSDR се анализира непрекъснато, дори когато е заглушен. FT8 / FT4: режим USB или DATA, на честота FT8 или FT4 (7.074 / 7.0475, 14.074 / 14.080 MHz…); часовникът на телефона трябва да е точен. CW: режим CW или USB, на CW сигнал. RTTY: режим USB или LSB (поне 500 Hz лента), на RTTY сигнал (14.080 до 14.099 MHz…). FreeDV RADE: режим USB, на RADE сигнал (14.236 MHz…); декодираната реч замества звука на WebSDR.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	UTC време · DT (s) · звукова честота (Hz) · съобщение (FT8, FT4); UTC време · текст (CW, RTTY)
+Show the latest messages on the main screen	Показване на последните съобщения на главния екран
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} цикъла, {1} съобщения, закъснение {2} s
+listening	слуша
+reversed	обърнат
+Settings (SET)…	Настройки (SET)…
+CW settings (applied immediately):	Настройки на CW (прилагат се веднага):
+Automatic tone	Автоматичен тон
+Automatic speed	Автоматична скорост
+Tone: {0} Hz	Тон: {0} Hz
+Filter: {0} Hz	Филтър: {0} Hz
+Speed: {0} WPM	Скорост: {0} WPM
+Detection threshold: {0} %	Праг на откриване: {0} %
+Squelch (signal / noise): ×{0}	Squelch (сигнал / шум): ×{0}
+Letter gap: {0} dots	Пауза между букви: {0} точки
+Word gap: {0} dots	Пауза между думи: {0} точки
+Default values	Стойности по подразбиране
+Filter follows the speed	Филтър според скоростта
+Drift tracking (AFC)	Проследяване на отклонението (AFC)
+AGC (fading): {0}	AGC (затихване): {0}
+slow	бавен
+medium	среден
+fast	бърз
+RTTY settings (applied immediately):	Настройки на RTTY (прилагат се веднага):
+Speed (baud rate)	Скорост (бод)
+Shift between the two tones	Отстояние между двата тона
+Polarity	Полярност
+Automatic	Автоматично
+Normal (mark = low tone)	Нормална (mark = нисък тон)
+Reversed	Обърната
+Automatic frequency	Автоматична честота
+Low tone: {0} Hz	Нисък тон: {0} Hz
+A space returns to letters (UOS)	Интервалът връща към букви (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Постоянно нормално слушане; щом се декодират кадри FreeDV RADE, звукът преминава към декодираната реч. Спира, докато друг декодер е активен, и се възобновява щом той спре.

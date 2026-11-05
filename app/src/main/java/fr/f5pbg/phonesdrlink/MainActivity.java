@@ -106,6 +106,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle b) {
         Store.init(this);
         st = Store.I;
+        cleanTemp(false);
         Lang.set(this, st.language);
         Ui.dark = st.dark;
         Ui.loadColors(st);
@@ -121,6 +122,9 @@ public class MainActivity extends Activity {
         build();
         applyKeepScreen();
         applyHeadset();
+        if (getIntent() != null && getIntent().getStringExtra("radewav") != null) radeSelfTest(getIntent().getStringExtra("radewav"));
+        if (getIntent() != null && getIntent().getStringExtra("radeeng") != null) radeEngineTest(getIntent().getStringExtra("radeeng"));
+        if (getIntent() != null && getIntent().getStringExtra("dectest") != null) decSelfTest(getIntent().getStringExtra("dectest"));
         setupWeb();
         refreshAll();
         if (Ui.reopenColors) { Ui.reopenColors = false; h.post(new Runnable() { public void run() { DlgSettings.showColors(MainActivity.this); } }); }
@@ -128,6 +132,7 @@ public class MainActivity extends Activity {
         web.loadUrl(first != null ? first : st.lastUrl);
         h.postDelayed(new Runnable() { public void run() { firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
         h.postDelayed(callWatch, 1000);
+        if (st.freedvAuto) h.postDelayed(new Runnable() { public void run() { maybeStartAuto(); } }, 4000);   // FreeDV auto : démarre avec l'application
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission("android.permission.POST_NOTIFICATIONS") != android.content.pm.PackageManager.PERMISSION_GRANTED)
             requestPermissions(new String[] { "android.permission.POST_NOTIFICATIONS" }, 7);
         try {
@@ -163,6 +168,8 @@ public class MainActivity extends Activity {
         stopService(new Intent(this, PlayService.class));
         if (focusReq != null) audio.abandonAudioFocusRequest(focusReq);
         if (mediaSession != null) { try { mediaSession.release(); } catch (Exception e) { } }
+        decoderStop(false);
+        if (isFinishing()) cleanTemp(true);
         if (web != null) { web.destroy(); }
         super.onDestroy();
     }
@@ -221,7 +228,7 @@ public class MainActivity extends Activity {
         LinearLayout r1 = Ui.row(this);
         btnWeb = Ui.button(this, "WEBSDR", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgWebSdr.show(MainActivity.this); } });
         btnWeb.setTypeface(Typeface.DEFAULT_BOLD);
-        btnSet = Ui.button(this, "SET", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgSettings.show(MainActivity.this); } });
+        btnSet = Ui.button(this, "SET", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; if (decMode != 0 && !radeAuto) DlgDecoder.show(MainActivity.this); else DlgSettings.show(MainActivity.this); } });
         btnSet.setTypeface(Typeface.DEFAULT_BOLD);
         btnMute = Ui.button(this, Lang.T("Muet", "Mute"), new View.OnClickListener() {
             public void onClick(View v) { muted = !muted; applyVolume(); updateButtons(); }
@@ -327,6 +334,13 @@ public class MainActivity extends Activity {
         zoom.addView(plus);
         zoom.addView(minus);
         zoomBox = zoom;
+        decOverlayView = new TextView(this);
+        decOverlayView.setTypeface(android.graphics.Typeface.MONOSPACE);
+        decOverlayView.setTextSize(10);
+        decOverlayView.setBackgroundColor(0xB0000000);
+        decOverlayView.setPadding(Ui.dp(this, 4), Ui.dp(this, 2), Ui.dp(this, 4), Ui.dp(this, 2));
+        decOverlayView.setVisibility(View.GONE);
+        decOverlayView.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { if (!blocked()) DlgDecoder.show(MainActivity.this); } });
         holdThen(plus, new Runnable() { public void run() { chooseZoomSide(); } });
         holdThen(minus, new Runnable() { public void run() { chooseZoomSide(); } });
         right = new LinearLayout(this);
@@ -369,6 +383,7 @@ public class MainActivity extends Activity {
         int m = Ui.dp(this, 10);
         zp.setMargins(st.zoomLeft ? m : 0, 0, st.zoomLeft ? 0 : m, st.barBottom ? Ui.dp(this, 28) : m);
         webFrame.addView(zoomBox, zp);
+        placeDecOverlay();
     }
 
     void chooseZoomSide() {
@@ -652,7 +667,7 @@ public class MainActivity extends Activity {
     }
 
     void applyVolume() {
-        boolean m = muted || callMute || focusMute;
+        boolean m = muted || callMute || focusMute || (decMode == DEC_RADE && radeVoice);
         js("if(window.__sdrlink)__sdrlink.setVolume(" + (m ? 0 : 1) + ");");
     }
 
@@ -662,12 +677,12 @@ public class MainActivity extends Activity {
     final Runnable watchRun = new Runnable() {
         public void run() {
             h.postDelayed(this, 5000);
-            if (!st.autoReload || sdrKind.isEmpty() || muted || callMute || focusMute || audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0 || autoTries >= 3) return;
+            if (!st.autoReload || sdrKind.isEmpty() || muted || callMute || focusMute || (decMode == DEC_RADE && radeVoice) || audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0 || autoTries >= 3) return;
             web.evaluateJavascript("(function(){try{return window.__sdrlink?__sdrlink.silentMs():-1}catch(e){return -1}})()", new android.webkit.ValueCallback<String>() {
                 public void onReceiveValue(String v) {
                     long ms;
                     try { ms = Long.parseLong(v.trim()); } catch (Exception e) { return; }
-                    if (ms >= 30000 && st.autoReload && !muted && !callMute && !focusMute) {
+                    if (ms >= 30000 && st.autoReload && !muted && !callMute && !focusMute && !(decMode == DEC_RADE && radeVoice)) {
                         autoTries++;
                         status(Lang.T("Plus de son depuis 30 s : le WebSDR est rechargé.", "No sound for 30 s: the WebSDR is reloaded."));
                         web.reload();
@@ -779,6 +794,7 @@ public class MainActivity extends Activity {
         if (msg.startsWith("mp3|")) { recWrite(msg.substring(4)); return; }
         if (msg.equals("mp3end")) { recFinish(); return; }
         if (msg.startsWith("rec|")) { onRecMessage(msg.split("\\|", -1)); return; }
+        if (msg.startsWith("dec|")) { onDecMessage(msg); return; }
         if (msg.startsWith("dbg|")) { android.util.Log.i("PSDR", "js=" + msg.substring(4)); return; }
         String[] p = msg.split("\\|", -1);
         if (p.length < 3) return;
@@ -792,6 +808,7 @@ public class MainActivity extends Activity {
         sdrKind = kind;
         sdrF = f;
         if (first && recResume) h.postDelayed(recResumeRun, 1500);
+        if (first && decMode != 0) h.postDelayed(decStartRun, 1500);   // le décodeur reprend sur la nouvelle page
         if (first) { applyAudio(); h.postDelayed(new Runnable() { public void run() { maxPageVolume(); } }, 2500); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 4500); }
         String fam = family(m);
 
@@ -1314,6 +1331,406 @@ public class MainActivity extends Activity {
         recStopAt = 0;
         if (recording && !recPending) onRecButton();
         else if (!recording && !recPending && sleepFired) quitApp();
+    }
+
+    // ------------------------------------------------------------------ décodeurs numériques (FT8, FT4, CW, RTTY, FreeDV RADE)
+
+    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5;
+    int decMode;                       // 0 arrêté, sinon DEC_*
+    boolean radeVoice;                 // RADE : des trames FreeDV sont décodées, la parole remplace le son du WebSDR
+    Ft8Engine ft8;
+    RadeEngine rade;
+    TextEngine txt;
+    static final class DecLine { String text, slot; int col; DecLine(String t, int c) { text = t; col = c; int k = t.indexOf(" "); slot = c != 0 && k > 0 ? t.substring(0, k) : null; } }   // col : 0 normal, 1 période 1, 2 période 2
+    final java.util.ArrayList<DecLine> decLines = new java.util.ArrayList<DecLine>();
+    boolean decNewLine = true;
+    String decStatus = "";
+    TextView decView, decState, decOverlayView;
+    ScrollView decScroll;
+    int decTries;
+
+    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_RADE ? "FreeDV RADE" : ""; }
+    static int decRate(int m) { return (m == DEC_FT8 || m == DEC_FT4) ? Ft8Engine.RATE : 8000; }
+
+    android.text.SpannableStringBuilder decSpan(int last) {
+        android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder();
+        for (int i = Math.max(0, decLines.size() - last); i < decLines.size(); i++) {
+            DecLine l = decLines.get(i);
+            int s = sb.length();
+            sb.append(l.text);
+            sb.setSpan(new android.text.style.ForegroundColorSpan(l.col == 1 ? Ui.ft8A() : l.col == 2 ? Ui.ft8B() : Ui.fg()), s, sb.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (i < decLines.size() - 1) sb.append('\n');
+        }
+        return sb;
+    }
+
+    // Écran principal : en FT8 / FT4, toute la dernière période (les lignes de même heure) tant qu'elle tient sur la partie WebSDR ;
+    // en CW / RTTY / RADE, les six dernières lignes.
+    android.text.SpannableStringBuilder decOverlaySpan() {
+        int end = decLines.size(), start = Math.max(0, end - 6);
+        String slot = end > 0 ? decLines.get(end - 1).slot : null;
+        if (slot != null) {
+            start = end;
+            while (start > 0 && slot.equals(decLines.get(start - 1).slot)) start--;
+            int lh = Math.max(1, decOverlayView.getLineHeight());
+            int room = webFrame != null && webFrame.getHeight() > 0 ? (webFrame.getHeight() - Ui.dp(this, st.barBottom ? 40 : 18)) / lh : 6;
+            if (end - start > room) start = end - Math.max(1, room);
+        }
+        android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder();
+        for (int i = start; i < end; i++) {
+            DecLine l = decLines.get(i);
+            int s = sb.length();
+            sb.append(l.text);
+            sb.setSpan(new android.text.style.ForegroundColorSpan(l.col == 1 ? Ui.ft8A() : l.col == 2 ? Ui.ft8B() : Ui.fg()), s, sb.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (i < end - 1) sb.append('\n');
+        }
+        return sb;
+    }
+
+    // Le texte décodé s'affiche dans la fenêtre du décodeur et, en bas de l'écran principal, sur quelques lignes (on peut ainsi
+    // déplacer la fréquence tout en suivant le décodage). Un appui sur ces lignes ouvre la fenêtre.
+    // Les mises à jour de l'affichage sont regroupées : au plus une reconstruction du texte coloré toutes les 150 ms.
+    boolean decRefreshPending;
+    final Runnable decRefreshRun = new Runnable() { public void run() { decRefreshPending = false; decRefreshNow(); } };
+
+    void decRefresh() {
+        if (decRefreshPending) return;
+        decRefreshPending = true;
+        h.postDelayed(decRefreshRun, 150);
+    }
+
+    void decRefreshNow() {
+        if (decView != null) {
+            decView.setText(decSpan(200));
+            if (decScroll != null) decScroll.post(new Runnable() { public void run() { if (decScroll != null) decScroll.fullScroll(View.FOCUS_DOWN); } });
+        }
+        if (decOverlayView != null) {
+            boolean show = decMode != 0 && decMode != DEC_RADE && st.decOverlay && !decLines.isEmpty();   // FreeDV : pas de lignes devant le spectre (la parole suffit)
+            decOverlayView.setVisibility(show ? View.VISIBLE : View.GONE);
+            if (show) decOverlayView.setText(decOverlaySpan());
+        }
+    }
+
+    void decAddLine(String text, int col) {
+        decLines.add(new DecLine(text, col));
+        while (decLines.size() > 200) decLines.remove(0);
+        decNewLine = true;
+    }
+
+    void decAppendText(String s) {   // CW, RTTY : flux de caractères, une ligne datée environ tous les 62 caractères
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '\n') { decNewLine = true; continue; }
+            if (decNewLine || decLines.isEmpty() || decLines.get(decLines.size() - 1).text.length() >= 70) {
+                if (ch == ' ') { decNewLine = true; continue; }
+                decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  ", 0);
+                decNewLine = false;
+            }
+            decLines.get(decLines.size() - 1).text += ch;
+        }
+        decRefresh();
+    }
+
+    // Réglages CW : copiés du stockage vers le moteur (appelé au démarrage du décodeur CW et à chaque changement dans la fenêtre).
+    void applyCwSettings() {
+        if (!(txt instanceof CwEngine)) return;
+        final CwEngine c = (CwEngine) txt;
+        c.autoTone = st.cwAutoTone;
+        c.manualTone = st.cwTone;
+        c.bandwidth = st.cwBw;
+        c.autoSpeed = st.cwAutoSpeed;
+        c.manualWpm = st.cwWpm;
+        c.threshold = st.cwThr;
+        c.charGap = st.cwChar / 10.0;
+        c.wordGap = st.cwWord / 10.0;
+        c.squelch = st.cwSq;
+        c.autoBw = st.cwAutoBw;
+        c.afc = st.cwAfc;
+        c.agc = st.cwAgc;
+        if (!c.autoSpeed) c.post(new Runnable() { public void run() { c.setManualSpeed(); } });
+    }
+
+    // Réglages RTTY : copiés du stockage vers le moteur ; les décodeurs sont refaits seulement si débit, décalage, polarité ou fréquence changent.
+    void applyRttySettings() {
+        if (!(txt instanceof RttyEngine)) return;
+        final RttyEngine r = (RttyEngine) txt;
+        double baud = st.rttyBaud / 100.0;
+        boolean redo = r.baudSetting != baud || r.shiftSetting != st.rttyShift || r.polSetting != st.rttyPol || r.freqSetting != st.rttyFreq || r.afc != st.rttyAfc;
+        r.baudSetting = baud;
+        r.shiftSetting = st.rttyShift;
+        r.polSetting = st.rttyPol;
+        r.freqSetting = st.rttyFreq;
+        r.afc = st.rttyAfc;
+        r.uos = st.rttyUos;
+        r.squelch = st.rttySq;
+        if (redo) r.post(new Runnable() { public void run() { r.settingsChanged(); } });
+    }
+
+    void decSetStatus(String s) { decStatus = s; if (decState != null) decState.setText(s); }
+
+    void placeDecOverlay() {
+        if (decOverlayView == null || webFrame == null) return;
+        if (decOverlayView.getParent() != null) ((ViewGroup) decOverlayView.getParent()).removeView(decOverlayView);
+        FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.START);
+        int side = Ui.dp(this, 72), m = Ui.dp(this, 4);   // on laisse la place aux boutons INIT, + et −
+        p.setMargins(st.zoomLeft ? side : m, 0, st.zoomLeft ? m : side, st.barBottom ? Ui.dp(this, 28) : m);
+        webFrame.addView(decOverlayView, p);
+    }
+
+    // FreeDV auto (SET) : le décodeur FreeDV RADE tourne en permanence pendant l'écoute classique (radeAuto) ; il est suspendu tant qu'un
+    // autre décodeur est actif et relancé quand celui-ci s'arrête (decoderStopUser). Sans la coche, rien de tout cela.
+    boolean radeAuto;
+
+    void maybeStartAuto() {
+        if (!st.freedvAuto || decMode != 0 || !Decoders.loaded) return;
+        decoderStart(DEC_RADE);
+        if (decMode == DEC_RADE) radeAuto = true;
+    }
+
+    void applyFreedvAuto() {
+        if (st.freedvAuto) maybeStartAuto();
+        else if (radeAuto) { radeAuto = false; decoderStop(false); }
+    }
+
+    // Arrêt demandé par l'utilisateur (bouton Arrêter) : si FreeDV auto est coché, FreeDV reprend.
+    void decoderStopUser() {
+        decoderStop(true);
+        maybeStartAuto();
+    }
+
+    void decoderStart(int mode) {
+        if (!Decoders.loaded) { Ui.toast(this, Lang.T("Décodeur indisponible sur ce téléphone", "Decoder not available on this phone")); return; }
+        decoderStop(false);
+        radeAuto = false;
+        decTries = 0;
+        decLines.clear();
+        decNewLine = true;
+        decRefresh();
+        decSetStatus(Lang.T("Démarrage…", "Starting…"));
+        if (mode == DEC_RADE) {
+            rade = new RadeEngine(new RadeEngine.Listener() {
+                public void onStatus(String s) { decSetStatus(s); }
+                public void onEvent(String line) { decAddLine(line, 0); decRefresh(); }
+                public void onVoice(boolean on) { radeVoice = on; applyVolume(); }
+            });
+            if (!rade.start()) { rade = null; decSetStatus(Lang.T("FreeDV RADE demande un téléphone 64 bits", "FreeDV RADE needs a 64-bit phone")); return; }
+        } else if (mode == DEC_FT8 || mode == DEC_FT4) {
+            ft8 = new Ft8Engine(mode == DEC_FT4, new Ft8Engine.Listener() {
+                public void onLines(java.util.ArrayList<String> lines, int parity) { for (String s : lines) decAddLine(s, parity == 0 ? 1 : 2); decRefresh(); }
+                public void onStatus(String s) { decSetStatus(s); }
+            });
+            ft8.start();
+        } else {
+            TextEngine.Listener l = new TextEngine.Listener() {
+                public void onText(final String s) { h.post(new Runnable() { public void run() { if (txt != null) decAppendText(s); } }); }   // le calcul se fait dans un fil à part
+                public void onStatus(final String s) { h.post(new Runnable() { public void run() { if (txt != null) decSetStatus(s); } }); }
+            };
+            txt = mode == DEC_CW ? new CwEngine(l) : new RttyEngine(l);
+            applyCwSettings();
+            applyRttySettings();
+        }
+        decMode = mode;
+        applyVolume();   // en RADE, le son brut du WebSDR est coupé : on entend la parole décodée
+        decStartJs();
+    }
+
+    void decoderStop(boolean message) {
+        boolean was = decMode != 0;
+        decMode = 0;
+        h.removeCallbacks(decStartRun);
+        if (ft8 != null) { ft8.stop(); ft8 = null; }
+        if (rade != null) { rade.stop(); rade = null; }
+        radeVoice = false;
+        radeAuto = false;
+        if (txt != null) { txt.shutdown(); txt = null; }
+        if (web != null) { js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();"); applyVolume(); }
+        if (was && message) decSetStatus(Lang.T("Décodeur arrêté", "Decoder stopped"));
+        if (decOverlayView != null) decOverlayView.setVisibility(View.GONE);
+    }
+
+    void decStartJs() {
+        if (decMode == 0) return;
+        web.evaluateJavascript("(function(){try{__sdrlink.decStart(" + decRate(decMode) + ")}catch(e){PhoneSdr.post(\"dec|err|\"+e)}})()", null);
+    }
+
+    final Runnable decStartRun = new Runnable() { public void run() { decStartJs(); } };
+
+    void onDecMessage(String msg) {
+        if (msg.startsWith("dec|d|")) {
+            if (ft8 == null && rade == null && txt == null) return;
+            try {
+                byte[] b = android.util.Base64.decode(msg.substring(6), android.util.Base64.NO_WRAP);
+                if (ft8 != null) ft8.feed(b, b.length); else if (rade != null) rade.feed(b, b.length); else if (txt != null) txt.feedBytes(b, b.length);
+            } catch (Exception e) { }
+            return;
+        }
+        if (msg.startsWith("dec|ok")) {
+            decTries = 0;
+            decSetStatus(decMode == DEC_RADE ? "RADE : " + Lang.T("recherche du signal…", "searching for the signal…") : decName(decMode) + " : " + Lang.T("en écoute", "listening"));
+            return;
+        }
+        if (msg.startsWith("dec|err")) {   // le son de la page n'est pas encore démarré : on réessaie
+            if (decMode != 0 && (radeAuto || ++decTries < 20)) h.postDelayed(decStartRun, radeAuto ? 5000 : 2000);
+            else if (decMode != 0) { decoderStop(false); decSetStatus(Lang.T("Pas de son à décoder dans cette page", "No sound to decode in this page")); }
+        }
+    }
+
+    // Fichiers temporaires : mise à jour téléchargée, sorties d'essai, copie de réglages, cache du navigateur de la page. Ils ne servent
+    // plus au prochain lancement : on les supprime au démarrage (restes d'un arrêt brutal) et à la fermeture.
+    void cleanTemp(boolean clearWebCache) {
+        try {
+            java.io.File c = getCacheDir();
+            java.io.File[] fs = c.listFiles();
+            if (fs != null) for (java.io.File f : fs) if (f.isFile()) f.delete();
+            java.io.File e = getExternalCacheDir();
+            if (e != null) { fs = e.listFiles(); if (fs != null) for (java.io.File f : fs) if (f.isFile()) f.delete(); }
+            java.io.File x = getExternalFilesDir(null);
+            if (x != null) for (String n : new String[] { "settings-dump.ini", "rade-test-out.pcm" }) { java.io.File f = new java.io.File(x, n); if (f.exists()) f.delete(); }
+            if (clearWebCache && web != null) web.clearCache(true);
+        } catch (Exception e) { }
+    }
+
+    // Essai des décodeurs CW et RTTY sur un signal synthétique : am start … --es dectest cw|rtty ; résultat dans logcat (étiquette PSDR).
+    void decSelfTest(final String kind) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    final StringBuilder out = new StringBuilder();
+                    TextEngine.Listener l = new TextEngine.Listener() {
+                        public void onText(String s) { out.append(s); }
+                        public void onStatus(String s) { android.util.Log.i("PSDR", "DECTEST statut : " + s); }
+                    };
+                    java.util.Random rnd = new java.util.Random(7);
+                    java.util.ArrayList<Double> sig = new java.util.ArrayList<Double>();
+                    String msg;
+                    if (kind.equals("cw")) {
+                        msg = "CQ CQ DE F5PBG F5PBG PSE K";
+                        double dot = 1.2 / 18 * 8000, ph = 0;   // 18 mots par minute
+                        for (int i = 0; i < 16000; i++) sig.add(0.0);
+                        for (char ch : msg.toCharArray()) {
+                            if (ch == ' ') { for (int i = 0; i < (int) (4 * dot); i++) sig.add(0.0); continue; }
+                            String m = CwEngine.MORSE[CwEngine.CHARS.indexOf(ch)];
+                            for (char e : m.toCharArray()) {
+                                int len = (int) ((e == '.' ? 1 : 3) * dot);
+                                for (int i = 0; i < len; i++) { ph += 2 * Math.PI * 700 / 8000; sig.add(0.5 * Math.sin(ph)); }
+                                for (int i = 0; i < (int) dot; i++) sig.add(0.0);
+                            }
+                            for (int i = 0; i < (int) (2 * dot); i++) sig.add(0.0);
+                        }
+                        for (int i = 0; i < 16000; i++) sig.add(0.0);
+                    } else {
+                        msg = "RYRYRYRY CQ CQ DE F5PBG F5PBG K";
+                        double bit = 8000 / 45.45, ph = 0, acc = 0;
+                        java.util.ArrayList<Integer> bits = new java.util.ArrayList<Integer>();
+                        for (int i = 0; i < 40; i++) bits.add(1);
+                        boolean figs = false;
+                        for (char ch : msg.toCharArray()) {
+                            int c = RttyEngine.LTRS.indexOf(ch);
+                            if (ch == ' ') c = 4;
+                            if (c < 0) continue;
+                            bits.add(0);
+                            for (int k = 0; k < 5; k++) bits.add((c >> k) & 1);
+                            bits.add(1); bits.add(1);
+                        }
+                        for (int i = 0; i < 40; i++) bits.add(1);
+                        for (int b : bits) {
+                            double f = b == 1 ? 2125 : 2295;   // mark = tonalité basse
+                            acc += bit;
+                            while (acc >= 1) { acc -= 1; ph += 2 * Math.PI * f / 8000; sig.add(0.5 * Math.sin(ph)); }
+                        }
+                    }
+                    TextEngine eng = kind.equals("cw") ? new CwEngine(l) : new RttyEngine(l);
+                    short[] chunk = new short[1024];
+                    int k = 0;
+                    for (int i = 0; i < sig.size(); i++) {
+                        double v = sig.get(i) + 0.04 * rnd.nextGaussian();
+                        chunk[k++] = (short) (Math.max(-1, Math.min(1, v)) * 30000);
+                        if (k == chunk.length) { eng.feed(chunk, k); k = 0; }
+                    }
+                    if (k > 0) eng.feed(chunk, k);
+                    android.util.Log.i("PSDR", "DECTEST " + kind + " attendu [" + msg + "] décodé [" + out + "]");
+                } catch (Throwable t) { android.util.Log.i("PSDR", "DECTEST erreur " + t); }
+            }
+        }).start();
+    }
+
+    // Essai du moteur RADE complet (bascule du son) : am start … --es radeeng /chemin/fichier.wav (48 kHz, 16 bits, mono) ; le fichier est
+    // injecté en temps réel pendant 30 s à la place du son de la page ; les changements d'état de la voix sont dans logcat (PSDR).
+    void radeEngineTest(final String path) {
+        h.postDelayed(new Runnable() {
+            public void run() {
+                decoderStart(DEC_RADE);
+                if (rade == null) return;
+                js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();");   // pas de son de la page : seul le fichier alimente le décodeur
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            java.io.RandomAccessFile f = new java.io.RandomAccessFile(path, "r");
+                            f.seek(44);
+                            byte[] buf = new byte[96000];
+                            for (int s = 0; s < 40; s++) {
+                                int r = f.read(buf);
+                                if (r < 12) break;
+                                int n = r / 12;
+                                byte[] o = new byte[n * 2];
+                                for (int i = 0; i < n; i++) {
+                                    int sum = 0;
+                                    for (int k = 0; k < 6; k++) sum += (short) ((buf[(i * 6 + k) * 2] & 255) | (buf[(i * 6 + k) * 2 + 1] << 8));
+                                    short v = (short) (sum / 6);
+                                    o[2 * i] = (byte) v; o[2 * i + 1] = (byte) (v >> 8);
+                                }
+                                if (rade != null) rade.feed(o, o.length);
+                                Thread.sleep(1000);
+                            }
+                            f.close();
+                            android.util.Log.i("PSDR", "RADEENG fin");
+                        } catch (Throwable t) { android.util.Log.i("PSDR", "RADEENG erreur " + t); }
+                    }
+                }).start();
+            }
+        }, 4000);
+    }
+
+    // Essai du décodeur RADE sur un fichier WAV (48 kHz, 16 bits, mono) : am start … --es radewav /chemin/fichier.wav ;
+    // résultats dans logcat (étiquette PSDR) et parole décodée dans files/rade-test-out.pcm (16 kHz, 16 bits).
+    void radeSelfTest(final String path) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    java.io.RandomAccessFile f = new java.io.RandomAccessFile(path, "r");
+                    long len = f.length();
+                    f.seek(44);
+                    long h0 = Decoders.radeNew();
+                    if (h0 == 0) { android.util.Log.i("PSDR", "RADETEST init impossible"); f.close(); return; }
+                    java.io.FileOutputStream fo = new java.io.FileOutputStream(new java.io.File(getExternalFilesDir(null), "rade-test-out.pcm"));
+                    byte[] buf = new byte[96000];
+                    short[] in8 = new short[8000], out = new short[8000 * 2 + 8000];
+                    int[] st = new int[3];
+                    long outTotal = 0, chunks = 0, syncChunks = 0, t0 = android.os.SystemClock.elapsedRealtime();
+                    int r;
+                    while ((r = f.read(buf)) >= 12) {
+                        int n = r / 12;
+                        for (int i = 0; i < n; i++) {
+                            int s = 0;
+                            for (int k = 0; k < 6; k++) s += (short) ((buf[(i * 6 + k) * 2] & 255) | (buf[(i * 6 + k) * 2 + 1] << 8));
+                            in8[i] = (short) (s / 6);
+                        }
+                        int w = Decoders.radeProcess(h0, in8, n, out, st);
+                        outTotal += w;
+                        chunks++;
+                        if (st[0] != 0) syncChunks++;
+                        byte[] ob = new byte[w * 2];
+                        for (int i = 0; i < w; i++) { ob[2 * i] = (byte) out[i]; ob[2 * i + 1] = (byte) (out[i] >> 8); }
+                        fo.write(ob);
+                        if (chunks % 10 == 0) android.util.Log.i("PSDR", "RADETEST t=" + chunks + "s sync=" + st[0] + " snr=" + st[1] + " foff=" + st[2] / 10.0 + " out=" + outTotal);
+                    }
+                    fo.close();
+                    f.close();
+                    Decoders.radeFree(h0);
+                    android.util.Log.i("PSDR", "RADETEST fin : " + chunks + " s de son, " + syncChunks + " s synchronisées, " + outTotal + " échantillons de parole, " + (android.os.SystemClock.elapsedRealtime() - t0) + " ms de calcul (fichier " + len + " octets)");
+                } catch (Throwable t) { android.util.Log.i("PSDR", "RADETEST erreur " + t); }
+            }
+        }).start();
     }
 
     // Appui long sur Verrou : quitter l'application (utile à ceux qui ne savent pas la fermer). Un REC en cours est d'abord sauvegardé.

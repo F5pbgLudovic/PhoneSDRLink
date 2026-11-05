@@ -34,6 +34,13 @@ final class DlgSettings {
         ver.setBackground(Ui.round(0xFF1B2128, 10, a));
         ver.setPadding(Ui.dp(a, 12), Ui.dp(a, 8), Ui.dp(a, 12), Ui.dp(a, 8));
         col.addView(ver, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 0));
+        add(col, a, Lang.T("Décodeur FT8 / FT4 / CW / RTTY / FreeDV…", "FT8 / FT4 / CW / RTTY / FreeDV decoder…"), new View.OnClickListener() {
+            public void onClick(View v) { d.dismiss(); DlgDecoder.show(a); }
+        });
+        col.addView(toggle(a, "FreeDV auto", st.freedvAuto, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.freedvAuto = on; st.save(); a.applyFreedvAuto(); }
+        }));
+        col.addView(Ui.small(a, Lang.T("Écoute classique en permanence ; dès que des trames FreeDV RADE sont décodées, le son bascule sur la parole décodée. Coupé pendant qu'un autre décodeur est actif, remis en route dès qu'il s'arrête.", "Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.")));
         col.addView(toggle(a, Lang.T("Mode sombre", "Dark mode"), st.dark, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.dark = on; st.save(); d.dismiss(); a.recreate(); }
         }));
@@ -128,11 +135,13 @@ final class DlgSettings {
             case 3: return c == Ui.freqTx();
             case 4: return c == Ui.barBg();
             case 5: return c == Ui.barFgText();
+            case 7: return c == Ui.ft8B() || c == Ui.panel();
+            case 8: return c == Ui.ft8A() || c == Ui.panel();
             default: return c == Ui.btn();
         }
     }
     static void setColor(Store st, int id, int c) {
-        switch (id) { case 0: st.colBtnBg = c; break; case 1: st.colBtnTx = c; break; case 2: st.colFreqTx = c; break; case 3: st.colFreqBg = c; break; case 4: st.colBarFg = c; break; case 5: st.colBarBg = c; break; default: st.colBg = c; }
+        switch (id) { case 0: st.colBtnBg = c; break; case 1: st.colBtnTx = c; break; case 2: st.colFreqTx = c; break; case 3: st.colFreqBg = c; break; case 4: st.colBarFg = c; break; case 5: st.colBarBg = c; break; case 7: st.colFt8A = c; break; case 8: st.colFt8B = c; break; default: st.colBg = c; }
     }
 
     static void showColors(MainActivity a) {
@@ -163,9 +172,19 @@ final class DlgSettings {
             if (id == 4 || id == 5) { b.setTextColor(Ui.barFgText()); b.setBackground(Ui.round(Ui.barBg(), 10, a)); }
             col.addView(b, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
         }
+        col.addView(Ui.small(a, Lang.T("Couleurs du décodeur (deux périodes FT8 / FT4) :", "Decoder colours (the two FT8 / FT4 periods):")));
+        for (int i = 0; i < 2; i++) {
+            final int id = 7 + i;
+            Button b = Ui.button(a, i == 0 ? Lang.T("Décodeur : période 1", "Decoder: period 1") : Lang.T("Décodeur : période 2", "Decoder: period 2"), new View.OnClickListener() {
+                public void onClick(View v) { pick(a, d, id); }
+            });
+            b.setTextColor(id == 7 ? Ui.ft8A() : Ui.ft8B());
+            b.setBackground(Ui.round(Ui.panel(), 10, a));
+            col.addView(b, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        }
         col.addView(Ui.button(a, Lang.T("Couleurs par défaut", "Default colours"), new View.OnClickListener() {
             public void onClick(View v) {
-                st.colBtnBg = st.colBtnTx = st.colFreqTx = st.colFreqBg = st.colBarFg = st.colBarBg = st.colBg = 0;
+                st.colBtnBg = st.colBtnTx = st.colFreqTx = st.colFreqBg = st.colBarFg = st.colBarBg = st.colBg = st.colFt8A = st.colFt8B = 0;
                 applyColors(a, d, null);
             }
         }), Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
@@ -207,7 +226,7 @@ final class DlgSettings {
         }
         // Couleur personnalisée : trois valeurs de 0 à 255 (rouge, vert, bleu).
         int cur;
-        switch (id) { case 0: cur = Ui.btn(); break; case 1: cur = Ui.btnTx(); break; case 2: cur = Ui.freqTx(); break; case 3: cur = Ui.freqBg(); break; case 4: cur = Ui.barFgText(); break; case 5: cur = Ui.barBg(); break; default: cur = Ui.bg(); }
+        switch (id) { case 0: cur = Ui.btn(); break; case 1: cur = Ui.btnTx(); break; case 2: cur = Ui.freqTx(); break; case 3: cur = Ui.freqBg(); break; case 4: cur = Ui.barFgText(); break; case 5: cur = Ui.barBg(); break; case 7: cur = Ui.ft8A(); break; case 8: cur = Ui.ft8B(); break; default: cur = Ui.bg(); }
         final android.widget.EditText[] rgb = new android.widget.EditText[3];
         final LinearLayout custom = Ui.row(a);
         String[] hints = { "R", Lang.T("V", "G"), "B" };

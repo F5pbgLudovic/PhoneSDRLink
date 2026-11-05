@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	Έξοδος από την εφαρμογή
 Quit PhoneSDRLink? The sound and the scan stop.	Έξοδος από το PhoneSDRLink; Ο ήχος και η σάρωση σταματούν.
 Quit	Έξοδος
+FT8 / FreeDV decoder…	Αποκωδικοποιητής FT8 / FreeDV…
+Decoder	Αποκωδικοποιητής
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Ο ήχος του WebSDR αναλύεται συνεχώς, ακόμη και όταν είναι σε σίγαση. FT8: λειτουργία USB ή DATA, σε συχνότητα FT8 (7.074, 14.074 MHz…)· το ρολόι του τηλεφώνου πρέπει να είναι ακριβές. FreeDV RADE: λειτουργία USB, σε σήμα RADE (14.236 MHz…)· η αποκωδικοποιημένη ομιλία αντικαθιστά τον ήχο του WebSDR.
+UTC time · DT (s) · audio frequency (Hz) · message	Ώρα UTC · DT (s) · συχνότητα ήχου (Hz) · μήνυμα
+Starting…	Εκκίνηση…
+FT8: listening	FT8: ακρόαση
+Decoder not available on this phone	Ο αποκωδικοποιητής δεν είναι διαθέσιμος σε αυτό το τηλέφωνο
+Decoder stopped	Ο αποκωδικοποιητής σταμάτησε
+No sound to decode in this page	Δεν υπάρχει ήχος για αποκωδικοποίηση σε αυτή τη σελίδα
+FreeDV RADE needs a 64-bit phone	Το FreeDV RADE απαιτεί τηλέφωνο 64 bit
+in sync (SNR {0} dB)	σε συγχρονισμό (SNR {0} dB)
+signal lost	το σήμα χάθηκε
+in sync	σε συγχρονισμό
+offset	απόκλιση
+searching for the signal…	αναζήτηση σήματος…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} κύκλοι, {1} μηνύματα, καθυστέρηση {2} s
+Stop	Διακοπή
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	Αποκωδικοποιητής FT8 / FT4 / CW / RTTY / FreeDV…
+Decoder colours (the two FT8 / FT4 periods):	Χρώματα αποκωδικοποιητή (οι δύο περίοδοι FT8 / FT4):
+Decoder: period 1	Αποκωδικοποιητής: περίοδος 1
+Decoder: period 2	Αποκωδικοποιητής: περίοδος 2
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Ο ήχος του WebSDR αναλύεται συνεχώς, ακόμη και σε σίγαση. FT8 / FT4: λειτουργία USB ή DATA, σε συχνότητα FT8 ή FT4 (7.074 / 7.0475, 14.074 / 14.080 MHz…)· το ρολόι του τηλεφώνου πρέπει να είναι ακριβές. CW: λειτουργία CW ή USB, σε σήμα CW. RTTY: λειτουργία USB ή LSB (τουλάχιστον 500 Hz εύρος), σε σήμα RTTY (14.080 έως 14.099 MHz…). FreeDV RADE: λειτουργία USB, σε σήμα RADE (14.236 MHz…)· η αποκωδικοποιημένη ομιλία αντικαθιστά τον ήχο του WebSDR.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	Ώρα UTC · DT (s) · συχνότητα ήχου (Hz) · μήνυμα (FT8, FT4)· ώρα UTC · κείμενο (CW, RTTY)
+Show the latest messages on the main screen	Εμφάνιση των τελευταίων μηνυμάτων στην κύρια οθόνη
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} κύκλοι, {1} μηνύματα, καθυστέρηση {2} s
+listening	ακρόαση
+reversed	ανεστραμμένο
+Settings (SET)…	Ρυθμίσεις (SET)…
+CW settings (applied immediately):	Ρυθμίσεις CW (εφαρμόζονται αμέσως):
+Automatic tone	Αυτόματος τόνος
+Automatic speed	Αυτόματη ταχύτητα
+Tone: {0} Hz	Τόνος: {0} Hz
+Filter: {0} Hz	Φίλτρο: {0} Hz
+Speed: {0} WPM	Ταχύτητα: {0} WPM
+Detection threshold: {0} %	Όριο ανίχνευσης: {0} %
+Squelch (signal / noise): ×{0}	Squelch (σήμα / θόρυβος): ×{0}
+Letter gap: {0} dots	Κενό γραμμάτων: {0} τελείες
+Word gap: {0} dots	Κενό λέξεων: {0} τελείες
+Default values	Προεπιλεγμένες τιμές
+Filter follows the speed	Το φίλτρο ακολουθεί την ταχύτητα
+Drift tracking (AFC)	Παρακολούθηση ολίσθησης (AFC)
+AGC (fading): {0}	AGC (διαλείψεις): {0}
+slow	αργό
+medium	μεσαίο
+fast	γρήγορο
+RTTY settings (applied immediately):	Ρυθμίσεις RTTY (εφαρμόζονται αμέσως):
+Speed (baud rate)	Ταχύτητα (baud)
+Shift between the two tones	Διαφορά μεταξύ των δύο τόνων
+Polarity	Πολικότητα
+Automatic	Αυτόματο
+Normal (mark = low tone)	Κανονική (mark = χαμηλός τόνος)
+Reversed	Αντίστροφη
+Automatic frequency	Αυτόματη συχνότητα
+Low tone: {0} Hz	Χαμηλός τόνος: {0} Hz
+A space returns to letters (UOS)	Το κενό επιστρέφει σε γράμματα (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Κανονική ακρόαση συνεχώς· μόλις αποκωδικοποιηθούν πλαίσια FreeDV RADE, ο ήχος περνά στην αποκωδικοποιημένη ομιλία. Αναστέλλεται όσο ενεργεί άλλος αποκωδικοποιητής και ξαναρχίζει μόλις σταματήσει.

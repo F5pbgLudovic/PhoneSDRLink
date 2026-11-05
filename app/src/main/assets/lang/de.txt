@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	App beenden
 Quit PhoneSDRLink? The sound and the scan stop.	PhoneSDRLink beenden? Ton und Suchlauf werden gestoppt.
 Quit	Beenden
+FT8 / FreeDV decoder…	FT8-/FreeDV-Decoder…
+Decoder	Decoder
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Der Ton des WebSDR wird fortlaufend analysiert, auch wenn er stummgeschaltet ist. FT8: Modus USB oder DATA, auf einer FT8-Frequenz (7.074, 14.074 MHz…); die Uhr des Telefons muss stimmen. FreeDV RADE: Modus USB, auf einem RADE-Signal (14.236 MHz…); die dekodierte Sprache ersetzt den Ton des WebSDR.
+UTC time · DT (s) · audio frequency (Hz) · message	UTC-Zeit · DT (s) · Audiofrequenz (Hz) · Nachricht
+Starting…	Start…
+FT8: listening	FT8: hört zu
+Decoder not available on this phone	Decoder auf diesem Telefon nicht verfügbar
+Decoder stopped	Decoder angehalten
+No sound to decode in this page	Kein Ton zum Dekodieren auf dieser Seite
+FreeDV RADE needs a 64-bit phone	FreeDV RADE benötigt ein 64-Bit-Telefon
+in sync (SNR {0} dB)	synchron (SNR {0} dB)
+signal lost	Signal verloren
+in sync	synchron
+offset	Versatz
+searching for the signal…	Signalsuche…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} Zeitfenster, {1} Nachrichten, Verzögerung {2} s
+Stop	Stopp
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	FT8-/FT4-/CW-/RTTY-/FreeDV-Decoder…
+Decoder colours (the two FT8 / FT4 periods):	Decoder-Farben (die beiden FT8-/FT4-Perioden):
+Decoder: period 1	Decoder: Periode 1
+Decoder: period 2	Decoder: Periode 2
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Der Ton des WebSDR wird fortlaufend analysiert, auch wenn er stummgeschaltet ist. FT8 / FT4: Modus USB oder DATA, auf einer FT8- oder FT4-Frequenz (7.074 / 7.0475, 14.074 / 14.080 MHz…); die Uhr des Telefons muss stimmen. CW: Modus CW oder USB, auf einem CW-Signal. RTTY: Modus USB oder LSB (mindestens 500 Hz Bandbreite), auf einem RTTY-Signal (14.080 bis 14.099 MHz…). FreeDV RADE: Modus USB, auf einem RADE-Signal (14.236 MHz…); die dekodierte Sprache ersetzt den Ton des WebSDR.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	UTC-Zeit · DT (s) · Audiofrequenz (Hz) · Nachricht (FT8, FT4); UTC-Zeit · Text (CW, RTTY)
+Show the latest messages on the main screen	Letzte Nachrichten auf dem Hauptbildschirm anzeigen
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} Zeitfenster, {1} Nachrichten, Verzögerung {2} s
+listening	hört zu
+reversed	invertiert
+Settings (SET)…	Einstellungen (SET)…
+CW settings (applied immediately):	CW-Einstellungen (sofort wirksam):
+Automatic tone	Automatischer Ton
+Automatic speed	Automatische Geschwindigkeit
+Tone: {0} Hz	Ton: {0} Hz
+Filter: {0} Hz	Filter: {0} Hz
+Speed: {0} WPM	Tempo: {0} WPM
+Detection threshold: {0} %	Erkennungsschwelle: {0} %
+Squelch (signal / noise): ×{0}	Squelch (Signal / Rauschen): ×{0}
+Letter gap: {0} dots	Buchstabenpause: {0} Punkte
+Word gap: {0} dots	Wortpause: {0} Punkte
+Default values	Standardwerte
+Filter follows the speed	Filter folgt der Geschwindigkeit
+Drift tracking (AFC)	Driftnachführung (AFC)
+AGC (fading): {0}	AGC (Schwund): {0}
+slow	langsam
+medium	mittel
+fast	schnell
+RTTY settings (applied immediately):	RTTY-Einstellungen (sofort wirksam):
+Speed (baud rate)	Geschwindigkeit (Baudrate)
+Shift between the two tones	Shift zwischen den beiden Tönen
+Polarity	Polarität
+Automatic	Automatisch
+Normal (mark = low tone)	Normal (Mark = tiefer Ton)
+Reversed	Invertiert
+Automatic frequency	Automatische Frequenz
+Low tone: {0} Hz	Tiefer Ton: {0} Hz
+A space returns to letters (UOS)	Leerzeichen schaltet auf Buchstaben (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Dauerhaft normales Hören; sobald FreeDV-RADE-Rahmen dekodiert werden, schaltet der Ton auf die dekodierte Sprache um. Pausiert, solange ein anderer Decoder aktiv ist, und wieder aktiv, sobald dieser stoppt.

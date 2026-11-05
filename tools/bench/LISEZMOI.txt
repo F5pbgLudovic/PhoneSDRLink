@@ -1,0 +1,11 @@
+Banc d'essai PC des décodeurs CW et RTTY (sans téléphone)
+=========================================================
+Génère des signaux synthétiques (CW 12 à 35 mots/minute, RTTY 45,45 / 50 / 75 bauds, polarité inversée, bruit seul) et vérifie le texte décodé.
+Lang.java est un faux « Lang » (textes anglais) pour compiler les moteurs hors Android.
+
+Compiler et lancer (depuis la racine du projet) :
+  toolchain\jdk\bin\javac -encoding UTF-8 -d tools\bench\out tools\bench\fr\f5pbg\phonesdrlink\*.java app\src\main\java\fr\f5pbg\phonesdrlink\TextEngine.java app\src\main\java\fr\f5pbg\phonesdrlink\CwEngine.java app\src\main\java\fr\f5pbg\phonesdrlink\RttyEngine.java
+  toolchain\jdk\bin\java -cp tools\bench\out fr.f5pbg.phonesdrlink.Dt     (CW 18 et 25 mots/min, RTTY 45 / 50 inversé / 75 bauds)
+  ... Dt4 (CW : bruit seul, SNR bas, 12 et 35 mots/min)   Dt5 (réglages RTTY : débit, polarité, décalage, fréquence manuelle)
+Résultats attendus en 1.9 : CQ CQ DE F5PBG ..., TEST DE F4XYZ 599 73, aucun texte sur du bruit seul, "CQ CQ DE FPBG K" en RTTY (le 5 manque : le générateur n'envoie pas de chiffres).
+Dt2 (traces de la CW) et Dt3 (scores des décodeurs RTTY) servent à comprendre un échec.

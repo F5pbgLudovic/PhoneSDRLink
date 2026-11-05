@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	Ieșire din aplicație
 Quit PhoneSDRLink? The sound and the scan stop.	Ieșiți din PhoneSDRLink? Sunetul și scanarea se opresc.
 Quit	Ieșire
+FT8 / FreeDV decoder…	Decodor FT8 / FreeDV…
+Decoder	Decodor
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Sunetul WebSDR este analizat continuu, chiar și dezactivat. FT8: mod USB sau DATA, pe o frecvență FT8 (7.074, 14.074 MHz…); ceasul telefonului trebuie să fie exact. FreeDV RADE: mod USB, pe un semnal RADE (14.236 MHz…); vocea decodată înlocuiește sunetul WebSDR.
+UTC time · DT (s) · audio frequency (Hz) · message	Ora UTC · DT (s) · frecvență audio (Hz) · mesaj
+Starting…	Se pornește…
+FT8: listening	FT8: ascultă
+Decoder not available on this phone	Decodorul nu este disponibil pe acest telefon
+Decoder stopped	Decodor oprit
+No sound to decode in this page	Nu este sunet de decodat în această pagină
+FreeDV RADE needs a 64-bit phone	FreeDV RADE necesită un telefon pe 64 de biți
+in sync (SNR {0} dB)	sincronizat (SNR {0} dB)
+signal lost	semnal pierdut
+in sync	sincronizat
+offset	abatere
+searching for the signal…	se caută semnalul…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} cicluri, {1} mesaje, întârziere {2} s
+Stop	Stop
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	Decodor FT8 / FT4 / CW / RTTY / FreeDV…
+Decoder colours (the two FT8 / FT4 periods):	Culorile decodorului (cele două perioade FT8 / FT4):
+Decoder: period 1	Decodor: perioada 1
+Decoder: period 2	Decodor: perioada 2
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Sunetul WebSDR este analizat continuu, chiar și dezactivat. FT8 / FT4: mod USB sau DATA, pe o frecvență FT8 sau FT4 (7.074 / 7.0475, 14.074 / 14.080 MHz…); ceasul telefonului trebuie să fie exact. CW: mod CW sau USB, pe un semnal CW. RTTY: mod USB sau LSB (cel puțin 500 Hz lățime), pe un semnal RTTY (14.080 – 14.099 MHz…). FreeDV RADE: mod USB, pe un semnal RADE (14.236 MHz…); vocea decodată înlocuiește sunetul WebSDR.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	Ora UTC · DT (s) · frecvență audio (Hz) · mesaj (FT8, FT4); ora UTC · text (CW, RTTY)
+Show the latest messages on the main screen	Afișează ultimele mesaje pe ecranul principal
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} cicluri, {1} mesaje, întârziere {2} s
+listening	ascultă
+reversed	inversat
+Settings (SET)…	Setări (SET)…
+CW settings (applied immediately):	Setări CW (aplicate imediat):
+Automatic tone	Ton automat
+Automatic speed	Viteză automată
+Tone: {0} Hz	Ton: {0} Hz
+Filter: {0} Hz	Filtru: {0} Hz
+Speed: {0} WPM	Viteză: {0} WPM
+Detection threshold: {0} %	Prag de detecție: {0} %
+Squelch (signal / noise): ×{0}	Squelch (semnal / zgomot): ×{0}
+Letter gap: {0} dots	Spațiu între litere: {0} puncte
+Word gap: {0} dots	Spațiu între cuvinte: {0} puncte
+Default values	Valori implicite
+Filter follows the speed	Filtrul urmează viteza
+Drift tracking (AFC)	Urmărirea derivei (AFC)
+AGC (fading): {0}	AGC (fading): {0}
+slow	lent
+medium	mediu
+fast	rapid
+RTTY settings (applied immediately):	Setări RTTY (aplicate imediat):
+Speed (baud rate)	Viteză (baud)
+Shift between the two tones	Decalajul dintre cele două tonuri
+Polarity	Polaritate
+Automatic	Automat
+Normal (mark = low tone)	Normală (mark = ton jos)
+Reversed	Inversată
+Automatic frequency	Frecvență automată
+Low tone: {0} Hz	Ton jos: {0} Hz
+A space returns to letters (UOS)	Spațiul revine la litere (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Ascultare normală permanentă; imediat ce cadrele FreeDV RADE sunt decodate, sunetul trece pe vocea decodată. Suspendat cât timp alt decodor este activ și reluat când acesta se oprește.

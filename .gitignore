@@ -6,3 +6,5 @@ local.properties
 *.jks
 release-notes*.md
 dist/
+app/.cxx/
+tools/bench/out/

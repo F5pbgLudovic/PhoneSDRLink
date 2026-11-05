@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	Iziet no lietotnes
 Quit PhoneSDRLink? The sound and the scan stop.	Vai iziet no PhoneSDRLink? Skaņa un skenēšana apstāsies.
 Quit	Iziet
+FT8 / FreeDV decoder…	FT8 / FreeDV dekodētājs…
+Decoder	Dekodētājs
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR skaņa tiek analizēta nepārtraukti, arī izslēgta. FT8: USB vai DATA režīms, FT8 frekvencē (7.074, 14.074 MHz…); tālruņa pulkstenim jābūt precīzam. FreeDV RADE: USB režīms, RADE signālam (14.236 MHz…); dekodētā runa aizstāj WebSDR skaņu.
+UTC time · DT (s) · audio frequency (Hz) · message	UTC laiks · DT (s) · audio frekvence (Hz) · ziņa
+Starting…	Palaiž…
+FT8: listening	FT8: klausās
+Decoder not available on this phone	Dekodētājs šajā tālrunī nav pieejams
+Decoder stopped	Dekodētājs apturēts
+No sound to decode in this page	Šajā lapā nav skaņas, ko dekodēt
+FreeDV RADE needs a 64-bit phone	FreeDV RADE nepieciešams 64 bitu tālrunis
+in sync (SNR {0} dB)	sinhronizēts (SNR {0} dB)
+signal lost	signāls zaudēts
+in sync	sinhronizēts
+offset	nobīde
+searching for the signal…	meklē signālu…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} intervāli, {1} ziņas, aizkave {2} s
+Stop	Stop
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	FT8 / FT4 / CW / RTTY / FreeDV dekodētājs…
+Decoder colours (the two FT8 / FT4 periods):	Dekodētāja krāsas (divi FT8 / FT4 periodi):
+Decoder: period 1	Dekodētājs: 1. periods
+Decoder: period 2	Dekodētājs: 2. periods
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR skaņa tiek analizēta nepārtraukti, arī izslēgta. FT8 / FT4: USB vai DATA režīms, FT8 vai FT4 frekvencē (7.074 / 7.0475, 14.074 / 14.080 MHz…); tālruņa pulkstenim jābūt precīzam. CW: CW vai USB režīms, CW signālam. RTTY: USB vai LSB režīms (vismaz 500 Hz josla), RTTY signālam (14.080–14.099 MHz…). FreeDV RADE: USB režīms, RADE signālam (14.236 MHz…); dekodētā runa aizstāj WebSDR skaņu.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	UTC laiks · DT (s) · audio frekvence (Hz) · ziņa (FT8, FT4); UTC laiks · teksts (CW, RTTY)
+Show the latest messages on the main screen	Rādīt pēdējās ziņas galvenajā ekrānā
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} intervāli, {1} ziņas, aizkave {2} s
+listening	klausās
+reversed	apgriezts
+Settings (SET)…	Iestatījumi (SET)…
+CW settings (applied immediately):	CW iestatījumi (lieto uzreiz):
+Automatic tone	Automātisks tonis
+Automatic speed	Automātisks ātrums
+Tone: {0} Hz	Tonis: {0} Hz
+Filter: {0} Hz	Filtrs: {0} Hz
+Speed: {0} WPM	Ātrums: {0} WPM
+Detection threshold: {0} %	Noteikšanas slieksnis: {0} %
+Squelch (signal / noise): ×{0}	Squelch (signāls / troksnis): ×{0}
+Letter gap: {0} dots	Atstarpe starp burtiem: {0} punkti
+Word gap: {0} dots	Atstarpe starp vārdiem: {0} punkti
+Default values	Noklusējuma vērtības
+Filter follows the speed	Filtrs seko ātrumam
+Drift tracking (AFC)	Dreifa sekošana (AFC)
+AGC (fading): {0}	AGC (fadings): {0}
+slow	lēns
+medium	vidējs
+fast	ātrs
+RTTY settings (applied immediately):	RTTY iestatījumi (lieto uzreiz):
+Speed (baud rate)	Ātrums (bodi)
+Shift between the two tones	Nobīde starp diviem toņiem
+Polarity	Polaritāte
+Automatic	Automātiski
+Normal (mark = low tone)	Normāla (mark = zems tonis)
+Reversed	Apgriezta
+Automatic frequency	Automātiska frekvence
+Low tone: {0} Hz	Zems tonis: {0} Hz
+A space returns to letters (UOS)	Atstarpe atgriež pie burtiem (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Pastāvīga parastā klausīšanās; tiklīdz tiek dekodēti FreeDV RADE kadri, skaņa pārslēdzas uz dekodēto runu. Apturēts, kamēr darbojas cits dekodētājs, un atsāk darboties, kad tas apstājas.

@@ -18,7 +18,7 @@ if (-not (Test-Path "$t\sdk\cmdline-tools\latest")) {
 $env:JAVA_HOME = "$t\jdk"; $env:ANDROID_HOME = "$t\sdk"
 $sm = "$t\sdk\cmdline-tools\latest\bin\sdkmanager.bat"
 (1..40 | ForEach-Object { 'y' }) | & $sm --licenses | Out-Null
-& $sm "platforms;android-34" "build-tools;34.0.0" "platform-tools" | Out-Null
+& $sm "platforms;android-34" "build-tools;34.0.0" "platform-tools" "ndk;26.1.10909125" "cmake;3.22.1" | Out-Null   # NDK et CMake : code natif des décodeurs (FT8, FreeDV RADE)
 $sdk = ("$t\sdk").Replace('\', '\\').Replace(':', '\:')
 "sdk.dir=$sdk" | Set-Content "$root\local.properties"
 'Chaine installee. (les dossiers jdk-tmp, g-tmp et c-tmp, s''ils restent, peuvent etre supprimes)'

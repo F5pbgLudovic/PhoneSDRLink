@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	Avsluta appen
 Quit PhoneSDRLink? The sound and the scan stop.	Avsluta PhoneSDRLink? Ljudet och skanningen stoppas.
 Quit	Avsluta
+FT8 / FreeDV decoder…	FT8-/FreeDV-avkodare…
+Decoder	Avkodare
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR-ljudet analyseras löpande, även när det är avstängt. FT8: USB- eller DATA-läge, på en FT8-frekvens (7.074, 14.074 MHz…); telefonens klocka måste vara exakt. FreeDV RADE: USB-läge, på en RADE-signal (14.236 MHz…); det avkodade talet ersätter WebSDR-ljudet.
+UTC time · DT (s) · audio frequency (Hz) · message	UTC-tid · DT (s) · ljudfrekvens (Hz) · meddelande
+Starting…	Startar…
+FT8: listening	FT8: lyssnar
+Decoder not available on this phone	Avkodaren finns inte på den här telefonen
+Decoder stopped	Avkodare stoppad
+No sound to decode in this page	Inget ljud att avkoda på den här sidan
+FreeDV RADE needs a 64-bit phone	FreeDV RADE kräver en 64-bitars telefon
+in sync (SNR {0} dB)	synkroniserad (SNR {0} dB)
+signal lost	signal förlorad
+in sync	synkroniserad
+offset	förskjutning
+searching for the signal…	söker efter signalen…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} perioder, {1} meddelanden, fördröjning {2} s
+Stop	Stopp
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	FT8-/FT4-/CW-/RTTY-/FreeDV-avkodare…
+Decoder colours (the two FT8 / FT4 periods):	Avkodarens färger (de två FT8-/FT4-perioderna):
+Decoder: period 1	Avkodare: period 1
+Decoder: period 2	Avkodare: period 2
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR-ljudet analyseras löpande, även när det är avstängt. FT8 / FT4: USB- eller DATA-läge, på en FT8- eller FT4-frekvens (7.074 / 7.0475, 14.074 / 14.080 MHz…); telefonens klocka måste vara exakt. CW: CW- eller USB-läge, på en CW-signal. RTTY: USB- eller LSB-läge (minst 500 Hz bandbredd), på en RTTY-signal (14.080 till 14.099 MHz…). FreeDV RADE: USB-läge, på en RADE-signal (14.236 MHz…); det avkodade talet ersätter WebSDR-ljudet.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	UTC-tid · DT (s) · ljudfrekvens (Hz) · meddelande (FT8, FT4); UTC-tid · text (CW, RTTY)
+Show the latest messages on the main screen	Visa de senaste meddelandena på huvudskärmen
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} perioder, {1} meddelanden, fördröjning {2} s
+listening	lyssnar
+reversed	inverterad
+Settings (SET)…	Inställningar (SET)…
+CW settings (applied immediately):	CW-inställningar (används direkt):
+Automatic tone	Automatisk ton
+Automatic speed	Automatisk hastighet
+Tone: {0} Hz	Ton: {0} Hz
+Filter: {0} Hz	Filter: {0} Hz
+Speed: {0} WPM	Hastighet: {0} WPM
+Detection threshold: {0} %	Detekteringströskel: {0} %
+Squelch (signal / noise): ×{0}	Squelch (signal / brus): ×{0}
+Letter gap: {0} dots	Bokstavsmellanrum: {0} punkter
+Word gap: {0} dots	Ordmellanrum: {0} punkter
+Default values	Standardvärden
+Filter follows the speed	Filtret följer hastigheten
+Drift tracking (AFC)	Driftföljning (AFC)
+AGC (fading): {0}	AGC (fädning): {0}
+slow	långsam
+medium	medel
+fast	snabb
+RTTY settings (applied immediately):	RTTY-inställningar (används direkt):
+Speed (baud rate)	Hastighet (baud)
+Shift between the two tones	Skift mellan de två tonerna
+Polarity	Polaritet
+Automatic	Automatisk
+Normal (mark = low tone)	Normal (mark = låg ton)
+Reversed	Omvänd
+Automatic frequency	Automatisk frekvens
+Low tone: {0} Hz	Låg ton: {0} Hz
+A space returns to letters (UOS)	Mellanslag återgår till bokstäver (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Vanlig lyssning hela tiden; så fort FreeDV RADE-ramar avkodas växlar ljudet till det avkodade talet. Pausas medan en annan avkodare är aktiv och återupptas när den stoppar.

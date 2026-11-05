@@ -536,3 +536,59 @@ Earphone or headset button: stops the scan, then starts it again; a double press
 Quit the app	Kilépés az alkalmazásból
 Quit PhoneSDRLink? The sound and the scan stop.	Kilép a PhoneSDRLinkből? A hang és a pásztázás leáll.
 Quit	Kilépés
+FT8 / FreeDV decoder…	FT8 / FreeDV dekóder…
+Decoder	Dekóder
+Analyses the WebSDR sound continuously, even when muted. FT8: USB or DATA mode, on an FT8 frequency (7.074, 14.074 MHz…); the phone clock must be accurate. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	A WebSDR hangját folyamatosan elemzi, némítva is. FT8: USB vagy DATA mód, FT8 frekvencián (7.074, 14.074 MHz…); a telefon óráját pontosan kell tartani. FreeDV RADE: USB mód, RADE jelen (14.236 MHz…); a dekódolt beszéd felváltja a WebSDR hangját.
+UTC time · DT (s) · audio frequency (Hz) · message	UTC idő · DT (s) · hangfrekvencia (Hz) · üzenet
+Starting…	Indítás…
+FT8: listening	FT8: figyel
+Decoder not available on this phone	A dekóder nem érhető el ezen a telefonon
+Decoder stopped	Dekóder leállítva
+No sound to decode in this page	Ezen az oldalon nincs dekódolható hang
+FreeDV RADE needs a 64-bit phone	A FreeDV RADE 64 bites telefont igényel
+in sync (SNR {0} dB)	szinkronban (SNR {0} dB)
+signal lost	a jel elveszett
+in sync	szinkronban
+offset	eltérés
+searching for the signal…	jel keresése…
+FT8: {0} slots, {1} messages, delay {2} s	FT8: {0} időszelet, {1} üzenet, késés {2} s
+Stop	Állj
+FT8 / FT4 / CW / RTTY / FreeDV decoder…	FT8 / FT4 / CW / RTTY / FreeDV dekóder…
+Decoder colours (the two FT8 / FT4 periods):	A dekóder színei (a két FT8 / FT4 időszak):
+Decoder: period 1	Dekóder: 1. időszak
+Decoder: period 2	Dekóder: 2. időszak
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	A WebSDR hangját folyamatosan elemzi, némítva is. FT8 / FT4: USB vagy DATA mód, FT8 vagy FT4 frekvencián (7.074 / 7.0475, 14.074 / 14.080 MHz…); a telefon óráját pontosan kell tartani. CW: CW vagy USB mód, CW jelen. RTTY: USB vagy LSB mód (legalább 500 Hz sávszélesség), RTTY jelen (14.080–14.099 MHz…). FreeDV RADE: USB mód, RADE jelen (14.236 MHz…); a dekódolt beszéd felváltja a WebSDR hangját.
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY)	UTC idő · DT (s) · hangfrekvencia (Hz) · üzenet (FT8, FT4); UTC idő · szöveg (CW, RTTY)
+Show the latest messages on the main screen	Az utolsó üzenetek megjelenítése a főképernyőn
+{3}: {0} slots, {1} messages, delay {2} s	{3}: {0} időszelet, {1} üzenet, késés {2} s
+listening	figyel
+reversed	fordított
+Settings (SET)…	Beállítások (SET)…
+CW settings (applied immediately):	CW beállítások (azonnal érvényesek):
+Automatic tone	Automatikus hang
+Automatic speed	Automatikus sebesség
+Tone: {0} Hz	Hang: {0} Hz
+Filter: {0} Hz	Szűrő: {0} Hz
+Speed: {0} WPM	Sebesség: {0} WPM
+Detection threshold: {0} %	Érzékelési küszöb: {0} %
+Squelch (signal / noise): ×{0}	Squelch (jel / zaj): ×{0}
+Letter gap: {0} dots	Betűköz: {0} pont
+Word gap: {0} dots	Szóköz: {0} pont
+Default values	Alapértékek
+Filter follows the speed	A szűrő követi a sebességet
+Drift tracking (AFC)	Sodródás követése (AFC)
+AGC (fading): {0}	AGC (fading): {0}
+slow	lassú
+medium	közepes
+fast	gyors
+RTTY settings (applied immediately):	RTTY beállítások (azonnal érvényesek):
+Speed (baud rate)	Sebesség (baud)
+Shift between the two tones	Eltolás a két hang között
+Polarity	Polaritás
+Automatic	Automatikus
+Normal (mark = low tone)	Normál (mark = mély hang)
+Reversed	Fordított
+Automatic frequency	Automatikus frekvencia
+Low tone: {0} Hz	Mély hang: {0} Hz
+A space returns to letters (UOS)	A szóköz visszavált betűkre (UOS)
+Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Folyamatos normál hallgatás; amint FreeDV RADE keretek dekódolódnak, a hang a dekódolt beszédre vált. Szünetel, amíg másik dekóder aktív, és újraindul, amint az leáll.
