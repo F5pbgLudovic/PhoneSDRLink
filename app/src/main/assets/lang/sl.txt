@@ -592,3 +592,30 @@ Automatic frequency	Samodejna frekvenca
 Low tone: {0} Hz	Nizek ton: {0} Hz
 A space returns to letters (UOS)	Presledek vrne na črke (UOS)
 Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Stalno običajno poslušanje; takoj ko se dekodirajo okvirji FreeDV RADE, se zvok preklopi na dekodiran govor. Začasno ustavljeno, medtem ko je aktiven drug dekoder, in nadaljevano, ko se ta ustavi.
+Audio frequency: {0} Hz	Zvočna frekvenca: {0} Hz
+Automatic frequency (strongest signal)	Samodejna frekvenca (najmočnejši signal)
+Bottom of the screen	Spodnji del zaslona
+Cut the sound in:	Izklopi zvok čez:
+FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…	Dekoder FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV…
+Folder: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV	Mapa: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV
+No application can open the folder: look in Pictures › PhoneSDRLink	Nobena aplikacija ne more odpreti mape: poglejte v Pictures › PhoneSDRLink
+Open the folder of saved pictures	Odpri mapo shranjenih slik
+PSK31 settings (applied immediately):	Nastavitve PSK31 (uveljavljene takoj):
+SSTV image saved: 	Slika SSTV shranjena:
+Save the pictures automatically (Pictures › PhoneSDRLink)	Slike shranjuj samodejno (Pictures › PhoneSDRLink)
+Speed	Hitrost
+Squelch (phase coherence): {0} %	Squelch (fazna koherenca): {0} %
+The recording in progress stops and the application closes in:	Snemanje v teku se ustavi in aplikacija se zapre čez:
+The sound will be cut in {0} min; the recording will stop and the application close in {1} min	Zvok bo izklopljen čez {0} min; snemanje se bo ustavilo in aplikacija se bo zaprla čez {1} min
+Top of the screen	Zgornji del zaslona
+Tuning bar	Vrstica za uglaševanje
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY, PSK31); UTC time · picture mode (SSTV)	Čas UTC · DT (s) · zvočna frekvenca (Hz) · sporočilo (FT8, FT4); čas UTC · besedilo (CW, RTTY, PSK31); čas UTC · način slike (SSTV)
+could not save	shranjevanje ni uspelo
+image complete	slika popolna
+image saved: 	slika shranjena:
+listening at %.0f Hz	poslušanje na %.0f Hz
+searching for a signal…	iskanje signala…
+signal at %.0f Hz	signal na %.0f Hz
+too short, not saved	prekratko, ni shranjeno
+unsupported mode (VIS %d)	nepodprt način (VIS %d)
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). PSK31: USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…), the audio frequency is found automatically. SSTV: USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the mode is recognised automatically, the picture is shown and saved when it ends. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Zvok WebSDR se neprestano analizira, tudi ko je utišan. FT8 / FT4: način USB ali DATA, na frekvenci FT8 ali FT4 (7,074 / 7,0475, 14,074 / 14,080 MHz…); ura telefona mora biti točna. CW: način CW ali USB, na signalu CW. RTTY: način USB ali LSB (pasovna širina vsaj 500 Hz), na signalu RTTY (14,080 do 14,099 MHz…). PSK31: način USB, na signalu PSK31 (14,070, 7,035, 3,580 MHz…), zvočna frekvenca se najde samodejno. SSTV: način USB (pasovna širina vsaj 2,4 kHz), na frekvenci SSTV (14,230, 7,033, 3,730 MHz…); način se prepozna samodejno, slika se prikaže in ob koncu shrani. FreeDV RADE: način USB, na signalu RADE (14,236 MHz…); dekodirani govor nadomesti zvok WebSDR.

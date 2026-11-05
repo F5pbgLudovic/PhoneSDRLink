@@ -592,3 +592,30 @@ Automatic frequency	Automaatne sagedus
 Low tone: {0} Hz	Madal toon: {0} Hz
 A space returns to letters (UOS)	Tühik viib tagasi tähtedele (UOS)
 Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Pidevalt tavaline kuulamine; niipea kui FreeDV RADE kaadreid dekodeeritakse, lülitub heli dekodeeritud kõnele. Peatatud, kuni mõni teine dekooder töötab, ja jätkub, kui see peatub.
+Audio frequency: {0} Hz	Helisagedus: {0} Hz
+Automatic frequency (strongest signal)	Automaatne sagedus (tugevaim signaal)
+Bottom of the screen	Ekraani alaosa
+Cut the sound in:	Vaigista heli:
+FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…	FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV dekooder…
+Folder: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV	Kaust: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV
+No application can open the folder: look in Pictures › PhoneSDRLink	Ükski rakendus ei saa kausta avada: vaadake kausta Pictures › PhoneSDRLink
+Open the folder of saved pictures	Ava salvestatud piltide kaust
+PSK31 settings (applied immediately):	PSK31 seaded (rakendatakse kohe):
+SSTV image saved: 	SSTV pilt salvestatud:
+Save the pictures automatically (Pictures › PhoneSDRLink)	Salvesta pildid automaatselt (Pictures › PhoneSDRLink)
+Speed	Kiirus
+Squelch (phase coherence): {0} %	Squelch (faasikoherentsus): {0} %
+The recording in progress stops and the application closes in:	Käimasolev salvestus peatub ja rakendus sulgub:
+The sound will be cut in {0} min; the recording will stop and the application close in {1} min	Heli vaigistatakse {0} min pärast; salvestus peatub ja rakendus sulgub {1} min pärast
+Top of the screen	Ekraani ülaosa
+Tuning bar	Häälestusriba
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY, PSK31); UTC time · picture mode (SSTV)	UTC aeg · DT (s) · helisagedus (Hz) · sõnum (FT8, FT4); UTC aeg · tekst (CW, RTTY, PSK31); UTC aeg · pildirežiim (SSTV)
+could not save	salvestamine ebaõnnestus
+image complete	pilt täielik
+image saved: 	pilt salvestatud:
+listening at %.0f Hz	kuulamine sagedusel %.0f Hz
+searching for a signal…	signaali otsimine…
+signal at %.0f Hz	signaal sagedusel %.0f Hz
+too short, not saved	liiga lühike, ei salvestatud
+unsupported mode (VIS %d)	toetamata režiim (VIS %d)
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). PSK31: USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…), the audio frequency is found automatically. SSTV: USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the mode is recognised automatically, the picture is shown and saved when it ends. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR-i heli analüüsitakse pidevalt, ka siis, kui see on vaigistatud. FT8 / FT4: režiim USB või DATA, FT8 või FT4 sagedusel (7,074 / 7,0475, 14,074 / 14,080 MHz…); telefoni kell peab olema täpne. CW: režiim CW või USB, CW-signaalil. RTTY: režiim USB või LSB (ribalaius vähemalt 500 Hz), RTTY-signaalil (14,080 kuni 14,099 MHz…). PSK31: režiim USB, PSK31-signaalil (14,070, 7,035, 3,580 MHz…), helisagedus leitakse automaatselt. SSTV: režiim USB (ribalaius vähemalt 2,4 kHz), SSTV sagedusel (14,230, 7,033, 3,730 MHz…); režiim tuvastatakse automaatselt, pilt kuvatakse ja salvestatakse lõpus. FreeDV RADE: režiim USB, RADE-signaalil (14,236 MHz…); dekodeeritud kõne asendab WebSDR-i heli.

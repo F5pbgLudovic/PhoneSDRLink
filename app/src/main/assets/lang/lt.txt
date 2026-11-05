@@ -592,3 +592,30 @@ Automatic frequency	Automatinis dažnis
 Low tone: {0} Hz	Žemas tonas: {0} Hz
 A space returns to letters (UOS)	Tarpas grąžina į raides (UOS)
 Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Nuolat įprastas klausymas; kai tik dekoduojami FreeDV RADE kadrai, garsas persijungia į dekoduotą kalbą. Pristabdoma, kol veikia kitas dekoderis, ir atnaujinama jam sustojus.
+Audio frequency: {0} Hz	Garso dažnis: {0} Hz
+Automatic frequency (strongest signal)	Automatinis dažnis (stipriausias signalas)
+Bottom of the screen	Ekrano apačia
+Cut the sound in:	Nutildyti garsą po:
+FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…	FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV dekoderis…
+Folder: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV	Aplankas: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV
+No application can open the folder: look in Pictures › PhoneSDRLink	Jokia programa negali atidaryti aplanko: ieškokite Pictures › PhoneSDRLink
+Open the folder of saved pictures	Atidaryti išsaugotų paveikslėlių aplanką
+PSK31 settings (applied immediately):	PSK31 nustatymai (taikomi iš karto):
+SSTV image saved: 	SSTV paveikslėlis išsaugotas:
+Save the pictures automatically (Pictures › PhoneSDRLink)	Automatiškai išsaugoti paveikslėlius (Pictures › PhoneSDRLink)
+Speed	Greitis
+Squelch (phase coherence): {0} %	Squelch (fazių koherencija): {0} %
+The recording in progress stops and the application closes in:	Vykstantis įrašymas sustos, o programa užsidarys po:
+The sound will be cut in {0} min; the recording will stop and the application close in {1} min	Garsas bus nutildytas po {0} min; įrašymas sustos, o programa užsidarys po {1} min
+Top of the screen	Ekrano viršus
+Tuning bar	Derinimo juosta
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY, PSK31); UTC time · picture mode (SSTV)	UTC laikas · DT (s) · garso dažnis (Hz) · pranešimas (FT8, FT4); UTC laikas · tekstas (CW, RTTY, PSK31); UTC laikas · vaizdo režimas (SSTV)
+could not save	nepavyko išsaugoti
+image complete	paveikslėlis baigtas
+image saved: 	paveikslėlis išsaugotas:
+listening at %.0f Hz	klausoma %.0f Hz dažniu
+searching for a signal…	ieškoma signalo…
+signal at %.0f Hz	signalas %.0f Hz dažniu
+too short, not saved	per trumpas, neišsaugota
+unsupported mode (VIS %d)	nepalaikomas režimas (VIS %d)
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). PSK31: USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…), the audio frequency is found automatically. SSTV: USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the mode is recognised automatically, the picture is shown and saved when it ends. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR garsas analizuojamas nuolat, net ir nutildytas. FT8 / FT4: USB arba DATA režimas, FT8 ar FT4 dažniu (7,074 / 7,0475, 14,074 / 14,080 MHz…); telefono laikrodis turi būti tikslus. CW: CW arba USB režimas, CW signalu. RTTY: USB arba LSB režimas (bent 500 Hz juostos plotis), RTTY signalu (nuo 14,080 iki 14,099 MHz…). PSK31: USB režimas, PSK31 signalu (14,070, 7,035, 3,580 MHz…), garso dažnis randamas automatiškai. SSTV: USB režimas (bent 2,4 kHz juostos plotis), SSTV dažniu (14,230, 7,033, 3,730 MHz…); režimas atpažįstamas automatiškai, paveikslėlis parodomas ir pabaigoje išsaugomas. FreeDV RADE: USB režimas, RADE signalu (14,236 MHz…); dekoduota kalba pakeičia WebSDR garsą.

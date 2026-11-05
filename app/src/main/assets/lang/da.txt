@@ -592,3 +592,30 @@ Automatic frequency	Automatisk frekvens
 Low tone: {0} Hz	Lav tone: {0} Hz
 A space returns to letters (UOS)	Mellemrum vender tilbage til bogstaver (UOS)
 Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.	Normal lytning hele tiden; så snart FreeDV RADE-rammer dekodes, skifter lyden til den dekodede tale. Sat på pause, mens en anden dekoder er aktiv, og genoptaget, når den stopper.
+Audio frequency: {0} Hz	Audiofrekvens: {0} Hz
+Automatic frequency (strongest signal)	Automatisk frekvens (kraftigste signal)
+Bottom of the screen	Nederst på skærmen
+Cut the sound in:	Sluk for lyden om:
+FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…	FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV-dekoder…
+Folder: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV	Mappe: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV
+No application can open the folder: look in Pictures › PhoneSDRLink	Ingen app kan åbne mappen: se i Pictures › PhoneSDRLink
+Open the folder of saved pictures	Åbn mappen med gemte billeder
+PSK31 settings (applied immediately):	PSK31-indstillinger (anvendes med det samme):
+SSTV image saved: 	SSTV-billede gemt:
+Save the pictures automatically (Pictures › PhoneSDRLink)	Gem billederne automatisk (Pictures › PhoneSDRLink)
+Speed	Hastighed
+Squelch (phase coherence): {0} %	Squelch (fasekohærens): {0} %
+The recording in progress stops and the application closes in:	Den igangværende optagelse stopper, og appen lukker om:
+The sound will be cut in {0} min; the recording will stop and the application close in {1} min	Lyden slukkes om {0} min; optagelsen stopper, og appen lukker om {1} min
+Top of the screen	Øverst på skærmen
+Tuning bar	Indstillingslinje
+UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY, PSK31); UTC time · picture mode (SSTV)	UTC-tid · DT (s) · audiofrekvens (Hz) · besked (FT8, FT4); UTC-tid · tekst (CW, RTTY, PSK31); UTC-tid · billedtilstand (SSTV)
+could not save	kunne ikke gemmes
+image complete	billedet er komplet
+image saved: 	billede gemt:
+listening at %.0f Hz	lytter på %.0f Hz
+searching for a signal…	søger efter et signal…
+signal at %.0f Hz	signal på %.0f Hz
+too short, not saved	for kort, ikke gemt
+unsupported mode (VIS %d)	tilstanden understøttes ikke (VIS %d)
+The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). PSK31: USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…), the audio frequency is found automatically. SSTV: USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the mode is recognised automatically, the picture is shown and saved when it ends. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR-lyden analyseres hele tiden, også når den er slået fra. FT8 / FT4: tilstand USB eller DATA, på en FT8- eller FT4-frekvens (7,074 / 7,0475, 14,074 / 14,080 MHz…); telefonens ur skal gå rigtigt. CW: tilstand CW eller USB, på et CW-signal. RTTY: tilstand USB eller LSB (mindst 500 Hz båndbredde), på et RTTY-signal (14,080 til 14,099 MHz…). PSK31: tilstand USB, på et PSK31-signal (14,070, 7,035, 3,580 MHz…), audiofrekvensen findes automatisk. SSTV: tilstand USB (mindst 2,4 kHz båndbredde), på en SSTV-frekvens (14,230, 7,033, 3,730 MHz…); tilstanden genkendes automatisk, billedet vises og gemmes, når det er slut. FreeDV RADE: tilstand USB, på et RADE-signal (14,236 MHz…); den afkodede tale erstatter WebSDR-lyden.

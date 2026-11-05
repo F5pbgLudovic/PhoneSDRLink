@@ -221,6 +221,8 @@ final class Store {
     boolean cwAfc = true, cwAutoBw = true;
     int rttyBaud = 0, rttyShift = 0, rttyPol = 0, rttySq = 15, rttyFreq = 0;   // réglages du décodeur RTTY (0 = automatique ; débit en centièmes de baud)
     boolean rttyUos = true, rttyAfc = true, freedvAuto;   // freedvAuto : décodeur FreeDV RADE permanent (SET › FreeDV auto)
+    boolean pskAuto = true, pskAfc = true, sstvSave = true;   // PSK31 : fréquence automatique, suivi de dérive ; SSTV : enregistrement automatique des images
+    int pskFreq = 1000, pskBaud = 31, pskSq = 75;             // PSK31 : fréquence audio manuelle (Hz), débit (31 ou 63), squelch (% de cohérence de phase)
     int colBtnBg, colBtnTx, colFreqTx, colFreqBg, colBarFg, colBarBg, colBg, colFt8A, colFt8B;   // couleurs choisies (0 = couleur d'origine)
     int notchLevel = 1, dnrLevel = 1;   // 1 = réglage d'origine, 10 = le plus fort
     String callsign = "PhoneSDRLink";
@@ -310,7 +312,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        notchLevel = 1; dnrLevel = 1; autoReload = false; barBottom = false; zoomLeft = false; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults();
+        notchLevel = 1; dnrLevel = 1; autoReload = false; barBottom = false; zoomLeft = false; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); sstvSave = true;
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
@@ -374,7 +376,7 @@ final class Store {
                 else if (k.equals("PhoneCwAutoTone")) cwAutoTone = !v.trim().equals("0");
                 else if (k.equals("PhoneCwAutoSpeed")) cwAutoSpeed = !v.trim().equals("0");
                 else if (k.equals("PhoneCwTone")) cwTone = Math.max(200, Math.min(1200, toInt(v, 700)));
-                else if (k.equals("PhoneCwBw")) cwBw = Math.max(30, Math.min(400, toInt(v, 80)));
+                else if (k.equals("PhoneCwBw")) cwBw = Math.max(30, Math.min(400, toInt(v, 75)));
                 else if (k.equals("PhoneCwWpm")) cwWpm = Math.max(5, Math.min(60, toInt(v, 18)));
                 else if (k.equals("PhoneCwThr")) cwThr = Math.max(30, Math.min(80, toInt(v, 55)));
                 else if (k.equals("PhoneCwChar")) cwChar = Math.max(15, Math.min(40, toInt(v, 20)));
@@ -391,6 +393,12 @@ final class Store {
                 else if (k.equals("PhoneRttyUos")) rttyUos = !v.trim().equals("0");
                 else if (k.equals("PhoneRttyAfc")) rttyAfc = !v.trim().equals("0");
                 else if (k.equals("PhoneFreeDvAuto")) freedvAuto = v.trim().equals("1");
+                else if (k.equals("PhonePskAuto")) pskAuto = !v.trim().equals("0");
+                else if (k.equals("PhonePskAfc")) pskAfc = !v.trim().equals("0");
+                else if (k.equals("PhonePskFreq")) pskFreq = Math.max(300, Math.min(2900, toInt(v, 1000)));
+                else if (k.equals("PhonePskBaud")) pskBaud = toInt(v, 31) >= 47 ? 63 : 31;
+                else if (k.equals("PhonePskSq")) pskSq = Math.max(60, Math.min(98, toInt(v, 75)));
+                else if (k.equals("PhoneSstvSave")) sstvSave = !v.trim().equals("0");
                 else if (k.equals("PhoneHeadsetStop")) headsetStop = v.trim().equals("1");
                 else if (k.equals("PhoneColBtnBg")) colBtnBg = hexColor(v);
                 else if (k.equals("PhoneColBtnTx")) colBtnTx = hexColor(v);
@@ -477,7 +485,7 @@ final class Store {
         Store t = new Store();
         t.favorites.clear();
         t.parse(text, cats & ~IMP_CONFIG | (cats & IMP_CONFIG));
-        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; callsign = t.callsign; checkUpdates = t.checkUpdates; }
+        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; callsign = t.callsign; checkUpdates = t.checkUpdates; }
         if ((cats & IMP_WEBSDR) != 0) {
             for (int i = 0; i < Favorite.MAX_LISTS; i++) if (!t.favListNames[i].equals("Liste " + (i + 1)) && favListNames[i].equals("Liste " + (i + 1))) favListNames[i] = t.favListNames[i];
             for (Favorite f : t.favorites) {
@@ -538,6 +546,12 @@ final class Store {
         line(sb, "PhoneRttyUos", rttyUos ? 1 : 0);
         line(sb, "PhoneRttyAfc", rttyAfc ? 1 : 0);
         line(sb, "PhoneFreeDvAuto", freedvAuto ? 1 : 0);
+        line(sb, "PhonePskAuto", pskAuto ? 1 : 0);
+        line(sb, "PhonePskAfc", pskAfc ? 1 : 0);
+        line(sb, "PhonePskFreq", pskFreq);
+        line(sb, "PhonePskBaud", pskBaud);
+        line(sb, "PhonePskSq", pskSq);
+        line(sb, "PhoneSstvSave", sstvSave ? 1 : 0);
         line(sb, "PhoneHeadsetStop", headsetStop ? 1 : 0);
         line(sb, "PhoneColBtnBg", String.format("%08X", colBtnBg));
         line(sb, "PhoneColBtnTx", String.format("%08X", colBtnTx));
@@ -587,6 +601,7 @@ final class Store {
 
     void cwDefaults() { cwAutoTone = true; cwAutoSpeed = true; cwTone = 700; cwBw = 80; cwWpm = 18; cwThr = 55; cwChar = 20; cwWord = 50; cwSq = 5; cwAgc = 1; cwAfc = true; cwAutoBw = true; }
     void rttyDefaults() { rttyBaud = 0; rttyShift = 0; rttyPol = 0; rttySq = 15; rttyFreq = 0; rttyUos = true; rttyAfc = true; }
+    void pskDefaults() { pskAuto = true; pskAfc = true; pskFreq = 1000; pskBaud = 31; pskSq = 75; }
 
     static int hexColor(String v) { try { return (int) Long.parseLong(v.trim(), 16); } catch (Exception e) { return 0; } }
     static void line(StringBuilder sb, String k, Object v) { sb.append(k).append('=').append(v).append("\r\n"); }

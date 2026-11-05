@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioAttributes;
@@ -33,6 +34,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -125,6 +127,7 @@ public class MainActivity extends Activity {
         if (getIntent() != null && getIntent().getStringExtra("radewav") != null) radeSelfTest(getIntent().getStringExtra("radewav"));
         if (getIntent() != null && getIntent().getStringExtra("radeeng") != null) radeEngineTest(getIntent().getStringExtra("radeeng"));
         if (getIntent() != null && getIntent().getStringExtra("dectest") != null) decSelfTest(getIntent().getStringExtra("dectest"));
+        if (getIntent() != null && getIntent().getStringExtra("decwav") != null) decWavTest(getIntent().getStringExtra("decwav"));
         setupWeb();
         refreshAll();
         if (Ui.reopenColors) { Ui.reopenColors = false; h.post(new Runnable() { public void run() { DlgSettings.showColors(MainActivity.this); } }); }
@@ -341,6 +344,11 @@ public class MainActivity extends Activity {
         decOverlayView.setPadding(Ui.dp(this, 4), Ui.dp(this, 2), Ui.dp(this, 4), Ui.dp(this, 2));
         decOverlayView.setVisibility(View.GONE);
         decOverlayView.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { if (!blocked()) DlgDecoder.show(MainActivity.this); } });
+        sstvOverlay = new ImageView(this);
+        sstvOverlay.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        sstvOverlay.setBackgroundColor(0xB0000000);
+        sstvOverlay.setVisibility(View.GONE);
+        sstvOverlay.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { if (!blocked()) DlgDecoder.show(MainActivity.this); } });
         holdThen(plus, new Runnable() { public void run() { chooseZoomSide(); } });
         holdThen(minus, new Runnable() { public void run() { chooseZoomSide(); } });
         right = new LinearLayout(this);
@@ -402,7 +410,7 @@ public class MainActivity extends Activity {
     }
 
     void chooseBarPlace() {
-        Ui.choose(this, Lang.T("Barre de réglage", "Tuning bar"), new String[] { Lang.T("Haut (où elle est)", "Top (where it is)"), Lang.T("Bas de l'écran", "Bottom of the screen") }, new Ui.Index() {
+        Ui.choose(this, Lang.T("Barre de réglage", "Tuning bar"), new String[] { Lang.T("Haut de l'écran", "Top of the screen"), Lang.T("Bas de l'écran", "Bottom of the screen") }, new Ui.Index() {
             public void chose(int i) { st.barBottom = i == 1; st.save(); placeBar(); }
         });
     }
@@ -1243,7 +1251,8 @@ public class MainActivity extends Activity {
         items.add(Lang.F("{0} minutes", "{0} minutes", 60));
         items.add(Lang.T("Autre durée (en minutes)…", "Other duration (minutes)…"));
         final int off = armed ? 1 : 0;
-        Ui.choose(this, Lang.T("Couper le son et fermer l'application dans :", "Cut the sound and close the application in:"), items.toArray(new String[0]), new Ui.Index() {
+        String ttl = recording ? Lang.T("Couper le son dans :", "Cut the sound in:") : Lang.T("Couper le son et fermer l'application dans :", "Cut the sound and close the application in:");
+        Ui.choose(this, ttl, items.toArray(new String[0]), new Ui.Index() {
             public void chose(int i) {
                 if (armed && i == 0) { sleepCancel(); return; }
                 int k = i - off;
@@ -1268,7 +1277,7 @@ public class MainActivity extends Activity {
         items[0] = Lang.F("En même temps que le son ({0} min)", "At the same time as the sound ({0} min)", rec[0]);
         for (int i = 1; i < 4; i++) items[i] = Lang.F("{0} min (après la coupure du son)", "{0} min (after the sound is cut)", rec[i]);
         items[4] = Lang.T("Autre durée (en minutes)…", "Other duration (minutes)…");
-        Ui.choose(this, Lang.T("Le REC en cours s'arrête dans :", "The recording in progress stops in:"), items, new Ui.Index() {
+        Ui.choose(this, Lang.T("Le REC en cours s'arrête et l'application se ferme dans :", "The recording in progress stops and the application closes in:"), items, new Ui.Index() {
             public void chose(int i) {
                 if (i < 4) { sleepSet(m, rec[i]); return; }
                 Ui.input(MainActivity.this, Lang.T("Arrêt du REC dans (minutes)", "Stop the recording in (minutes)"), "min", "", new Ui.Text() {
@@ -1293,7 +1302,7 @@ public class MainActivity extends Activity {
         if (recMin > 0) {
             recStopAt = now + recMin * 60000L;
             h.postDelayed(recStopRun, recMin * 60000L);
-            s += " " + Lang.F("(REC arrêté dans {0} min)", "(recording stopped in {0} min)", recMin);
+            s = Lang.F("Le son sera coupé dans {0} min ; le REC s'arrêtera et l'application se fermera dans {1} min", "The sound will be cut in {0} min; the recording will stop and the application close in {1} min", m, recMin);
         }
         status(s);
         updateButtons();
@@ -1335,7 +1344,7 @@ public class MainActivity extends Activity {
 
     // ------------------------------------------------------------------ décodeurs numériques (FT8, FT4, CW, RTTY, FreeDV RADE)
 
-    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5;
+    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7;
     int decMode;                       // 0 arrêté, sinon DEC_*
     boolean radeVoice;                 // RADE : des trames FreeDV sont décodées, la parole remplace le son du WebSDR
     Ft8Engine ft8;
@@ -1349,7 +1358,7 @@ public class MainActivity extends Activity {
     ScrollView decScroll;
     int decTries;
 
-    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_RADE ? "FreeDV RADE" : ""; }
+    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_RADE ? "FreeDV RADE" : ""; }
     static int decRate(int m) { return (m == DEC_FT8 || m == DEC_FT4) ? Ft8Engine.RATE : 8000; }
 
     android.text.SpannableStringBuilder decSpan(int last) {
@@ -1405,9 +1414,12 @@ public class MainActivity extends Activity {
             if (decScroll != null) decScroll.post(new Runnable() { public void run() { if (decScroll != null) decScroll.fullScroll(View.FOCUS_DOWN); } });
         }
         if (decOverlayView != null) {
-            boolean show = decMode != 0 && decMode != DEC_RADE && st.decOverlay && !decLines.isEmpty();   // FreeDV : pas de lignes devant le spectre (la parole suffit)
+            boolean show = decMode != 0 && decMode != DEC_RADE && decMode != DEC_SSTV && st.decOverlay && !decLines.isEmpty();   // FreeDV : pas de lignes devant le spectre (la parole suffit)
             decOverlayView.setVisibility(show ? View.VISIBLE : View.GONE);
             if (show) decOverlayView.setText(decOverlaySpan());
+        }
+        if (decMode == DEC_SSTV || (sstvOverlay != null && sstvOverlay.getVisibility() == View.VISIBLE)) {
+            sstvShow();
         }
     }
 
@@ -1466,6 +1478,184 @@ public class MainActivity extends Activity {
         if (redo) r.post(new Runnable() { public void run() { r.settingsChanged(); } });
     }
 
+    void applyDecSettings() { applyCwSettings(); applyRttySettings(); applyPskSettings(); }
+
+    // Réglages PSK31 : copiés du stockage vers le moteur (fréquence automatique ou manuelle, AFC, débit, squelch).
+    void applyPskSettings() {
+        if (!(txt instanceof PskEngine)) return;
+        final PskEngine p = (PskEngine) txt;
+        p.autoFreq = st.pskAuto;
+        p.manualFreq = st.pskFreq;
+        p.afc = st.pskAfc;
+        p.baud = st.pskBaud;
+        p.squelch = st.pskSq;
+        p.post(new Runnable() { public void run() { p.settingsChanged(); } });
+    }
+
+    // ---- SSTV : image en cours (bitmap rempli ligne par ligne), incrustation en bas de l'écran principal, enregistrement automatique
+    ImageView sstvOverlay, sstvDlgImg;
+    Bitmap sstvBmp;
+    int[] sstvPx;
+    int sstvW, sstvH, sstvShown;
+    volatile int sstvRows;
+    String sstvName = "", sstvSaved = "";
+    boolean sstvPending;
+
+    final SstvEngine.Images sstvImages = new SstvEngine.Images() {
+        public void begin(final String name, final int w, final int hh, final int[] px) {
+            h.post(new Runnable() { public void run() { if (txt instanceof SstvEngine) sstvBegin(name, w, hh, px); } });
+        }
+        public void rows(int done) {
+            sstvRows = done;
+            if (sstvPending) return;
+            sstvPending = true;
+            h.postDelayed(new Runnable() { public void run() { sstvPending = false; sstvUpdate(); } }, 200);
+        }
+        public void end(final boolean complete, final int rows) {
+            h.post(new Runnable() { public void run() { sstvEnd(complete, rows); } });
+        }
+    };
+
+    void sstvBegin(String name, int w, int hh, int[] px) {
+        sstvName = name; sstvPx = px; sstvW = w; sstvH = hh; sstvShown = 0; sstvRows = 0;
+        sstvBmp = Bitmap.createBitmap(w, hh, Bitmap.Config.ARGB_8888);
+        sstvBmp.eraseColor(0xFF202020);
+        decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  " + name + " (" + w + "×" + hh + ")", 0);
+        decRefresh();
+        sstvShow();
+    }
+
+    void sstvUpdate() {
+        if (sstvBmp == null || sstvPx == null) return;
+        int done = Math.min(sstvRows, sstvH);
+        if (done > sstvShown) { sstvBmp.setPixels(sstvPx, sstvShown * sstvW, sstvW, 0, sstvShown, sstvW, done - sstvShown); sstvShown = done; }
+        sstvShow();
+    }
+
+    // Met l'image dans la fenêtre du décodeur et dans l'incrustation de l'écran principal (petit format, à la place du texte).
+    void sstvShow() {
+        if (sstvDlgImg != null && sstvBmp != null) sstvDlgImg.setImageBitmap(sstvBmp);
+        if (sstvOverlay == null) return;
+        boolean show = decMode == DEC_SSTV && st.decOverlay && sstvBmp != null;
+        sstvOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (!show) return;
+        int fw = webFrame != null ? webFrame.getWidth() : 0, fh = webFrame != null ? webFrame.getHeight() : 0;
+        if (fw <= 0 || fh <= 0) { fw = getResources().getDisplayMetrics().widthPixels; fh = getResources().getDisplayMetrics().heightPixels / 2; }
+        float k = Math.min((fw * 0.42f) / sstvW, (fh * 0.42f) / sstvH);
+        FrameLayout.LayoutParams p = (FrameLayout.LayoutParams) sstvOverlay.getLayoutParams();
+        if (p != null) {
+            int nw = Math.max(1, (int) (sstvW * k)), nh = Math.max(1, (int) (sstvH * k));
+            if (p.width != nw || p.height != nh) { p.width = nw; p.height = nh; sstvOverlay.setLayoutParams(p); }
+        }
+        sstvOverlay.setImageBitmap(sstvBmp);
+    }
+
+    void sstvEnd(boolean complete, int rows) {
+        sstvRows = rows;
+        sstvUpdate();
+        if (sstvBmp == null) return;
+        if (!st.sstvSave || rows < 16) {
+            decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  " + (complete ? Lang.T("image terminée", "image complete") : Lang.T("signal perdu", "signal lost")) + (rows < 16 ? " — " + Lang.T("trop courte, non enregistrée", "too short, not saved") : ""), 0);
+            decRefresh();
+            return;
+        }
+        final Bitmap b = rows < sstvH ? Bitmap.createBitmap(sstvBmp, 0, 0, sstvW, rows) : sstvBmp.copy(Bitmap.Config.ARGB_8888, false);
+        final String nm = sstvName;
+        final boolean comp = complete;
+        new Thread(new Runnable() {
+            public void run() {
+                final String res = saveSstv(b, nm, comp);
+                h.post(new Runnable() {
+                    public void run() {
+                        sstvSaved = res == null ? "" : res;
+                        decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  " + (res == null ? Lang.T("enregistrement impossible", "could not save") : Lang.T("image enregistrée : ", "image saved: ") + res), 0);
+                        decRefresh();
+                        if (res != null) Ui.toast(MainActivity.this, Lang.T("Image SSTV enregistrée : ", "SSTV image saved: ") + res);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    // Enregistre l'image en PNG dans Images/PhoneSDRLink (Android 10 et plus : galerie, sans permission) ou, plus ancien, dans le dossier
+    // de l'application (Android/data/…/files/Pictures/SSTV). Renvoie le nom du fichier, ou null.
+    String saveSstv(Bitmap b, String mode, boolean complete) {
+        String fn = "SSTV_" + mode.replace(" ", "") + "_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(new java.util.Date()) + (complete ? "" : "_partiel") + ".png";
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= 29) {
+                android.content.ContentValues cv = new android.content.ContentValues();
+                cv.put(android.provider.MediaStore.Images.Media.DISPLAY_NAME, fn);
+                cv.put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/png");
+                cv.put(android.provider.MediaStore.Images.Media.RELATIVE_PATH, "Pictures/PhoneSDRLink");
+                android.net.Uri u = getContentResolver().insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+                if (u == null) return null;
+                java.io.OutputStream os = getContentResolver().openOutputStream(u);
+                b.compress(Bitmap.CompressFormat.PNG, 100, os);
+                os.close();
+            } else {
+                java.io.File d = new java.io.File(getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES), "SSTV");
+                d.mkdirs();
+                java.io.FileOutputStream os = new java.io.FileOutputStream(new java.io.File(d, fn));
+                b.compress(Bitmap.CompressFormat.PNG, 100, os);
+                os.close();
+            }
+            return fn;
+        } catch (Exception e) { return null; }
+    }
+
+    // Lien vers le dossier des images enregistrées : le gestionnaire de fichiers s'il sait ouvrir ce dossier, sinon la galerie.
+    void openSstvFolder() {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= 29) {
+                try {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setDataAndType(android.net.Uri.parse("content://com.android.externalstorage.documents/document/primary%3APictures%2FPhoneSDRLink"), "vnd.android.document/directory");
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                    return;
+                } catch (Exception e) { }
+                Intent g = new Intent(Intent.ACTION_VIEW, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                g.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(g);
+            } else {
+                Ui.toast(this, Lang.T("Dossier : Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV", "Folder: Android/data/fr.f5pbg.phonesdrlink/files/Pictures/SSTV"));
+            }
+        } catch (Exception e) {
+            Ui.toast(this, Lang.T("Aucune application pour ouvrir le dossier : cherchez Images › PhoneSDRLink", "No application can open the folder: look in Pictures › PhoneSDRLink"));
+        }
+    }
+
+    // Essai PSK31 / SSTV sur un fichier WAV (8 kHz, 16 bits, mono) injecté à la place du son de la page :
+    // am start … --es decwav psk:/chemin/fichier.wav  ou  sstv:/chemin/fichier.wav  (résultat dans la fenêtre du décodeur et dans logcat, étiquette PSDR).
+    void decWavTest(final String spec) {
+        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : DEC_PSK;
+        final String path = spec.substring(spec.indexOf(':') + 1);
+        h.postDelayed(new Runnable() {
+            public void run() {
+                decoderStart(mode);
+                if (txt == null) return;
+                js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();");
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            java.io.RandomAccessFile f = new java.io.RandomAccessFile(path, "r");
+                            f.seek(44);
+                            byte[] buf = new byte[3200];
+                            int r;
+                            while ((r = f.read(buf)) > 0) {
+                                if (txt == null) break;
+                                txt.feedBytes(buf.clone(), r);
+                                Thread.sleep(4);
+                            }
+                            f.close();
+                            android.util.Log.i("PSDR", "DECWAV fin");
+                        } catch (Throwable t) { android.util.Log.i("PSDR", "DECWAV erreur " + t); }
+                    }
+                }).start();
+            }
+        }, 3000);
+    }
+
     void decSetStatus(String s) { decStatus = s; if (decState != null) decState.setText(s); }
 
     void placeDecOverlay() {
@@ -1475,6 +1665,13 @@ public class MainActivity extends Activity {
         int side = Ui.dp(this, 72), m = Ui.dp(this, 4);   // on laisse la place aux boutons INIT, + et −
         p.setMargins(st.zoomLeft ? side : m, 0, st.zoomLeft ? m : side, st.barBottom ? Ui.dp(this, 28) : m);
         webFrame.addView(decOverlayView, p);
+        if (sstvOverlay != null) {
+            if (sstvOverlay.getParent() != null) ((ViewGroup) sstvOverlay.getParent()).removeView(sstvOverlay);
+            FrameLayout.LayoutParams q = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.START);
+            q.setMargins(p.leftMargin, 0, p.rightMargin, p.bottomMargin);
+            webFrame.addView(sstvOverlay, q);
+            sstvShow();
+        }
     }
 
     // FreeDV auto (SET) : le décodeur FreeDV RADE tourne en permanence pendant l'écoute classique (radeAuto) ; il est suspendu tant qu'un
@@ -1525,11 +1722,13 @@ public class MainActivity extends Activity {
                 public void onText(final String s) { h.post(new Runnable() { public void run() { if (txt != null) decAppendText(s); } }); }   // le calcul se fait dans un fil à part
                 public void onStatus(final String s) { h.post(new Runnable() { public void run() { if (txt != null) decSetStatus(s); } }); }
             };
-            txt = mode == DEC_CW ? new CwEngine(l) : new RttyEngine(l);
+            txt = mode == DEC_CW ? new CwEngine(l) : mode == DEC_PSK ? new PskEngine(l) : mode == DEC_SSTV ? new SstvEngine(l, sstvImages) : new RttyEngine(l);
             applyCwSettings();
             applyRttySettings();
+            applyPskSettings();
         }
         decMode = mode;
+        sstvShow();
         applyVolume();   // en RADE, le son brut du WebSDR est coupé : on entend la parole décodée
         decStartJs();
     }
@@ -1542,10 +1741,12 @@ public class MainActivity extends Activity {
         if (rade != null) { rade.stop(); rade = null; }
         radeVoice = false;
         radeAuto = false;
+        if (txt instanceof SstvEngine && ((SstvEngine) txt).img != null) sstvEnd(false, sstvRows);   // image interrompue : on garde ce qui est reçu
         if (txt != null) { txt.shutdown(); txt = null; }
         if (web != null) { js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();"); applyVolume(); }
         if (was && message) decSetStatus(Lang.T("Décodeur arrêté", "Decoder stopped"));
         if (decOverlayView != null) decOverlayView.setVisibility(View.GONE);
+        sstvShow();
     }
 
     void decStartJs() {

@@ -34,7 +34,7 @@ final class DlgSettings {
         ver.setBackground(Ui.round(0xFF1B2128, 10, a));
         ver.setPadding(Ui.dp(a, 12), Ui.dp(a, 8), Ui.dp(a, 12), Ui.dp(a, 8));
         col.addView(ver, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 0));
-        add(col, a, Lang.T("Décodeur FT8 / FT4 / CW / RTTY / FreeDV…", "FT8 / FT4 / CW / RTTY / FreeDV decoder…"), new View.OnClickListener() {
+        add(col, a, Lang.T("Décodeur FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV…", "FT8 / FT4 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…"), new View.OnClickListener() {
             public void onClick(View v) { d.dismiss(); DlgDecoder.show(a); }
         });
         col.addView(toggle(a, "FreeDV auto", st.freedvAuto, new CompoundButton.OnCheckedChangeListener() {
