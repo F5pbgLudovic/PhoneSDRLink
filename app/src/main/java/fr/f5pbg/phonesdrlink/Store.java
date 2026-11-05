@@ -181,7 +181,7 @@ final class ScanProfile {
 // Tous les réglages de PHONESDRLINK, enregistrés dans settings.ini (même format « clé=valeur » que SDRLink pour PC :
 // un fichier d'export de SDRLink peut être importé, les clés inconnues sont ignorées).
 final class Store {
-    static final int[] STEPS = { 100, 250, 500, 1000 };
+    static final int[] STEPS = { 10, 50, 100, 250, 500, 1000, 10000 };
     static final long MIN_HZ = 1800000L, MAX_HZ = 440000000L;
     static final int IMP_CONFIG = 1, IMP_WEBSDR = 2, IMP_MEMS = 4, IMP_SCAN = 8;
 
@@ -196,7 +196,25 @@ final class Store {
     String lastUrl = "http://websdr.ewi.utwente.nl:8901/";
     long freqHz = 7100000L;
     String mode = "LSB";
-    int stepIdx = 3;
+    // Pas de la barre (Hz) retenu pour chaque famille de modes : CW, USB+LSB, autres (AM, FM, DATA). Celui que l'opérateur choisit
+    // devient le pas par défaut du mode, y compris après un redémarrage. Largeur de bande (Hz, 0 = filtre d'origine du WebSDR)
+    // retenue de la même façon : CW, USB+LSB, AM, FM, DATA.
+    int stepCw = 10, stepSsb = 1000, stepOther = 1000;
+    int bwCw = 300, bwSsb = 2900, bwAm = 6000, bwFm = 8000, bwData = 0;
+
+    int stepFor(String m) { return "CW".equals(m) ? stepCw : ("USB".equals(m) || "LSB".equals(m)) ? stepSsb : stepOther; }
+
+    void setStepFor(String m, int hz) { if ("CW".equals(m)) stepCw = hz; else if ("USB".equals(m) || "LSB".equals(m)) stepSsb = hz; else stepOther = hz; }
+
+    int bwFor(String m) { return "CW".equals(m) ? bwCw : ("USB".equals(m) || "LSB".equals(m)) ? bwSsb : "AM".equals(m) ? bwAm : "FM".equals(m) ? bwFm : bwData; }
+
+    static int defaultBw(String m) { return "CW".equals(m) ? 300 : ("USB".equals(m) || "LSB".equals(m)) ? 2900 : "AM".equals(m) ? 6000 : "FM".equals(m) ? 8000 : 0; }
+
+    void setBwFor(String m, int hz) {
+        if ("CW".equals(m)) bwCw = hz; else if ("USB".equals(m) || "LSB".equals(m)) bwSsb = hz; else if ("AM".equals(m)) bwAm = hz; else if ("FM".equals(m)) bwFm = hz; else bwData = hz;
+    }
+
+    void defaultsModes() { stepCw = 10; stepSsb = 1000; stepOther = 1000; bwCw = 300; bwSsb = 2900; bwAm = 6000; bwFm = 8000; bwData = 0; }
     // WebSDR
     final ArrayList<Favorite> favorites = new ArrayList<Favorite>();
     final String[] favListNames = new String[Favorite.MAX_LISTS];
@@ -262,10 +280,13 @@ final class Store {
 
     void defaultsConfig() {
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
-        lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; stepIdx = 3;
+        lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
 
     // ------------------------------------------------------------------ lecture / écriture
+
+    static int okStep(int v, int def) { for (int x : STEPS) if (x == v) return v; return def; }
+    static int okBw(int v, int def) { return v == 0 || (v >= 100 && v <= 15000) ? v : def; }
 
     static int toInt(String v, int def) { try { return Integer.parseInt(v.trim()); } catch (Exception e) { return def; } }
     static long toLong(String v, long def) { try { return Long.parseLong(v.trim()); } catch (Exception e) { return def; } }
@@ -316,7 +337,15 @@ final class Store {
                 else if (k.equals("LastUrl")) { if (v.trim().length() > 0) lastUrl = v.trim(); }
                 else if (k.equals("Freq0")) { long f = toLong(v, 0); if (f >= MIN_HZ && f <= MAX_HZ) freqHz = f; }
                 else if (k.equals("Mode0")) { if (v.trim().length() > 0) mode = v.trim(); }
-                else if (k.equals("PhoneStep")) stepIdx = Math.max(0, Math.min(STEPS.length - 1, toInt(v, 3)));
+                else if (k.equals("PhoneStep")) { int[] old = { 100, 250, 500, 1000 }; stepSsb = stepOther = old[Math.max(0, Math.min(3, toInt(v, 3)))]; }   // anciennes versions : un seul pas
+                else if (k.equals("PhoneStepCw")) stepCw = okStep(toInt(v, 10), 10);
+                else if (k.equals("PhoneStepSsb")) stepSsb = okStep(toInt(v, 1000), 1000);
+                else if (k.equals("PhoneStepOther")) stepOther = okStep(toInt(v, 1000), 1000);
+                else if (k.equals("PhoneBwCw")) bwCw = okBw(toInt(v, 300), 300);
+                else if (k.equals("PhoneBwSsb")) bwSsb = okBw(toInt(v, 2900), 2900);
+                else if (k.equals("PhoneBwAm")) bwAm = okBw(toInt(v, 6000), 6000);
+                else if (k.equals("PhoneBwFm")) bwFm = okBw(toInt(v, 8000), 8000);
+                else if (k.equals("PhoneBwData")) bwData = okBw(toInt(v, 0), 0);
             }
             if (web) {
                 if (k.equals("Fav")) { if (v.length() > 0) { favs.add(Favorite.fromSetting(v)); favSeen = true; } }
@@ -415,7 +444,14 @@ final class Store {
         line(sb, "LastUrl", lastUrl);
         line(sb, "Freq0", freqHz);
         line(sb, "Mode0", mode);
-        line(sb, "PhoneStep", stepIdx);
+        line(sb, "PhoneStepCw", stepCw);
+        line(sb, "PhoneStepSsb", stepSsb);
+        line(sb, "PhoneStepOther", stepOther);
+        line(sb, "PhoneBwCw", bwCw);
+        line(sb, "PhoneBwSsb", bwSsb);
+        line(sb, "PhoneBwAm", bwAm);
+        line(sb, "PhoneBwFm", bwFm);
+        line(sb, "PhoneBwData", bwData);
         line(sb, "FirstSearch", firstSearchDone ? 1 : 0);
         line(sb, "ListCount", favListCount);
         for (int i = 0; i < favListCount; i++) line(sb, "List" + (i + 1), favListNames[i]);

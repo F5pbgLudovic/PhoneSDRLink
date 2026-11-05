@@ -113,6 +113,7 @@ public class MainActivity extends Activity {
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         freq = st.freqHz;
         mode = st.mode;
+        bwHz = st.bwFor(mode);
         try { InputStream in = getAssets().open("bridge.js"); bridgeScript = Store.readAll(in); in.close(); } catch (Exception e) { }
         build();
         applyKeepScreen();
@@ -374,8 +375,8 @@ public class MainActivity extends Activity {
 
     void updateDisplays() {
         tvFreq.setText(formatFreq(freq));
-        btnMode.setText(bwHz > 0 ? modeLabel(mode) + "\n" + bwText(bwHz).replace(" kHz", "k") : modeLabel(mode));
-        btnStep.setText(stepText(Store.STEPS[st.stepIdx]));
+        btnMode.setText(bwHz > 0 ? modeLabel(mode) + "\n" + bwText(bwHz).replace(" kHz", "k").replace(" Hz", "Hz") : modeLabel(mode));
+        btnStep.setText(stepText(st.stepFor(mode)));
     }
 
     void updateButtons() {
@@ -645,7 +646,7 @@ public class MainActivity extends Activity {
         if (url.isEmpty()) return;
         if (!url.contains("://")) url = "http://" + url;
         sdrKind = "";
-        bwHz = 0;   // nouveau WebSDR : son filtre d'origine
+        bwHz = st.bwFor(mode);   // nouveau WebSDR : la largeur retenue pour le mode (appliquée au premier état de la page)
         captureScale = true;
         updateDisplays();
         web.loadUrl(url);
@@ -698,7 +699,11 @@ public class MainActivity extends Activity {
         // Réglage fait dans la page (clic dans la cascade, touches) : l'affichage le suit.
         if (System.currentTimeMillis() < targetUntil && Math.abs(f - target) > 400) return;   // retard de la page pendant qu'on glisse
         if (f > 0) freq = f;
-        if (!fam.isEmpty() && !toSdr(mode).equals(fam)) mode = fromFamily(fam);
+        if (!fam.isEmpty() && !toSdr(mode).equals(fam)) {
+            mode = fromFamily(fam);
+            syncBw(true);
+            if (bwHz > 0) h.postDelayed(new Runnable() { public void run() { if (bwHz > 0) js("if(window.__sdrlink)__sdrlink.setBw(" + bwHz + ");"); } }, 700);
+        }
         updateDisplays();
         saveSoon();
     }
@@ -722,8 +727,16 @@ public class MainActivity extends Activity {
         saveSoon();
     }
 
+    // Le mode change : le pas et la largeur de bande retenus pour ce mode sont repris (le pas s'affiche d'après le mode).
+    // push : la largeur est aussi annoncée à la page (réappliquée par L.set après le changement de mode).
+    void syncBw(boolean push) {
+        bwHz = st.bwFor(mode);
+        if (push) js("if(window.__sdrlink)__sdrlink.bw=" + bwHz + ";");
+    }
+
     void setMode(String m) {
         mode = m;
+        syncBw(true);
         setSdr(0, toSdr(m));
         updateDisplays();
         saveSoon();
@@ -739,7 +752,7 @@ public class MainActivity extends Activity {
 
     // Glissement sur la barre : n pas (positif = vers la droite = fréquence plus haute).
     void tuneBySteps(int n, double ms) {
-        long step = accelerate(Store.STEPS[st.stepIdx], ms);
+        long step = accelerate(st.stepFor(mode), ms);
         long base = System.currentTimeMillis() < targetUntil && target > 0 ? target : freq;
         long t = Math.round((double) base / step) * step + n * step;
         if (scanning) stopScan(null);
@@ -755,7 +768,7 @@ public class MainActivity extends Activity {
     void chooseStep() {
         String[] names = new String[Store.STEPS.length];
         for (int i = 0; i < names.length; i++) names[i] = stepText(Store.STEPS[i]);
-        Ui.choose(this, Lang.T("Pas :", "Step:"), names, new Ui.Index() { public void chose(int i) { st.stepIdx = i; updateDisplays(); st.save(); } });
+        Ui.choose(this, Lang.T("Pas :", "Step:"), names, new Ui.Index() { public void chose(int i) { st.setStepFor(mode, Store.STEPS[i]); updateDisplays(); st.save(); } });
     }
 
     void tuneMemory(Memory m) {
@@ -770,7 +783,7 @@ public class MainActivity extends Activity {
         freq = m.hz;
         target = m.hz;
         targetUntil = System.currentTimeMillis() + 1000;
-        if (!m.mode.isEmpty()) mode = m.mode;
+        if (!m.mode.isEmpty()) { mode = m.mode; syncBw(true); }
         setSdr(m.hz, m.mode.isEmpty() ? "" : toSdr(m.mode));
         updateDisplays();
         saveSoon();
@@ -945,13 +958,13 @@ public class MainActivity extends Activity {
     int bwHz;   // 0 = filtre d'origine du WebSDR
 
     static String bwText(int hz) {
-        return hz % 1000 == 0 ? (hz / 1000) + " kHz" : String.format(java.util.Locale.US, "%.2f", hz / 1000.0).replaceAll("0+$", "").replace(".", Lang.T(",", ".")) + " kHz";
+        return hz < 1000 ? hz + " Hz" : hz % 1000 == 0 ? (hz / 1000) + " kHz" : String.format(java.util.Locale.US, "%.2f", hz / 1000.0).replaceAll("0+$", "").replace(".", Lang.T(",", ".")) + " kHz";
     }
 
     void chooseBandwidth() {
         if (blocked()) return;
         if (sdrKind.isEmpty()) { status(Lang.T("Largeur de bande impossible : aucun WebSDR actif", "Cannot set the bandwidth: no active WebSDR")); return; }
-        final int[] v = { 2100, 2400, 2800, 2900, 3000, 4000 };
+        final int[] v = bwChoices(mode);
         String[] items = new String[v.length + 2];
         items[0] = Lang.T("Filtre d'origine du WebSDR", "WebSDR default filter") + (bwHz == 0 ? "  ✓" : "");
         for (int i = 0; i < v.length; i++) items[i + 1] = bwText(v[i]) + (bwHz == v[i] ? "  ✓" : "");
@@ -960,11 +973,11 @@ public class MainActivity extends Activity {
             public void chose(int i) {
                 if (i == 0) setBandwidth(0);
                 else if (i <= v.length) setBandwidth(v[i - 1]);
-                else Ui.input(MainActivity.this, Lang.T("Largeur de bande en kHz (0,3 à 12)", "Bandwidth in kHz (0.3 to 12)"), "kHz", bwHz > 0 ? bwText(bwHz).replace(" kHz", "") : "", new Ui.Text() {
+                else Ui.input(MainActivity.this, Lang.T("Largeur de bande en kHz (0,1 à 15)", "Bandwidth in kHz (0.1 to 15)"), "kHz", bwHz >= 1000 ? bwText(bwHz).replace(" kHz", "") : bwHz > 0 ? String.valueOf(bwHz / 1000.0).replace(".", Lang.T(",", ".")) : "", new Ui.Text() {
                     public void got(String t) {
                         double k = -1;
                         try { k = Double.parseDouble(t.trim().replace(',', '.')); } catch (NumberFormatException e) { }
-                        if (!(k >= 0.3 && k <= 12)) { Ui.toast(MainActivity.this, Lang.T("Valeur invalide (0,3 à 12 kHz).", "Invalid value (0.3 to 12 kHz).")); return; }
+                        if (!(k >= 0.1 && k <= 15)) { Ui.toast(MainActivity.this, Lang.T("Valeur invalide (0,1 à 15 kHz).", "Invalid value (0.1 to 15 kHz).")); return; }
                         setBandwidth((int) Math.round(k * 1000));
                     }
                 });
@@ -972,10 +985,21 @@ public class MainActivity extends Activity {
         });
     }
 
+    // Largeurs proposées selon le mode (Hz) ; « filtre d'origine » et « autre valeur » sont toujours ajoutés.
+    static int[] bwChoices(String m) {
+        if ("CW".equals(m)) return new int[] { 100, 200, 300, 400, 500, 800 };
+        if ("USB".equals(m) || "LSB".equals(m)) return new int[] { 2100, 2400, 2800, 2900, 3000, 4000, 5000 };
+        if ("AM".equals(m)) return new int[] { 6000, 8000, 10000 };
+        if ("FM".equals(m)) return new int[] { 8000, 10000, 12000, 15000 };
+        return new int[] { 200, 300, 500, 2100, 2400, 2800, 3000, 4000 };   // DATA
+    }
+
     static boolean contains(int[] a, int x) { for (int y : a) if (y == x) return true; return false; }
 
     void setBandwidth(int hz) {
         bwHz = hz;
+        st.setBwFor(mode, hz);   // devient la largeur par défaut de ce mode, sur tous les WebSDR et après un redémarrage
+        st.save();
         if (hz == 0) {
             // Retour au filtre d'origine : le mode est simplement réappliqué.
             js("if(window.__sdrlink)__sdrlink.bw=0;");
