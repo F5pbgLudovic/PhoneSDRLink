@@ -316,10 +316,11 @@
   // Enregistrement MP3 : le son brut de la page (avant volume, muet, notch et réducteur de bruit) est copié par un
   // ScriptProcessor vers un encodeur lamejs (dans un Worker si la page le permet), qui renvoie le MP3 par morceaux en base64.
   L.rec = null;
-  L.recStart = function (lameSrc, kbps) {
+  L.recStart = function (lameSrc, kbps, rate) {
     var ctx = null, i;
     for (i = 0; i < L.ctxs.length; i++) if (L.ctxs[i].state === 'running') { ctx = L.ctxs[i]; break; }
     if (!ctx || !ctx.createScriptProcessor) { __post('rec|err|noaudio'); return; }
+    var er = rate > 0 ? rate : ctx.sampleRate;   // cadence du fichier : celle du premier morceau si le REC continue sur une autre page
     var r = { ctx: ctx, worker: null, enc: null, sp: null };
     var send = function (bytes) {
       var s = '';
@@ -336,10 +337,10 @@
         if (e.data.end) { __post('mp3end'); r.worker.terminate(); }
       };
       r.worker.onerror = function () { __post('rec|err|worker'); };
-      r.worker.postMessage({ init: true, rate: ctx.sampleRate, kbps: kbps });
+      r.worker.postMessage({ init: true, rate: er, kbps: kbps });
     } catch (e) {
       r.worker = null;
-      try { (0, eval)(lameSrc); r.enc = new lamejs.Mp3Encoder(1, ctx.sampleRate, kbps); } catch (e2) { __post('rec|err|encoder'); return; }
+      try { (0, eval)(lameSrc); r.enc = new lamejs.Mp3Encoder(1, er, kbps); } catch (e2) { __post('rec|err|encoder'); return; }
     }
     var sp = r.sp = ctx.createScriptProcessor(16384, 1, 1), silent = ctx.createGain();
     sp.channelCount = 1;
@@ -350,8 +351,13 @@
     origConnect.call(silent, ctx.destination);   // un ScriptProcessor ne tourne que s'il est relié à la sortie
     r.silent = silent;
     sp.onaudioprocess = function (e) {
-      var d = e.inputBuffer.getChannelData(0), p = new Int16Array(d.length), j;
-      for (j = 0; j < d.length; j++) p[j] = Math.max(-1, Math.min(1, d[j])) * 32767 | 0;
+      var d = e.inputBuffer.getChannelData(0), n = d.length, j, q;
+      if (er !== ctx.sampleRate) n = Math.round(d.length * er / ctx.sampleRate);   // rééchantillonnage (échantillon le plus proche)
+      var p = new Int16Array(n);
+      for (j = 0; j < n; j++) {
+        q = er === ctx.sampleRate ? d[j] : d[Math.min(d.length - 1, Math.floor(j * ctx.sampleRate / er))];
+        p[j] = Math.max(-1, Math.min(1, q)) * 32767 | 0;
+      }
       if (r.worker) r.worker.postMessage(p.buffer, [p.buffer]);
       else { var o = r.enc.encodeBuffer(p); if (o.length) send(new Uint8Array(o.buffer)); }
     };
@@ -374,6 +380,7 @@
   L.zoomTimer = 0;
   L.spectrumZoom = function (webPx, xdpi, kHzPerMm) {
     clearTimeout(L.zoomTimer);
+    clearTimeout(L.zoomHold); L.zoomHold = 0;   // zoom voulu : la garde de fréquence n'a plus rien à remettre
     var k = detect();
     var cssPerPx = (window.visualViewport && visualViewport.width) ? visualViewport.width / webPx : 1;   // pixels CSS par pixel écran
     var mmPerCss = 25.4 / xdpi / cssPerPx;
@@ -531,8 +538,44 @@
   };
 
   // hz = 0 : ne pas changer la fréquence ; mode = '' : ne pas changer le mode. mode : lsb usb cw am fm
+  // Un changement de fréquence ne doit pas changer le zoom du spectre : on note le zoom avant la première commande d'une série
+  // et, 1,5 s après la dernière, on le remet si la page l'a modifié (KiwiSDR, websdr.org, OpenWebRX). Le zoom demandé par
+  // l'utilisateur (+, − ou geste) passe par L.spectrumZoom, qui annule cette garde.
+  L.zoomGet = function (k) {
+    try {
+      if (k === 'kiwi' && typeof zoom_level === 'number') return zoom_level;
+      if (k === 'websdr' && typeof khzperpixel === 'number') return khzperpixel;
+      if ((k === 'owrx' || k === 'owrx+') && typeof zoom_level === 'number') return zoom_level;
+    } catch (e) { }
+    return null;
+  };
+  L.zoomPut = function (k, z, tries) {
+    try {
+      if (k === 'kiwi') ext_set_zoom(ext_zoom.ABS, z);
+      else if (k === 'owrx' || k === 'owrx+') zoom_set(z);
+      else if (k === 'websdr') {
+        var r = Math.log(khzperpixel / z) / Math.LN2;
+        if (Math.abs(r) < 0.5 || (tries || 0) > 12) return;
+        wfset(r > 0 ? 0 : 1);
+        L.zoomTimer = setTimeout(function () { L.zoomPut(k, z, (tries || 0) + 1); }, 900);
+      }
+    } catch (e) { }
+  };
+  L.zoomHold = 0;
+  L.zoomRef = null;
+  L.zoomGuard = function (k) {
+    if (!L.zoomHold) L.zoomRef = L.zoomGet(k);
+    clearTimeout(L.zoomHold);
+    if (L.zoomRef === null) { L.zoomHold = 0; return; }
+    L.zoomHold = setTimeout(function () {
+      L.zoomHold = 0;
+      var z = L.zoomGet(k);
+      if (z !== null && z !== L.zoomRef) L.zoomPut(k, L.zoomRef, 0);
+    }, 1500);
+  };
   L.set = function (hz, mode) {
     var k = detect();
+    L.zoomGuard(k);
     try {
       if (k === 'phantom') {
         // setfreq : valeur en kHz (en dessous de 1e6 la page la prend pour des kHz) ; set_mode : nom en majuscules.

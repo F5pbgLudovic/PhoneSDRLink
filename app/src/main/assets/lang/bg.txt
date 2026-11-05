@@ -496,3 +496,14 @@ Bandwidth in kHz (0.3 to 12)	Ширина на лентата в kHz (0,3 до 1
 Invalid value (0.3 to 12 kHz).	Невалидна стойност (0,3 до 12 kHz).
 Bandwidth: WebSDR default filter	Ширина: филтър по подразбиране на WebSDR
 Bandwidth: {0}	Ширина: {0}
+The recording continues on the new WebSDR	Записът продължава на новия WebSDR
+Check for updates at startup	Проверка за актуализации при стартиране
+PhoneSDRLink V{0} is available (you are using V{1}).	PhoneSDRLink V{0} е налична (използвате V{1}).
+Update available	Има налична актуализация
+Download and install now? Android will ask for confirmation.	Да се изтегли и инсталира ли сега? Android ще поиска потвърждение.
+Install	Инсталиране
+Open the download page?	Да се отвори ли страницата за изтегляне?
+Downloading the update…	Изтегляне на актуализацията…
+Update failed: opening the download page	Неуспешна актуализация: отваря се страницата за изтегляне
+Update installation cancelled or failed	Инсталирането на актуализацията е отказано или неуспешно
+Search the list…	Търсене в списъка…

@@ -195,14 +195,16 @@ final class Ui {
 
     interface Yes { void yes(); }
 
-    static void confirm(Context c, String title, String message, final Yes cb) {
+    static void confirm(Context c, String title, String message, final Yes cb) { confirm(c, title, message, "OK", Lang.T("Annuler", "Cancel"), cb); }
+
+    static void confirm(Context c, String title, String message, String yesLabel, String noLabel, final Yes cb) {
         LinearLayout col = column(c);
         col.addView(label(c, message));
         final Dialog d = window(c, title, col, false);
         LinearLayout r = row(c);
         r.setGravity(Gravity.END);
-        r.addView(button(c, Lang.T("Annuler", "Cancel"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }));
-        Button ok = button(c, "OK", new View.OnClickListener() { public void onClick(View v) { d.dismiss(); cb.yes(); } });
+        r.addView(button(c, noLabel, new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }));
+        Button ok = button(c, yesLabel, new View.OnClickListener() { public void onClick(View v) { d.dismiss(); cb.yes(); } });
         r.addView(ok);
         col.addView(r);
         d.show();

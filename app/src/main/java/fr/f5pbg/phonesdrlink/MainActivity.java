@@ -109,6 +109,7 @@ public class MainActivity extends Activity {
         setTheme(st.dark ? android.R.style.Theme_DeviceDefault_NoActionBar : android.R.style.Theme_DeviceDefault_Light_NoActionBar);
         super.onCreate(b);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        try { android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO); } catch (Exception e) { }   // le fil principal relaie le son : priorité audio
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         freq = st.freqHz;
         mode = st.mode;
@@ -304,9 +305,13 @@ public class MainActivity extends Activity {
     Button initButton() {
         Button b = Ui.button(this, "INIT", new View.OnClickListener() {
             public void onClick(View v) {
+                if (blocked()) return;
                 sdrKind = "";
                 status(Lang.T("INIT : le WebSDR est relancé", "INIT: restarting the WebSDR"));
-                web.reload();
+                cancelScaleGuard();
+                initReset = true;
+                String cu = web.getUrl();
+                if (cu != null && !cu.isEmpty()) web.loadUrl(cu); else web.reload();   // nouveau chargement : zoom et affichage d'origine
             }
         });
         b.setTextSize(11);
@@ -320,7 +325,7 @@ public class MainActivity extends Activity {
         return b;
     }
 
-    // Verrou : tant qu'il est rouge, aucune commande ne change rien (seuls Muet, Verrou, INIT, + et − restent actifs).
+    // Verrou : tant qu'il est rouge, aucune commande ne change rien (seuls Muet et Verrou restent actifs).
     boolean blocked() {
         if (locked) Ui.toast(this, Lang.T("🔒 Verrouillé : appuyez sur Verrou pour modifier", "🔒 Locked: press Lock to change"));
         return locked;
@@ -328,7 +333,7 @@ public class MainActivity extends Activity {
 
     Button zoomButton(String text, final boolean in) {
         Button b = Ui.button(this, text, new View.OnClickListener() {
-            public void onClick(View v) { if (in) web.zoomIn(); else web.zoomOut(); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 700); }
+            public void onClick(View v) { if (blocked()) return; cancelScaleGuard(); if (in) web.zoomIn(); else web.zoomOut(); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 700); }
         });
         b.setTextSize(22);
         b.setTypeface(Typeface.DEFAULT_BOLD);
@@ -426,9 +431,11 @@ public class MainActivity extends Activity {
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(web, true);
         web.addJavascriptInterface(new JsBridge(), "PhoneSdr");
+        if (Build.VERSION.SDK_INT >= 26) web.setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT, false);   // le processus qui joue le son garde sa priorité même écran éteint
         web.setBackgroundColor(Color.BLACK);
         web.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, android.view.MotionEvent e) {
+                if (e.getPointerCount() > 1) cancelScaleGuard();   // zoom à la main
                 if (locked && e.getActionMasked() == android.view.MotionEvent.ACTION_DOWN) blocked();
                 return locked;
             }
@@ -439,7 +446,8 @@ public class MainActivity extends Activity {
             public void onPageStarted(WebView v, String url, android.graphics.Bitmap icon) {
                 sdrKind = "";
                 sdrF = 0;
-                if (recording) recFinish();
+                if (recording && !recPending) { recResume = true; recTries = 0; }   // le REC continue sur la nouvelle page
+                else if (recording || recPending) recFinish();
                 if (!WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) injectFallback();
                 tvPage.setText(url);
             }
@@ -447,6 +455,7 @@ public class MainActivity extends Activity {
             public void onPageFinished(WebView v, String url) {
                 if (!WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) injectFallback();
                 applyAudio();
+                if (captureScale || initReset) h.postDelayed(scaleInit, 1200);
                 st.lastUrl = url;
                 tvPage.setText(url);
             }
@@ -591,7 +600,43 @@ public class MainActivity extends Activity {
         return "";
     }
 
+    // Un changement de fréquence ne change pas le zoom de l'écran : l'échelle de la page est notée avant une série de commandes
+    // et remise 1,5 s après la dernière si elle a bougé ; un zoom voulu (+, − ou geste) annule cette garde.
+    float scaleRef, initScale;
+    int initTries;
+    boolean captureScale = true, initReset;   // initScale : échelle d'une page fraîchement ouverte ; INIT y remet l'écran
+
+    final Runnable scaleInit = new Runnable() {
+        @SuppressWarnings("deprecation")
+        public void run() {
+            float s = web.getScale();
+            if (initReset) {
+                boolean off = initScale > 0 && s > 0 && Math.abs(s / initScale - 1) > 0.02f;
+                if (off && initTries++ < 5) { web.zoomBy(initScale / s); h.postDelayed(this, 1500); }   // la page peut refuser le premier essai : on revérifie
+                else { initReset = false; initTries = 0; }
+            } else if (captureScale) { initScale = s; captureScale = false; }
+        }
+    };
+    final Runnable scaleCheck = new Runnable() {
+        @SuppressWarnings("deprecation")
+        public void run() {
+            float s = web.getScale();
+            if (scaleRef > 0 && s > 0 && Math.abs(s / scaleRef - 1) > 0.03f) web.zoomBy(scaleRef / s);
+            scaleRef = 0;
+        }
+    };
+
+    @SuppressWarnings("deprecation")
+    void guardScale() {
+        if (scaleRef == 0) scaleRef = web.getScale();
+        h.removeCallbacks(scaleCheck);
+        h.postDelayed(scaleCheck, 1500);
+    }
+
+    void cancelScaleGuard() { h.removeCallbacks(scaleCheck); scaleRef = 0; }
+
     void setSdr(long hz, String sdrMode) {
+        guardScale();
         js("if(window.__sdrlink)__sdrlink.set(" + hz + ",'" + sdrMode + "');");
     }
 
@@ -601,6 +646,7 @@ public class MainActivity extends Activity {
         if (!url.contains("://")) url = "http://" + url;
         sdrKind = "";
         bwHz = 0;   // nouveau WebSDR : son filtre d'origine
+        captureScale = true;
         updateDisplays();
         web.loadUrl(url);
     }
@@ -626,6 +672,7 @@ public class MainActivity extends Activity {
         boolean first = sdrKind.isEmpty();
         sdrKind = kind;
         sdrF = f;
+        if (first && recResume) h.postDelayed(recResumeRun, 1500);
         if (first) { applyAudio(); h.postDelayed(new Runnable() { public void run() { maxPageVolume(); } }, 2500); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 4500); }
         String fam = family(m);
 
@@ -1105,6 +1152,25 @@ public class MainActivity extends Activity {
         }
     }
 
+    // Démarre (ou reprend, sur une nouvelle page) la capture du son dans la page ; recRate : cadence du premier morceau, pour
+    // que tout le fichier garde la même fréquence d'échantillonnage.
+    boolean recResume;
+    int recTries, recRate;
+
+    void recStartJs() throws Exception {
+        java.io.InputStream in = getAssets().open("lame.min.js");
+        String src = Store.readAll(in);
+        in.close();
+        web.evaluateJavascript("(function(){try{__sdrlink.recStart(" + org.json.JSONObject.quote(src) + ", 128, " + recRate + ")}catch(e){PhoneSdr.post(\"rec|err|\"+e)}})()", null);
+    }
+
+    final Runnable recResumeRun = new Runnable() {
+        public void run() {
+            if (!recResume || !recording || recPending) return;
+            try { recStartJs(); } catch (Exception e) { recResume = false; recFinish(); }
+        }
+    };
+
     void onRecButton() {
         if (recPending) return;
         if (recording) {
@@ -1115,13 +1181,11 @@ public class MainActivity extends Activity {
         }
         if (sdrKind.isEmpty()) { status(Lang.T("Enregistrement impossible : aucun son", "Cannot record: no audio")); return; }
         try {
-            java.io.InputStream in = getAssets().open("lame.min.js");
-            String src = Store.readAll(in);
-            in.close();
             String stamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(new java.util.Date());
             recName = "PhoneSDRLink_" + stamp + "_" + Memory.kHz(freq) + "kHz_" + modeLabel(mode) + ".mp3";
+            recRate = 0;
             openRecFile();
-            web.evaluateJavascript("(function(){try{__sdrlink.recStart(" + org.json.JSONObject.quote(src) + ", 128)}catch(e){PhoneSdr.post(\"rec|err|\"+e)}})()", null);
+            recStartJs();
         } catch (Exception e) {
             status(Lang.T("Enregistrement impossible : ", "Cannot record: ") + e.getMessage());
             recClose(true);
@@ -1150,7 +1214,14 @@ public class MainActivity extends Activity {
     }
 
     void onRecMessage(String[] p) {
+        if (recResume && recording) {
+            if (p.length >= 2 && p[1].equals("ok")) { recResume = false; status(Lang.T("Le REC continue sur le nouveau WebSDR", "The recording continues on the new WebSDR")); }
+            else if (++recTries < 20) h.postDelayed(recResumeRun, 2000);   // le son n'est pas encore démarré : on réessaie
+            else { recResume = false; recFinish(); }
+            return;
+        }
         if (p.length >= 2 && p[1].equals("ok")) {
+            try { recRate = Integer.parseInt(p[2]); } catch (Exception e) { recRate = 0; }
             recording = true;
             recStart = System.currentTimeMillis();
             status(Lang.F("Enregistrement du son de « {0} » (appuyez sur REC pour arrêter)", "Recording the sound of \"{0}\" (click REC to stop)", currentTitle()));
@@ -1181,6 +1252,7 @@ public class MainActivity extends Activity {
         recClose(empty);
         recording = false;
         recPending = false;
+        recResume = false;
         updateButtons();
         status(empty ? Lang.T("Enregistrement vide : rien à sauvegarder", "Empty recording: nothing to save")
             : Lang.F("Enregistrement sauvegardé : « {0} » (Musique/PhoneSDRLink)", "Recording saved: \"{0}\"", name));
@@ -1260,11 +1332,15 @@ public class MainActivity extends Activity {
         try { return getPackageManager().getPackageInfo(getPackageName(), 0).versionName; } catch (Exception e) { return "1.0"; }
     }
 
-    // Vérifie la dernière release GitHub. manual : affiche toujours un résultat.
+    // Vérifie la dernière release GitHub. manual : affiche toujours un résultat (sans quitter la fenêtre en cours).
+    // Au démarrage, une mise à jour trouvée ouvre une alerte qui propose de l'installer (téléchargement de l'APK de la release,
+    // puis installation par Android, qui demande confirmation) ; sans APK dans la release, la page GitHub s'ouvre.
+    String apkUrl;
+
     void checkUpdate(final boolean manual) {
         new Thread(new Runnable() {
             public void run() {
-                String tag = null, url = null;
+                String tag = null, url = null, apk = null;
                 try {
                     HttpURLConnection c = (HttpURLConnection) new URL(RELEASES_API).openConnection();
                     c.setRequestProperty("User-Agent", "PhoneSDRLink/" + versionName());
@@ -1276,8 +1352,10 @@ public class MainActivity extends Activity {
                     if (m.find()) tag = m.group(1);
                     Matcher u = Pattern.compile("\"html_url\"\\s*:\\s*\"(https://github\\.com/[^\"]+/releases/tag/[^\"]+)\"").matcher(json);
                     url = u.find() ? u.group(1) : "https://github.com/F5pbgLudovic/PhoneSDRLink/releases/latest";
+                    Matcher a = Pattern.compile("\"browser_download_url\"\\s*:\\s*\"(https://[^\"]+\\.apk)\"").matcher(json);
+                    if (a.find()) apk = a.group(1);
                 } catch (Exception e) { }
-                final String ftag = tag, furl = url;
+                final String ftag = tag, furl = url, fapk = apk;
                 h.post(new Runnable() {
                     public void run() {
                         if (ftag == null) { if (manual) Ui.message(MainActivity.this, Lang.T("PhoneSDRLink : mises à jour", "PhoneSDRLink: updates"), Lang.T("Impossible de joindre GitHub pour vérifier les mises à jour.", "Could not reach GitHub to check for updates.")); return; }
@@ -1287,11 +1365,88 @@ public class MainActivity extends Activity {
                             return;
                         }
                         updateUrl = furl;
+                        apkUrl = fapk;
                         status(Lang.F("⚠ Mise à jour V{0} disponible : cliquez pour la télécharger", "⚠ Update V{0} available: click to download it", ftag));
-                        if (manual) startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(furl)));
+                        offerUpdate(ftag);
                     }
                 });
             }
         }).start();
+    }
+
+    void offerUpdate(String tag) {
+        String msg = Lang.F("La version V{0} de PhoneSDRLink est disponible (vous utilisez la V{1}).", "PhoneSDRLink V{0} is available (you are using V{1}).", tag, versionName());
+        if (apkUrl != null) {
+            Ui.confirm(this, "⚠ " + Lang.T("Mise à jour disponible", "Update available"),
+                msg + "\n\n" + Lang.T("Télécharger et installer maintenant ? Android demandera une confirmation.", "Download and install now? Android will ask for confirmation."),
+                Lang.T("Installer", "Install"), Lang.T("Plus tard", "Later"), new Ui.Yes() { public void yes() { downloadAndInstall(); } });
+        } else {
+            Ui.confirm(this, "⚠ " + Lang.T("Mise à jour disponible", "Update available"),
+                msg + "\n\n" + Lang.T("Ouvrir la page de téléchargement ?", "Open the download page?"),
+                Lang.T("Ouvrir", "Open"), Lang.T("Plus tard", "Later"), new Ui.Yes() { public void yes() { try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))); } catch (Exception e) { } } });
+        }
+    }
+
+    void downloadAndInstall() {
+        final String src = apkUrl;
+        status(Lang.T("Téléchargement de la mise à jour…", "Downloading the update…"));
+        new Thread(new Runnable() {
+            public void run() {
+                String err = null;
+                try {
+                    java.io.File f = new java.io.File(getCacheDir(), "update.apk");
+                    HttpURLConnection c = (HttpURLConnection) new URL(src).openConnection();
+                    c.setConnectTimeout(10000);
+                    c.setReadTimeout(20000);
+                    c.setInstanceFollowRedirects(true);
+                    InputStream in = c.getInputStream();
+                    java.io.FileOutputStream o = new java.io.FileOutputStream(f);
+                    byte[] b = new byte[65536];
+                    int n;
+                    while ((n = in.read(b)) > 0) o.write(b, 0, n);
+                    o.close();
+                    in.close();
+                    if (f.length() < 100000) throw new Exception("APK");
+                    installApk(f);
+                } catch (Exception e) { err = String.valueOf(e.getMessage()); }
+                final String ferr = err;
+                if (ferr != null) h.post(new Runnable() { public void run() {
+                    status(Lang.T("Mise à jour impossible : ouverture de la page de téléchargement", "Update failed: opening the download page"));
+                    try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))); } catch (Exception e) { }
+                } });
+            }
+        }).start();
+    }
+
+    void installApk(java.io.File f) throws Exception {
+        final android.content.pm.PackageInstaller pi = getPackageManager().getPackageInstaller();
+        int id = pi.createSession(new android.content.pm.PackageInstaller.SessionParams(android.content.pm.PackageInstaller.SessionParams.MODE_FULL_INSTALL));
+        android.content.pm.PackageInstaller.Session s = pi.openSession(id);
+        java.io.OutputStream o = s.openWrite("update", 0, f.length());
+        InputStream in = new java.io.FileInputStream(f);
+        byte[] b = new byte[65536];
+        int n;
+        while ((n = in.read(b)) > 0) o.write(b, 0, n);
+        s.fsync(o);
+        in.close();
+        o.close();
+        android.content.BroadcastReceiver r = new android.content.BroadcastReceiver() {
+            public void onReceive(Context c, Intent i) {
+                int st2 = i.getIntExtra(android.content.pm.PackageInstaller.EXTRA_STATUS, -1);
+                if (st2 == android.content.pm.PackageInstaller.STATUS_PENDING_USER_ACTION) {
+                    Intent confirm = (Intent) i.getParcelableExtra(Intent.EXTRA_INTENT);
+                    if (confirm != null) { confirm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); startActivity(confirm); }
+                } else if (st2 != android.content.pm.PackageInstaller.STATUS_SUCCESS) {
+                    status(Lang.T("Installation de la mise à jour annulée ou impossible", "Update installation cancelled or failed"));
+                    try { unregisterReceiver(this); } catch (Exception e) { }
+                }
+            }
+        };
+        String action = getPackageName() + ".INSTALL_DONE";
+        if (Build.VERSION.SDK_INT >= 33) registerReceiver(r, new android.content.IntentFilter(action), Context.RECEIVER_NOT_EXPORTED);
+        else registerReceiver(r, new android.content.IntentFilter(action));
+        Intent ii = new Intent(action).setPackage(getPackageName());
+        int fl = android.app.PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= 31 ? android.app.PendingIntent.FLAG_MUTABLE : 0);
+        s.commit(android.app.PendingIntent.getBroadcast(this, id, ii, fl).getIntentSender());
     }
 }

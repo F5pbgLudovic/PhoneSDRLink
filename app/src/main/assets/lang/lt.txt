@@ -496,3 +496,14 @@ Bandwidth in kHz (0.3 to 12)	Juostos plotis kHz (nuo 0,3 iki 12)
 Invalid value (0.3 to 12 kHz).	Netinkama vertė (nuo 0,3 iki 12 kHz).
 Bandwidth: WebSDR default filter	Juostos plotis: numatytasis WebSDR filtras
 Bandwidth: {0}	Juostos plotis: {0}
+The recording continues on the new WebSDR	Įrašymas tęsiamas naujame WebSDR
+Check for updates at startup	Paleidžiant tikrinti, ar yra naujinimų
+PhoneSDRLink V{0} is available (you are using V{1}).	Galima PhoneSDRLink V{0} (naudojate V{1}).
+Update available	Yra naujinimas
+Download and install now? Android will ask for confirmation.	Atsisiųsti ir įdiegti dabar? „Android“ paprašys patvirtinimo.
+Install	Įdiegti
+Open the download page?	Atidaryti atsisiuntimo puslapį?
+Downloading the update…	Atsisiunčiamas naujinimas…
+Update failed: opening the download page	Naujinimas nepavyko: atidaromas atsisiuntimo puslapis
+Update installation cancelled or failed	Naujinimo diegimas atšauktas arba nepavyko
+Search the list…	Ieškoti sąraše…

@@ -62,6 +62,7 @@ final class DlgWebSdr {
         final ArrayList<Favorite> shown = new ArrayList<Favorite>();
         final boolean[] filling = { false };
         final Runnable[] fill = new Runnable[1];
+        final String[] query = { "" };
         fill[0] = new Runnable() {
             @SuppressWarnings("unchecked")
             public void run() {
@@ -73,7 +74,11 @@ final class DlgWebSdr {
                 sp.setSelection(Math.min(st.curFavList, st.favListCount));
                 filling[0] = false;
                 shown.clear();
-                for (Favorite f : st.favorites) if (st.curFavList >= st.favListCount || f.list == st.curFavList) shown.add(f);
+                for (Favorite f : st.favorites) {
+                    if (!(st.curFavList >= st.favListCount || f.list == st.curFavList)) continue;
+                    if (!query[0].isEmpty() && !(f.name.toLowerCase().contains(query[0]) || f.url.toLowerCase().contains(query[0]))) continue;
+                    shown.add(f);
+                }
                 ArrayList<String> rows = new ArrayList<String>();
                 for (Favorite f : shown) rows.add(f.name);
                 // Grandes cases : un WebSDR par case, bien visible et facile à toucher.
@@ -109,7 +114,27 @@ final class DlgWebSdr {
                 a.openUrl(shown.get(pos).url);
             }
         });
-        col.addView(sp);
+        // Loupe à droite du nom de la liste : un champ de recherche filtre la liste en cours (nom ou adresse).
+        LinearLayout lr = Ui.row(a);
+        lr.addView(sp, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        final EditText find = Ui.edit(a, "", Lang.T("Rechercher dans la liste…", "Search the list…"), InputType.TYPE_CLASS_TEXT);
+        find.setVisibility(View.GONE);
+        find.addTextChangedListener(new android.text.TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int x, int y, int z) { }
+            public void onTextChanged(CharSequence s, int x, int y, int z) { }
+            public void afterTextChanged(android.text.Editable s) { query[0] = s.toString().trim().toLowerCase(); fill[0].run(); }
+        });
+        lr.addView(Ui.button(a, "🔍", new View.OnClickListener() {
+            public void onClick(View v) {
+                if (find.getVisibility() == View.VISIBLE) { find.setText(""); find.setVisibility(View.GONE); return; }
+                find.setVisibility(View.VISIBLE);
+                find.requestFocus();
+                android.view.inputmethod.InputMethodManager im = (android.view.inputmethod.InputMethodManager) a.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                if (im != null) im.showSoftInput(find, 0);
+            }
+        }), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        col.addView(lr);
+        col.addView(find);
         col.addView(lv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
 
         LinearLayout ar = Ui.row(a);

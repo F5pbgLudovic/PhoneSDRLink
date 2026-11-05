@@ -496,3 +496,14 @@ Bandwidth in kHz (0.3 to 12)	Szerokość pasma w kHz (0,3 do 12)
 Invalid value (0.3 to 12 kHz).	Nieprawidłowa wartość (0,3 do 12 kHz).
 Bandwidth: WebSDR default filter	Szerokość pasma: domyślny filtr WebSDR
 Bandwidth: {0}	Szerokość pasma: {0}
+The recording continues on the new WebSDR	Nagrywanie trwa dalej na nowym WebSDR
+Check for updates at startup	Sprawdzaj aktualizacje przy uruchomieniu
+PhoneSDRLink V{0} is available (you are using V{1}).	PhoneSDRLink V{0} jest dostępny (używasz V{1}).
+Update available	Dostępna aktualizacja
+Download and install now? Android will ask for confirmation.	Pobrać i zainstalować teraz? Android poprosi o potwierdzenie.
+Install	Zainstaluj
+Open the download page?	Otworzyć stronę pobierania?
+Downloading the update…	Pobieranie aktualizacji…
+Update failed: opening the download page	Aktualizacja nie powiodła się: otwieranie strony pobierania
+Update installation cancelled or failed	Instalacja aktualizacji anulowana lub nieudana
+Search the list…	Szukaj na liście…

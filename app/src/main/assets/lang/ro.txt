@@ -496,3 +496,14 @@ Bandwidth in kHz (0.3 to 12)	Lățimea de bandă în kHz (0,3 la 12)
 Invalid value (0.3 to 12 kHz).	Valoare invalidă (0,3 la 12 kHz).
 Bandwidth: WebSDR default filter	Lățime de bandă: filtrul implicit al WebSDR
 Bandwidth: {0}	Lățime de bandă: {0}
+The recording continues on the new WebSDR	Înregistrarea continuă pe noul WebSDR
+Check for updates at startup	Verifică actualizările la pornire
+PhoneSDRLink V{0} is available (you are using V{1}).	PhoneSDRLink V{0} este disponibil (folosiți V{1}).
+Update available	Actualizare disponibilă
+Download and install now? Android will ask for confirmation.	Descărcați și instalați acum? Android va cere confirmare.
+Install	Instalează
+Open the download page?	Deschideți pagina de descărcare?
+Downloading the update…	Se descarcă actualizarea…
+Update failed: opening the download page	Actualizare eșuată: se deschide pagina de descărcare
+Update installation cancelled or failed	Instalarea actualizării a fost anulată sau a eșuat
+Search the list…	Căutați în listă…

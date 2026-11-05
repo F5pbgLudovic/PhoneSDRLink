@@ -56,9 +56,9 @@ final class DlgSettings {
             }
         });
         add(col, a, Lang.T("Vérifier les mises à jour", "Check for updates"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); a.checkUpdate(true); }
+            public void onClick(View v) { a.checkUpdate(true); }
         });
-        col.addView(toggle(a, Lang.T("Vérifier au démarrage", "Check at startup"), st.checkUpdates, new CompoundButton.OnCheckedChangeListener() {
+        col.addView(toggle(a, Lang.T("Vérifier les mises à jour au démarrage", "Check for updates at startup"), st.checkUpdates, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.checkUpdates = on; st.save(); }
         }));
         add(col, a, Lang.T("Nom ou indicatif donné aux WebSDR", "Name or callsign for WebSDRs") + " : " + st.callsign, new View.OnClickListener() {

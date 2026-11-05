@@ -496,3 +496,14 @@ Bandwidth in kHz (0.3 to 12)	Kaistanleveys kHz:nä (0,3–12)
 Invalid value (0.3 to 12 kHz).	Virheellinen arvo (0,3–12 kHz).
 Bandwidth: WebSDR default filter	Kaistanleveys: WebSDR:n oletussuodatin
 Bandwidth: {0}	Kaistanleveys: {0}
+The recording continues on the new WebSDR	Tallennus jatkuu uudella WebSDR:llä
+Check for updates at startup	Tarkista päivitykset käynnistyksen yhteydessä
+PhoneSDRLink V{0} is available (you are using V{1}).	PhoneSDRLink V{0} on saatavilla (käytössä V{1}).
+Update available	Päivitys saatavilla
+Download and install now? Android will ask for confirmation.	Ladataanko ja asennetaanko nyt? Android pyytää vahvistuksen.
+Install	Asenna
+Open the download page?	Avataanko lataussivu?
+Downloading the update…	Ladataan päivitystä…
+Update failed: opening the download page	Päivitys epäonnistui: avataan lataussivu
+Update installation cancelled or failed	Päivityksen asennus peruttiin tai epäonnistui
+Search the list…	Hae luettelosta…

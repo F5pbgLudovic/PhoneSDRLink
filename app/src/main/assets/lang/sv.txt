@@ -496,3 +496,14 @@ Bandwidth in kHz (0.3 to 12)	Bandbredd i kHz (0,3 till 12)
 Invalid value (0.3 to 12 kHz).	Ogiltigt värde (0,3 till 12 kHz).
 Bandwidth: WebSDR default filter	Bandbredd: WebSDR:s standardfilter
 Bandwidth: {0}	Bandbredd: {0}
+The recording continues on the new WebSDR	Inspelningen fortsätter på den nya WebSDR
+Check for updates at startup	Sök efter uppdateringar vid start
+PhoneSDRLink V{0} is available (you are using V{1}).	PhoneSDRLink V{0} är tillgänglig (du använder V{1}).
+Update available	Uppdatering tillgänglig
+Download and install now? Android will ask for confirmation.	Ladda ner och installera nu? Android ber om bekräftelse.
+Install	Installera
+Open the download page?	Öppna nedladdningssidan?
+Downloading the update…	Laddar ner uppdateringen…
+Update failed: opening the download page	Uppdateringen misslyckades: öppnar nedladdningssidan
+Update installation cancelled or failed	Installationen av uppdateringen avbröts eller misslyckades
+Search the list…	Sök i listan…

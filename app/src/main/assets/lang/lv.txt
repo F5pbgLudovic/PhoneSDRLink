@@ -496,3 +496,14 @@ Bandwidth in kHz (0.3 to 12)	Joslas platums kHz (no 0,3 līdz 12)
 Invalid value (0.3 to 12 kHz).	Nederīga vērtība (no 0,3 līdz 12 kHz).
 Bandwidth: WebSDR default filter	Joslas platums: WebSDR noklusējuma filtrs
 Bandwidth: {0}	Joslas platums: {0}
+The recording continues on the new WebSDR	Ieraksts turpinās jaunajā WebSDR
+Check for updates at startup	Startējot pārbaudīt atjauninājumus
+PhoneSDRLink V{0} is available (you are using V{1}).	Pieejama PhoneSDRLink V{0} (jūs izmantojat V{1}).
+Update available	Pieejams atjauninājums
+Download and install now? Android will ask for confirmation.	Vai lejupielādēt un instalēt tagad? Android lūgs apstiprinājumu.
+Install	Instalēt
+Open the download page?	Vai atvērt lejupielādes lapu?
+Downloading the update…	Notiek atjauninājuma lejupielāde…
+Update failed: opening the download page	Atjaunināšana neizdevās: tiek atvērta lejupielādes lapa
+Update installation cancelled or failed	Atjauninājuma instalēšana atcelta vai neizdevās
+Search the list…	Meklēt sarakstā…

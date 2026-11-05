@@ -458,14 +458,17 @@ final class Store {
     String memListLabel(int i) { return listLabel(memListNames, i); }
 
     // Nom ou indicatif donné aux WebSDR : sans ; , = \ ' " ni caractères de contrôle, 30 caractères au plus.
+    // Les espaces deviennent le caractère invisible Alt+255 (espace insécable, U+00A0) : les WebSDR le prennent en compte,
+    // alors qu'ils ignorent un espace de clavier ; un nom réduit à un espace donne donc un nom invisible.
     static String clean(String name) {
         StringBuilder sb = new StringBuilder();
-        String t = (name == null ? "" : name).trim();
+        String t = name == null ? "" : name;
         for (int i = 0; i < t.length(); i++) {
             char c = t.charAt(i);
+            if (c == ' ') c = '\u00A0';
             if (!Character.isISOControl(c) && ";,=\\'\"".indexOf(c) < 0 && sb.length() < 30) sb.append(c);
         }
-        return sb.toString().trim();
+        return sb.toString();
     }
 
     void addRecent(Memory m) {

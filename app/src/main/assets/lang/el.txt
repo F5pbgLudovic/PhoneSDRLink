@@ -496,3 +496,14 @@ Bandwidth in kHz (0.3 to 12)	Εύρος ζώνης σε kHz (0,3 έως 12)
 Invalid value (0.3 to 12 kHz).	Μη έγκυρη τιμή (0,3 έως 12 kHz).
 Bandwidth: WebSDR default filter	Εύρος ζώνης: προεπιλεγμένο φίλτρο WebSDR
 Bandwidth: {0}	Εύρος ζώνης: {0}
+The recording continues on the new WebSDR	Η εγγραφή συνεχίζεται στο νέο WebSDR
+Check for updates at startup	Έλεγχος για ενημερώσεις κατά την εκκίνηση
+PhoneSDRLink V{0} is available (you are using V{1}).	Το PhoneSDRLink V{0} είναι διαθέσιμο (χρησιμοποιείτε το V{1}).
+Update available	Διαθέσιμη ενημέρωση
+Download and install now? Android will ask for confirmation.	Λήψη και εγκατάσταση τώρα; Το Android θα ζητήσει επιβεβαίωση.
+Install	Εγκατάσταση
+Open the download page?	Άνοιγμα της σελίδας λήψης;
+Downloading the update…	Λήψη της ενημέρωσης…
+Update failed: opening the download page	Η ενημέρωση απέτυχε: άνοιγμα της σελίδας λήψης
+Update installation cancelled or failed	Η εγκατάσταση της ενημέρωσης ακυρώθηκε ή απέτυχε
+Search the list…	Αναζήτηση στη λίστα…
