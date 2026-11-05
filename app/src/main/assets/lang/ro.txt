@@ -527,3 +527,12 @@ Colours…	Culori…
 General background	Fundal general
 Custom colour (RGB)	Culoare personalizată (RGB)
 G	G
+Headset button: stop the scan	Butonul căștilor: oprește scanarea
+Pressing the earphone or headset button stops the scan; pressing again resumes it.	Apăsarea butonului căștilor oprește scanarea; o nouă apăsare o reia.
+headset button	butonul căștilor
+Back one step: {0}	Înapoi cu un pas: {0}
+Headset buttons (stop / start the scan)	Butoanele căștilor (oprire / pornire scanare)
+Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.	Butonul căștilor: oprește scanarea, apoi o repornește; o dublă apăsare cât timp este oprită revine un pas înapoi. Debifat: butoanele căștilor sunt ignorate.
+Quit the app	Ieșire din aplicație
+Quit PhoneSDRLink? The sound and the scan stop.	Ieșiți din PhoneSDRLink? Sunetul și scanarea se opresc.
+Quit	Ieșire

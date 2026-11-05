@@ -527,3 +527,12 @@ Colours…	Kleuren…
 General background	Algemene achtergrond
 Custom colour (RGB)	Aangepaste kleur (RGB)
 G	G
+Headset button: stop the scan	Koptelefoonknop: scan stoppen
+Pressing the earphone or headset button stops the scan; pressing again resumes it.	Een druk op de knop van de oortjes of koptelefoon stopt de scan; nog een druk hervat hem.
+headset button	koptelefoonknop
+Back one step: {0}	Eén stap terug: {0}
+Headset buttons (stop / start the scan)	Koptelefoonknoppen (scan stoppen / starten)
+Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.	Knop van de oortjes of koptelefoon: stopt de scan en start hem weer; een dubbele druk terwijl hij gestopt is gaat één stap terug. Niet aangevinkt: de koptelefoonknoppen worden genegeerd.
+Quit the app	App afsluiten
+Quit PhoneSDRLink? The sound and the scan stop.	PhoneSDRLink afsluiten? Het geluid en de scan stoppen.
+Quit	Afsluiten

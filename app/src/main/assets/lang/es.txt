@@ -527,3 +527,12 @@ Colours…	Colores…
 General background	Fondo general
 Custom colour (RGB)	Color personalizado (RGB)
 G	G
+Headset button: stop the scan	Botón del auricular: detener el escaneo
+Pressing the earphone or headset button stops the scan; pressing again resumes it.	Pulsar el botón del auricular o de los cascos detiene el escaneo; una nueva pulsación lo reanuda.
+headset button	botón del auricular
+Back one step: {0}	Atrás un paso: {0}
+Headset buttons (stop / start the scan)	Botones del auricular (parar / iniciar el escaneo)
+Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.	Botón del auricular o de los cascos: detiene el escaneo y lo vuelve a iniciar; una doble pulsación con el escaneo detenido retrocede un paso. Sin marcar: se ignoran los botones del auricular.
+Quit the app	Salir de la aplicación
+Quit PhoneSDRLink? The sound and the scan stop.	¿Salir de PhoneSDRLink? El sonido y el escaneo se detienen.
+Quit	Salir

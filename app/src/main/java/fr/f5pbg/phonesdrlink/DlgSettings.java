@@ -53,6 +53,10 @@ final class DlgSettings {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.autoReload = on; st.save(); a.applyAudio(); }
         }));
         col.addView(Ui.small(a, Lang.T("Recharge le WebSDR si le son est coupé depuis 30 s (sauf volume à zéro ou mute).", "Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).")));
+        col.addView(toggle(a, Lang.T("Boutons du casque (arrêt / départ du scan)", "Headset buttons (stop / start the scan)"), st.headsetStop, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.headsetStop = on; st.save(); a.applyHeadset(); }
+        }));
+        col.addView(Ui.small(a, Lang.T("Bouton de l'oreillette ou du casque : arrête le scan, puis le relance ; un double appui quand il est arrêté recule d'un pas. Décochée : les boutons du casque sont ignorés.", "Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.")));
         add(col, a, Lang.T("Couleurs…", "Colours…"), new View.OnClickListener() {
             public void onClick(View v) { d.dismiss(); showColors(a); }
         });

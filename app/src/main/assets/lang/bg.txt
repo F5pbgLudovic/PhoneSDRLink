@@ -527,3 +527,12 @@ Colours…	Цветове…
 General background	Общ фон
 Custom colour (RGB)	Свой цвят (RGB)
 G	G
+Headset button: stop the scan	Бутон на слушалките: спиране на сканирането
+Pressing the earphone or headset button stops the scan; pressing again resumes it.	Натискането на бутона на слушалките спира сканирането; ново натискане го възобновява.
+headset button	бутон на слушалките
+Back one step: {0}	Назад с една стъпка: {0}
+Headset buttons (stop / start the scan)	Бутони на слушалките (спиране / старт на сканирането)
+Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.	Бутон на слушалките: спира сканирането, после го стартира отново; двойно натискане при спряно сканиране връща една стъпка назад. Без отметка: бутоните на слушалките се игнорират.
+Quit the app	Изход от приложението
+Quit PhoneSDRLink? The sound and the scan stop.	Изход от PhoneSDRLink? Звукът и сканирането спират.
+Quit	Изход

@@ -120,6 +120,7 @@ public class MainActivity extends Activity {
         try { InputStream in = getAssets().open("bridge.js"); bridgeScript = Store.readAll(in); in.close(); } catch (Exception e) { }
         build();
         applyKeepScreen();
+        applyHeadset();
         setupWeb();
         refreshAll();
         if (Ui.reopenColors) { Ui.reopenColors = false; h.post(new Runnable() { public void run() { DlgSettings.showColors(MainActivity.this); } }); }
@@ -161,6 +162,7 @@ public class MainActivity extends Activity {
         h.removeCallbacksAndMessages(null);
         stopService(new Intent(this, PlayService.class));
         if (focusReq != null) audio.abandonAudioFocusRequest(focusReq);
+        if (mediaSession != null) { try { mediaSession.release(); } catch (Exception e) { } }
         if (web != null) { web.destroy(); }
         super.onDestroy();
     }
@@ -233,6 +235,7 @@ public class MainActivity extends Activity {
         btnLock = Ui.button(this, "", new View.OnClickListener() {
             public void onClick(View v) { locked = !locked; bar.locked = locked; updateButtons(); }
         });
+        btnLock.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { askQuit(); return true; } });
         for (Button x : new Button[] { btnWeb, btnSet, btnRec, btnMute, btnLock }) { x.setTextSize(13); x.setPadding(Ui.dp(this, 3), 0, Ui.dp(this, 3), 0); }
         r1.addView(btnMute, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.8f, this, 2));
         r1.addView(btnLock, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.9f, this, 2));
@@ -992,6 +995,68 @@ public class MainActivity extends Activity {
 
     long scanDwellMs = 5000;
 
+    // Bouton de l'oreillette / du casque : une session média reçoit les appuis (lecture/pause, décrocher…) ; aucun calcul tant qu'on n'appuie pas.
+    android.media.session.MediaSession mediaSession;
+    boolean stoppedByHeadset;
+    long lastHeadsetMs;
+
+    void applyHeadset() {
+        try {
+            if (st.headsetStop) {
+                if (mediaSession == null) {
+                    mediaSession = new android.media.session.MediaSession(this, "PhoneSDRLink");
+                    mediaSession.setFlags(android.media.session.MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | android.media.session.MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+                    mediaSession.setCallback(new android.media.session.MediaSession.Callback() {
+                        @Override public boolean onMediaButtonEvent(Intent i) {
+                            android.view.KeyEvent e = i.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+                            if (e != null) {
+                                android.util.Log.i("PhoneSDRLink", "MEDIAKEY code=" + e.getKeyCode() + " (" + android.view.KeyEvent.keyCodeToString(e.getKeyCode()) + ") action=" + e.getAction() + " repeat=" + e.getRepeatCount());
+                                if (e.getAction() == android.view.KeyEvent.ACTION_DOWN && e.getRepeatCount() == 0) headsetKey(e.getKeyCode());
+                            }
+                            return true;
+                        }
+                    });
+                    long acts = android.media.session.PlaybackState.ACTION_PLAY | android.media.session.PlaybackState.ACTION_PAUSE | android.media.session.PlaybackState.ACTION_PLAY_PAUSE | android.media.session.PlaybackState.ACTION_STOP;
+                    mediaSession.setPlaybackState(new android.media.session.PlaybackState.Builder().setActions(acts).setState(android.media.session.PlaybackState.STATE_PLAYING, 0, 1f).build());
+                }
+                mediaSession.setActive(true);
+            } else if (mediaSession != null) {
+                mediaSession.setActive(false);
+                mediaSession.release();
+                mediaSession = null;
+            }
+        } catch (Exception e) { }
+    }
+
+    // Double appui (« suivant ») ou triple appui (« précédent ») : seulement quand le casque a arrêté le scan, revient d'un pas en arrière
+    // (le signal est déjà passé) ; un appui simple reprend ensuite le scan depuis cette fréquence.
+    void headsetBack() {
+        if (scanning || !stoppedByHeadset) return;
+        if (st.scanType == 0) {
+            if (scanRun == null) return;
+            long f = scanRun.prev(scanHz);
+            if (f < 0) return;
+            scanHz = f;
+        } else {
+            if (scanMems.isEmpty()) return;
+            scanIndex = (scanIndex - 1 + scanMems.size()) % scanMems.size();
+        }
+        scanTune();
+        status(Lang.F("Retour d'un pas : {0}", "Back one step: {0}", st.scanType == 0 ? Memory.kHz(scanHz) + " kHz" : scanMems.get(scanIndex).label()));
+    }
+
+    void headsetKey(int code) {
+        boolean back = code == android.view.KeyEvent.KEYCODE_MEDIA_NEXT || code == android.view.KeyEvent.KEYCODE_MEDIA_PREVIOUS;
+        boolean ok = code == android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || code == android.view.KeyEvent.KEYCODE_HEADSETHOOK
+                || code == android.view.KeyEvent.KEYCODE_MEDIA_PLAY || code == android.view.KeyEvent.KEYCODE_MEDIA_PAUSE || code == android.view.KeyEvent.KEYCODE_MEDIA_STOP;
+        long now = System.currentTimeMillis();
+        if (!(ok || back) || !st.headsetStop || now - lastHeadsetMs < (back ? 300 : 700)) return;   // anti-rebond (double événement de certains casques) ; plus court pour le retour, qu'on enchaîne
+        lastHeadsetMs = now;
+        if (back) { headsetBack(); return; }
+        if (scanning) { stopScan(Lang.T("bouton du casque", "headset button")); stoppedByHeadset = true; }
+        else { stoppedByHeadset = false; startScan(true); }   // arrêté (ou jamais lancé) : le bouton lance / reprend le scan
+    }
+
     void stopScan(String reason) {
         if (!scanning) return;
         scanning = false;
@@ -1249,6 +1314,14 @@ public class MainActivity extends Activity {
         recStopAt = 0;
         if (recording && !recPending) onRecButton();
         else if (!recording && !recPending && sleepFired) quitApp();
+    }
+
+    // Appui long sur Verrou : quitter l'application (utile à ceux qui ne savent pas la fermer). Un REC en cours est d'abord sauvegardé.
+    void askQuit() {
+        Ui.confirm(this, Lang.T("Quitter l'application", "Quit the app"), Lang.T("Quitter PhoneSDRLink ? Le son et le scan s'arrêtent.", "Quit PhoneSDRLink? The sound and the scan stop."),
+            Lang.T("Quitter", "Quit"), Lang.T("Annuler", "Cancel"), new Ui.Yes() {
+                public void yes() { if (scanning) stopScan(null); if (recording || recPending) recFinish(); quitApp(); }
+            });
     }
 
     void quitApp() {

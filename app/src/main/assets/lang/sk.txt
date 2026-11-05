@@ -527,3 +527,12 @@ Colours…	Farby…
 General background	Všeobecné pozadie
 Custom colour (RGB)	Vlastná farba (RGB)
 G	G
+Headset button: stop the scan	Tlačidlo slúchadiel: zastaviť skenovanie
+Pressing the earphone or headset button stops the scan; pressing again resumes it.	Stlačenie tlačidla slúchadiel zastaví skenovanie; ďalšie stlačenie ho obnoví.
+headset button	tlačidlo slúchadiel
+Back one step: {0}	O krok späť: {0}
+Headset buttons (stop / start the scan)	Tlačidlá slúchadiel (zastavenie / spustenie skenovania)
+Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.	Tlačidlo slúchadiel: zastaví skenovanie a znova ho spustí; dvojité stlačenie pri zastavenom skenovaní vráti o krok späť. Bez začiarknutia: tlačidlá slúchadiel sa ignorujú.
+Quit the app	Ukončiť aplikáciu
+Quit PhoneSDRLink? The sound and the scan stop.	Ukončiť PhoneSDRLink? Zvuk aj skenovanie sa zastavia.
+Quit	Ukončiť

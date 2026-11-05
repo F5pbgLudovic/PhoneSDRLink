@@ -527,3 +527,12 @@ Colours…	Färger…
 General background	Allmän bakgrund
 Custom colour (RGB)	Egen färg (RGB)
 G	G
+Headset button: stop the scan	Hörlursknapp: stoppa skanningen
+Pressing the earphone or headset button stops the scan; pressing again resumes it.	Ett tryck på knappen på hörsnäckan eller hörlurarna stoppar skanningen; ett nytt tryck återupptar den.
+headset button	hörlursknapp
+Back one step: {0}	Ett steg tillbaka: {0}
+Headset buttons (stop / start the scan)	Hörlursknappar (stoppa / starta skanningen)
+Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.	Knapp på hörsnäckan eller hörlurarna: stoppar skanningen och startar den igen; ett dubbeltryck när den är stoppad går ett steg tillbaka. Ej ikryssad: hörlursknapparna ignoreras.
+Quit the app	Avsluta appen
+Quit PhoneSDRLink? The sound and the scan stop.	Avsluta PhoneSDRLink? Ljudet och skanningen stoppas.
+Quit	Avsluta

@@ -151,6 +151,18 @@ final class ScanProfile {
         return -1;
     }
 
+    // Fréquence précédente, en sautant les zones non scannées ; la dernière si hz <= début ; -1 si tout est sauté.
+    long prev(long hz) {
+        long lo = lo(), step = Math.max(1, stepHz), n = (hi() - lo) / step + 1;
+        long pos = hz <= lo ? n : (hz - lo + step - 1) / step;
+        for (long i = 0; i < n; i++) {
+            pos = (pos - 1 + n) % n;
+            long f = lo + pos * step;
+            if (!skipped(f)) return f;
+        }
+        return -1;
+    }
+
     static String skipText(long[] z) { return z[0] + "-" + z[1]; }
 
     static long[] parseSkip(String v) {
@@ -204,7 +216,7 @@ final class Store {
 
     // Configuration
     String language = "";
-    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen, spectrumZoom = true, autoReload, barBottom, zoomLeft;
+    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen, spectrumZoom = true, autoReload, barBottom, zoomLeft, headsetStop;
     int colBtnBg, colBtnTx, colFreqTx, colFreqBg, colBarFg, colBarBg, colBg;   // couleurs choisies (0 = couleur d'origine)
     int notchLevel = 1, dnrLevel = 1;   // 1 = réglage d'origine, 10 = le plus fort
     String callsign = "PhoneSDRLink";
@@ -294,7 +306,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        notchLevel = 1; dnrLevel = 1; autoReload = false; barBottom = false; zoomLeft = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = 0;
+        notchLevel = 1; dnrLevel = 1; autoReload = false; barBottom = false; zoomLeft = false; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = 0;
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
@@ -352,6 +364,7 @@ final class Store {
                 else if (k.equals("PhoneAutoReload")) autoReload = v.trim().equals("1");
                 else if (k.equals("PhoneBarBottom")) barBottom = v.trim().equals("1");
                 else if (k.equals("PhoneZoomLeft")) zoomLeft = v.trim().equals("1");
+                else if (k.equals("PhoneHeadsetStop")) headsetStop = v.trim().equals("1");
                 else if (k.equals("PhoneColBtnBg")) colBtnBg = hexColor(v);
                 else if (k.equals("PhoneColBtnTx")) colBtnTx = hexColor(v);
                 else if (k.equals("PhoneColFreqTx")) colFreqTx = hexColor(v);
@@ -437,7 +450,7 @@ final class Store {
         Store t = new Store();
         t.favorites.clear();
         t.parse(text, cats & ~IMP_CONFIG | (cats & IMP_CONFIG));
-        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; callsign = t.callsign; checkUpdates = t.checkUpdates; }
+        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; callsign = t.callsign; checkUpdates = t.checkUpdates; }
         if ((cats & IMP_WEBSDR) != 0) {
             for (int i = 0; i < Favorite.MAX_LISTS; i++) if (!t.favListNames[i].equals("Liste " + (i + 1)) && favListNames[i].equals("Liste " + (i + 1))) favListNames[i] = t.favListNames[i];
             for (Favorite f : t.favorites) {
@@ -477,6 +490,7 @@ final class Store {
         line(sb, "PhoneAutoReload", autoReload ? 1 : 0);
         line(sb, "PhoneBarBottom", barBottom ? 1 : 0);
         line(sb, "PhoneZoomLeft", zoomLeft ? 1 : 0);
+        line(sb, "PhoneHeadsetStop", headsetStop ? 1 : 0);
         line(sb, "PhoneColBtnBg", String.format("%08X", colBtnBg));
         line(sb, "PhoneColBtnTx", String.format("%08X", colBtnTx));
         line(sb, "PhoneColFreqTx", String.format("%08X", colFreqTx));

@@ -527,3 +527,12 @@ Colours…	Krāsas…
 General background	Vispārējais fons
 Custom colour (RGB)	Pielāgota krāsa (RGB)
 G	G
+Headset button: stop the scan	Austiņu poga: apturēt skenēšanu
+Pressing the earphone or headset button stops the scan; pressing again resumes it.	Nospiežot austiņu pogu, skenēšana tiek apturēta; vēlreiz nospiežot, tā turpinās.
+headset button	austiņu poga
+Back one step: {0}	Viens solis atpakaļ: {0}
+Headset buttons (stop / start the scan)	Austiņu pogas (skenēšanas apturēšana / sākšana)
+Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.	Austiņu poga: aptur skenēšanu un tad to atkal sāk; dubultā nospiešana apturētā stāvoklī atgriež vienu soli atpakaļ. Bez atzīmes: austiņu pogas tiek ignorētas.
+Quit the app	Iziet no lietotnes
+Quit PhoneSDRLink? The sound and the scan stop.	Vai iziet no PhoneSDRLink? Skaņa un skenēšana apstāsies.
+Quit	Iziet

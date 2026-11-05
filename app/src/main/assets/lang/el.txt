@@ -527,3 +527,12 @@ Colours…	Χρώματα…
 General background	Γενικό φόντο
 Custom colour (RGB)	Προσαρμοσμένο χρώμα (RGB)
 G	G
+Headset button: stop the scan	Κουμπί ακουστικών: διακοπή σάρωσης
+Pressing the earphone or headset button stops the scan; pressing again resumes it.	Πατώντας το κουμπί των ακουστικών διακόπτεται η σάρωση· πατώντας ξανά συνεχίζεται.
+headset button	κουμπί ακουστικών
+Back one step: {0}	Πίσω κατά ένα βήμα: {0}
+Headset buttons (stop / start the scan)	Κουμπιά ακουστικών (διακοπή / εκκίνηση σάρωσης)
+Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.	Κουμπί ακουστικών: διακόπτει τη σάρωση και τη ξεκινά ξανά· διπλό πάτημα όσο είναι σταματημένη γυρίζει ένα βήμα πίσω. Χωρίς σήμανση: τα κουμπιά των ακουστικών αγνοούνται.
+Quit the app	Έξοδος από την εφαρμογή
+Quit PhoneSDRLink? The sound and the scan stop.	Έξοδος από το PhoneSDRLink; Ο ήχος και η σάρωση σταματούν.
+Quit	Έξοδος
