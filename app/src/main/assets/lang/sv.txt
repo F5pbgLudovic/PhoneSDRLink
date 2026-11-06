@@ -686,3 +686,5 @@ Headset / Wheel	Headset / Hjul
 Finger ring: speed of the fast scroll (100 % = original speed)	Ring: hastighet för snabb rullning (100 % = ursprunglig hastighet)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Hastighet som uppnås när flera hjulslag följer på varandra: från nästan noll (10 %) till 150 %; 100 % är den ursprungliga hastigheten.
 Reception buffer	Mottagningsbuffert
+Auto frequency change for digital modes	Automatiskt frekvensbyte för digitala moder
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	När en avkodare startas ställs den närmaste frekvensen (och moden) in från avkodarens lista ”Digitala moder”.

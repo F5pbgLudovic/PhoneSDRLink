@@ -686,3 +686,5 @@ Headset / Wheel	Слушалки / Колелце
 Finger ring: speed of the fast scroll (100 % = original speed)	Пръстен: скорост на бързото превъртане (100 % = първоначална скорост)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Скорост, достигната при последователни удари на колелцето: от почти нула (10 %) до 150 %; 100 % е първоначалната скорост.
 Reception buffer	Буфер за приемане
+Auto frequency change for digital modes	Автоматична смяна на честотата за цифрови режими
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	При пускане на декодер се настройва на най-близката честота (и режим) от списъка „Цифрови режими“ на този декодер.

@@ -686,3 +686,5 @@ Headset / Wheel	Headset / Rad
 Finger ring: speed of the fast scroll (100 % = original speed)	Ring: Geschwindigkeit des schnellen Bildlaufs (100 % = ursprüngliche Geschwindigkeit)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Geschwindigkeit, die erreicht wird, wenn mehrere Radschläge aufeinander folgen: von fast null (10 %) bis 150 %; 100 % ist die ursprüngliche Geschwindigkeit.
 Reception buffer	Empfangspuffer
+Auto frequency change for digital modes	Automatischer Frequenzwechsel bei digitalen Betriebsarten
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Beim Start eines Decoders wird die nächstgelegene Frequenz (und Betriebsart) aus der Liste „Digitale Betriebsarten“ dieses Decoders eingestellt.

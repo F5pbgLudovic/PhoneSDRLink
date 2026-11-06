@@ -686,3 +686,5 @@ Headset / Wheel	Zestaw słuchawkowy / Kółko
 Finger ring: speed of the fast scroll (100 % = original speed)	Pierścień: prędkość szybkiego przewijania (100 % = prędkość pierwotna)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Prędkość osiągana, gdy kilka obrotów kółka następuje po sobie: od prawie zera (10 %) do 150 %; 100 % to prędkość pierwotna.
 Reception buffer	Bufor odbioru
+Auto frequency change for digital modes	Automatyczna zmiana częstotliwości dla emisji cyfrowych
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Po uruchomieniu dekodera strojenie na najbliższą częstotliwość (i emisję) z listy „Emisje cyfrowe” tego dekodera.

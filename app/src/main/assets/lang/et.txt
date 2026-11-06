@@ -686,3 +686,5 @@ Headset / Wheel	Peakomplekt / Ratas
 Finger ring: speed of the fast scroll (100 % = original speed)	Sõrmus: kiire kerimise kiirus (100 % = algkiirus)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Kiirus, mis saavutatakse, kui mitu rattapööret järgnevad üksteisele: peaaegu nullist (10 %) kuni 150 %-ni; 100 % on algkiirus.
 Reception buffer	Vastuvõtupuhver
+Auto frequency change for digital modes	Digirežiimide sageduse automaatne vahetus
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Dekooderi käivitamisel häälestatakse lähimale sagedusele (ja režiimile) selle dekooderi loendist „Digirežiimid“.

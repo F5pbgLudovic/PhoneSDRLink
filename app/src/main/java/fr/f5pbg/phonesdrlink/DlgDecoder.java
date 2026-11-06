@@ -139,6 +139,7 @@ final class DlgDecoder {
             public void onClick(View v) {
                 if (a.decMode == sel[0]) return;   // déjà en marche
                 showPanels(sel[0]);
+                a.digAutoTune(sel[0]);
                 a.decoderStart(sel[0]);
                 refresh.run();
             }
@@ -157,7 +158,7 @@ final class DlgDecoder {
                 sel[0] = MODES[pos];
                 lastSel = sel[0];
                 showPanels(sel[0]);
-                if (changed) a.decoderStart(sel[0]);      // choisir un mode dans la liste le lance (le bouton passe au vert)
+                if (changed) { a.digAutoTune(sel[0]); a.decoderStart(sel[0]); }      // choisir un mode dans la liste le lance (le bouton passe au vert)
                 refresh.run();
             }
             public void onNothingSelected(android.widget.AdapterView<?> par) { }

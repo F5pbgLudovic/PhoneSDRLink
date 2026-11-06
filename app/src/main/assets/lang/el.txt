@@ -686,3 +686,5 @@ Headset / Wheel	Ακουστικά / Τροχός
 Finger ring: speed of the fast scroll (100 % = original speed)	Δαχτυλίδι: ταχύτητα της γρήγορης κύλισης (100 % = αρχική ταχύτητα)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Ταχύτητα που επιτυγχάνεται όταν διαδέχονται το ένα το άλλο αρκετά χτυπήματα του τροχού: από σχεδόν μηδέν (10 %) έως 150 %· το 100 % είναι η αρχική ταχύτητα.
 Reception buffer	Προσωρινή μνήμη λήψης
+Auto frequency change for digital modes	Αυτόματη αλλαγή συχνότητας για ψηφιακά είδη εκπομπής
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Όταν ξεκινά ένας αποκωδικοποιητής, συντονίζεται στην πλησιέστερη συχνότητα (και είδος) της λίστας «Ψηφιακά είδη» του αποκωδικοποιητή.

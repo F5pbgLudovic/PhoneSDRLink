@@ -216,7 +216,7 @@ final class Store {
 
     // Configuration
     String language = "";
-    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen, spectrumZoom = true, autoReload, barBottom, zoomLeft, headsetStop, decOverlay = true, cwAutoTone = true, cwAutoSpeed = true;
+    boolean dark = true, autoNotch, autoDnr, checkUpdates = true, firstSearchDone, keepScreen, spectrumZoom = true, autoReload, barBottom, zoomLeft, headsetStop, digAuto, decOverlay = true, cwAutoTone = true, cwAutoSpeed = true;
     int cwTone = 700, cwBw = 80, cwWpm = 18, cwThr = 55, cwChar = 20, cwWord = 50, cwSq = 5, cwAgc = 1;   // réglages du décodeur CW
     boolean cwAfc = true, cwAutoBw = true;
     int rttyBaud = 0, rttyShift = 0, rttyPol = 0, rttySq = 15, rttyFreq = 0;   // réglages du décodeur RTTY (0 = automatique ; débit en centièmes de baud)
@@ -322,7 +322,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        notchLevel = 1; dnrLevel = 1; autoReload = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450; ringSpeed = 100;
+        notchLevel = 1; dnrLevel = 1; autoReload = false; digAuto = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450; ringSpeed = 100;
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
@@ -378,6 +378,7 @@ final class Store {
                 else if (k.equals("PhoneNotchLevel")) notchLevel = Math.max(1, Math.min(10, toInt(v, 1)));
                 else if (k.equals("PhoneDnrLevel")) dnrLevel = Math.max(1, Math.min(10, toInt(v, 1)));
                 else if (k.equals("PhoneAutoReload")) autoReload = v.trim().equals("1");
+                else if (k.equals("PhoneDigAuto")) digAuto = v.trim().equals("1");
                 else if (k.equals("PhoneBarBottom")) barBottom = v.trim().equals("1");
                 else if (k.equals("PhoneZoomLeft")) { zoomLeft = v.trim().equals("1"); if (!zoomPosSet) zoomPos = zoomLeft ? 1 : 0; }
                 else if (k.equals("PhoneZoomPos")) { zoomPos = Math.max(0, Math.min(7, toInt(v, 0))); zoomPosSet = true; }
@@ -544,6 +545,7 @@ final class Store {
         line(sb, "PhoneNotchLevel", notchLevel);
         line(sb, "PhoneDnrLevel", dnrLevel);
         line(sb, "PhoneAutoReload", autoReload ? 1 : 0);
+        line(sb, "PhoneDigAuto", digAuto ? 1 : 0);
         line(sb, "PhoneBarBottom", barBottom ? 1 : 0);
         line(sb, "PhoneZoomLeft", zoomLeft ? 1 : 0);
         line(sb, "PhoneZoomPos", zoomPos);

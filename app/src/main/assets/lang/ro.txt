@@ -686,3 +686,5 @@ Headset / Wheel	Căști / Rotiță
 Finger ring: speed of the fast scroll (100 % = original speed)	Inel: viteza derulării rapide (100 % = viteza inițială)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Viteza atinsă când mai multe mișcări ale rotiței se succed: de la aproape zero (10 %) la 150 %; 100 % este viteza inițială.
 Reception buffer	Buffer de recepție
+Auto frequency change for digital modes	Schimbare automată a frecvenței pentru modurile digitale
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	La pornirea unui decodor, se acordă pe cea mai apropiată frecvență (și mod) din lista „Moduri digitale” a decodorului.

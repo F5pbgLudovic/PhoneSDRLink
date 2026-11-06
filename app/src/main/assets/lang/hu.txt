@@ -686,3 +686,5 @@ Headset / Wheel	Fejhallgató / Görgő
 Finger ring: speed of the fast scroll (100 % = original speed)	Gyűrű: a gyors görgetés sebessége (100 % = eredeti sebesség)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Az elért sebesség, ha több görgetés követi egymást: csaknem nullától (10 %) 150 %-ig; a 100 % az eredeti sebesség.
 Reception buffer	Vételi puffer
+Auto frequency change for digital modes	Automatikus frekvenciaváltás digitális módokhoz
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Dekóder indításakor a dekóder „Digitális módok” listájának legközelebbi frekvenciájára (és módjára) hangol.

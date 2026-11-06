@@ -686,3 +686,5 @@ Headset / Wheel	Austiņas / Ritenis
 Finger ring: speed of the fast scroll (100 % = original speed)	Gredzens: ātrās ritināšanas ātrums (100 % = sākotnējais ātrums)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Ātrums, kas tiek sasniegts, kad pēc kārtas seko vairāki riteņa grieziena kustības: no gandrīz nulles (10 %) līdz 150 %; 100 % ir sākotnējais ātrums.
 Reception buffer	Uztveršanas buferis
+Auto frequency change for digital modes	Automātiska frekvences maiņa digitālajiem režīmiem
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Palaižot dekoderi, tiek noskaņota tuvākā frekvence (un režīms) no šī dekodera saraksta „Digitālie režīmi”.

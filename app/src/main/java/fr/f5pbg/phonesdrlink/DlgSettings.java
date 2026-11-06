@@ -60,6 +60,10 @@ final class DlgSettings {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.autoReload = on; st.save(); a.applyAudio(); }
         }));
         col.addView(Ui.small(a, Lang.T("Recharge le WebSDR si le son est coupé depuis 30 s (sauf volume à zéro ou mute).", "Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).")));
+        col.addView(toggle(a, Lang.T("Changement auto fréquence Modes numériques", "Auto frequency change for digital modes"), st.digAuto, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.digAuto = on; st.save(); }
+        }));
+        col.addView(Ui.small(a, Lang.T("À l'activation d'un décodeur, se place sur la fréquence (et le mode) la plus proche de la liste « Modes numériques » de ce décodeur.", "When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's \"Digital modes\" list.")));
         add(col, a, Lang.T("Mémoire tampon réception", "Reception buffer"), new View.OnClickListener() {
             public void onClick(View v) { showBuffer(a); }   // SET reste ouvert dessous : le retour arrière y ramène
         });

@@ -686,3 +686,5 @@ Headset / Wheel	Kuulokkeet / Rulla
 Finger ring: speed of the fast scroll (100 % = original speed)	Sormus: nopean vierityksen nopeus (100 % = alkuperäinen nopeus)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Nopeus, joka saavutetaan, kun useita rullaliikkeitä seuraa peräkkäin: lähes nollasta (10 %) 150 %:iin; 100 % on alkuperäinen nopeus.
 Reception buffer	Vastaanottopuskuri
+Auto frequency change for digital modes	Digitaalilajien taajuuden automaattinen vaihto
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Kun dekooderi käynnistetään, viritetään lähimmälle taajuudelle (ja lajille) dekooderin „Digitaaliset lajit“ -luettelosta.

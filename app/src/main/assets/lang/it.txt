@@ -686,3 +686,5 @@ Headset / Wheel	Cuffie / Rotella
 Finger ring: speed of the fast scroll (100 % = original speed)	Anello: velocità dello scorrimento rapido (100 % = velocità originale)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Velocità raggiunta quando più scatti della rotella si susseguono: da quasi zero (10 %) a 150 %; 100 % è la velocità originale.
 Reception buffer	Buffer di ricezione
+Auto frequency change for digital modes	Cambio automatico di frequenza nei modi digitali
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	All'avvio di un decodificatore, sintonizza la frequenza (e il modo) più vicina dell'elenco «Modi digitali» di quel decodificatore.

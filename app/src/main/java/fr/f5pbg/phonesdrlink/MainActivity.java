@@ -2048,6 +2048,17 @@ public class MainActivity extends Activity {
         maybeStartAuto();
     }
 
+    // « Changement auto fréquence Modes numériques » (SET) : au lancement d'un décodeur par l'utilisateur, on se place sur la mémoire de la
+    // liste « Modes numériques » de ce décodeur (région IARU de SET) la plus proche de la fréquence actuelle, avec son mode.
+    void digAutoTune(int dec) {
+        if (!st.digAuto) return;
+        Memory best = null;
+        for (Memory m : DigitalFreqs.list(dec, st.iaruRegion)) if (best == null || Math.abs(m.hz - freq) < Math.abs(best.hz - freq)) best = m;
+        if (best == null) return;
+        if (scanning) stopScan(null);
+        applyMemory(best);
+    }
+
     void decoderStart(int mode) {
         if (!Decoders.loaded) { Ui.toast(this, Lang.T("Décodeur indisponible sur ce téléphone", "Decoder not available on this phone")); return; }
         decoderStop(false);

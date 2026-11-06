@@ -686,3 +686,5 @@ Headset / Wheel	Headset / Wieltje
 Finger ring: speed of the fast scroll (100 % = original speed)	Ring: snelheid van het snelle scrollen (100 % = oorspronkelijke snelheid)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Snelheid die wordt bereikt wanneer meerdere wieltjesslagen op elkaar volgen: van bijna nul (10 %) tot 150 %; 100 % is de oorspronkelijke snelheid.
 Reception buffer	Ontvangstbuffer
+Auto frequency change for digital modes	Automatische frequentiewissel bij digitale modes
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Bij het starten van een decoder wordt afgestemd op de dichtstbijzijnde frequentie (en mode) uit de lijst „Digitale modes” van die decoder.

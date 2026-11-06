@@ -686,3 +686,5 @@ Headset / Wheel	Slušalke / Kolesce
 Finger ring: speed of the fast scroll (100 % = original speed)	Prstan: hitrost hitrega pomikanja (100 % = prvotna hitrost)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Hitrost, dosežena, ko si zaporedoma sledi več sunkov kolesca: od skoraj nič (10 %) do 150 %; 100 % je prvotna hitrost.
 Reception buffer	Sprejemni medpomnilnik
+Auto frequency change for digital modes	Samodejna sprememba frekvence za digitalne načine
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Ob zagonu dekodirnika se nastavi na najbližjo frekvenco (in način) s seznama »Digitalni načini« tega dekodirnika.

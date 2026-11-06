@@ -686,3 +686,5 @@ Headset / Wheel	Slúchadlá / Koliesko
 Finger ring: speed of the fast scroll (100 % = original speed)	Prsteň: rýchlosť rýchleho posúvania (100 % = pôvodná rýchlosť)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Rýchlosť dosiahnutá, keď po sebe nasleduje viac otočení kolieska: od takmer nuly (10 %) do 150 %; 100 % je pôvodná rýchlosť.
 Reception buffer	Prijímací buffer
+Auto frequency change for digital modes	Automatická zmena frekvencie pre digitálne módy
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Pri spustení dekodéra sa naladí na najbližšiu frekvenciu (a mód) zo zoznamu „Digitálne módy“ tohto dekodéra.

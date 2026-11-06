@@ -686,3 +686,5 @@ Headset / Wheel	Ausinės / Ratukas
 Finger ring: speed of the fast scroll (100 % = original speed)	Žiedas: greito slinkimo greitis (100 % = pradinis greitis)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Greitis, pasiekiamas, kai vienas po kito seka keli ratuko pasukimai: nuo beveik nulio (10 %) iki 150 %; 100 % yra pradinis greitis.
 Reception buffer	Priėmimo buferis
+Auto frequency change for digital modes	Automatinis dažnio keitimas skaitmeniniams režimams
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Paleidus dekoderį, derinama į artimiausią dažnį (ir režimą) iš to dekoderio sąrašo „Skaitmeniniai režimai“.

@@ -686,3 +686,5 @@ Headset / Wheel	Slušalice / Kotačić
 Finger ring: speed of the fast scroll (100 % = original speed)	Prsten: brzina brzog pomicanja (100 % = izvorna brzina)
 Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Brzina postignuta kada se više okretaja kotačića nižu jedan za drugim: od gotovo nule (10 %) do 150 %; 100 % je izvorna brzina.
 Reception buffer	Međuspremnik prijema
+Auto frequency change for digital modes	Automatska promjena frekvencije za digitalne modove
+When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Pri pokretanju dekodera ugađa se na najbližu frekvenciju (i mod) s popisa „Digitalni modovi“ tog dekodera.
