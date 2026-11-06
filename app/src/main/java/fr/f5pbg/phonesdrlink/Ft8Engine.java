@@ -10,7 +10,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-// Décodage FT8 (tranches de 15 s) ou FT4 (7,5 s) en continu : le son (12 kHz, 16 bits) arrive par morceaux ; à la fin de chaque
+// Décodage FT8 (tranches de 15 s), FT4 (7,5 s) ou FT2 (3,75 s ; FT4 à symboles deux fois plus courts) en continu : le son (12 kHz, 16 bits) arrive par morceaux ; à la fin de chaque
 // tranche (alignée sur l'heure UTC) la tranche écoulée est décodée par ft8_lib dans un fil à part. Le retard du son (réseau,
 // WebSDR) est appris à partir du DT des messages décodés : la fenêtre d'analyse est décalée d'autant. La parité de la tranche
 // (paire / impaire) permet d'afficher les deux périodes en deux couleurs.
@@ -18,7 +18,8 @@ final class Ft8Engine {
     interface Listener { void onLines(ArrayList<String> lines, int parity); void onStatus(String s); }
 
     static final int RATE = 12000;
-    final boolean ft4;
+    final boolean ft4;      // vrai pour FT4 et FT2 : l'heure est affichée avec le dixième de seconde
+    final int mode;         // 0 FT8, 1 FT4, 2 FT2 (même numérotation que le décodeur C)
     final int slotMs, slotN;
     final String name;
     final short[] ring = new short[RATE * 45];
@@ -30,11 +31,12 @@ final class Ft8Engine {
     final ExecutorService ex = Executors.newSingleThreadExecutor();
     final Listener ls;
 
-    Ft8Engine(boolean ft4, Listener l) {
-        this.ft4 = ft4;
-        slotMs = ft4 ? 7500 : 15000;
+    Ft8Engine(int mode, Listener l) {
+        this.mode = mode;
+        this.ft4 = mode != 0;
+        slotMs = mode == 2 ? 3750 : mode == 1 ? 7500 : 15000;
         slotN = RATE * slotMs / 1000;
-        name = ft4 ? "FT4" : "FT8";
+        name = mode == 2 ? "FT2" : mode == 1 ? "FT4" : "FT8";
         ls = l;
     }
 
@@ -97,7 +99,7 @@ final class Ft8Engine {
         final int parity = (int) (Math.floorMod(s, 2L));
         ex.execute(new Runnable() {
             public void run() {
-                final String res = Decoders.ft8Decode(slot, slotN, RATE, ft4 ? 1 : 0);
+                final String res = Decoders.ft8Decode(slot, slotN, RATE, mode);
                 final ArrayList<String> lines = new ArrayList<String>();
                 final ArrayList<Double> dts = new ArrayList<Double>();
                 Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"), Locale.US);

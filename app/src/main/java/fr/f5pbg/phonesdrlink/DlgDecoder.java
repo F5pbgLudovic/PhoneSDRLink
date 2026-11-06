@@ -19,7 +19,8 @@ import java.util.Locale;
 // Les derniers messages restent aussi visibles en bas de l'écran principal (case à cocher ci-dessous). En CW, un panneau de
 // réglages (tonalité, filtre, vitesse, seuils…) s'affiche sous le texte décodé.
 final class DlgDecoder {
-    static ScrollView cwBox, rttyBox, pskBox, sstvBox;
+    static ScrollView cwBox, rttyBox, pskBox, sstvBox, js8Box;
+    static LinearLayout hiBox;      // champ « Surbrillance » (tous les modes qui font défiler du texte)
     static View sstvImgBox;
 
     // Panneaux de réglages et image selon le décodeur choisi.
@@ -28,11 +29,13 @@ final class DlgDecoder {
         if (rttyBox != null) rttyBox.setVisibility(mode == MainActivity.DEC_RTTY ? View.VISIBLE : View.GONE);
         if (pskBox != null) pskBox.setVisibility(mode == MainActivity.DEC_PSK ? View.VISIBLE : View.GONE);
         if (sstvBox != null) sstvBox.setVisibility(mode == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
+        if (hiBox != null) hiBox.setVisibility(mode == MainActivity.DEC_SSTV || mode == MainActivity.DEC_RADE || mode == MainActivity.DEC_RADE2 ? View.GONE : View.VISIBLE);
+        if (js8Box != null) js8Box.setVisibility(mode == MainActivity.DEC_JS8 ? View.VISIBLE : View.GONE);
         if (sstvImgBox != null) sstvImgBox.setVisibility(mode == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
     }
 
     // Ordre des modes dans la liste déroulante.
-    static final int[] MODES = { MainActivity.DEC_FT8, MainActivity.DEC_FT4, MainActivity.DEC_WSPR, MainActivity.DEC_JT9, MainActivity.DEC_CW,
+    static final int[] MODES = { MainActivity.DEC_FT8, MainActivity.DEC_FT4, MainActivity.DEC_FT2, MainActivity.DEC_WSPR, MainActivity.DEC_JT9, MainActivity.DEC_JS8, MainActivity.DEC_CW,
         MainActivity.DEC_RTTY, MainActivity.DEC_PSK, MainActivity.DEC_SSTV, MainActivity.DEC_RADE, MainActivity.DEC_RADE2 };
     static int lastSel = MainActivity.DEC_FT8;     // dernier mode choisi dans la liste (gardé tant que l'application tourne)
     static Runnable onState;                       // appelé quand le décodeur démarre ou s'arrête : remet à jour les boutons
@@ -45,6 +48,10 @@ final class DlgDecoder {
                 head = Lang.T("Mode USB ou DATA, sur une fréquence FT8 (7.074, 14.074 MHz…) ou FT4 (7.0475, 14.080 MHz…). L'heure du téléphone doit être exacte.", "USB or DATA mode, on an FT8 (7.074, 14.074 MHz…) or FT4 (7.0475, 14.080 MHz…) frequency. The phone clock must be accurate.");
                 cols = Lang.T("Heure UTC · DT (s) · fréquence audio (Hz) · message. Les deux périodes (paire et impaire) sont affichées en deux couleurs.", "UTC time · DT (s) · audio frequency (Hz) · message. The two periods (even and odd) are shown in two colours.");
                 break;
+            case MainActivity.DEC_FT2:
+                head = Lang.T("Mode USB ou DATA, sur une fréquence FT2 (3.578, 7.052, 14.084 MHz…). FT2 est un FT4 deux fois plus rapide : tranches de 3,75 s, messages de 2,5 s, bande de 170 Hz. L'heure du téléphone doit être exacte. Réception seule ; les signaux faibles se décodent moins bien qu'en FT4 (symboles plus courts).", "USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 at double speed: 3.75 s slots, 2.5 s messages, 170 Hz wide. The phone clock must be accurate. Reception only; weak signals decode less well than in FT4 (shorter symbols).");
+                cols = Lang.T("Heure UTC · DT (s) · fréquence audio (Hz) · message. Les deux périodes (paire et impaire) sont affichées en deux couleurs.", "UTC time · DT (s) · audio frequency (Hz) · message. The two periods (even and odd) are shown in two colours.");
+                break;
             case MainActivity.DEC_WSPR:
                 head = Lang.T("Mode USB, sur une fréquence WSPR (14.0956, 7.0386, 10.1387 MHz… : fréquence de la porteuse + 1500 Hz). Tranches de 2 minutes ; l'heure du téléphone doit être exacte ; premiers résultats à la fin de la première tranche.", "USB mode, on a WSPR frequency (14.0956, 7.0386, 10.1387 MHz…: carrier frequency + 1500 Hz). 2-minute slots; the phone clock must be accurate; first results at the end of the first slot.");
                 cols = Lang.T("Heure UTC · SNR (dB) · DT (s) · fréquence audio (Hz) · indicatif, locator, puissance (dBm).", "UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · callsign, locator, power (dBm).");
@@ -52,6 +59,10 @@ final class DlgDecoder {
             case MainActivity.DEC_JT9:
                 head = Lang.T("Mode USB, sur une fréquence JT9 (14.078, 7.078, 3.578 MHz…). Tranches d'une minute ; l'heure du téléphone doit être exacte.", "USB mode, on a JT9 frequency (14.078, 7.078, 3.578 MHz…). 1-minute slots; the phone clock must be accurate.");
                 cols = Lang.T("Heure UTC · SNR (dB) · DT (s) · fréquence audio (Hz) · message.", "UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · message.");
+                break;
+            case MainActivity.DEC_JS8:
+                head = Lang.T("Mode USB, sur une fréquence JS8Call (14.078, 7.078, 3.578 MHz…). Réception seule : trames balise (HEARTBEAT), messages dirigés, texte libre. Choisissez la vitesse de l'émetteur (liste « Vitesse » sous le texte) : Lent (tranches de 30 s), Normal (15 s), Rapide (10 s), Turbo (6 s), Ultra (4 s) ; elle doit être la même que celle de la station écoutée. L'heure du téléphone doit être exacte.", "USB mode, on a JS8Call frequency (14.078, 7.078, 3.578 MHz…). Receive only: heartbeat frames, directed messages, free text. Choose the transmitter's speed (the Speed list under the text): Slow (30 s slots), Normal (15 s), Fast (10 s), Turbo (6 s), Ultra (4 s); it must be the same as the station you listen to. The phone clock must be accurate.");
+                cols = Lang.T("Heure UTC · SNR (dB) · DT (s) · fréquence audio (Hz) · trame (indicatif émetteur : destinataire ou commande, texte). Les deux périodes (paire et impaire) sont affichées en deux couleurs.", "UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · frame (sender callsign: addressee or command, text). The two periods (even and odd) are shown in two colours.");
                 break;
             case MainActivity.DEC_CW:
                 head = Lang.T("Mode CW ou USB, sur un signal CW. Réglages (tonalité, filtre, vitesse, seuils…) sous le texte.", "CW or USB mode, on a CW signal. Settings (tone, filter, speed, thresholds…) under the text.");
@@ -173,6 +184,33 @@ final class DlgDecoder {
             public void onCheckedChanged(CompoundButton b, boolean on) { a.st.decOverlay = on; a.st.save(); a.decRefresh(); }
         });
         col.addView(ov);
+        hiBox = Ui.row(a);
+        hiBox.addView(Ui.small(a, Lang.T("Surbrillance", "Highlight")), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        // Zone d'affichage (pas de saisie sur place, donc pas de curseur qui clignote) : un appui ouvre une fenêtre de saisie avec Valider / Retour.
+        final TextView hi = new TextView(a);
+        hi.setTextSize(14);
+        hi.setTextColor(Ui.fg());
+        hi.setHintTextColor(Ui.sub());
+        hi.setHint("F5PBG, DL1ABC, CQ DX…");
+        hi.setSingleLine(true);
+        hi.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        hi.setPadding(Ui.dp(a, 8), Ui.dp(a, 8), Ui.dp(a, 8), Ui.dp(a, 8));
+        android.graphics.drawable.GradientDrawable hiBg = new android.graphics.drawable.GradientDrawable();
+        hiBg.setColor(Ui.bg());
+        hiBg.setStroke(Ui.dp(a, 1), Ui.sub());
+        hiBg.setCornerRadius(Ui.dp(a, 6));
+        hi.setBackground(hiBg);
+        hi.setText(a.st.decHi);
+        hi.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Ui.input(a, Lang.T("Surbrillance : indicatifs ou textes à repérer, séparés par des virgules", "Highlight: callsigns or texts to spot, separated by commas"), "F5PBG, DL1ABC, CQ DX…", a.st.decHi,
+                    "✓", "✕", new Ui.Text() {
+                        public void got(String t) { a.st.decHi = t.trim(); a.st.save(); hi.setText(a.st.decHi); a.decRefresh(); }
+                    });
+            }
+        });
+        hiBox.addView(hi, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        col.addView(hiBox);
         col.addView(state);
         // SSTV : l'image reçue (se remplit ligne par ligne)
         final ImageView pic = new ImageView(a);
@@ -221,6 +259,10 @@ final class DlgDecoder {
         sstvPanel(a, ss);
         sstvBox = capped(a, ss);
         col.addView(sstvBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout js = Ui.column(a);
+        js8Panel(a, js);
+        js8Box = capped(a, js);
+        col.addView(js8Box, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         showPanels(sel[0]);
         refresh.run();
         final Dialog d = Ui.window(a, Lang.T("Décodeur", "Decoder"), col, true);
@@ -231,7 +273,7 @@ final class DlgDecoder {
         state.setText(a.decStatus);
         a.decRefresh();
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() {
-            public void onDismiss(android.content.DialogInterface x) { a.decView = null; a.decScroll = null; a.decState = null; a.sstvDlgImg = null; cwBox = null; rttyBox = null; pskBox = null; sstvBox = null; sstvImgBox = null; onState = null; }
+            public void onDismiss(android.content.DialogInterface x) { a.decView = null; a.decScroll = null; a.decState = null; a.sstvDlgImg = null; cwBox = null; rttyBox = null; pskBox = null; sstvBox = null; js8Box = null; hiBox = null; sstvImgBox = null; onState = null; }
         });
         d.show();
     }
@@ -411,6 +453,15 @@ final class DlgDecoder {
             public void onNothingSelected(android.widget.AdapterView<?> par) { }
         });
         return sp;
+    }
+
+    static void js8Panel(final MainActivity a, final LinearLayout box) {
+        final Store st = a.st;
+        String[] names = { Lang.T("Lent (30 s)", "Slow (30 s)"), Lang.T("Normal (15 s)", "Normal (15 s)"), Lang.T("Rapide (10 s)", "Fast (10 s)"), "Turbo (6 s)", "Ultra (4 s)" };
+        LinearLayout line = Ui.row(a);
+        line.addView(Ui.small(a, Lang.T("Vitesse", "Speed")), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        line.addView(numSpinner(a, names, st.js8Speed, new Pick() { public void chose(int i) { st.js8Speed = i; st.save(); a.applyJs8Settings(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        box.addView(line);
     }
 
     static void sstvPanel(final MainActivity a, final LinearLayout box) {

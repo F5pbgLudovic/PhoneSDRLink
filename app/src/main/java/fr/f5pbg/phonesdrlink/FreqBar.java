@@ -60,6 +60,21 @@ final class FreqBar extends View {
 
     void stopFling() { flingV = 0; removeCallbacks(flingStep); }
 
+    // Bague / télécommande à balayages (JX-11…) : chaque balayage donne une lancée à la roue, comme un geste rapide du doigt ; les balayages
+    // successifs dans le même sens s'additionnent (la roue accélère), un balayage en sens inverse freine. dir = +1 monte la fréquence.
+    boolean flinging() { return flingV != 0; }
+    int flingDir() { return flingV > 0 ? 1 : flingV < 0 ? -1 : 0; }
+
+    void kick(int dir) {
+        if (locked) return;
+        boolean idle = flingV == 0;
+        float add = dir * 500 * getResources().getDisplayMetrics().density;
+        flingV = Math.max(-4500f, Math.min(4500f, flingV + add));
+        if (Math.abs(flingV) < FLING_STOP) flingV = 0;
+        flingT = android.os.SystemClock.uptimeMillis();
+        if (flingV != 0 && idle) postOnAnimation(flingStep);
+    }
+
     @Override
     protected void onDetachedFromWindow() { stopFling(); super.onDetachedFromWindow(); }
 

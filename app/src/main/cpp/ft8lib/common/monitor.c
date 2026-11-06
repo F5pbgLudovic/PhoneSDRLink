@@ -56,8 +56,10 @@ void monitor_init(monitor_t* me, const monitor_config_t* cfg)
 {
     float slot_time = (cfg->protocol == FTX_PROTOCOL_FT4) ? FT4_SLOT_TIME : FT8_SLOT_TIME;
     float symbol_period = (cfg->protocol == FTX_PROTOCOL_FT4) ? FT4_SYMBOL_PERIOD : FT8_SYMBOL_PERIOD;
+    if (cfg->slot_time > 0) slot_time = cfg->slot_time;
+    if (cfg->symbol_period > 0) symbol_period = cfg->symbol_period;
     // Compute DSP parameters that depend on the sample rate
-    me->block_size = (int)(cfg->sample_rate * symbol_period); // samples corresponding to one FSK symbol
+    me->block_size = (int)(cfg->sample_rate * symbol_period + 0.5f); // samples corresponding to one FSK symbol
     me->subblock_size = me->block_size / cfg->time_osr;
     me->nfft = me->block_size * cfg->freq_osr;
     me->fft_norm = 2.0f / me->nfft;
@@ -106,6 +108,7 @@ void monitor_init(monitor_t* me, const monitor_config_t* cfg)
 
     waterfall_init(&me->wf, max_blocks, num_bins, cfg->time_osr, cfg->freq_osr);
     me->wf.protocol = cfg->protocol;
+    me->wf.scan_max = cfg->scan_max;
 
     me->symbol_period = symbol_period;
 

@@ -71,6 +71,13 @@ final class DlgSettings {
             new String[] { Lang.T("Aucune (réglage d'origine)", "None (original setting)"), "0,25 s", "0,5 s", "1 s", "2 s", "3 s" }, bi,
             new DlgDecoder.Pick() { public void chose(int i) { st.bufMs = bufMs[i]; st.save(); a.applyBuffer(); } });
         col.addView(Ui.small(a, Lang.T("Demande au WebSDR une plus grande mémoire tampon de sortie audio : plus de latence, dans l'espoir de supprimer de petites coupures. Le WebSDR est rechargé quand on change la valeur.", "Asks the WebSDR for a larger audio output buffer: more latency, in the hope of removing small dropouts. The WebSDR is reloaded when the value is changed.")));
+        final int[] ringMs = new int[17];
+        String[] ringNames = new String[17];
+        int ri = 7;
+        for (int i = 0; i < 17; i++) { ringMs[i] = 100 + 50 * i; ringNames[i] = ringMs[i] + " ms"; if (ringMs[i] == st.ringMs) ri = i; }
+        DlgDecoder.choice(a, col, Lang.T("Bague : délai entre deux coups de molette pour accélérer", "Finger ring: delay between two wheel strokes to accelerate"), ringNames, ri,
+            new DlgDecoder.Pick() { public void chose(int i) { st.ringMs = ringMs[i]; st.save(); } });
+        col.addView(Ui.small(a, Lang.T("Deux coups de molette dans le même sens séparés de moins que ce délai lancent le défilement rapide ; sinon, chaque coup fait un seul pas.", "Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.")));
         add(col, a, Lang.T("Couleurs…", "Colours…"), new View.OnClickListener() {
             public void onClick(View v) { d.dismiss(); showColors(a); }
         });

@@ -46,6 +46,7 @@ typedef struct
     WF_ELEM_T* mag;          ///< FFT magnitudes stored as uint8_t[blocks][time_osr][freq_osr][num_bins]
     int block_stride;        ///< Helper value = time_osr * freq_osr * num_bins
     ftx_protocol_t protocol; ///< Indicate if using FT4 or FT8
+    int scan_max;            ///< PhoneSDRLink : upper bound (excluded) of the time offsets tried in ftx_find_candidates (20 by default)
 } ftx_waterfall_t;
 
 /// Output structure of ftx_find_sync() and input structure of ftx_decode().

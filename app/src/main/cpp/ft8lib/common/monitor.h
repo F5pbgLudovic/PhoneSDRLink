@@ -18,6 +18,9 @@ typedef struct
     int time_osr;            ///< Number of time subdivisions
     int freq_osr;            ///< Number of frequency subdivisions
     ftx_protocol_t protocol; ///< Protocol: FT4 or FT8
+    float symbol_period;     ///< PhoneSDRLink : symbol duration override in seconds (0 = protocol default), used for FT2 (FT4 with 0.024 s)
+    float slot_time;         ///< PhoneSDRLink : slot duration override in seconds (0 = protocol default)
+    int scan_max;            ///< PhoneSDRLink : time offsets tried, in blocks (0 = 20)
 } monitor_config_t;
 
 /// FT4/FT8 monitor object that manages DSP processing of incoming audio data

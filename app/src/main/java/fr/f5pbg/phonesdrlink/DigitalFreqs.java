@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 // Liste automatique « Modes numériques » des mémoires : les fréquences habituelles (porteuse / affichage du récepteur, en kHz) du mode
 // du décodeur, bandes de 1,8 à 440 MHz, selon la région IARU (1 Europe-Afrique, 2 Amériques, 3 Asie-Pacifique).
-// Sources : table des fréquences par défaut de WSJT-X (FT8, FT4, JT9, WSPR), plans de bande IARU et usages courants (PSK31, RTTY, SSTV, CW QRP,
+// Sources : table des fréquences par défaut de WSJT-X (FT8, FT4, JT9, WSPR), de JS8Call (JS8), plans de bande IARU et usages courants (PSK31, RTTY, SSTV, CW QRP,
 // FreeDV). Ce sont des fréquences d'usage : elles peuvent changer, et ne remplacent pas le plan de bande de chaque pays.
 final class DigitalFreqs {
     private DigitalFreqs() { }
@@ -22,6 +22,11 @@ final class DigitalFreqs {
         { MainActivity.DEC_FT4, 10140.0, "USB", "a", "" }, { MainActivity.DEC_FT4, 14080.0, "USB", "a", "" }, { MainActivity.DEC_FT4, 18104.0, "USB", "a", "" },
         { MainActivity.DEC_FT4, 21140.0, "USB", "a", "" }, { MainActivity.DEC_FT4, 24919.0, "USB", "a", "" }, { MainActivity.DEC_FT4, 28180.0, "USB", "a", "" },
         { MainActivity.DEC_FT4, 50318.0, "USB", "a", "" }, { MainActivity.DEC_FT4, 144170.0, "USB", "a", "" },
+        // FT2 (Decodium ; liste des fréquences d'essai publiée par les concepteurs : 160 m à 12 m ; 7062 kHz annoncé comme nouvelle fréquence des 40 m)
+        { MainActivity.DEC_FT2, 1843.0, "USB", "a", "" }, { MainActivity.DEC_FT2, 3578.0, "USB", "a", "" }, { MainActivity.DEC_FT2, 5360.0, "USB", "a", "" },
+        { MainActivity.DEC_FT2, 7052.0, "USB", "a", "" }, { MainActivity.DEC_FT2, 7062.0, "USB", "a", "" }, { MainActivity.DEC_FT2, 10144.0, "USB", "a", "" },
+        { MainActivity.DEC_FT2, 14084.0, "USB", "a", "" }, { MainActivity.DEC_FT2, 18108.0, "USB", "a", "" }, { MainActivity.DEC_FT2, 21144.0, "USB", "a", "" },
+        { MainActivity.DEC_FT2, 24923.0, "USB", "a", "" },
         // WSPR
         { MainActivity.DEC_WSPR, 1836.6, "USB", "a", "" }, { MainActivity.DEC_WSPR, 3568.6, "USB", "a", "" }, { MainActivity.DEC_WSPR, 7038.6, "USB", "a", "" },
         { MainActivity.DEC_WSPR, 10138.7, "USB", "a", "" }, { MainActivity.DEC_WSPR, 14095.6, "USB", "a", "" }, { MainActivity.DEC_WSPR, 18104.6, "USB", "a", "" },
@@ -33,6 +38,11 @@ final class DigitalFreqs {
         { MainActivity.DEC_JT9, 10140.0, "USB", "a", "" }, { MainActivity.DEC_JT9, 14078.0, "USB", "a", "" }, { MainActivity.DEC_JT9, 18104.0, "USB", "a", "" },
         { MainActivity.DEC_JT9, 21078.0, "USB", "a", "" }, { MainActivity.DEC_JT9, 24919.0, "USB", "a", "" }, { MainActivity.DEC_JT9, 28078.0, "USB", "a", "" },
         { MainActivity.DEC_JT9, 50312.0, "USB", "a", "" }, { MainActivity.DEC_JT9, 70104.0, "USB", "1", "" },
+        // JS8Call (liste des fréquences par défaut de JS8Call)
+        { MainActivity.DEC_JS8, 1843.5, "USB", "a", "" }, { MainActivity.DEC_JS8, 3578.0, "USB", "a", "" }, { MainActivity.DEC_JS8, 5363.0, "USB", "a", "" },
+        { MainActivity.DEC_JS8, 7078.0, "USB", "a", "" }, { MainActivity.DEC_JS8, 10130.0, "USB", "a", "" }, { MainActivity.DEC_JS8, 14078.0, "USB", "a", "" },
+        { MainActivity.DEC_JS8, 18104.0, "USB", "a", "" }, { MainActivity.DEC_JS8, 21078.0, "USB", "a", "" }, { MainActivity.DEC_JS8, 24922.0, "USB", "a", "" },
+        { MainActivity.DEC_JS8, 28078.0, "USB", "a", "" }, { MainActivity.DEC_JS8, 50318.0, "USB", "a", "" }, { MainActivity.DEC_JS8, 144178.0, "USB", "a", "" },
         // PSK31 (fréquence « .15 » d'usage)
         { MainActivity.DEC_PSK, 1838.15, "USB", "a", "" }, { MainActivity.DEC_PSK, 3580.15, "USB", "a", "" }, { MainActivity.DEC_PSK, 7035.15, "USB", "13", "" },
         { MainActivity.DEC_PSK, 7080.15, "USB", "2", "" }, { MainActivity.DEC_PSK, 10142.15, "USB", "a", "" }, { MainActivity.DEC_PSK, 14070.15, "USB", "a", "" },

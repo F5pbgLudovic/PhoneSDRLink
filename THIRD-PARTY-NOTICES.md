@@ -12,3 +12,15 @@ Sources : https://github.com/kgoba/ft8_lib · https://github.com/drowe67/radae_n
 Les fichiers `rade/rade_dec_data.c` et `opus/dnn/fargan_data.c` sont les poids des réseaux de neurones (environ 24 Mo de texte chacun).
 
 RADE V2 (FreeDV 3.0, en développement) : dossier rade2/ = fichiers de https://github.com/freedv/rade_c (David Rowe, FreeDV), branche main au 6 novembre 2026, licence BSD 2 clauses (rade2/LICENSE) : rade_v2_ofdm, rade_rx_v2, rade_dec_v2 (+ poids rade_dec_v2_data.c), rade_sync (+ poids rade_sync_data.c), constantes. Réseaux de neurones : Opus (même commit 940d4e5), avec MAX_CONV_INPUTS_ALL porté de 1536 à 2048 dans opus/dnn/nnet.c.
+
+JS8Call (décodeur JS8, 1.12) : le décodeur est écrit pour PhoneSDRLink (Js8Engine.java, Js8Text.java), mais il utilise des données et des définitions de **JS8Call** (Jordan Sherer KN4CRD et contributeurs ; https://github.com/JS8Call-improved/JS8Call-improved ; licence **GNU GPL v3**) : matrices du code LDPC (174,87), polynôme et valeur finale du CRC de 12 bits, suites de synchro de Costas, tables de Varicode et de codage Huffman, et le dictionnaire de compression JSC (262 144 mots, `app/src/main/assets/js8jsc.bin`, 1,9 Mo, extrait de JSC_map.cpp avec `tools/js8/GenJsc.java`). Ces éléments sont sous GPL v3 : voir https://www.gnu.org/licenses/gpl-3.0.html. Enregistrements d'essai : fichiers `media/tests` du même dépôt.
+
+FT2 (décodeur FT2, 1.12) : aucun code de Decodium ni de WSJT-X n'est repris. Le décodeur réutilise le moteur FT4 de ft8_lib (MIT) avec des symboles de 24 ms, d'après les paramètres publiés (https://www.ft2.it, manuel de Decodium) et les travaux de rétro-ingénierie de SP5TLS (https://github.com/kosciej/wsjtx-ft2libre, GPL v3 ; ses fichiers d'essai research/ft2_signal.wav et ft2_capture*.wav n'ont servi que de test et ne sont pas inclus).
+
+Licence de PhoneSDRLink (1.12) : GNU GPL v3 (fichier LICENSE à la racine), pour rester conforme à la licence de JS8Call.
+
+WSPR et JT9 : décodeurs écrits pour PhoneSDRLink d'après les descriptions publiées des protocoles (K1JT et al., WSJT-X, GPL v3), validés avec des enregistrements de WSJT-X ; leur code est compatible avec la GPL v3.
+
+ft8_lib (MIT) a été légèrement modifié pour FT2 (durée de symbole et de tranche réglables, plage de recherche en temps) : la mention de licence MIT d'origine (app/src/main/cpp/ft8lib/LICENSE) est conservée. lamejs (LGPL-3.0), radae_nopy et rade_c (BSD) et Opus (BSD) sont compatibles avec la GPL v3.
+
+Le texte complet de la GPL v3 est dans le fichier LICENSE à la racine du dépôt.

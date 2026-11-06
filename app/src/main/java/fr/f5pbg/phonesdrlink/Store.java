@@ -226,6 +226,9 @@ final class Store {
     int zoomPos;                      // boutons INIT + − : coin (bits 0-1 : 0 bas droit, 1 bas gauche, 2 haut droit, 3 haut gauche) et sens (bit 2 : horizontal)
     int bufMs;                        // mémoire tampon audio supplémentaire (ms), 0 = réglage d origine
     boolean zoomPosSet;
+    int ringMs = 450;                 // bague : délai maximal entre deux coups de molette pour lancer l'accélération (100 à 900 ms)
+    String decHi = "";               // surbrillance : suites de caractères à repérer dans le trafic décodé (séparées par des virgules)
+    int js8Speed = 1;                 // JS8 : vitesse (0 Lent, 1 Normal, 2 Rapide, 3 Turbo, 4 Ultra)
     int sstvSens = 5, sstvLoss = 4;   // SSTV : sensibilité aux signaux faibles et « perte data » (patience avant d'abandonner une image), 1 à 10
     String viewPos = "";              // positions des listes (liste choisie, défilement) : "cle=a,b,c|cle=a,b"
     int iaruRegion = 1;               // liste de mémoires « Modes numériques » : région IARU 1, 2 ou 3
@@ -318,7 +321,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        notchLevel = 1; dnrLevel = 1; autoReload = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4;
+        notchLevel = 1; dnrLevel = 1; autoReload = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450;
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
@@ -412,6 +415,9 @@ final class Store {
                 else if (k.equals("PhoneSstvSave")) sstvSave = !v.trim().equals("0");
                 else if (k.equals("PhoneSstvSens10")) sstvSens = Math.max(1, Math.min(10, toInt(v, 5)));
                 else if (k.equals("PhoneSstvLoss")) sstvLoss = Math.max(1, Math.min(10, toInt(v, 4)));
+                else if (k.equals("PhoneRingMs")) ringMs = Math.max(100, Math.min(900, toInt(v, 450)));
+                else if (k.equals("PhoneDecHighlight")) { try { decHi = java.net.URLDecoder.decode(v.trim(), "UTF-8"); } catch (Exception e) { } }
+                else if (k.equals("PhoneJs8Speed")) js8Speed = Math.max(0, Math.min(4, toInt(v, 1)));
                 else if (k.equals("PhoneHeadsetStop")) headsetStop = v.trim().equals("1");
                 else if (k.equals("PhoneColBtnBg")) colBtnBg = hexColor(v);
                 else if (k.equals("PhoneColBtnTx")) colBtnTx = hexColor(v);
@@ -498,7 +504,7 @@ final class Store {
         Store t = new Store();
         t.favorites.clear();
         t.parse(text, cats & ~IMP_CONFIG | (cats & IMP_CONFIG));
-        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; zoomPos = t.zoomPos; bufMs = t.bufMs; iaruRegion = t.iaruRegion; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; colDec = t.colDec; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; sstvSens = t.sstvSens; sstvLoss = t.sstvLoss; callsign = t.callsign; checkUpdates = t.checkUpdates; }
+        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; zoomPos = t.zoomPos; bufMs = t.bufMs; iaruRegion = t.iaruRegion; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; colDec = t.colDec; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; sstvSens = t.sstvSens; sstvLoss = t.sstvLoss; js8Speed = t.js8Speed; decHi = t.decHi; ringMs = t.ringMs; callsign = t.callsign; checkUpdates = t.checkUpdates; }
         if ((cats & IMP_WEBSDR) != 0) {
             for (int i = 0; i < Favorite.MAX_LISTS; i++) if (!t.favListNames[i].equals("Liste " + (i + 1)) && favListNames[i].equals("Liste " + (i + 1))) favListNames[i] = t.favListNames[i];
             for (Favorite f : t.favorites) {
@@ -571,6 +577,9 @@ final class Store {
         line(sb, "PhoneSstvSave", sstvSave ? 1 : 0);
         line(sb, "PhoneSstvSens10", sstvSens);
         line(sb, "PhoneSstvLoss", sstvLoss);
+        line(sb, "PhoneJs8Speed", js8Speed);
+        line(sb, "PhoneRingMs", ringMs);
+        try { line(sb, "PhoneDecHighlight", java.net.URLEncoder.encode(decHi, "UTF-8")); } catch (Exception e) { }
         line(sb, "PhoneHeadsetStop", headsetStop ? 1 : 0);
         line(sb, "PhoneColBtnBg", String.format("%08X", colBtnBg));
         line(sb, "PhoneColBtnTx", String.format("%08X", colBtnTx));

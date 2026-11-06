@@ -64,7 +64,9 @@ static ftx_callsign_hash_interface_t hash_if = { .lookup_hash = ht_lookup, .save
 
 int sdrdec_ft8_decode(const float *signal, int n, int sample_rate, int ft4, char *out, int out_size) {
     monitor_t mon;
+    /* ft4 : 0 = FT8, 1 = FT4, 2 = FT2 (FT4 dont les symboles durent 24 ms au lieu de 48 ; tranche de 3,75 s) */
     monitor_config_t cfg = { .f_min = 200, .f_max = 3000, .sample_rate = sample_rate, .time_osr = TIME_OSR, .freq_osr = FREQ_OSR, .protocol = ft4 ? FTX_PROTOCOL_FT4 : FTX_PROTOCOL_FT8 };
+    if (ft4 == 2) { cfg.symbol_period = 0.024f; cfg.slot_time = 3.75f; cfg.scan_max = 56; }
     monitor_init(&mon, &cfg);
     for (int pos = 0; pos + mon.block_size <= n; pos += mon.block_size) monitor_process(&mon, signal + pos);
 

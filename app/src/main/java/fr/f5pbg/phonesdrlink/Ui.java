@@ -194,17 +194,24 @@ final class Ui {
 
     interface Text { void got(String text); }
 
-    static void input(Context c, String title, String hint, String initial, final Text cb) {
+    static void input(Context c, String title, String hint, String initial, final Text cb) { input(c, title, hint, initial, "OK", Lang.T("Annuler", "Cancel"), cb); }
+
+    // Même fenêtre avec des libellés de boutons au choix ; le clavier s'ouvre tout de suite, le curseur est à la fin du texte.
+    static void input(Context c, String title, String hint, String initial, String okLabel, String cancelLabel, final Text cb) {
         final EditText e = edit(c, initial, hint, InputType.TYPE_CLASS_TEXT);
+        e.setSelection(e.getText().length());
         LinearLayout col = column(c);
         col.addView(e);
         final Dialog d = window(c, title, col, false);
         LinearLayout r = row(c);
         r.setGravity(Gravity.END);
-        r.addView(button(c, Lang.T("Annuler", "Cancel"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }));
-        r.addView(button(c, "OK", new View.OnClickListener() { public void onClick(View v) { d.dismiss(); cb.got(e.getText().toString()); } }));
+        r.addView(button(c, cancelLabel, new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }));
+        r.addView(button(c, okLabel, new View.OnClickListener() { public void onClick(View v) { d.dismiss(); cb.got(e.getText().toString()); } }));
         col.addView(r);
+        if (d.getWindow() != null) d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         d.show();
+        e.requestFocus();
+        e.postDelayed(new Runnable() { public void run() { android.view.inputmethod.InputMethodManager m = (android.view.inputmethod.InputMethodManager) e.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); if (m != null) m.showSoftInput(e, 0); } }, 150);
     }
 
     interface Yes { void yes(); }

@@ -26,3 +26,12 @@ Dsstv2 (SSTV : image interrompue puis autre image, avec ou sans pause) : compile
 Dsstv3 (SSTV sans le début : mode trouvé par les synchros) : mêmes fichiers que Dsstv2 ; Dsstv3 wav <dossier> écrit sstv-blind.wav (8 kHz) à injecter avec --es decwav sstv:/sdcard/Android/data/fr.f5pbg.phonesdrlink/files/sstv-blind.wav.
 Dsstv4 [blind] (tableau : sensibilité 0 à 4 x SNR 12/9/6/3 dB x 4 modes, lignes reçues / erreur ; puis 600 s de bruit seul par niveau) et Dsstv5 <mode> <SNR> <niveau> [blind [dbg]] (suivi d'une réception) : compiler avec Lang, Dsstv, Dsstv4, Dsstv5, TextEngine, SstvEngine.
 Dsstv6 (perte data : trou de 4/10/40 s au milieu d'une image, niveaux 1/4/7/10) : compiler avec Lang, Dsstv, Dsstv6, TextEngine, SstvEngine.
+
+JS8 (1.12, Js8Engine.java / Js8Text.java / SlotDecoder.java)
+-------------------------------------------------------------
+Dj8 : wav <vitesse 0..4> <fichier.wav> [shift=n passes=n sync=x cand=n] ; synth <vitesse> <SNR dB> [n] ; noise <vitesse> <n>. Vitesses : 0 Lent, 1 Normal, 2 Rapide, 3 Turbo, 4 Ultra.
+Enregistrements d'essai (à télécharger, non fournis) : https://github.com/JS8Call-improved/JS8Call-improved/tree/HEAD/media/tests (A_*.wav = Normal, E_*.wav = Lent ; le dernier nombre du nom = messages attendus par le décodeur de JS8Call : 4 1 3 5 6 9 3 en Normal ; nous en trouvons 4 1 2 4 6 7 2).
+  P=app\src\main\java\fr\f5pbg\phonesdrlink
+  toolchain\jdk\bin\javac -encoding UTF-8 -d tools\bench\out tools\bench\stub\android\os\*.java tools\bench\fr\f5pbg\phonesdrlink\Lang.java tools\bench\fr\f5pbg\phonesdrlink\Dj8.java %P%\SlotDecoder.java %P%\Js8Engine.java %P%\Js8Text.java %P%\Ft8Engine.java %P%\Decoders.java
+  toolchain\jdk\bin\java -Dfile.encoding=UTF-8 -cp tools\bench\out fr.f5pbg.phonesdrlink.Dj8 wav 1 A_2_6.wav
+Le dictionnaire (assets\js8jsc.bin) vient de tools\js8\GenJsc.java (JSC_map.cpp de JS8Call) ; tools\js8\TestText.java teste Js8Text (42 essais). Test sur le téléphone : --es decwav js8:/sdcard/Android/data/fr.f5pbg.phonesdrlink/files/A_2_6.wav (injecté à partir de la prochaine limite de tranche).

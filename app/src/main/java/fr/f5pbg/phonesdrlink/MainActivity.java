@@ -704,6 +704,150 @@ public class MainActivity extends Activity {
         }
     };
 
+    // Bague / télécommande de doigt « JX-11 » (vue comme un petit écran tactile et un clavier de touches multimédia) : un balayage vers le
+    // haut monte la fréquence, vers le bas la baisse (un pas du réglage en cours par balayage) ; un appui (touche de volume, simple toucher)
+    // arrête net la roue, comme le doigt posé sur la réglette. Ces événements sont consommés ici : ils ne touchent ni la page ni le volume.
+    static boolean isRing(android.view.InputEvent e) {
+        android.view.InputDevice d = e.getDevice();
+        return d != null && d.getName() != null && d.getName().startsWith("JX-11");
+    }
+    float ringY0;
+
+    // Listes Mode (clic droit de la bague) et Largeur de bande (clic gauche) : un cadre s'affiche sur l'écran, la molette fait défiler la liste,
+    // le choix est appliqué au bout de 3 secondes sans mouvement (ou à un second clic sur le même bouton).
+    int ringPick;              // 0 aucune liste, 1 mode, 2 largeur de bande
+    int ringIdx;
+    String[] ringItems = new String[0];
+    int[] ringBw = new int[0];
+    TextView ringView;
+    final Runnable ringApplyRun = new Runnable() { public void run() { ringApply(); } };
+
+    void ringOpen(int kind) {
+        if (ringPick == kind) { ringApply(); return; }
+        if (ringPick != 0) ringApply();
+        if (blocked()) return;
+        if (kind == 2 && sdrKind.isEmpty()) { status(Lang.T("Largeur de bande impossible : aucun WebSDR actif", "Cannot set the bandwidth: no active WebSDR")); return; }
+        if (bar != null) bar.stopFling();
+        if (kind == 1) {
+            ringItems = new String[MODES.length];
+            ringIdx = 0;
+            for (int i = 0; i < MODES.length; i++) { ringItems[i] = modeLabel(MODES[i]); if (MODES[i].equals(mode)) ringIdx = i; }
+        } else {
+            int[] v = bwChoices(mode);
+            ringBw = new int[v.length + 1];
+            ringItems = new String[v.length + 1];
+            ringBw[0] = 0;
+            ringItems[0] = Lang.T("Filtre d'origine du WebSDR", "WebSDR default filter");
+            ringIdx = bwHz == 0 ? 0 : -1;
+            int best = 0, bestD = Integer.MAX_VALUE;
+            for (int i = 0; i < v.length; i++) { ringBw[i + 1] = v[i]; ringItems[i + 1] = bwText(v[i]); int d = Math.abs(v[i] - bwHz); if (d < bestD) { bestD = d; best = i + 1; } }
+            if (ringIdx < 0) ringIdx = best;
+        }
+        ringPick = kind;
+        ringShow();
+    }
+
+    void ringMove(int d) {
+        if (ringPick == 0 || ringItems.length == 0) return;
+        ringIdx = Math.max(0, Math.min(ringItems.length - 1, ringIdx + d));
+        ringShow();
+    }
+
+    void ringShow() {
+        if (webFrame == null) return;
+        if (ringView == null) {
+            ringView = new TextView(this);
+            ringView.setTextSize(20);
+            ringView.setTextColor(0xFFFFFFFF);
+            ringView.setBackgroundColor(0xE6000000);
+            ringView.setPadding(Ui.dp(this, 18), Ui.dp(this, 12), Ui.dp(this, 18), Ui.dp(this, 12));
+            ringView.setGravity(Gravity.CENTER);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+            webFrame.addView(ringView, lp);
+        }
+        android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder();
+        String title = ringPick == 1 ? Lang.T("Mode", "Mode") : Lang.T("Largeur de bande", "Bandwidth");
+        sb.append(title).append('\n');
+        sb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, title.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        for (int i = 0; i < ringItems.length; i++) {
+            int s0 = sb.length();
+            sb.append("  ").append(ringItems[i]).append("  ");
+            if (i == ringIdx) {
+                sb.setSpan(new android.text.style.BackgroundColorSpan(Ui.accent()), s0, sb.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                sb.setSpan(new android.text.style.ForegroundColorSpan(0xFF000000), s0, sb.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                sb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), s0, sb.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            if (i < ringItems.length - 1) sb.append('\n');
+        }
+        ringView.setText(sb);
+        ringView.setVisibility(View.VISIBLE);
+        h.removeCallbacks(ringApplyRun);
+        h.postDelayed(ringApplyRun, 3000);
+    }
+
+    void ringApply() {
+        h.removeCallbacks(ringApplyRun);
+        int kind = ringPick;
+        ringPick = 0;
+        if (ringView != null) ringView.setVisibility(View.GONE);
+        if (kind == 1 && ringIdx >= 0 && ringIdx < MODES.length && !MODES[ringIdx].equals(mode)) setMode(MODES[ringIdx]);
+        else if (kind == 2 && ringIdx >= 0 && ringIdx < ringBw.length && ringBw[ringIdx] != bwHz) setBandwidth(ringBw[ringIdx]);
+    }
+    int ringDir;
+    long ringT;
+    static boolean ringPresent() {
+        for (int id : android.view.InputDevice.getDeviceIds()) { android.view.InputDevice d = android.view.InputDevice.getDevice(id); if (d != null && d.getName() != null && d.getName().startsWith("JX-11")) return true; }
+        return false;
+    }
+    // Le système transmet les gestes de la bague comme des touchers « virtuels » (identité -1, pas « JX-11 ») dont l'abscisse est toujours
+    // la même : milieu de la plage 0..1000 de la bague, soit 500 / 1001 de la largeur de l'écran. Un vrai doigt n'a jamais l'identité -1.
+    boolean isRingTouch(android.view.MotionEvent ev) {
+        if (isRing(ev)) return true;
+        if (ev.getDeviceId() != -1) return false;
+        float cx = 500f * getResources().getDisplayMetrics().widthPixels / 1001f;
+        return Math.abs(ev.getX() - cx) < 0.05f;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(android.view.MotionEvent ev) {
+        if (isRingTouch(ev)) {
+            int a = ev.getActionMasked();
+            if (a == android.view.MotionEvent.ACTION_DOWN) ringY0 = ev.getY();
+            else if (a == android.view.MotionEvent.ACTION_UP) {
+                float dy = ev.getY() - ringY0;
+                if (bar != null && Math.abs(dy) >= Ui.dp(this, 30)) {   // (un simple toucher ne fait plus rien)
+                    int dir = dy < 0 ? 1 : -1;
+                    long now = android.os.SystemClock.uptimeMillis();
+                    if (ringPick != 0) ringMove(-dir);                                   // liste Mode / Largeur affichée : le balayage la fait défiler
+                    else if (bar.flinging() && bar.flingDir() != dir) { bar.stopFling(); ringT = 0; ringDir = 0; return true; }   // sens inverse : arrêt net
+                    else {
+                        // Un balayage isolé = un pas du réglage en cours. Des balayages rapprochés dans le même sens (moins de st.ringMs, 450 ms par défaut, réglable dans SET) lancent la roue
+                        // comme un geste rapide sur la réglette, et chaque balayage de plus l'accélère.
+                        if (bar.flinging() || (dir == ringDir && now - ringT < st.ringMs)) bar.kick(dir);
+                        else tuneBySteps(dir, 1000);
+                    }
+                    ringDir = dir;
+                    ringT = now;
+                }
+            }
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(android.view.KeyEvent ev) {
+        if ((isRing(ev) && ev.getKeyCode() != android.view.KeyEvent.KEYCODE_HOME) || (ev.getDeviceId() == -1 && ringPresent() && (ev.getKeyCode() == android.view.KeyEvent.KEYCODE_VOLUME_UP || ev.getKeyCode() == android.view.KeyEvent.KEYCODE_VOLUME_DOWN))) {
+            // Touches de la bague : volume + = clic droit (liste des modes), volume - = clic gauche (liste des largeurs de bande).
+            if (ev.getAction() == android.view.KeyEvent.ACTION_DOWN && ev.getRepeatCount() == 0) {
+                if (ev.getKeyCode() == android.view.KeyEvent.KEYCODE_VOLUME_UP) ringOpen(1);
+                else if (ev.getKeyCode() == android.view.KeyEvent.KEYCODE_VOLUME_DOWN) ringOpen(2);
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(ev);
+    }
+
     @Override
     public boolean onKeyDown(int code, android.view.KeyEvent e) {
         boolean r = super.onKeyDown(code, e);
@@ -1415,13 +1559,14 @@ public class MainActivity extends Activity {
 
     // ------------------------------------------------------------------ décodeurs numériques (FT8, FT4, CW, RTTY, FreeDV RADE)
 
-    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7, DEC_WSPR = 8, DEC_JT9 = 9, DEC_RADE2 = 10;
+    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7, DEC_WSPR = 8, DEC_JT9 = 9, DEC_RADE2 = 10, DEC_JS8 = 11, DEC_FT2 = 12;
     static boolean isRade(int m) { return m == DEC_RADE || m == DEC_RADE2; }   // FreeDV RADE V1 (FreeDV 2.x) ou V2 (FreeDV 3.0)
     int decMode;                       // 0 arrêté, sinon DEC_*
     boolean radeVoice;                 // RADE : des trames FreeDV sont décodées, la parole remplace le son du WebSDR
     Ft8Engine ft8;
     WsprEngine wspr;
     Jt9Engine jt9;
+    Js8Engine js8;
     RadeEngine rade;
     TextEngine txt;
     static final class DecLine { String text, slot; int col; DecLine(String t, int c) { text = t; col = c; int k = t.indexOf(" "); slot = c != 0 && k > 0 ? t.substring(0, k) : null; } }   // col : 0 normal, 1 période 1, 2 période 2
@@ -1432,8 +1577,35 @@ public class MainActivity extends Activity {
     ScrollView decScroll;
     int decTries;
 
-    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_WSPR ? "WSPR" : m == DEC_JT9 ? "JT9" : m == DEC_RADE ? "RADE V1" : m == DEC_RADE2 ? "RADE V2" : ""; }
-    static int decRate(int m) { return (m == DEC_FT8 || m == DEC_FT4 || m == DEC_WSPR || m == DEC_JT9) ? Ft8Engine.RATE : 8000; }
+    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_FT2 ? "FT2" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_WSPR ? "WSPR" : m == DEC_JT9 ? "JT9" : m == DEC_JS8 ? "JS8" : m == DEC_RADE ? "RADE V1" : m == DEC_RADE2 ? "RADE V2" : ""; }
+    static int decRate(int m) { return (m == DEC_FT8 || m == DEC_FT4 || m == DEC_FT2 || m == DEC_WSPR || m == DEC_JT9 || m == DEC_JS8) ? Ft8Engine.RATE : 8000; }
+
+    // Surbrillance (réglage « Surbrillance » de la fenêtre du décodeur) : chaque suite de caractères saisie (séparées par des virgules,
+    // tiret, barre oblique et espaces permis à l'intérieur) est repérée sans tenir compte des majuscules, dans la fenêtre du décodeur et
+    // sur l'écran principal.
+    String hiSrc = null;
+    String[] hiPats = new String[0];
+    void hiParse() {
+        String src = st.decHi == null ? "" : st.decHi;
+        if (src.equals(hiSrc)) return;
+        hiSrc = src;
+        java.util.ArrayList<String> l = new java.util.ArrayList<String>();
+        for (String p : src.split("[,;\\n]")) { p = p.trim().toLowerCase(java.util.Locale.ROOT); if (p.length() > 0) l.add(p); }
+        hiPats = l.toArray(new String[0]);
+    }
+    void hilite(android.text.SpannableStringBuilder sb, int start, String text) {
+        hiParse();
+        if (hiPats.length == 0) return;
+        String low = text.toLowerCase(java.util.Locale.ROOT);
+        if (low.length() != text.length()) return;   // (rare) la mise en minuscules a changé la longueur : positions fausses, on s'abstient
+        for (String p : hiPats) {
+            for (int k = low.indexOf(p); k >= 0; k = low.indexOf(p, k + p.length())) {
+                sb.setSpan(new android.text.style.BackgroundColorSpan(0xFF00E676), start + k, start + k + p.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                sb.setSpan(new android.text.style.ForegroundColorSpan(0xFF000000), start + k, start + k + p.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                sb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start + k, start + k + p.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+    }
 
     android.text.SpannableStringBuilder decSpan(int last) {
         android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder();
@@ -1442,6 +1614,7 @@ public class MainActivity extends Activity {
             int s = sb.length();
             sb.append(l.text);
             sb.setSpan(new android.text.style.ForegroundColorSpan(l.col == 1 ? Ui.ft8A() : l.col == 2 ? Ui.ft8B() : Ui.fg()), s, sb.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            hilite(sb, s, l.text);
             if (i < decLines.size() - 1) sb.append('\n');
         }
         return sb;
@@ -1465,6 +1638,7 @@ public class MainActivity extends Activity {
             int s = sb.length();
             sb.append(l.text);
             sb.setSpan(new android.text.style.ForegroundColorSpan(l.col == 1 ? Ui.ft8A() : l.col == 2 ? Ui.ft8B() : Ui.fg()), s, sb.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            hilite(sb, s, l.text);
             if (i < end - 1) sb.append('\n');
         }
         return sb;
@@ -1554,6 +1728,7 @@ public class MainActivity extends Activity {
 
     void applyDecSettings() { applyCwSettings(); applyRttySettings(); applyPskSettings(); applySstvSettings(); }
 
+    void applyJs8Settings() { if (decMode == DEC_JS8) decoderStart(DEC_JS8); }   // vitesse changée : le décodeur JS8 repart
     void applySstvSettings() { if (txt instanceof SstvEngine) ((SstvEngine) txt).setLevels(st.sstvSens, st.sstvLoss); }
 
     // Réglages PSK31 : copiés du stockage vers le moteur (fréquence automatique ou manuelle, AFC, débit, squelch).
@@ -1710,7 +1885,7 @@ public class MainActivity extends Activity {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    long per = mode == DEC_WSPR ? 120000L : 60000L;
+                    long per = mode == DEC_WSPR ? 120000L : mode == DEC_JS8 ? Js8Engine.PERIOD[st.js8Speed] : 60000L;
                     long now = System.currentTimeMillis(), t0 = (now / per + 1) * per;
                     android.util.Log.i("PSDR", "DECWAV attente " + (t0 - now) + " ms");
                     long tS = t0 - 3200;   // 3,2 s de silence avant : la fenêtre d analyse commence avant la tranche
@@ -1721,14 +1896,14 @@ public class MainActivity extends Activity {
                     int r, k = 0;
                     for (; k < 24; k++) {
                         byte[] z = new byte[3200];
-                        if (wspr != null) wspr.feed(z, 3200); else if (jt9 != null) jt9.feed(z, 3200);
+                        if (wspr != null) wspr.feed(z, 3200); else if (jt9 != null) jt9.feed(z, 3200); else if (js8 != null) js8.feed(z, 3200);
                         long dz = tS + (k + 1) * 1600L * 1000L / 12000L - System.currentTimeMillis();
                         if (dz > 0) Thread.sleep(dz);
                     }
                     while ((r = f.read(buf)) > 0) {
-                        if (wspr == null && jt9 == null) break;
+                        if (wspr == null && jt9 == null && js8 == null) break;
                         byte[] c = buf.clone();
-                        if (wspr != null) wspr.feed(c, r); else jt9.feed(c, r);
+                        if (wspr != null) wspr.feed(c, r); else if (jt9 != null) jt9.feed(c, r); else js8.feed(c, r);
                         k++;
                         long due = tS + k * 1600L * 1000L / 12000L, w = due - System.currentTimeMillis();
                         if (w > 0) Thread.sleep(w);
@@ -1741,12 +1916,12 @@ public class MainActivity extends Activity {
     }
 
     void decWavTest(final String spec) {
-        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : spec.startsWith("wspr:") ? DEC_WSPR : spec.startsWith("jt9:") ? DEC_JT9 : DEC_PSK;
+        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : spec.startsWith("wspr:") ? DEC_WSPR : spec.startsWith("jt9:") ? DEC_JT9 : spec.startsWith("js8:") ? DEC_JS8 : DEC_PSK;
         final String path = spec.substring(spec.indexOf(':') + 1);
         h.postDelayed(new Runnable() {
             public void run() {
                 decoderStart(mode);
-                if (mode == DEC_WSPR || mode == DEC_JT9) { decSlotWav(mode, path); return; }
+                if (mode == DEC_WSPR || mode == DEC_JT9 || mode == DEC_JS8) { decSlotWav(mode, path); return; }
                 if (txt == null) return;
                 js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();");
                 new Thread(new Runnable() {
@@ -1826,15 +2001,19 @@ public class MainActivity extends Activity {
                 public void onVoice(boolean on) { radeVoice = on; applyVolume(); }
             });
             if (!rade.start()) { rade = null; decSetStatus(Lang.T("FreeDV RADE demande un téléphone 64 bits", "FreeDV RADE needs a 64-bit phone")); return; }
-        } else if (mode == DEC_WSPR || mode == DEC_JT9) {
+        } else if (mode == DEC_WSPR || mode == DEC_JT9 || mode == DEC_JS8) {
             Ft8Engine.Listener sl = new Ft8Engine.Listener() {
                 public void onLines(java.util.ArrayList<String> lines, int parity) { for (String s : lines) decAddLine(s, parity == 0 ? 1 : 2); decRefresh(); }
                 public void onStatus(String s) { decSetStatus(s); }
             };
             SlotDecoder.dumpDir = getExternalFilesDir(null);
-            if (mode == DEC_WSPR) { wspr = new WsprEngine(sl); wspr.start(); } else { jt9 = new Jt9Engine(sl); jt9.start(); }
-        } else if (mode == DEC_FT8 || mode == DEC_FT4) {
-            ft8 = new Ft8Engine(mode == DEC_FT4, new Ft8Engine.Listener() {
+            if (mode == DEC_WSPR) { wspr = new WsprEngine(sl); wspr.start(); }
+            else if (mode == DEC_JS8) {
+                if (!Js8Text.jscLoaded()) { try { java.io.InputStream in = getAssets().open("js8jsc.bin"); try { Js8Text.loadJsc(in); } finally { in.close(); } } catch (Exception e) { android.util.Log.i("PSDR", "JS8 dictionnaire : " + e); } }
+                js8 = new Js8Engine(st.js8Speed, sl); js8.start();
+            } else { jt9 = new Jt9Engine(sl); jt9.start(); }
+        } else if (mode == DEC_FT8 || mode == DEC_FT4 || mode == DEC_FT2) {
+            ft8 = new Ft8Engine(mode == DEC_FT2 ? 2 : mode == DEC_FT4 ? 1 : 0, new Ft8Engine.Listener() {
                 public void onLines(java.util.ArrayList<String> lines, int parity) { for (String s : lines) decAddLine(s, parity == 0 ? 1 : 2); decRefresh(); }
                 public void onStatus(String s) { decSetStatus(s); }
             });
@@ -1865,6 +2044,7 @@ public class MainActivity extends Activity {
         if (ft8 != null) { ft8.stop(); ft8 = null; }
         if (wspr != null) { wspr.stop(); wspr = null; }
         if (jt9 != null) { jt9.stop(); jt9 = null; }
+        if (js8 != null) { js8.stop(); js8 = null; }
         if (rade != null) { rade.stop(); rade = null; }
         radeVoice = false;
         radeAuto = false;
@@ -1889,10 +2069,10 @@ public class MainActivity extends Activity {
     void onDecMessage(String msg) {
         if (decTest) return;
         if (msg.startsWith("dec|d|")) {
-            if (ft8 == null && wspr == null && jt9 == null && rade == null && txt == null) return;
+            if (ft8 == null && wspr == null && jt9 == null && js8 == null && rade == null && txt == null) return;
             try {
                 byte[] b = android.util.Base64.decode(msg.substring(6), android.util.Base64.NO_WRAP);
-                if (ft8 != null) ft8.feed(b, b.length); else if (wspr != null) wspr.feed(b, b.length); else if (jt9 != null) jt9.feed(b, b.length); else if (rade != null) rade.feed(b, b.length); else if (txt != null) txt.feedBytes(b, b.length);
+                if (ft8 != null) ft8.feed(b, b.length); else if (wspr != null) wspr.feed(b, b.length); else if (jt9 != null) jt9.feed(b, b.length); else if (js8 != null) js8.feed(b, b.length); else if (rade != null) rade.feed(b, b.length); else if (txt != null) txt.feedBytes(b, b.length);
             } catch (Exception e) { }
             return;
         }
