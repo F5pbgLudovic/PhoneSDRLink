@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Vastuvõtupuhver
 Auto frequency change for digital modes	Digirežiimide sageduse automaatne vahetus
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Dekooderi käivitamisel häälestatakse lähimale sagedusele (ja režiimile) selle dekooderi loendist „Digirežiimid“.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	USB-režiim, Olivia signaalil (väljakutse 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 ja 32/1000 veidi kõrgemal, umbes 14.075 ja 14.106 MHz). Määrake saatja toonide arv ja ribalaius (nimekirjad teksti all): need peavad olema samad mis saatjal; tavalised vormingud: 8/250, 16/500, 32/1000. Signaali keskpunkt leitakse spektrist automaatselt (või määratakse käsitsi). Tekst ilmub plokkidena, mõni sekund pärast sünkroniseerimist; signaal võib olla isegi tugevalt müra all. Ainult vastuvõtt.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	UTC-aeg · tekst. Teksti kohal näitab olekurida sünkroniseerimist, signaali ja müra suhet ning sagedusnihet.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	USB-režiim, Contestia signaalil (Olivia variant 6-bitiste märkidega: 3.5825, 7.0425, 14.0725 MHz…). Määrake saatja toonide arv ja ribalaius (nimekirjad teksti all): tavalised vormingud 8/250, 16/500, 32/1000. Signaali keskpunkt leitakse spektrist automaatselt (või määratakse käsitsi). Ainult vastuvõtt.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	USB-režiim, Hellschreiberi signaalil (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Valige saatja variant pildi all olevast nimekirjast: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 või Hell 80. Teksti ei dekodeerita tähtedeks: see kirjutatakse pildina, mida loete silmaga, nagu algsel masinal (14-punktilised read, mis kerivad üles). Sagedus leitakse spektrist automaatselt; punktiread joonduvad ise. Ainult vastuvõtt.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Pilt: tähed kirjutatakse vasakult paremale ja rida murdub lõpus. Kui tekst paistab viltune, erinevad kahe jaama kellad veidi: jälgimine korrigeerib selle ise.
+{0} settings (applied immediately):	{0} seaded (rakenduvad kohe):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Kiirus: umbes {0} märki sekundis ({1} tooni {2} Hz ulatuses)
+Number of tones	Toonide arv
+Signal bandwidth	Signaali ribalaius
+Automatic signal centre	Automaatne signaali keskpunkt
+Signal centre: {0} Hz	Signaali keskpunkt: {0} Hz
+Reversed signal (opposite sideband)	Ümberpööratud signaal (vastasküljariba)
+Frequency search margin: ± {0} tones	Sageduse otsingu varu: ± {0} tooni
+Synchronisation integration: {0}	Sünkroniseerimise integreerimine: {0}
+Synchronisation threshold (signal / noise): ×{0}	Sünkroniseerimise lävi (signaal / müra): ×{0}
+Hell settings (applied immediately):	Hell seaded (rakenduvad kohe):
+Transmitter variant	Saatja variant
+Squelch: {0}	Squelch: {0}
+none	puudub
+Swap the tones (FM Hell 105 / 245, Hell 80)	Vaheta toonid (FM Hell 105 / 245, Hell 80)
+Clear the screen	Tühjenda ekraan
+Save the picture	Salvesta pilt
+Nothing to save	Pole midagi salvestada
+Could not save	Salvestamine ebaõnnestus
+Picture saved: 	Pilt salvestatud: 
+Olivia: settings refused	Olivia: seaded tagasi lükatud
+listening at %d Hz	kuulamas sagedusel %d Hz
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	sünkroonis, S/N %.0f dB, nihe %+.0f Hz, keskpunkt %d Hz
+searching for a signal… (centre %d Hz)	otsin signaali… (keskpunkt %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	vastuvõtt sagedusel %.0f Hz (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	otsin signaali… (%.0f Hz)

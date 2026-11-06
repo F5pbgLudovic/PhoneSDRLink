@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Mottagningsbuffert
 Auto frequency change for digital modes	Automatiskt frekvensbyte för digitala moder
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	När en avkodare startas ställs den närmaste frekvensen (och moden) in från avkodarens lista ”Digitala moder”.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	USB-läge, på en Olivia-signal (anrop 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 och 32/1000 något högre, runt 14.075 och 14.106 MHz). Ställ in sändarens antal toner och bandbredd (listorna under texten): de måste vara desamma som sändarens; vanliga format: 8/250, 16/500, 32/1000. Signalens mittpunkt hittas automatiskt i spektrumet (eller anges manuellt). Texten visas i block, några sekunder efter synkroniseringen; signalen kan till och med ligga långt under bruset. Endast mottagning.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	UTC-tid · text. Ovanför texten visar statusraden synkroniseringen, signal-brusförhållandet och frekvensavvikelsen.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	USB-läge, på en Contestia-signal (en Olivia-variant med 6-bitars tecken: 3.5825, 7.0425, 14.0725 MHz…). Ställ in sändarens antal toner och bandbredd (listorna under texten): vanliga format 8/250, 16/500, 32/1000. Signalens mittpunkt hittas automatiskt i spektrumet (eller anges manuellt). Endast mottagning.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	USB-läge, på en Hellschreiber-signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Välj sändarens variant i listan under bilden: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 eller Hell 80. Texten avkodas inte till bokstäver: den skrivs som en bild som du läser med blicken, som på originalmaskinen (rader om 14 punkter som rullar uppåt). Frekvensen hittas automatiskt i spektrumet; punktraderna riktar in sig själva. Endast mottagning.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Bild: bokstäverna skrivs från vänster till höger och raden bryts vid slutet. Om texten ser lutande ut skiljer sig de två stationernas klockor något: spårningen kompenserar själv.
+{0} settings (applied immediately):	Inställningar för {0} (tillämpas direkt):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Hastighet: cirka {0} tecken per sekund ({1} toner över {2} Hz)
+Number of tones	Antal toner
+Signal bandwidth	Signalens bandbredd
+Automatic signal centre	Automatisk signalmittpunkt
+Signal centre: {0} Hz	Signalmittpunkt: {0} Hz
+Reversed signal (opposite sideband)	Inverterad signal (motsatt sidband)
+Frequency search margin: ± {0} tones	Frekvenssökningsmarginal: ± {0} toner
+Synchronisation integration: {0}	Synkroniseringsintegration: {0}
+Synchronisation threshold (signal / noise): ×{0}	Synkroniseringströskel (signal / brus): ×{0}
+Hell settings (applied immediately):	Hell-inställningar (tillämpas direkt):
+Transmitter variant	Sändarvariant
+Squelch: {0}	Squelch: {0}
+none	ingen
+Swap the tones (FM Hell 105 / 245, Hell 80)	Växla tonerna (FM Hell 105 / 245, Hell 80)
+Clear the screen	Rensa skärmen
+Save the picture	Spara bilden
+Nothing to save	Inget att spara
+Could not save	Kunde inte spara
+Picture saved: 	Bild sparad: 
+Olivia: settings refused	Olivia: inställningarna nekades
+listening at %d Hz	lyssnar på %d Hz
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	synkad, S/N %.0f dB, avvikelse %+.0f Hz, mittpunkt %d Hz
+searching for a signal… (centre %d Hz)	söker efter en signal… (mittpunkt %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	tar emot på %.0f Hz (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	söker efter en signal… (%.0f Hz)

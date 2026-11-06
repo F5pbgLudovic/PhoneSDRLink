@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Προσωρινή μνήμη λήψης
 Auto frequency change for digital modes	Αυτόματη αλλαγή συχνότητας για ψηφιακά είδη εκπομπής
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Όταν ξεκινά ένας αποκωδικοποιητής, συντονίζεται στην πλησιέστερη συχνότητα (και είδος) της λίστας «Ψηφιακά είδη» του αποκωδικοποιητή.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	Λειτουργία USB, σε σήμα Olivia (συχνότητες κλήσης 8/250: 14.0729, 7.0729, 3.5729 MHz…· 16/500 και 32/1000 λίγο ψηλότερα, γύρω στα 14.075 και 14.106 MHz). Ρυθμίστε τον αριθμό των τόνων και το εύρος ζώνης του πομπού (λίστες κάτω από το κείμενο): πρέπει να είναι ίδια με τα δικά του· συνηθισμένες μορφές: 8/250, 16/500, 32/1000. Το κέντρο του σήματος βρίσκεται αυτόματα στο φάσμα (ή ορίζεται με το χέρι). Το κείμενο εμφανίζεται σε μπλοκ, λίγα δευτερόλεπτα μετά τον συγχρονισμό· το σήμα μπορεί να είναι ακόμη και πολύ κάτω από το θόρυβο. Μόνο λήψη.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	Ώρα UTC · κείμενο. Πάνω από το κείμενο, η γραμμή κατάστασης δείχνει τον συγχρονισμό, τον λόγο σήματος προς θόρυβο και την απόκλιση συχνότητας.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	Λειτουργία USB, σε σήμα Contestia (παραλλαγή του Olivia με χαρακτήρες 6 bit: 3.5825, 7.0425, 14.0725 MHz…). Ρυθμίστε τον αριθμό των τόνων και το εύρος ζώνης του πομπού (λίστες κάτω από το κείμενο): συνηθισμένες μορφές 8/250, 16/500, 32/1000. Το κέντρο του σήματος βρίσκεται αυτόματα στο φάσμα (ή ορίζεται με το χέρι). Μόνο λήψη.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	Λειτουργία USB, σε σήμα Hellschreiber (Feld Hell: 14.063, 7.046, 3.592 MHz…· FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Επιλέξτε την παραλλαγή του πομπού στη λίστα κάτω από την εικόνα: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 ή Hell 80. Το κείμενο δεν αποκωδικοποιείται σε γράμματα: γράφεται ως εικόνα που διαβάζετε με το μάτι, όπως στην αρχική μηχανή (γραμμές 14 κουκκίδων που κυλούν προς τα πάνω). Η συχνότητα βρίσκεται αυτόματα στο φάσμα· οι σειρές κουκκίδων ευθυγραμμίζονται μόνες τους. Μόνο λήψη.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Εικόνα: τα γράμματα γράφονται από αριστερά προς τα δεξιά και η γραμμή αλλάζει στο τέλος της. Αν το κείμενο φαίνεται λοξό, τα ρολόγια των δύο σταθμών διαφέρουν ελαφρά: η παρακολούθηση το διορθώνει μόνη της.
+{0} settings (applied immediately):	Ρυθμίσεις {0} (εφαρμόζονται αμέσως):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Ταχύτητα: περίπου {0} χαρακτήρες το δευτερόλεπτο ({1} τόνοι σε {2} Hz)
+Number of tones	Αριθμός τόνων
+Signal bandwidth	Εύρος ζώνης σήματος
+Automatic signal centre	Αυτόματο κέντρο σήματος
+Signal centre: {0} Hz	Κέντρο σήματος: {0} Hz
+Reversed signal (opposite sideband)	Ανεστραμμένο σήμα (αντίθετη πλευρική ζώνη)
+Frequency search margin: ± {0} tones	Περιθώριο αναζήτησης συχνότητας: ± {0} τόνοι
+Synchronisation integration: {0}	Ολοκλήρωση συγχρονισμού: {0}
+Synchronisation threshold (signal / noise): ×{0}	Κατώφλι συγχρονισμού (σήμα / θόρυβος): ×{0}
+Hell settings (applied immediately):	Ρυθμίσεις Hell (εφαρμόζονται αμέσως):
+Transmitter variant	Παραλλαγή πομπού
+Squelch: {0}	Squelch: {0}
+none	κανένα
+Swap the tones (FM Hell 105 / 245, Hell 80)	Εναλλαγή των τόνων (FM Hell 105 / 245, Hell 80)
+Clear the screen	Εκκαθάριση οθόνης
+Save the picture	Αποθήκευση εικόνας
+Nothing to save	Δεν υπάρχει τίποτα για αποθήκευση
+Could not save	Η αποθήκευση απέτυχε
+Picture saved: 	Η εικόνα αποθηκεύτηκε: 
+Olivia: settings refused	Olivia: οι ρυθμίσεις απορρίφθηκαν
+listening at %d Hz	ακρόαση στα %d Hz
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	συγχρονισμένο, S/N %.0f dB, απόκλιση %+.0f Hz, κέντρο %d Hz
+searching for a signal… (centre %d Hz)	αναζήτηση σήματος… (κέντρο %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	λήψη στα %.0f Hz (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	αναζήτηση σήματος… (%.0f Hz)

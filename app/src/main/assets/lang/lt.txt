@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Priėmimo buferis
 Auto frequency change for digital modes	Automatinis dažnio keitimas skaitmeniniams režimams
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Paleidus dekoderį, derinama į artimiausią dažnį (ir režimą) iš to dekoderio sąrašo „Skaitmeniniai režimai“.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	USB režimas, Olivia signalui (šaukimo dažnis 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 ir 32/1000 šiek tiek aukščiau, apie 14.075 ir 14.106 MHz). Nustatykite siųstuvo tonų skaičių ir juostos plotį (sąrašai po tekstu): jie turi sutapti su siųstuvo; įprasti formatai: 8/250, 16/500, 32/1000. Signalo centras automatiškai randamas spektre (arba nustatomas rankiniu būdu). Tekstas rodomas blokais, praėjus keliems sekundėms po sinchronizacijos; signalas gali būti net gerokai žemiau triukšmo lygio. Tik priėmimas.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	UTC laikas · tekstas. Virš teksto būsenos eilutėje rodoma sinchronizacija, signalo ir triukšmo santykis bei dažnio nuokrypis.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	USB režimas, Contestia signalui (Olivia variantas su 6 bitų simboliais: 3.5825, 7.0425, 14.0725 MHz…). Nustatykite siųstuvo tonų skaičių ir juostos plotį (sąrašai po tekstu): įprasti formatai 8/250, 16/500, 32/1000. Signalo centras automatiškai randamas spektre (arba nustatomas rankiniu būdu). Tik priėmimas.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	USB režimas, Hellschreiber signalui (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Pasirinkite siųstuvo variantą sąraše po paveikslėliu: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 arba Hell 80. Tekstas nedekoduojamas į raides: jis rašomas kaip paveikslėlis, kurį skaitote akimis, kaip originaliame aparate (14 taškų eilutės slenka aukštyn). Dažnis automatiškai randamas spektre; taškų eilutės susilygiuoja pačios. Tik priėmimas.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Paveikslėlis: raidės rašomos iš kairės į dešinę, o eilutė pabaigoje laužoma į kitą. Jei tekstas atrodo pasviręs, dviejų stočių laikrodžiai šiek tiek skiriasi: sekimas pats pasitaiso.
+{0} settings (applied immediately):	{0} nustatymai (taikomi iš karto):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Greitis: apie {0} simbolių per sekundę ({1} tonų per {2} Hz)
+Number of tones	Tonų skaičius
+Signal bandwidth	Signalo juostos plotis
+Automatic signal centre	Automatinis signalo centras
+Signal centre: {0} Hz	Signalo centras: {0} Hz
+Reversed signal (opposite sideband)	Apverstas signalas (priešinga šoninė juosta)
+Frequency search margin: ± {0} tones	Dažnio paieškos ribos: ± {0} tonų
+Synchronisation integration: {0}	Sinchronizacijos integravimas: {0}
+Synchronisation threshold (signal / noise): ×{0}	Sinchronizacijos slenkstis (signalas / triukšmas): ×{0}
+Hell settings (applied immediately):	Hell nustatymai (taikomi iš karto):
+Transmitter variant	Siųstuvo variantas
+Squelch: {0}	Squelch: {0}
+none	nėra
+Swap the tones (FM Hell 105 / 245, Hell 80)	Sukeisti tonus (FM Hell 105 / 245, Hell 80)
+Clear the screen	Išvalyti ekraną
+Save the picture	Išsaugoti paveikslėlį
+Nothing to save	Nėra ką išsaugoti
+Could not save	Nepavyko išsaugoti
+Picture saved: 	Paveikslėlis išsaugotas: 
+Olivia: settings refused	Olivia: nustatymai atmesti
+listening at %d Hz	klausoma %d Hz dažniu
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	sinchronizuota, S/N %.0f dB, nuokrypis %+.0f Hz, centras %d Hz
+searching for a signal… (centre %d Hz)	ieškoma signalo… (centras %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	priimama %.0f Hz dažniu (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	ieškoma signalo… (%.0f Hz)

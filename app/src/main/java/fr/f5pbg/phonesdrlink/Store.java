@@ -229,6 +229,12 @@ final class Store {
     int ringSpeed = 100;              // bague : vitesse du défilement rapide en % de la vitesse d'origine (10 à 150)
     int ringMs = 450;                 // bague : délai maximal entre deux coups de molette pour lancer l'accélération (100 à 900 ms)
     String decHi = "";               // surbrillance : suites de caractères à repérer dans le trafic décodé (séparées par des virgules)
+    // Olivia / Contestia : tons et bande de chaque mode, centre automatique ou imposé, marge de recherche, intégration de la synchro, seuil (dixièmes), signal inversé
+    int oliTones = 32, oliBw = 1000, conTones = 16, conBw = 500, oliFreq = 1500, oliMargin = 8, oliInteg = 4, oliThr = 30;
+    boolean oliAuto = true, oliRev = false;
+    // Hell : variante (0 Feld Hell … 6 Hell 80), fréquence automatique ou imposée, squelch (0 à 10), FSK inversé
+    int hellVar = 0, hellFreq = 1000, hellSq = 5;
+    boolean hellAuto = true, hellInv = false;
     int js8Speed = 1;                 // JS8 : vitesse (0 Lent, 1 Normal, 2 Rapide, 3 Turbo, 4 Ultra)
     int sstvSens = 5, sstvLoss = 4;   // SSTV : sensibilité aux signaux faibles et « perte data » (patience avant d'abandonner une image), 1 à 10
     String viewPos = "";              // positions des listes (liste choisie, défilement) : "cle=a,b,c|cle=a,b"
@@ -322,7 +328,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        notchLevel = 1; dnrLevel = 1; autoReload = false; digAuto = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450; ringSpeed = 100;
+        notchLevel = 1; dnrLevel = 1; autoReload = false; digAuto = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); oliDefaults(); hellDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450; ringSpeed = 100;
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
@@ -421,6 +427,21 @@ final class Store {
                 else if (k.equals("PhoneRingMs")) ringMs = Math.max(100, Math.min(900, toInt(v, 450)));
                 else if (k.equals("PhoneDecHighlight")) { try { decHi = java.net.URLDecoder.decode(v.trim(), "UTF-8"); } catch (Exception e) { } }
                 else if (k.equals("PhoneJs8Speed")) js8Speed = Math.max(0, Math.min(4, toInt(v, 1)));
+                else if (k.equals("PhoneOliTones")) oliTones = oneOf(toInt(v, 32), 2, 4, 8, 16, 32, 64, 128, 256);
+                else if (k.equals("PhoneOliBw")) oliBw = oneOf(toInt(v, 1000), 125, 250, 500, 1000, 2000);
+                else if (k.equals("PhoneConTones")) conTones = oneOf(toInt(v, 16), 2, 4, 8, 16, 32, 64, 128, 256);
+                else if (k.equals("PhoneConBw")) conBw = oneOf(toInt(v, 500), 125, 250, 500, 1000, 2000);
+                else if (k.equals("PhoneOliAuto")) oliAuto = !v.trim().equals("0");
+                else if (k.equals("PhoneOliFreq")) oliFreq = Math.max(300, Math.min(2900, toInt(v, 1500)));
+                else if (k.equals("PhoneOliMargin")) oliMargin = Math.max(2, Math.min(20, toInt(v, 8)));
+                else if (k.equals("PhoneOliInteg")) oliInteg = Math.max(2, Math.min(20, toInt(v, 4)));
+                else if (k.equals("PhoneOliThr")) oliThr = Math.max(30, Math.min(100, toInt(v, 30)));
+                else if (k.equals("PhoneOliRev")) oliRev = v.trim().equals("1");
+                else if (k.equals("PhoneHellVar")) hellVar = Math.max(0, Math.min(6, toInt(v, 0)));
+                else if (k.equals("PhoneHellAuto")) hellAuto = !v.trim().equals("0");
+                else if (k.equals("PhoneHellFreq")) hellFreq = Math.max(300, Math.min(2900, toInt(v, 1000)));
+                else if (k.equals("PhoneHellSq")) hellSq = Math.max(0, Math.min(10, toInt(v, 5)));
+                else if (k.equals("PhoneHellInv")) hellInv = v.trim().equals("1");
                 else if (k.equals("PhoneHeadsetStop")) headsetStop = v.trim().equals("1");
                 else if (k.equals("PhoneColBtnBg")) colBtnBg = hexColor(v);
                 else if (k.equals("PhoneColBtnTx")) colBtnTx = hexColor(v);
@@ -507,7 +528,7 @@ final class Store {
         Store t = new Store();
         t.favorites.clear();
         t.parse(text, cats & ~IMP_CONFIG | (cats & IMP_CONFIG));
-        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; zoomPos = t.zoomPos; bufMs = t.bufMs; iaruRegion = t.iaruRegion; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; colDec = t.colDec; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; sstvSens = t.sstvSens; sstvLoss = t.sstvLoss; js8Speed = t.js8Speed; decHi = t.decHi; ringMs = t.ringMs; ringSpeed = t.ringSpeed; callsign = t.callsign; checkUpdates = t.checkUpdates; }
+        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; zoomPos = t.zoomPos; bufMs = t.bufMs; iaruRegion = t.iaruRegion; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; colDec = t.colDec; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; sstvSens = t.sstvSens; sstvLoss = t.sstvLoss; js8Speed = t.js8Speed; oliTones = t.oliTones; oliBw = t.oliBw; conTones = t.conTones; conBw = t.conBw; oliAuto = t.oliAuto; oliFreq = t.oliFreq; oliMargin = t.oliMargin; oliInteg = t.oliInteg; oliThr = t.oliThr; oliRev = t.oliRev; hellVar = t.hellVar; hellAuto = t.hellAuto; hellFreq = t.hellFreq; hellSq = t.hellSq; hellInv = t.hellInv; decHi = t.decHi; ringMs = t.ringMs; ringSpeed = t.ringSpeed; callsign = t.callsign; checkUpdates = t.checkUpdates; }
         if ((cats & IMP_WEBSDR) != 0) {
             for (int i = 0; i < Favorite.MAX_LISTS; i++) if (!t.favListNames[i].equals("Liste " + (i + 1)) && favListNames[i].equals("Liste " + (i + 1))) favListNames[i] = t.favListNames[i];
             for (Favorite f : t.favorites) {
@@ -582,6 +603,21 @@ final class Store {
         line(sb, "PhoneSstvSens10", sstvSens);
         line(sb, "PhoneSstvLoss", sstvLoss);
         line(sb, "PhoneJs8Speed", js8Speed);
+        line(sb, "PhoneOliTones", oliTones);
+        line(sb, "PhoneOliBw", oliBw);
+        line(sb, "PhoneConTones", conTones);
+        line(sb, "PhoneConBw", conBw);
+        line(sb, "PhoneOliAuto", oliAuto ? 1 : 0);
+        line(sb, "PhoneOliFreq", oliFreq);
+        line(sb, "PhoneOliMargin", oliMargin);
+        line(sb, "PhoneOliInteg", oliInteg);
+        line(sb, "PhoneOliThr", oliThr);
+        line(sb, "PhoneOliRev", oliRev ? 1 : 0);
+        line(sb, "PhoneHellVar", hellVar);
+        line(sb, "PhoneHellAuto", hellAuto ? 1 : 0);
+        line(sb, "PhoneHellFreq", hellFreq);
+        line(sb, "PhoneHellSq", hellSq);
+        line(sb, "PhoneHellInv", hellInv ? 1 : 0);
         line(sb, "PhoneRingMs", ringMs);
         line(sb, "PhoneRingSpeed", ringSpeed);
         try { line(sb, "PhoneDecHighlight", java.net.URLEncoder.encode(decHi, "UTF-8")); } catch (Exception e) { }
@@ -635,6 +671,9 @@ final class Store {
 
     void cwDefaults() { cwAutoTone = true; cwAutoSpeed = true; cwTone = 700; cwBw = 80; cwWpm = 18; cwThr = 55; cwChar = 20; cwWord = 50; cwSq = 5; cwAgc = 1; cwAfc = true; cwAutoBw = true; }
     void rttyDefaults() { rttyBaud = 0; rttyShift = 0; rttyPol = 0; rttySq = 15; rttyFreq = 0; rttyUos = true; rttyAfc = true; }
+    static int oneOf(int v, int... ok) { for (int o : ok) if (o == v) return v; return ok[ok.length / 2]; }
+    void oliDefaults() { oliTones = 32; oliBw = 1000; conTones = 16; conBw = 500; oliFreq = 1500; oliMargin = 8; oliInteg = 4; oliThr = 30; oliAuto = true; oliRev = false; }
+    void hellDefaults() { hellVar = 0; hellFreq = 1000; hellSq = 5; hellAuto = true; hellInv = false; }
     void pskDefaults() { pskAuto = true; pskAfc = true; pskFreq = 1000; pskBaud = 31; pskSq = 75; }
 
     static int hexColor(String v) { try { return (int) Long.parseLong(v.trim(), 16); } catch (Exception e) { return 0; } }

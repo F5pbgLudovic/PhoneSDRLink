@@ -33,8 +33,16 @@ abstract class TextEngine {
     }
 
     synchronized void shutdown() {
-        if (ex != null) { ex.shutdownNow(); ex = null; }
+        if (ex != null) {
+            final ExecutorService e = ex;
+            ex = null;
+            try { e.execute(new Runnable() { public void run() { onClose(); } }); } catch (Exception z) { }   // libération des ressources dans le fil du calcul, après les morceaux en attente
+            e.shutdown();
+        }
     }
+
+    /** Appelé dans le fil du décodeur à l'arrêt (libérer le code natif). */
+    void onClose() { }
 
     abstract void feed(short[] s, int n);
 

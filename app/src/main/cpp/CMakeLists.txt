@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.18)
-project(sdrdec C)
+project(sdrdec C CXX)
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fno-exceptions -fno-rtti")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/ft8lib)
 
@@ -11,7 +13,7 @@ set(FT8_SOURCES
   ft8lib/common/monitor.c
   sdrdec_ft8.c)
 
-add_library(sdrdec SHARED ${FT8_SOURCES} sdrdec_jni.c)
+add_library(sdrdec SHARED ${FT8_SOURCES} sdrdec_jni.c olivia_jni.cpp)
 target_link_libraries(sdrdec m log)
 
 # FreeDV RADE V1 (réseaux de neurones de 4 à 5 Mo chacun) : seulement pour les téléphones 64 bits.

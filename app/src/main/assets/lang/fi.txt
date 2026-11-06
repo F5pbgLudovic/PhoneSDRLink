@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Vastaanottopuskuri
 Auto frequency change for digital modes	Digitaalilajien taajuuden automaattinen vaihto
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Kun dekooderi käynnistetään, viritetään lähimmälle taajuudelle (ja lajille) dekooderin „Digitaaliset lajit“ -luettelosta.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	USB-tila, Olivia-signaalille (kutsutaajuudet 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 ja 32/1000 hieman ylempänä, noin 14.075 ja 14.106 MHz). Aseta lähettimen äänten määrä ja kaistanleveys (luettelot tekstin alla): niiden on oltava samat kuin lähettimellä; yleiset muodot: 8/250, 16/500, 32/1000. Signaalin keskitaajuus löytyy automaattisesti spektristä (tai se asetetaan käsin). Teksti ilmestyy lohkoina muutaman sekunnin kuluttua synkronoinnista; signaali voi olla jopa selvästi kohinan alapuolella. Vain vastaanotto.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	UTC-aika · teksti. Tekstin yläpuolella tilarivi näyttää synkronoinnin, signaali-kohinasuhteen ja taajuuspoikkeaman.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	USB-tila, Contestia-signaalille (Olivian muunnelma 6-bittisillä merkeillä: 3.5825, 7.0425, 14.0725 MHz…). Aseta lähettimen äänten määrä ja kaistanleveys (luettelot tekstin alla): yleiset muodot 8/250, 16/500, 32/1000. Signaalin keskitaajuus löytyy automaattisesti spektristä (tai se asetetaan käsin). Vain vastaanotto.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	USB-tila, Hellschreiber-signaalille (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Valitse lähettimen muunnelma kuvan alla olevasta luettelosta: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 tai Hell 80. Tekstiä ei pureta kirjaimiksi: se kirjoitetaan kuvana, jonka luet silmällä kuten alkuperäisessä koneessa (14 pisteen rivit vierivät ylös). Taajuus löytyy automaattisesti spektristä; pistekuviot asettuvat kohdalleen itsestään. Vain vastaanotto.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Kuva: kirjaimet kirjoitetaan vasemmalta oikealle ja rivi vaihtuu sen lopussa. Jos teksti näyttää vinolta, asemien kellot poikkeavat hieman toisistaan: seuranta korjaa sen itse.
+{0} settings (applied immediately):	{0}-asetukset (otetaan käyttöön heti):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Nopeus: noin {0} merkkiä sekunnissa ({1} ääntä {2} Hz:n alueella)
+Number of tones	Äänten määrä
+Signal bandwidth	Signaalin kaistanleveys
+Automatic signal centre	Automaattinen signaalin keskitaajuus
+Signal centre: {0} Hz	Signaalin keskitaajuus: {0} Hz
+Reversed signal (opposite sideband)	Käännetty signaali (vastakkainen sivukaista)
+Frequency search margin: ± {0} tones	Taajuushaun marginaali: ± {0} ääntä
+Synchronisation integration: {0}	Synkronoinnin integrointi: {0}
+Synchronisation threshold (signal / noise): ×{0}	Synkronoinnin kynnys (signaali / kohina): ×{0}
+Hell settings (applied immediately):	Hell-asetukset (otetaan käyttöön heti):
+Transmitter variant	Lähettimen muunnelma
+Squelch: {0}	Squelch: {0}
+none	ei mitään
+Swap the tones (FM Hell 105 / 245, Hell 80)	Vaihda äänet keskenään (FM Hell 105 / 245, Hell 80)
+Clear the screen	Tyhjennä näyttö
+Save the picture	Tallenna kuva
+Nothing to save	Ei mitään tallennettavaa
+Could not save	Tallennus epäonnistui
+Picture saved: 	Kuva tallennettu: 
+Olivia: settings refused	Olivia: asetukset hylätty
+listening at %d Hz	kuuntelee taajuudella %d Hz
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	synkronissa, S/N %.0f dB, poikkeama %+.0f Hz, keskitaajuus %d Hz
+searching for a signal… (centre %d Hz)	etsitään signaalia… (keskitaajuus %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	vastaanotto taajuudella %.0f Hz (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	etsitään signaalia… (%.0f Hz)

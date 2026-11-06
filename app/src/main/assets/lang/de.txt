@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Empfangspuffer
 Auto frequency change for digital modes	Automatischer Frequenzwechsel bei digitalen Betriebsarten
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Beim Start eines Decoders wird die nächstgelegene Frequenz (und Betriebsart) aus der Liste „Digitale Betriebsarten“ dieses Decoders eingestellt.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	USB-Modus, auf ein Olivia-Signal (Anruffrequenzen 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 und 32/1000 etwas höher, um 14.075 und 14.106 MHz). Stellen Sie Tonanzahl und Bandbreite des Senders ein (Listen unter dem Text): Sie müssen mit seinen übereinstimmen; übliche Formate: 8/250, 16/500, 32/1000. Die Signalmitte wird automatisch im Spektrum gefunden (oder von Hand festgelegt). Der Text erscheint blockweise, einige Sekunden nach der Synchronisation; das Signal darf sogar weit unter dem Rauschen liegen. Nur Empfang.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	UTC-Zeit · Text. Über dem Text zeigt die Statuszeile die Synchronisation, den Signal-Rausch-Abstand und den Frequenzversatz an.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	USB-Modus, auf ein Contestia-Signal (eine Olivia-Variante mit 6-Bit-Zeichen: 3.5825, 7.0425, 14.0725 MHz…). Stellen Sie Tonanzahl und Bandbreite des Senders ein (Listen unter dem Text): übliche Formate 8/250, 16/500, 32/1000. Die Signalmitte wird automatisch im Spektrum gefunden (oder von Hand festgelegt). Nur Empfang.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	USB-Modus, auf ein Hellschreiber-Signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Wählen Sie die Variante des Senders in der Liste unter dem Bild: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 oder Hell 80. Der Text wird nicht in Buchstaben dekodiert: Er wird als Bild geschrieben, das man mit dem Auge liest, wie bei der Originalmaschine (Zeilen aus 14 Punkten laufen nach oben). Die Frequenz wird automatisch im Spektrum gefunden; die Punktzeilen richten sich von selbst aus. Nur Empfang.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Bild: Die Buchstaben werden von links nach rechts geschrieben, am Zeilenende wird umgebrochen. Wirkt der Text schräg, weichen die Uhren der beiden Stationen leicht voneinander ab: Die Nachführung gleicht das von selbst aus.
+{0} settings (applied immediately):	{0}-Einstellungen (sofort wirksam):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Geschwindigkeit: etwa {0} Zeichen pro Sekunde ({1} Töne über {2} Hz)
+Number of tones	Anzahl der Töne
+Signal bandwidth	Signalbandbreite
+Automatic signal centre	Signalmitte automatisch
+Signal centre: {0} Hz	Signalmitte: {0} Hz
+Reversed signal (opposite sideband)	Invertiertes Signal (gegenüberliegendes Seitenband)
+Frequency search margin: ± {0} tones	Frequenzsuchbereich: ± {0} Töne
+Synchronisation integration: {0}	Synchronisationsintegration: {0}
+Synchronisation threshold (signal / noise): ×{0}	Synchronisationsschwelle (Signal / Rauschen): ×{0}
+Hell settings (applied immediately):	Hell-Einstellungen (sofort wirksam):
+Transmitter variant	Sendervariante
+Squelch: {0}	Squelch: {0}
+none	keine
+Swap the tones (FM Hell 105 / 245, Hell 80)	Töne vertauschen (FM Hell 105 / 245, Hell 80)
+Clear the screen	Bildschirm löschen
+Save the picture	Bild speichern
+Nothing to save	Nichts zu speichern
+Could not save	Speichern nicht möglich
+Picture saved: 	Bild gespeichert: 
+Olivia: settings refused	Olivia: Einstellungen abgelehnt
+listening at %d Hz	Empfang bei %d Hz
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	synchron, S/N %.0f dB, Versatz %+.0f Hz, Mitte %d Hz
+searching for a signal… (centre %d Hz)	Suche nach einem Signal… (Mitte %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	Empfang bei %.0f Hz (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	Suche nach einem Signal… (%.0f Hz)

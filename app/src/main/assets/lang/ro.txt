@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Buffer de recepție
 Auto frequency change for digital modes	Schimbare automată a frecvenței pentru modurile digitale
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	La pornirea unui decodor, se acordă pe cea mai apropiată frecvență (și mod) din lista „Moduri digitale” a decodorului.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	Mod USB, pe un semnal Olivia (apel 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 și 32/1000 puțin mai sus, în jur de 14.075 și 14.106 MHz). Setați numărul de tonuri și lărgimea de bandă a emițătorului (listele de sub text): trebuie să fie aceleași ca ale lui; formate uzuale: 8/250, 16/500, 32/1000. Centrul semnalului este găsit automat în spectru (sau fixat manual). Textul apare în blocuri, la câteva secunde după sincronizare; semnalul poate fi chiar mult sub nivelul zgomotului. Doar recepție.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	Ora UTC · text. Deasupra textului, linia de stare arată sincronizarea, raportul semnal/zgomot și abaterea de frecvență.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	Mod USB, pe un semnal Contestia (o variantă Olivia cu caractere de 6 biți: 3.5825, 7.0425, 14.0725 MHz…). Setați numărul de tonuri și lărgimea de bandă a emițătorului (listele de sub text): formate uzuale 8/250, 16/500, 32/1000. Centrul semnalului este găsit automat în spectru (sau fixat manual). Doar recepție.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	Mod USB, pe un semnal Hellschreiber (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Alegeți varianta emițătorului din lista de sub imagine: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 sau Hell 80. Textul nu este decodat în litere: este scris ca o imagine pe care o citiți din ochi, ca pe aparatul original (linii de 14 puncte care derulează în sus). Frecvența este găsită automat în spectru; rândurile de puncte se aliniază singure. Doar recepție.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Imagine: literele se scriu de la stânga la dreapta, iar linia trece pe rândul următor la capăt. Dacă textul pare înclinat, ceasurile celor două stații diferă ușor: urmărirea se corectează singură.
+{0} settings (applied immediately):	Setări {0} (aplicate imediat):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Viteză: aproximativ {0} caractere pe secundă ({1} tonuri pe {2} Hz)
+Number of tones	Număr de tonuri
+Signal bandwidth	Lărgimea de bandă a semnalului
+Automatic signal centre	Centrul semnalului automat
+Signal centre: {0} Hz	Centrul semnalului: {0} Hz
+Reversed signal (opposite sideband)	Semnal inversat (bandă laterală opusă)
+Frequency search margin: ± {0} tones	Marja de căutare a frecvenței: ± {0} tonuri
+Synchronisation integration: {0}	Integrarea sincronizării: {0}
+Synchronisation threshold (signal / noise): ×{0}	Pragul de sincronizare (semnal / zgomot): ×{0}
+Hell settings (applied immediately):	Setări Hell (aplicate imediat):
+Transmitter variant	Varianta emițătorului
+Squelch: {0}	Squelch: {0}
+none	niciunul
+Swap the tones (FM Hell 105 / 245, Hell 80)	Inversează tonurile (FM Hell 105 / 245, Hell 80)
+Clear the screen	Șterge ecranul
+Save the picture	Salvează imaginea
+Nothing to save	Nimic de salvat
+Could not save	Salvare imposibilă
+Picture saved: 	Imagine salvată: 
+Olivia: settings refused	Olivia: setări refuzate
+listening at %d Hz	ascultare la %d Hz
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	sincronizat, S/N %.0f dB, abatere %+.0f Hz, centru %d Hz
+searching for a signal… (centre %d Hz)	se caută un semnal… (centru %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	recepție la %.0f Hz (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	se caută un semnal… (%.0f Hz)

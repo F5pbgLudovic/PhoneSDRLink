@@ -20,5 +20,17 @@ final class Decoders {
     static native void radeFree(long h);
     static native int radeProcess(long h, short[] in8k, int n, short[] out16k, int[] status);
 
+    /** Olivia / Contestia (réception, bibliothèque MFSK de Pawel Jalocha, comme fldigi). centre en Hz (audio), thr10 = seuil de synchro en dixièmes (30 = 3,0). 0 si échec. */
+    static native long oliviaNew(int tones, int bw, int margin, int integ, int contestia, int center, int reverse, int thr10);
+    static native void oliviaFree(long h);
+    static native int oliviaCenter(long h, int center);
+    /** Renvoie le nombre de caractères mis dans out ; st = { rapport signal/bruit de synchro, décalage de fréquence (Hz) }. */
+    static native int oliviaProcess(long h, short[] in, int n, byte[] out, double[] st);
+    /** Essai de bouclage (émetteur + bruit + récepteur) : « texte|rapport|décalage ». */
+    static native String oliviaLoopTest(int tones, int bw, int contestia, String text, int snr10, int dfreq);
+
+    /** Fichier WAV d'essai Olivia / Contestia (voir olivia_jni.cpp) ; renvoie le nombre d'échantillons. */
+    static native int oliviaMakeWav(int tones, int bw, int contestia, String text, int snr10, int center, String path);
+
     private Decoders() { }
 }

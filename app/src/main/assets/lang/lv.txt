@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Uztveršanas buferis
 Auto frequency change for digital modes	Automātiska frekvences maiņa digitālajiem režīmiem
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Palaižot dekoderi, tiek noskaņota tuvākā frekvence (un režīms) no šī dekodera saraksta „Digitālie režīmi”.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	USB režīms, Olivia signālam (izsaukuma frekvence 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 un 32/1000 mazliet augstāk, ap 14.075 un 14.106 MHz). Iestatiet raidītāja toņu skaitu un joslas platumu (saraksti zem teksta): tiem jāsakrīt ar raidītāja iestatījumiem; biežāk lietotie formāti: 8/250, 16/500, 32/1000. Signāla centrs tiek automātiski atrasts spektrā (vai iestatīts ar roku). Teksts parādās blokos dažas sekundes pēc sinhronizācijas; signāls var būt pat krietni zem trokšņa līmeņa. Tikai uztveršana.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	UTC laiks · teksts. Virs teksta statusa rindā redzama sinhronizācija, signāla un trokšņa attiecība un frekvences novirze.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	USB režīms, Contestia signālam (Olivia variants ar 6 bitu rakstzīmēm: 3.5825, 7.0425, 14.0725 MHz…). Iestatiet raidītāja toņu skaitu un joslas platumu (saraksti zem teksta): biežāk lietotie formāti 8/250, 16/500, 32/1000. Signāla centrs tiek automātiski atrasts spektrā (vai iestatīts ar roku). Tikai uztveršana.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	USB režīms, Hellschreiber signālam (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Izvēlieties raidītāja variantu sarakstā zem attēla: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 vai Hell 80. Teksts netiek atkodēts burtos: tas tiek rakstīts kā attēls, ko lasāt ar aci, tāpat kā oriģinālajā aparātā (14 punktu rindas ritinās uz augšu). Frekvence tiek automātiski atrasta spektrā; punktu rindas izlīdzinās pašas. Tikai uztveršana.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Attēls: burti tiek rakstīti no kreisās uz labo, un rinda beigās pāriet nākamajā. Ja teksts izskatās sašķiebts, abu staciju pulksteņi nedaudz atšķiras: izsekošana pati izlīdzinās.
+{0} settings (applied immediately):	{0} iestatījumi (stājas spēkā uzreiz):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Ātrums: aptuveni {0} rakstzīmes sekundē ({1} toņi {2} Hz joslā)
+Number of tones	Toņu skaits
+Signal bandwidth	Signāla joslas platums
+Automatic signal centre	Automātisks signāla centrs
+Signal centre: {0} Hz	Signāla centrs: {0} Hz
+Reversed signal (opposite sideband)	Apgriezts signāls (pretējā sānjosla)
+Frequency search margin: ± {0} tones	Frekvences meklēšanas robeža: ± {0} toņi
+Synchronisation integration: {0}	Sinhronizācijas integrēšana: {0}
+Synchronisation threshold (signal / noise): ×{0}	Sinhronizācijas slieksnis (signāls / troksnis): ×{0}
+Hell settings (applied immediately):	Hell iestatījumi (stājas spēkā uzreiz):
+Transmitter variant	Raidītāja variants
+Squelch: {0}	Squelch: {0}
+none	nav
+Swap the tones (FM Hell 105 / 245, Hell 80)	Apmainīt toņus (FM Hell 105 / 245, Hell 80)
+Clear the screen	Notīrīt ekrānu
+Save the picture	Saglabāt attēlu
+Nothing to save	Nav ko saglabāt
+Could not save	Neizdevās saglabāt
+Picture saved: 	Attēls saglabāts: 
+Olivia: settings refused	Olivia: iestatījumi noraidīti
+listening at %d Hz	klausās uz %d Hz
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	sinhronizēts, S/N %.0f dB, novirze %+.0f Hz, centrs %d Hz
+searching for a signal… (centre %d Hz)	meklē signālu… (centrs %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	uztver uz %.0f Hz (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	meklē signālu… (%.0f Hz)

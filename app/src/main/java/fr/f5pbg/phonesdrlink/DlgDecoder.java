@@ -19,7 +19,7 @@ import java.util.Locale;
 // Les derniers messages restent aussi visibles en bas de l'écran principal (case à cocher ci-dessous). En CW, un panneau de
 // réglages (tonalité, filtre, vitesse, seuils…) s'affiche sous le texte décodé.
 final class DlgDecoder {
-    static ScrollView cwBox, rttyBox, pskBox, sstvBox, js8Box;
+    static ScrollView cwBox, rttyBox, pskBox, sstvBox, js8Box, oliBox, conBox, hellBox;
     static LinearLayout hiBox;      // champ « Surbrillance » (tous les modes qui font défiler du texte)
     static View sstvImgBox;
 
@@ -29,14 +29,26 @@ final class DlgDecoder {
         if (rttyBox != null) rttyBox.setVisibility(mode == MainActivity.DEC_RTTY ? View.VISIBLE : View.GONE);
         if (pskBox != null) pskBox.setVisibility(mode == MainActivity.DEC_PSK ? View.VISIBLE : View.GONE);
         if (sstvBox != null) sstvBox.setVisibility(mode == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
-        if (hiBox != null) hiBox.setVisibility(mode == MainActivity.DEC_SSTV || mode == MainActivity.DEC_RADE || mode == MainActivity.DEC_RADE2 ? View.GONE : View.VISIBLE);
+        if (hiBox != null) hiBox.setVisibility(MainActivity.isImageDec(mode) || mode == MainActivity.DEC_RADE || mode == MainActivity.DEC_RADE2 ? View.GONE : View.VISIBLE);
+        if (oliBox != null) oliBox.setVisibility(mode == MainActivity.DEC_OLIVIA ? View.VISIBLE : View.GONE);
+        if (conBox != null) conBox.setVisibility(mode == MainActivity.DEC_CONTESTIA ? View.VISIBLE : View.GONE);
+        if (hellBox != null) hellBox.setVisibility(mode == MainActivity.DEC_HELL ? View.VISIBLE : View.GONE);
         if (js8Box != null) js8Box.setVisibility(mode == MainActivity.DEC_JS8 ? View.VISIBLE : View.GONE);
-        if (sstvImgBox != null) sstvImgBox.setVisibility(mode == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
+        if (sstvImgBox != null) {
+            sstvImgBox.setVisibility(MainActivity.isImageDec(mode) ? View.VISIBLE : View.GONE);
+            ViewGroup.LayoutParams lp = sstvImgBox.getLayoutParams();
+            boolean hell = mode == MainActivity.DEC_HELL;
+            if (lp != null && sstvImgBox instanceof ImageView) {   // Hell : image large et basse, qui prend seulement sa hauteur ; SSTV : cadre à 34 % de l'écran
+                int hh = hell ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) (sstvImgBox.getResources().getDisplayMetrics().heightPixels * 0.34f);
+                ((ImageView) sstvImgBox).setAdjustViewBounds(hell);
+                if (lp.height != hh) { lp.height = hh; sstvImgBox.setLayoutParams(lp); }
+            }
+        }
     }
 
     // Ordre des modes dans la liste déroulante.
     static final int[] MODES = { MainActivity.DEC_FT8, MainActivity.DEC_FT4, MainActivity.DEC_FT2, MainActivity.DEC_WSPR, MainActivity.DEC_JT9, MainActivity.DEC_JS8, MainActivity.DEC_CW,
-        MainActivity.DEC_RTTY, MainActivity.DEC_PSK, MainActivity.DEC_SSTV, MainActivity.DEC_RADE, MainActivity.DEC_RADE2 };
+        MainActivity.DEC_RTTY, MainActivity.DEC_PSK, MainActivity.DEC_OLIVIA, MainActivity.DEC_CONTESTIA, MainActivity.DEC_HELL, MainActivity.DEC_SSTV, MainActivity.DEC_RADE, MainActivity.DEC_RADE2 };
     static int lastSel = MainActivity.DEC_FT8;     // dernier mode choisi dans la liste (gardé tant que l'application tourne)
     static Runnable onState;                       // appelé quand le décodeur démarre ou s'arrête : remet à jour les boutons
 
@@ -75,6 +87,18 @@ final class DlgDecoder {
             case MainActivity.DEC_PSK:
                 head = Lang.T("Mode USB, sur un signal PSK31 (14.070, 7.035, 3.580 MHz…) ; la fréquence audio est trouvée automatiquement (ou réglée à la main). PSK63 possible.", "USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…); the audio frequency is found automatically (or set by hand). PSK63 possible.");
                 cols = Lang.T("Heure UTC · texte.", "UTC time · text.");
+                break;
+            case MainActivity.DEC_OLIVIA:
+                head = Lang.T("Mode USB, sur un signal Olivia (appel 8/250 : 14.0729, 7.0729, 3.5729 MHz… ; 16/500 et 32/1000 un peu plus haut, vers 14.075 et 14.106 MHz). Réglez le nombre de tons et la bande de l'émetteur (listes sous le texte) : ils doivent être les mêmes que les siens ; formats courants : 8/250, 16/500, 32/1000. Le centre du signal est trouvé tout seul dans le spectre (ou imposé). Le texte apparaît par blocs, quelques secondes après la synchronisation ; le signal passe même bien en dessous du bruit. Réception seule.", "USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.");
+                cols = Lang.T("Heure UTC · texte. Au-dessus du texte, la ligne d'état donne la synchro, le rapport signal/bruit et l'écart de fréquence.", "UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.");
+                break;
+            case MainActivity.DEC_CONTESTIA:
+                head = Lang.T("Mode USB, sur un signal Contestia (variante d'Olivia à caractères de 6 bits : 3.5825, 7.0425, 14.0725 MHz…). Réglez le nombre de tons et la bande de l'émetteur (listes sous le texte) : formats courants 8/250, 16/500, 32/1000. Le centre du signal est trouvé tout seul dans le spectre (ou imposé). Réception seule.", "USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.");
+                cols = Lang.T("Heure UTC · texte.", "UTC time · text.");
+                break;
+            case MainActivity.DEC_HELL:
+                head = Lang.T("Mode USB, sur un signal Hellschreiber (Feld Hell : 14.063, 7.046, 3.592 MHz… ; FM Hell 105 : 3.585, 7.0695, 10.1425 MHz…). Choisissez la variante de l'émetteur dans la liste sous l'image : Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 ou Hell 80. Le texte n'est pas décodé en lettres : il s'écrit comme une image que l'on lit à l'œil, comme sur la machine d'origine (lignes de 14 points qui défilent). La fréquence est trouvée toute seule dans le spectre ; les rangs de points se calent d'eux-mêmes. Réception seule.", "USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.");
+                cols = Lang.T("Image : les lettres s'écrivent de gauche à droite et la ligne passe à la suivante en bout de ligne. Si le texte semble penché, la vitesse d'horloge des deux stations diffère un peu : le suivi se rattrape tout seul.", "Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.");
                 break;
             case MainActivity.DEC_SSTV:
                 head = Lang.T("Mode USB (au moins 2,4 kHz de bande), sur une fréquence SSTV (14.230, 7.033, 3.730 MHz…) ; le mode de l'image est reconnu tout seul, l'image se construit ligne par ligne, puis elle est enregistrée à la fin.", "USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the picture mode is recognised automatically, the picture builds up line by line and is saved when it ends.");
@@ -221,7 +245,7 @@ final class DlgDecoder {
         if (a.sstvBmp != null) pic.setImageBitmap(a.sstvBmp);
         sstvImgBox = pic;
         col.addView(pic, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (a.getResources().getDisplayMetrics().heightPixels * 0.34f)));
-        pic.setVisibility(sel[0] == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
+        pic.setVisibility(MainActivity.isImageDec(sel[0]) ? View.VISIBLE : View.GONE);
         // Fenêtre de réception (encadrée) : prend toute la place libre au-dessus des réglages
         final TextView log = new TextView(a);
         log.setTypeface(Typeface.MONOSPACE);
@@ -264,6 +288,18 @@ final class DlgDecoder {
         js8Panel(a, js);
         js8Box = capped(a, js);
         col.addView(js8Box, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout ol = Ui.column(a);
+        oliPanel(a, ol, false);
+        oliBox = capped(a, ol);
+        col.addView(oliBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout cn = Ui.column(a);
+        oliPanel(a, cn, true);
+        conBox = capped(a, cn);
+        col.addView(conBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout hl = Ui.column(a);
+        hellPanel(a, hl);
+        hellBox = capped(a, hl);
+        col.addView(hellBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         showPanels(sel[0]);
         refresh.run();
         final Dialog d = Ui.window(a, Lang.T("Décodeur", "Decoder"), col, true);
@@ -274,7 +310,7 @@ final class DlgDecoder {
         state.setText(a.decStatus);
         a.decRefresh();
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() {
-            public void onDismiss(android.content.DialogInterface x) { a.decView = null; a.decScroll = null; a.decState = null; a.sstvDlgImg = null; cwBox = null; rttyBox = null; pskBox = null; sstvBox = null; js8Box = null; hiBox = null; sstvImgBox = null; onState = null; }
+            public void onDismiss(android.content.DialogInterface x) { a.decView = null; a.decScroll = null; a.decState = null; a.sstvDlgImg = null; cwBox = null; rttyBox = null; pskBox = null; sstvBox = null; js8Box = null; oliBox = null; conBox = null; hellBox = null; hiBox = null; sstvImgBox = null; onState = null; }
         });
         d.show();
     }
@@ -442,6 +478,79 @@ final class DlgDecoder {
                 pskPanel(a, box);
             }
         }));
+    }
+
+    static final int[] OLI_TONES = { 2, 4, 8, 16, 32, 64, 128, 256 }, OLI_BWS = { 125, 250, 500, 1000, 2000 };
+
+    static void oliPanel(final MainActivity a, final LinearLayout box, final boolean con) {
+        final Store st = a.st;
+        final String nm = con ? "Contestia" : "Olivia";
+        box.addView(Ui.small(a, Lang.F("Réglages {0} (appliqués tout de suite) :", "{0} settings (applied immediately):", nm)));
+        final TextView rate = Ui.small(a, "");
+        final Runnable upd = new Runnable() {
+            public void run() {
+                int t = con ? st.conTones : st.oliTones, b = con ? st.conBw : st.oliBw;
+                rate.setText(Lang.F("Débit : environ {0} caractères par seconde ({1} tons sur {2} Hz)", "Speed: about {0} characters per second ({1} tones over {2} Hz)", String.format(Locale.US, "%.1f", OliviaEngine.charsPerSecond(t, b, con)), t, b));
+            }
+        };
+        choice(a, box, Lang.T("Nombre de tons", "Number of tones"), new String[] { "2", "4", "8", "16", "32", "64", "128", "256" }, indexOf(OLI_TONES, con ? st.conTones : st.oliTones),
+            new Pick() { public void chose(int i) { if (con) st.conTones = OLI_TONES[i]; else st.oliTones = OLI_TONES[i]; st.save(); a.applyDecSettings(); upd.run(); } });
+        choice(a, box, Lang.T("Bande du signal", "Signal bandwidth"), new String[] { "125 Hz", "250 Hz", "500 Hz", "1000 Hz", "2000 Hz" }, indexOf(OLI_BWS, con ? st.conBw : st.oliBw),
+            new Pick() { public void chose(int i) { if (con) st.conBw = OLI_BWS[i]; else st.oliBw = OLI_BWS[i]; st.save(); a.applyDecSettings(); upd.run(); } });
+        upd.run();
+        box.addView(rate);
+        final CheckBox auto = Ui.check(a, Lang.T("Centre du signal automatique", "Automatic signal centre"), st.oliAuto);
+        auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.oliAuto = on; st.save(); a.applyDecSettings(); }
+        });
+        box.addView(auto);
+        seek(a, box, Ui.label(a, ""), 300, 2900, st.oliFreq, new Fmt() { public String text(int v) { return Lang.F("Centre du signal : {0} Hz", "Signal centre: {0} Hz", v); } },
+            new Change() { public void set(int v) { st.oliFreq = v; st.oliAuto = false; auto.setChecked(false); } });
+        final CheckBox rev = Ui.check(a, Lang.T("Signal inversé (bande latérale opposée)", "Reversed signal (opposite sideband)"), st.oliRev);
+        rev.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.oliRev = on; st.save(); a.applyDecSettings(); }
+        });
+        box.addView(rev);
+        seek(a, box, Ui.label(a, ""), 2, 20, st.oliMargin, new Fmt() { public String text(int v) { return Lang.F("Marge de recherche en fréquence : ± {0} tons", "Frequency search margin: ± {0} tones", v); } },
+            new Change() { public void set(int v) { st.oliMargin = v; } });
+        seek(a, box, Ui.label(a, ""), 2, 20, st.oliInteg, new Fmt() { public String text(int v) { return Lang.F("Intégration de la synchro : {0}", "Synchronisation integration: {0}", v); } },
+            new Change() { public void set(int v) { st.oliInteg = v; } });
+        seek(a, box, Ui.label(a, ""), 30, 100, st.oliThr, new Fmt() { public String text(int v) { return Lang.F("Seuil de synchro (signal / bruit) : ×{0}", "Synchronisation threshold (signal / noise): ×{0}", String.format(Locale.US, "%.1f", v / 10.0)); } },
+            new Change() { public void set(int v) { st.oliThr = v; } });
+        box.addView(Ui.button(a, Lang.T("Valeurs par défaut", "Default values"), new View.OnClickListener() {
+            public void onClick(View v) {
+                st.oliDefaults();
+                st.save();
+                a.applyDecSettings();
+                box.removeAllViews();
+                oliPanel(a, box, con);
+            }
+        }));
+    }
+
+    static void hellPanel(final MainActivity a, final LinearLayout box) {
+        final Store st = a.st;
+        box.addView(Ui.small(a, Lang.T("Réglages Hell (appliqués tout de suite) :", "Hell settings (applied immediately):")));
+        choice(a, box, Lang.T("Variante de l'émetteur", "Transmitter variant"), HellEngine.NAMES, st.hellVar,
+            new Pick() { public void chose(int i) { st.hellVar = i; st.save(); a.applyDecSettings(); } });
+        final CheckBox auto = Ui.check(a, Lang.T("Fréquence automatique", "Automatic frequency"), st.hellAuto);
+        auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.hellAuto = on; st.save(); a.applyDecSettings(); }
+        });
+        box.addView(auto);
+        seek(a, box, Ui.label(a, ""), 300, 2900, st.hellFreq, new Fmt() { public String text(int v) { return Lang.F("Fréquence audio : {0} Hz", "Audio frequency: {0} Hz", v); } },
+            new Change() { public void set(int v) { st.hellFreq = v; st.hellAuto = false; auto.setChecked(false); } });
+        seek(a, box, Ui.label(a, ""), 0, 10, st.hellSq, new Fmt() { public String text(int v) { return Lang.F("Squelch : {0}", "Squelch: {0}", v == 0 ? Lang.T("aucun", "none") : String.valueOf(v)); } },
+            new Change() { public void set(int v) { st.hellSq = v; } });
+        final CheckBox inv = Ui.check(a, Lang.T("Inverser les tonalités (FM Hell 105 / 245, Hell 80)", "Swap the tones (FM Hell 105 / 245, Hell 80)"), st.hellInv);
+        inv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.hellInv = on; st.save(); a.applyDecSettings(); }
+        });
+        box.addView(inv);
+        LinearLayout line = Ui.row(a);
+        line.addView(Ui.button(a, Lang.T("Effacer l'écran", "Clear the screen"), new View.OnClickListener() { public void onClick(View v) { a.hellClear(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        line.addView(Ui.button(a, Lang.T("Enregistrer l'image", "Save the picture"), new View.OnClickListener() { public void onClick(View v) { a.hellSave(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        box.addView(line);
     }
 
     // Liste déroulante de chiffres ; p est appelé quand le choix change (pas à l'affichage).

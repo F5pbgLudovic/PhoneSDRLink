@@ -23,4 +23,6 @@ WSPR et JT9 : décodeurs écrits pour PhoneSDRLink d'après les descriptions pub
 
 ft8_lib (MIT) a été légèrement modifié pour FT2 (durée de symbole et de tranche réglables, plage de recherche en temps) : la mention de licence MIT d'origine (app/src/main/cpp/ft8lib/LICENSE) est conservée. lamejs (LGPL-3.0), radae_nopy et rade_c (BSD) et Opus (BSD) sont compatibles avec la GPL v3.
 
+Olivia et Contestia : le décodeur utilise la bibliothèque MFSK de Pawel Jalocha (app/src/main/cpp/jalocha/, reprise telle quelle de fldigi, W1HKJ et contributeurs, GNU GPL), compatible avec la GPL v3 ; Hell : paramètres de modulation (cadence des colonnes, largeurs de filtre, écarts de tonalité) repris des sources de fldigi (feld.cxx, GPL v3).
+
 Le texte complet de la GPL v3 est dans le fichier LICENSE à la racine du dépôt.

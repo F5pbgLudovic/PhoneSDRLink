@@ -129,6 +129,7 @@ public class MainActivity extends Activity {
         if (getIntent() != null && getIntent().getStringExtra("radev2test") != null) radeV2Loop(getIntent().getStringExtra("radev2test"));
         if (getIntent() != null && getIntent().getStringExtra("dectest") != null) decSelfTest(getIntent().getStringExtra("dectest"));
         if (getIntent() != null && getIntent().getStringExtra("decwav") != null) decWavTest(getIntent().getStringExtra("decwav"));
+        if (getIntent() != null && getIntent().getStringExtra("olitest") != null) oliviaLoop(getIntent().getStringExtra("olitest"));
         setupWeb();
         refreshAll();
         if (Ui.reopenColors) { Ui.reopenColors = false; h.post(new Runnable() { public void run() { DlgSettings.showColors(MainActivity.this); } }); }
@@ -1622,7 +1623,7 @@ public class MainActivity extends Activity {
 
     // ------------------------------------------------------------------ décodeurs numériques (FT8, FT4, CW, RTTY, FreeDV RADE)
 
-    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7, DEC_WSPR = 8, DEC_JT9 = 9, DEC_RADE2 = 10, DEC_JS8 = 11, DEC_FT2 = 12;
+    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7, DEC_WSPR = 8, DEC_JT9 = 9, DEC_RADE2 = 10, DEC_JS8 = 11, DEC_FT2 = 12, DEC_OLIVIA = 13, DEC_CONTESTIA = 14, DEC_HELL = 15;
     static boolean isRade(int m) { return m == DEC_RADE || m == DEC_RADE2; }   // FreeDV RADE V1 (FreeDV 2.x) ou V2 (FreeDV 3.0)
     int decMode;                       // 0 arrêté, sinon DEC_*
     boolean radeVoice;                 // RADE : des trames FreeDV sont décodées, la parole remplace le son du WebSDR
@@ -1640,7 +1641,8 @@ public class MainActivity extends Activity {
     ScrollView decScroll;
     int decTries;
 
-    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_FT2 ? "FT2" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_WSPR ? "WSPR" : m == DEC_JT9 ? "JT9" : m == DEC_JS8 ? "JS8" : m == DEC_RADE ? "RADE V1" : m == DEC_RADE2 ? "RADE V2" : ""; }
+    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_FT2 ? "FT2" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_WSPR ? "WSPR" : m == DEC_JT9 ? "JT9" : m == DEC_JS8 ? "JS8" : m == DEC_RADE ? "RADE V1" : m == DEC_RADE2 ? "RADE V2" : m == DEC_OLIVIA ? "Olivia" : m == DEC_CONTESTIA ? "Contestia" : m == DEC_HELL ? "Hell" : ""; }
+    static boolean isImageDec(int m) { return m == DEC_SSTV || m == DEC_HELL; }   // décodeurs dont le résultat est une image (SSTV, Hell)
     static int decRate(int m) { return (m == DEC_FT8 || m == DEC_FT4 || m == DEC_FT2 || m == DEC_WSPR || m == DEC_JT9 || m == DEC_JS8) ? Ft8Engine.RATE : 8000; }
 
     // Surbrillance (réglage « Surbrillance » de la fenêtre du décodeur) : chaque suite de caractères saisie (séparées par des virgules,
@@ -1725,11 +1727,11 @@ public class MainActivity extends Activity {
             if (decScroll != null) decScroll.post(new Runnable() { public void run() { if (decScroll != null) decScroll.fullScroll(View.FOCUS_DOWN); } });
         }
         if (decOverlayView != null) {
-            boolean show = decMode != 0 && !isRade(decMode) && decMode != DEC_SSTV && st.decOverlay && !decLines.isEmpty();   // FreeDV : pas de lignes devant le spectre (la parole suffit)
+            boolean show = decMode != 0 && !isRade(decMode) && !isImageDec(decMode) && st.decOverlay && !decLines.isEmpty();   // FreeDV : pas de lignes devant le spectre (la parole suffit)
             decOverlayView.setVisibility(show ? View.VISIBLE : View.GONE);
             if (show) decOverlayView.setText(decOverlaySpan());
         }
-        if (decMode == DEC_SSTV || (sstvOverlay != null && sstvOverlay.getVisibility() == View.VISIBLE)) {
+        if (isImageDec(decMode) || (sstvOverlay != null && sstvOverlay.getVisibility() == View.VISIBLE)) {
             sstvShow();
         }
     }
@@ -1789,10 +1791,54 @@ public class MainActivity extends Activity {
         if (redo) r.post(new Runnable() { public void run() { r.settingsChanged(); } });
     }
 
-    void applyDecSettings() { applyCwSettings(); applyRttySettings(); applyPskSettings(); applySstvSettings(); }
+    void applyDecSettings() { applyCwSettings(); applyRttySettings(); applyPskSettings(); applySstvSettings(); applyOliviaSettings(); applyHellSettings(); }
 
     void applyJs8Settings() { if (decMode == DEC_JS8) decoderStart(DEC_JS8); }   // vitesse changée : le décodeur JS8 repart
     void applySstvSettings() { if (txt instanceof SstvEngine) ((SstvEngine) txt).setLevels(st.sstvSens, st.sstvLoss); }
+
+    // Réglages Olivia / Contestia : copiés du stockage vers le moteur ; le décodeur natif est refait seulement si un paramètre qui compte change.
+    void applyOliviaSettings() {
+        if (!(txt instanceof OliviaEngine)) return;
+        final OliviaEngine o = (OliviaEngine) txt;
+        int t = o.contestia ? st.conTones : st.oliTones, b = o.contestia ? st.conBw : st.oliBw, f = st.oliAuto ? 0 : st.oliFreq;
+        boolean redo = o.tones != t || o.bw != b || o.margin != st.oliMargin || o.integ != st.oliInteg || o.thr10 != st.oliThr || o.reverse != st.oliRev || (o.centerSetting != f && f == 0 && o.centerSetting > 0);
+        o.tones = t; o.bw = b; o.margin = st.oliMargin; o.integ = st.oliInteg; o.thr10 = st.oliThr; o.reverse = st.oliRev; o.centerSetting = f;
+        if (redo) o.post(new Runnable() { public void run() { o.settingsChanged(); } });
+    }
+
+    // Réglages Hell : copiés du stockage vers le moteur.
+    void applyHellSettings() {
+        if (!(txt instanceof HellEngine)) return;
+        final HellEngine e = (HellEngine) txt;
+        boolean redo = e.variant != st.hellVar;
+        e.variant = st.hellVar; e.centerSetting = st.hellAuto ? 0 : st.hellFreq; e.sq = st.hellSq; e.invert = st.hellInv;
+        if (redo) e.post(new Runnable() { public void run() { e.settingsChanged(); } });
+    }
+
+    void hellClear() { if (txt instanceof HellEngine) ((HellEngine) txt).clearReq++; }
+
+    void hellSave() {
+        if (sstvBmp == null || !(txt instanceof HellEngine)) { Ui.toast(this, Lang.T("Rien à enregistrer", "Nothing to save")); return; }
+        final Bitmap b = sstvBmp.copy(Bitmap.Config.ARGB_8888, false);
+        new Thread(new Runnable() {
+            public void run() {
+                final String res = saveSstv(b, "Hell", true);
+                h.post(new Runnable() { public void run() { Ui.toast(MainActivity.this, res == null ? Lang.T("Enregistrement impossible", "Could not save") : Lang.T("Image enregistrée : ", "Picture saved: ") + res); } });
+            }
+        }).start();
+    }
+
+    // Hell : l'image (tableau rempli par le moteur) passe par les mêmes vues que les images SSTV.
+    final HellEngine.Display hellDisplay = new HellEngine.Display() {
+        public void begin(final int w, final int hh, final int[] px) {
+            h.post(new Runnable() { public void run() { if (txt instanceof HellEngine) sstvBegin("Hell", w, hh, px); } });
+        }
+        public void changed() {
+            if (sstvPending) return;
+            sstvPending = true;
+            h.postDelayed(new Runnable() { public void run() { sstvPending = false; sstvUpdate(); } }, 120);
+        }
+    };
 
     // Réglages PSK31 : copiés du stockage vers le moteur (fréquence automatique ou manuelle, AFC, débit, squelch).
     void applyPskSettings() {
@@ -1834,13 +1880,13 @@ public class MainActivity extends Activity {
         sstvName = name; sstvPx = px; sstvW = w; sstvH = hh; sstvShown = 0; sstvRows = 0;
         sstvBmp = Bitmap.createBitmap(w, hh, Bitmap.Config.ARGB_8888);
         sstvBmp.eraseColor(0xFF202020);
-        decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  " + name + " (" + w + "×" + hh + ")", 0);
-        decRefresh();
+        if (!(txt instanceof HellEngine)) { decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  " + name + " (" + w + "×" + hh + ")", 0); decRefresh(); }
         sstvShow();
     }
 
     void sstvUpdate() {
         if (sstvBmp == null || sstvPx == null) return;
+        if (txt instanceof HellEngine) { sstvBmp.setPixels(sstvPx, 0, sstvW, 0, 0, sstvW, sstvH); sstvShow(); return; }   // Hell : toute l'image est redessinée (elle défile)
         int done = Math.min(sstvRows, sstvH);
         if (done > sstvShown) { sstvBmp.setPixels(sstvPx, sstvShown * sstvW, sstvW, 0, sstvShown, sstvW, done - sstvShown); sstvShown = done; }
         sstvShow();
@@ -1850,12 +1896,12 @@ public class MainActivity extends Activity {
     void sstvShow() {
         if (sstvDlgImg != null && sstvBmp != null) sstvDlgImg.setImageBitmap(sstvBmp);
         if (sstvOverlay == null) return;
-        boolean show = decMode == DEC_SSTV && st.decOverlay && sstvBmp != null;
+        boolean show = isImageDec(decMode) && st.decOverlay && sstvBmp != null;
         sstvOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
         if (!show) return;
         int fw = webFrame != null ? webFrame.getWidth() : 0, fh = webFrame != null ? webFrame.getHeight() : 0;
         if (fw <= 0 || fh <= 0) { fw = getResources().getDisplayMetrics().widthPixels; fh = getResources().getDisplayMetrics().heightPixels / 2; }
-        float k = Math.min((fw * 0.42f) / sstvW, (fh * 0.42f) / sstvH);
+        float k = decMode == DEC_HELL ? Math.min((fw * 0.92f) / sstvW, (fh * 0.40f) / sstvH) : Math.min((fw * 0.42f) / sstvW, (fh * 0.42f) / sstvH);
         FrameLayout.LayoutParams p = (FrameLayout.LayoutParams) sstvOverlay.getLayoutParams();
         if (p != null) {
             int nw = Math.max(1, (int) (sstvW * k)), nh = Math.max(1, (int) (sstvH * k));
@@ -1894,7 +1940,7 @@ public class MainActivity extends Activity {
     // Enregistre l'image en PNG dans Images/PhoneSDRLink (Android 10 et plus : galerie, sans permission) ou, plus ancien, dans le dossier
     // de l'application (Android/data/…/files/Pictures/SSTV). Renvoie le nom du fichier, ou null.
     String saveSstv(Bitmap b, String mode, boolean complete) {
-        String fn = "SSTV_" + mode.replace(" ", "") + "_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(new java.util.Date()) + (complete ? "" : "_partiel") + ".png";
+        String fn = (mode.startsWith("Hell") ? "" : "SSTV_") + mode.replace(" ", "") + "_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(new java.util.Date()) + (complete ? "" : "_partiel") + ".png";
         try {
             if (android.os.Build.VERSION.SDK_INT >= 29) {
                 android.content.ContentValues cv = new android.content.ContentValues();
@@ -1979,8 +2025,18 @@ public class MainActivity extends Activity {
     }
 
     void decWavTest(final String spec) {
-        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : spec.startsWith("wspr:") ? DEC_WSPR : spec.startsWith("jt9:") ? DEC_JT9 : spec.startsWith("js8:") ? DEC_JS8 : DEC_PSK;
-        final String path = spec.substring(spec.indexOf(':') + 1);
+        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : spec.startsWith("wspr:") ? DEC_WSPR : spec.startsWith("jt9:") ? DEC_JT9 : spec.startsWith("js8:") ? DEC_JS8 : spec.startsWith("oli:") ? DEC_OLIVIA : spec.startsWith("con:") ? DEC_CONTESTIA : spec.startsWith("hell:") ? DEC_HELL : DEC_PSK;
+        String body = spec.substring(spec.indexOf(':') + 1);
+        if ((mode == DEC_OLIVIA || mode == DEC_CONTESTIA || mode == DEC_HELL) && !body.startsWith("/") && body.indexOf(':') > 0) {   // oli:tons/bande:chemin  hell:variante:chemin (essais seulement, non enregistré)
+            String opt = body.substring(0, body.indexOf(':'));
+            body = body.substring(body.indexOf(':') + 1);
+            try {
+                if (mode == DEC_HELL) st.hellVar = Integer.parseInt(opt);
+                else { String[] tb = opt.split("/"); if (mode == DEC_OLIVIA) { st.oliTones = Integer.parseInt(tb[0]); st.oliBw = Integer.parseInt(tb[1]); } else { st.conTones = Integer.parseInt(tb[0]); st.conBw = Integer.parseInt(tb[1]); } }
+            } catch (Exception e) { }
+        }
+        final String path = body;
+        HellEngine.debug = true;
         h.postDelayed(new Runnable() {
             public void run() {
                 decoderStart(mode);
@@ -2097,8 +2153,10 @@ public class MainActivity extends Activity {
                 public void onText(final String s) { h.post(new Runnable() { public void run() { if (txt != null) decAppendText(s); } }); }   // le calcul se fait dans un fil à part
                 public void onStatus(final String s) { h.post(new Runnable() { public void run() { if (txt != null) decSetStatus(s); } }); }
             };
-            txt = mode == DEC_CW ? new CwEngine(l) : mode == DEC_PSK ? new PskEngine(l) : mode == DEC_SSTV ? new SstvEngine(l, sstvImages) : new RttyEngine(l);
+            txt = mode == DEC_CW ? new CwEngine(l) : mode == DEC_PSK ? new PskEngine(l) : mode == DEC_SSTV ? new SstvEngine(l, sstvImages) : mode == DEC_OLIVIA || mode == DEC_CONTESTIA ? new OliviaEngine(l, mode == DEC_CONTESTIA) : mode == DEC_HELL ? new HellEngine(l, hellDisplay) : new RttyEngine(l);
             applyCwSettings();
+            applyOliviaSettings();
+            applyHellSettings();
             applyRttySettings();
             applyPskSettings();
             applySstvSettings();
@@ -2315,6 +2373,29 @@ public class MainActivity extends Activity {
                     Decoders.radeFree(h0);
                     android.util.Log.i("PSDR", "RADETEST fin : " + chunks + " s de son, " + syncChunks + " s synchronisées, " + outTotal + " échantillons de parole, " + (android.os.SystemClock.elapsedRealtime() - t0) + " ms de calcul (fichier " + len + " octets)");
                 } catch (Throwable t) { android.util.Log.i("PSDR", "RADETEST erreur " + t); }
+            }
+        }).start();
+    }
+
+    // Essai de bouclage Olivia / Contestia : am start … --es olitest "tons,bande,contestia,snr10,décalage;…" (ex. 32,1000,0,0,0;8,250,0,-100,20) ; résultats dans logcat (PSDR).
+    void oliviaLoop(final String spec) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    for (String one : spec.split(";")) {
+                        if (one.startsWith("wav:")) {   // wav:tons,bande,contestia,snr10,centre,texte,chemin
+                            String[] q = one.substring(4).split(",", 7);
+                            int n = Decoders.oliviaMakeWav(Integer.parseInt(q[0]), Integer.parseInt(q[1]), Integer.parseInt(q[2]), q[5], Integer.parseInt(q[3]), Integer.parseInt(q[4]), q[6]);
+                            android.util.Log.i("PSDR", "OLIVIA wav " + q[6] + " -> " + n);
+                            continue;
+                        }
+                        String[] p = one.split(",");
+                        long t0 = System.currentTimeMillis();
+                        String r = Decoders.oliviaLoopTest(Integer.parseInt(p[0].trim()), Integer.parseInt(p[1].trim()), Integer.parseInt(p[2].trim()), "CQ CQ DE F5PBG F5PBG PSE K", Integer.parseInt(p[3].trim()), Integer.parseInt(p[4].trim()));
+                        android.util.Log.i("PSDR", "OLIVIA " + one + " -> " + r + " (" + (System.currentTimeMillis() - t0) + " ms)");
+                    }
+                    android.util.Log.i("PSDR", "OLIVIA fin");
+                } catch (Throwable t) { android.util.Log.i("PSDR", "OLIVIA erreur " + t); }
             }
         }).start();
     }

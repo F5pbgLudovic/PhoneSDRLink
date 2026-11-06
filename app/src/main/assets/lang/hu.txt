@@ -688,3 +688,34 @@ Speed reached when several wheel strokes follow each other: from almost zero (10
 Reception buffer	Vételi puffer
 Auto frequency change for digital modes	Automatikus frekvenciaváltás digitális módokhoz
 When a decoder is started, tunes to the nearest frequency (and mode) of that decoder's "Digital modes" list.	Dekóder indításakor a dekóder „Digitális módok” listájának legközelebbi frekvenciájára (és módjára) hangol.
+USB mode, on an Olivia signal (calling 8/250: 14.0729, 7.0729, 3.5729 MHz…; 16/500 and 32/1000 a little higher, around 14.075 and 14.106 MHz). Set the transmitter's number of tones and bandwidth (lists under the text): they must be the same as its own; common formats: 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). The text appears in blocks, a few seconds after synchronisation; the signal can even be well below the noise. Receive only.	USB üzemmód, Olivia jelen (hívás 8/250: 14.0729, 7.0729, 3.5729 MHz…; a 16/500 és a 32/1000 kicsit feljebb, 14.075 és 14.106 MHz körül). Állítsa be az adó hangjainak számát és sávszélességét (listák a szöveg alatt): meg kell egyezniük az adóéval; gyakori formátumok: 8/250, 16/500, 32/1000. A jel közepét a program automatikusan megtalálja a spektrumban (vagy kézzel rögzíthető). A szöveg blokkonként jelenik meg, néhány másodperccel a szinkronizálás után; a jel akár jóval a zaj szintje alatt is lehet. Csak vétel.
+UTC time · text. Above the text, the status line shows the synchronisation, the signal-to-noise ratio and the frequency offset.	UTC idő · szöveg. A szöveg felett az állapotsor mutatja a szinkronizálást, a jel/zaj viszonyt és a frekvenciaeltérést.
+USB mode, on a Contestia signal (an Olivia variant with 6-bit characters: 3.5825, 7.0425, 14.0725 MHz…). Set the transmitter's number of tones and bandwidth (lists under the text): common formats 8/250, 16/500, 32/1000. The signal's centre is found automatically in the spectrum (or fixed by hand). Receive only.	USB üzemmód, Contestia jelen (az Olivia 6 bites karaktereket használó változata: 3.5825, 7.0425, 14.0725 MHz…). Állítsa be az adó hangjainak számát és sávszélességét (listák a szöveg alatt): gyakori formátumok 8/250, 16/500, 32/1000. A jel közepét a program automatikusan megtalálja a spektrumban (vagy kézzel rögzíthető). Csak vétel.
+USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.	USB üzemmód, Hellschreiber jelen (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Válassza ki az adó változatát a kép alatti listában: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 vagy Hell 80. A szöveget nem betűkké dekódolja: képként jelenik meg, amelyet szemmel olvas, mint az eredeti gépen (felfelé gördülő, 14 pontos sorok). A frekvenciát a program automatikusan megtalálja a spektrumban; a pontsorok maguktól beállnak. Csak vétel.
+Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.	Kép: a betűk balról jobbra íródnak, és a sor a végén tovább törik. Ha a szöveg ferdének tűnik, a két állomás órája kissé eltér: a követés magától kiigazítja.
+{0} settings (applied immediately):	{0} beállítások (azonnal érvényesülnek):
+Speed: about {0} characters per second ({1} tones over {2} Hz)	Sebesség: kb. {0} karakter másodpercenként ({1} hang {2} Hz-en)
+Number of tones	Hangok száma
+Signal bandwidth	Jel sávszélessége
+Automatic signal centre	Automatikus jelközép
+Signal centre: {0} Hz	Jelközép: {0} Hz
+Reversed signal (opposite sideband)	Fordított jel (ellenkező oldalsáv)
+Frequency search margin: ± {0} tones	Frekvenciakeresési tartomány: ± {0} hang
+Synchronisation integration: {0}	Szinkronizálási integráció: {0}
+Synchronisation threshold (signal / noise): ×{0}	Szinkronizálási küszöb (jel / zaj): ×{0}
+Hell settings (applied immediately):	Hell beállítások (azonnal érvényesülnek):
+Transmitter variant	Adó változata
+Squelch: {0}	Zajzár: {0}
+none	nincs
+Swap the tones (FM Hell 105 / 245, Hell 80)	Hangok felcserélése (FM Hell 105 / 245, Hell 80)
+Clear the screen	Képernyő törlése
+Save the picture	Kép mentése
+Nothing to save	Nincs mit menteni
+Could not save	A mentés nem sikerült
+Picture saved: 	Kép elmentve: 
+Olivia: settings refused	Olivia: a beállításokat elutasította
+listening at %d Hz	figyelés %d Hz-en
+in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	szinkronban, S/N %.0f dB, eltérés %+.0f Hz, közép %d Hz
+searching for a signal… (centre %d Hz)	jel keresése… (közép %d Hz)
+receiving at %.0f Hz (S/N %.0f dB)	vétel %.0f Hz-en (S/N %.0f dB)
+searching for a signal… (%.0f Hz)	jel keresése… (%.0f Hz)
