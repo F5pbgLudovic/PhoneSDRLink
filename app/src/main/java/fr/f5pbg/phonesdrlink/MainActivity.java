@@ -448,6 +448,7 @@ public class MainActivity extends Activity {
                 status(Lang.T("INIT : le WebSDR est relancé", "INIT: restarting the WebSDR"));
                 cancelScaleGuard();
                 st.putPos(zoomKey(), 1000);   // INIT remet l'écran d'origine : le zoom retenu est oublié
+                st.putPos(ownKey(), Integer.MAX_VALUE);   // et le zoom propre du WebSDR retenu aussi
                 initReset = true;
                 String cu = web.getUrl();
                 if (cu != null && !cu.isEmpty()) web.loadUrl(cu); else web.reload();   // nouveau chargement : zoom et affichage d'origine
@@ -472,7 +473,24 @@ public class MainActivity extends Activity {
 
     Button zoomButton(String text, final boolean in) {
         Button b = Ui.button(this, text, new View.OnClickListener() {
-            public void onClick(View v) { if (blocked()) return; cancelScaleGuard(); if (in) web.zoomIn(); else web.zoomOut(); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 700); h.removeCallbacks(recordZoomRun); h.postDelayed(recordZoomRun, 1500); }
+            public void onClick(View v) {
+                if (blocked()) return;
+                cancelScaleGuard();
+                // D'abord le zoom du WebSDR lui-même (un palier, comme ses propres boutons + et −) ; s'il n'en a pas de connu, on garde l'ancien
+                // comportement : zoom de la page puis remise à l'échelle du spectre.
+                web.evaluateJavascript("(function(){try{return window.__sdrlink&&__sdrlink.zoomStep(" + (in ? 1 : -1) + ")?1:0}catch(e){return 0}})()", new android.webkit.ValueCallback<String>() {
+                    public void onReceiveValue(String r) {
+                        if ("1".equals(r)) {   // zoom propre du WebSDR fait : on note le nouveau palier (même si la page vient de s'ouvrir)
+                            h.postDelayed(new Runnable() { public void run() { ownForce = true; js("if(window.__sdrlink)__sdrlink.zoomReport();"); } }, 1200);
+                            return;
+                        }
+                        if (in) web.zoomIn(); else web.zoomOut();
+                        h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 700);
+                        h.removeCallbacks(recordZoomRun);
+                        h.postDelayed(recordZoomRun, 1500);
+                    }
+                });
+            }
         });
         b.setTextSize(22);
         b.setTypeface(Typeface.DEFAULT_BOLD);
@@ -823,7 +841,7 @@ public class MainActivity extends Activity {
                     else {
                         // Un balayage isolé = un pas du réglage en cours. Des balayages rapprochés dans le même sens (moins de st.ringMs, 450 ms par défaut, réglable dans SET) lancent la roue
                         // comme un geste rapide sur la réglette, et chaque balayage de plus l'accélère.
-                        if (bar.flinging() || (dir == ringDir && now - ringT < st.ringMs)) bar.kick(dir);
+                        if (bar.flinging() || (dir == ringDir && now - ringT < st.ringMs)) bar.kick(dir, st.ringSpeed);
                         else tuneBySteps(dir, 1000);
                     }
                     ringDir = dir;
@@ -1008,6 +1026,50 @@ public class MainActivity extends Activity {
         web.loadUrl(url);
     }
 
+    // Zoom propre du WebSDR (palier de zoom du spectre/cascade) retenu pour chaque favori, dans PhoneViewPos (clé s<hash>, comme la clé z<hash>
+    // du zoom de l'écran) : retrouvé à chaque retour sur ce WebSDR et à la relance de l'application. Le zoom est lu toutes les 3 s ; une valeur
+    // différente de celle de la page fraîchement réglée est enregistrée (zoom voulu avec + / −, les boutons de la page ou un geste).
+    // INIT l'oublie. Sans valeur retenue, le « zoom du spectre » automatique de SET s'applique comme avant.
+    int ownPhase;               // 0 page en cours de réglage, 1 prochaine lecture = référence, 2 suivi des changements
+    int ownBase;
+    boolean ownForce;
+    int ownSeq;                 // numéro de la page en cours (annule les actions retardées d'une page précédente)
+    String ownKey() { return "s" + zoomKey().substring(1); }
+
+    void ownStart() {
+        final int seq = ++ownSeq;
+        ownPhase = 0;
+        int[] sv = st.getPos(ownKey());
+        final boolean saved = sv != null && sv.length > 0 && sv[0] != Integer.MAX_VALUE;
+        final int val = saved ? sv[0] : 0;
+        if (saved) {
+            int[] when = { 3000, 5000, 7500 };   // la page peut refuser un premier essai : on recommence
+            for (int i = 0; i < when.length; i++) h.postDelayed(new Runnable() { public void run() { if (seq == ownSeq) js("if(window.__sdrlink)__sdrlink.zoomWrite(" + val + ");"); } }, when[i]);
+        } else {
+            h.postDelayed(new Runnable() { public void run() { if (seq == ownSeq) applySpectrumZoom(); } }, 4500);
+        }
+        h.postDelayed(new Runnable() { public void run() { if (seq == ownSeq) ownPhase = 1; } }, 10000);
+        h.removeCallbacks(ownPollRun);
+        h.postDelayed(ownPollRun, 3000);
+    }
+
+    final Runnable ownPollRun = new Runnable() {
+        public void run() {
+            if (sdrKind.isEmpty() || web == null) return;
+            if (ownPhase > 0) js("if(window.__sdrlink)__sdrlink.zoomReport();");
+            h.postDelayed(this, 3000);
+        }
+    };
+
+    void onOwnZoom(int v) {
+        if (ownForce) { ownForce = false; ownBase = v; if (ownPhase < 2) ownPhase = 2; st.putPos(ownKey(), v); st.save(); return; }
+        if (ownPhase == 1) { ownBase = v; ownPhase = 2; return; }
+        if (ownPhase != 2 || v == ownBase) return;
+        ownBase = v;
+        st.putPos(ownKey(), v);
+        st.save();
+    }
+
     String currentUrl() { return web.getUrl() == null ? st.lastUrl : web.getUrl(); }
     String currentTitle() { return web.getTitle() == null ? "" : web.getTitle(); }
 
@@ -1018,6 +1080,7 @@ public class MainActivity extends Activity {
         if (msg.equals("mp3end")) { recFinish(); return; }
         if (msg.startsWith("rec|")) { onRecMessage(msg.split("\\|", -1)); return; }
         if (msg.startsWith("dec|")) { onDecMessage(msg); return; }
+        if (msg.startsWith("zv|")) { try { onOwnZoom(Integer.parseInt(msg.substring(3).trim())); } catch (NumberFormatException e) { } return; }
         if (msg.startsWith("dbg|")) { android.util.Log.i("PSDR", "js=" + msg.substring(4)); return; }
         String[] p = msg.split("\\|", -1);
         if (p.length < 3) return;
@@ -1032,7 +1095,7 @@ public class MainActivity extends Activity {
         sdrF = f;
         if (first && recResume) h.postDelayed(recResumeRun, 1500);
         if (first && decMode != 0) h.postDelayed(decStartRun, 1500);   // le décodeur reprend sur la nouvelle page
-        if (first) { applyAudio(); h.postDelayed(new Runnable() { public void run() { maxPageVolume(); } }, 2500); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 4500); }
+        if (first) { applyAudio(); h.postDelayed(new Runnable() { public void run() { maxPageVolume(); } }, 2500); ownStart(); }
         String fam = family(m);
 
         // Juste après un clic qui a arrêté le scan : la page est remise sur la fréquence scannée.

@@ -60,26 +60,14 @@ final class DlgSettings {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.autoReload = on; st.save(); a.applyAudio(); }
         }));
         col.addView(Ui.small(a, Lang.T("Recharge le WebSDR si le son est coupé depuis 30 s (sauf volume à zéro ou mute).", "Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).")));
-        col.addView(toggle(a, Lang.T("Boutons du casque (arrêt / départ du scan)", "Headset buttons (stop / start the scan)"), st.headsetStop, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.headsetStop = on; st.save(); a.applyHeadset(); }
-        }));
-        col.addView(Ui.small(a, Lang.T("Bouton de l'oreillette ou du casque : arrête le scan, puis le relance ; un double appui quand il est arrêté recule d'un pas. Décochée : les boutons du casque sont ignorés.", "Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.")));
-        final int[] bufMs = { 0, 250, 500, 1000, 2000, 3000 };
-        int bi = 0;
-        for (int i = 0; i < bufMs.length; i++) if (bufMs[i] == st.bufMs) bi = i;
-        DlgDecoder.choice(a, col, Lang.T("Mémoire tampon audio supplémentaire (essai)", "Extra audio buffer (test)"),
-            new String[] { Lang.T("Aucune (réglage d'origine)", "None (original setting)"), "0,25 s", "0,5 s", "1 s", "2 s", "3 s" }, bi,
-            new DlgDecoder.Pick() { public void chose(int i) { st.bufMs = bufMs[i]; st.save(); a.applyBuffer(); } });
-        col.addView(Ui.small(a, Lang.T("Demande au WebSDR une plus grande mémoire tampon de sortie audio : plus de latence, dans l'espoir de supprimer de petites coupures. Le WebSDR est rechargé quand on change la valeur.", "Asks the WebSDR for a larger audio output buffer: more latency, in the hope of removing small dropouts. The WebSDR is reloaded when the value is changed.")));
-        final int[] ringMs = new int[17];
-        String[] ringNames = new String[17];
-        int ri = 7;
-        for (int i = 0; i < 17; i++) { ringMs[i] = 100 + 50 * i; ringNames[i] = ringMs[i] + " ms"; if (ringMs[i] == st.ringMs) ri = i; }
-        DlgDecoder.choice(a, col, Lang.T("Bague : délai entre deux coups de molette pour accélérer", "Finger ring: delay between two wheel strokes to accelerate"), ringNames, ri,
-            new DlgDecoder.Pick() { public void chose(int i) { st.ringMs = ringMs[i]; st.save(); } });
-        col.addView(Ui.small(a, Lang.T("Deux coups de molette dans le même sens séparés de moins que ce délai lancent le défilement rapide ; sinon, chaque coup fait un seul pas.", "Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.")));
+        add(col, a, Lang.T("Mémoire tampon réception", "Reception buffer"), new View.OnClickListener() {
+            public void onClick(View v) { showBuffer(a); }   // SET reste ouvert dessous : le retour arrière y ramène
+        });
+        add(col, a, Lang.T("Casque / Molette", "Headset / Wheel"), new View.OnClickListener() {
+            public void onClick(View v) { showHeadset(a); }
+        });
         add(col, a, Lang.T("Couleurs…", "Colours…"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); showColors(a); }
+            public void onClick(View v) { showColors(a); }
         });
 
         add(col, a, Lang.T("Langue :", "Language:") + " " + name(st.language), new View.OnClickListener() {
@@ -98,7 +86,6 @@ final class DlgSettings {
         }));
         add(col, a, Lang.T("Nom ou indicatif donné aux WebSDR", "Name or callsign for WebSDRs") + " : " + st.callsign, new View.OnClickListener() {
             public void onClick(View v) {
-                d.dismiss();
                 Ui.input(a, Lang.T("Nom ou indicatif donné aux WebSDR qui en demandent un (KiwiSDR, websdr.org) :", "Name or callsign given to WebSDRs that ask for one (KiwiSDR, websdr.org):"),
                     "", st.callsign, new Ui.Text() {
                         public void got(String text) {
@@ -108,6 +95,8 @@ final class DlgSettings {
                             st.save();
                             a.updateIdentity();
                             a.web.reload();
+                            d.dismiss();   // SET est réaffiché pour montrer le nouveau nom
+                            show(a);
                         }
                     });
             }
@@ -157,6 +146,47 @@ final class DlgSettings {
     }
     static void setColor(Store st, int id, int c) {
         switch (id) { case 0: st.colBtnBg = c; break; case 1: st.colBtnTx = c; break; case 2: st.colFreqTx = c; break; case 3: st.colFreqBg = c; break; case 4: st.colBarFg = c; break; case 5: st.colBarBg = c; break; case 7: st.colFt8A = c; break; case 8: st.colFt8B = c; break; case 9: st.colDec = c; break; default: st.colBg = c; }
+    }
+
+    // Bouton « Mémoire tampon réception » : mémoire tampon audio supplémentaire demandée au WebSDR (essai).
+    static void showBuffer(final MainActivity a) {
+        final Store st = a.st;
+        LinearLayout col = Ui.column(a);
+        Dialog bd = Ui.window(a, Lang.T("Mémoire tampon réception", "Reception buffer"), Ui.scroll(a, col), false);
+        final int[] bufMs = { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900 };   // 0 = réglage d'origine, puis de 100 à 900 ms
+        int bi = 0;
+        for (int i = 0; i < bufMs.length; i++) if (Math.abs(bufMs[i] - st.bufMs) < Math.abs(bufMs[bi] - st.bufMs)) bi = i;   // valeur la plus proche (d'anciennes versions proposaient 250, 1000 ms…)
+        DlgDecoder.choice(a, col, Lang.T("Mémoire tampon audio supplémentaire (essai)", "Extra audio buffer (test)"),
+            new String[] { Lang.T("Aucune (réglage d'origine)", "None (original setting)"), "100 ms", "200 ms", "300 ms", "400 ms", "500 ms", "600 ms", "700 ms", "800 ms", "900 ms" }, bi,
+            new DlgDecoder.Pick() { public void chose(int i) { st.bufMs = bufMs[i]; st.save(); a.applyBuffer(); } });
+        col.addView(Ui.small(a, Lang.T("Demande au WebSDR une plus grande mémoire tampon de sortie audio : plus de latence, dans l'espoir de supprimer de petites coupures. Le WebSDR est rechargé quand on change la valeur.", "Asks the WebSDR for a larger audio output buffer: more latency, in the hope of removing small dropouts. The WebSDR is reloaded when the value is changed.")));
+        bd.show();
+    }
+
+    // Bouton « Casque / Molette » : boutons de l'oreillette ou du casque, et bague / molette de doigt (délai et vitesse du défilement rapide).
+    static void showHeadset(final MainActivity a) {
+        final Store st = a.st;
+        LinearLayout col = Ui.column(a);
+        Dialog hd = Ui.window(a, Lang.T("Casque / Molette", "Headset / Wheel"), Ui.scroll(a, col), false);
+        col.addView(toggle(a, Lang.T("Boutons du casque (arrêt / départ du scan)", "Headset buttons (stop / start the scan)"), st.headsetStop, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.headsetStop = on; st.save(); a.applyHeadset(); }
+        }));
+        col.addView(Ui.small(a, Lang.T("Bouton de l'oreillette ou du casque : arrête le scan, puis le relance ; un double appui quand il est arrêté recule d'un pas. Décochée : les boutons du casque sont ignorés.", "Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.")));
+        final int[] ringMs = new int[17];
+        String[] ringNames = new String[17];
+        int ri = 7;
+        for (int i = 0; i < 17; i++) { ringMs[i] = 100 + 50 * i; ringNames[i] = ringMs[i] + " ms"; if (ringMs[i] == st.ringMs) ri = i; }
+        DlgDecoder.choice(a, col, Lang.T("Bague : délai entre deux coups de molette pour accélérer", "Finger ring: delay between two wheel strokes to accelerate"), ringNames, ri,
+            new DlgDecoder.Pick() { public void chose(int i) { st.ringMs = ringMs[i]; st.save(); } });
+        col.addView(Ui.small(a, Lang.T("Deux coups de molette dans le même sens séparés de moins que ce délai lancent le défilement rapide ; sinon, chaque coup fait un seul pas.", "Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.")));
+        final int[] ringPct = new int[15];
+        String[] ringPctNames = new String[15];
+        int pi = 9;
+        for (int i = 0; i < 15; i++) { ringPct[i] = 10 * (i + 1); ringPctNames[i] = ringPct[i] + " %"; if (ringPct[i] == st.ringSpeed) pi = i; }
+        DlgDecoder.choice(a, col, Lang.T("Bague : vitesse du défilement rapide (100 % = vitesse d'origine)", "Finger ring: speed of the fast scroll (100 % = original speed)"), ringPctNames, pi,
+            new DlgDecoder.Pick() { public void chose(int i) { st.ringSpeed = ringPct[i]; st.save(); } });
+        col.addView(Ui.small(a, Lang.T("Vitesse atteinte quand plusieurs coups de molette se suivent : de presque zéro (10 %) à 150 % ; 100 % est la vitesse d'origine.", "Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.")));
+        hd.show();
     }
 
     static void showColors(MainActivity a) {

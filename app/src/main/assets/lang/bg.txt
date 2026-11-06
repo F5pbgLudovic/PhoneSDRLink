@@ -682,3 +682,7 @@ Back	Назад
 Highlight: callsigns or texts to spot, separated by commas	Маркиране: позивни или текстове за търсене, разделени със запетаи
 Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
 Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Headset / Wheel	Слушалки / Колелце
+Finger ring: speed of the fast scroll (100 % = original speed)	Пръстен: скорост на бързото превъртане (100 % = първоначална скорост)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Скорост, достигната при последователни удари на колелцето: от почти нула (10 %) до 150 %; 100 % е първоначалната скорост.
+Reception buffer	Буфер за приемане

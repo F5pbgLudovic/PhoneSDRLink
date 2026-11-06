@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Jóváhagyás
 Back	Vissza
 Highlight: callsigns or texts to spot, separated by commas	Kiemelés: hívójelek vagy keresendő szövegek, vesszővel elválasztva
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Gyűrű: késleltetés két görgetés között a gyorsításhoz
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Két azonos irányú görgőmozdulat, amelyek közelebb vannak egymáshoz, mint ez a késleltetés, elindítják a gyors görgetést; egyébként minden mozdulat egyetlen lépés.
+Headset / Wheel	Fejhallgató / Görgő
+Finger ring: speed of the fast scroll (100 % = original speed)	Gyűrű: a gyors görgetés sebessége (100 % = eredeti sebesség)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Az elért sebesség, ha több görgetés követi egymást: csaknem nullától (10 %) 150 %-ig; a 100 % az eredeti sebesség.
+Reception buffer	Vételi puffer

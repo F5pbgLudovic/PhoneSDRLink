@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Validează
 Back	Înapoi
 Highlight: callsigns or texts to spot, separated by commas	Evidențiere: indicative sau texte de reperat, separate prin virgule
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Inel: întârzierea dintre două mișcări ale rotiței pentru accelerare
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Două mișcări ale rotiței în același sens, mai apropiate decât această întârziere, pornesc derularea rapidă; altfel, fiecare mișcare este un singur pas.
+Headset / Wheel	Căști / Rotiță
+Finger ring: speed of the fast scroll (100 % = original speed)	Inel: viteza derulării rapide (100 % = viteza inițială)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Viteza atinsă când mai multe mișcări ale rotiței se succed: de la aproape zero (10 %) la 150 %; 100 % este viteza inițială.
+Reception buffer	Buffer de recepție

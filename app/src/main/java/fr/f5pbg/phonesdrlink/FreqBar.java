@@ -65,11 +65,12 @@ final class FreqBar extends View {
     boolean flinging() { return flingV != 0; }
     int flingDir() { return flingV > 0 ? 1 : flingV < 0 ? -1 : 0; }
 
-    void kick(int dir) {
+    void kick(int dir, int pct) {
         if (locked) return;
         boolean idle = flingV == 0;
-        float add = dir * 500 * getResources().getDisplayMetrics().density;
-        flingV = Math.max(-4500f, Math.min(4500f, flingV + add));
+        float f = pct / 100f;
+        float add = dir * 500 * f * getResources().getDisplayMetrics().density;
+        flingV = Math.max(-4500f * f, Math.min(4500f * f, flingV + add));
         if (Math.abs(flingV) < FLING_STOP) flingV = 0;
         flingT = android.os.SystemClock.uptimeMillis();
         if (flingV != 0 && idle) postOnAnimation(flingStep);

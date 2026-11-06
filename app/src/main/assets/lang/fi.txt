@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Vahvista
 Back	Takaisin
 Highlight: callsigns or texts to spot, separated by commas	Korostus: kutsutunnukset tai tekstit, jotka halutaan huomata, pilkuilla erotettuina
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Sormus: viive kahden rullaliikkeen välillä kiihdyttämiseksi
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Kaksi rullaliikettä samaan suuntaan tätä viivettä lyhyemmällä välillä käynnistää nopean vierityksen; muuten jokainen liike on yksi askel.
+Headset / Wheel	Kuulokkeet / Rulla
+Finger ring: speed of the fast scroll (100 % = original speed)	Sormus: nopean vierityksen nopeus (100 % = alkuperäinen nopeus)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Nopeus, joka saavutetaan, kun useita rullaliikkeitä seuraa peräkkäin: lähes nollasta (10 %) 150 %:iin; 100 % on alkuperäinen nopeus.
+Reception buffer	Vastaanottopuskuri

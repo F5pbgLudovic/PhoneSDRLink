@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Potvrdiť
 Back	Späť
 Highlight: callsigns or texts to spot, separated by commas	Zvýraznenie: volacie znaky alebo texty na nájdenie, oddelené čiarkami
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Prsteň: oneskorenie medzi dvoma pohybmi kolieska na zrýchlenie
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Dva pohyby kolieska rovnakým smerom bližšie k sebe, než je toto oneskorenie, spustia rýchle posúvanie; inak je každý pohyb jediným krokom.
+Headset / Wheel	Slúchadlá / Koliesko
+Finger ring: speed of the fast scroll (100 % = original speed)	Prsteň: rýchlosť rýchleho posúvania (100 % = pôvodná rýchlosť)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Rýchlosť dosiahnutá, keď po sebe nasleduje viac otočení kolieska: od takmer nuly (10 %) do 150 %; 100 % je pôvodná rýchlosť.
+Reception buffer	Prijímací buffer

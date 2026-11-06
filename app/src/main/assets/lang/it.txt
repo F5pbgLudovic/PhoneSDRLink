@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Convalida
 Back	Indietro
 Highlight: callsigns or texts to spot, separated by commas	Evidenziazione: nominativi o testi da individuare, separati da virgole
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Anello: ritardo tra due scatti della rotella per accelerare
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Due scatti della rotella nella stessa direzione ravvicinati più di questo ritardo avviano lo scorrimento rapido; altrimenti ogni scatto è un singolo passo.
+Headset / Wheel	Cuffie / Rotella
+Finger ring: speed of the fast scroll (100 % = original speed)	Anello: velocità dello scorrimento rapido (100 % = velocità originale)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Velocità raggiunta quando più scatti della rotella si susseguono: da quasi zero (10 %) a 150 %; 100 % è la velocità originale.
+Reception buffer	Buffer di ricezione

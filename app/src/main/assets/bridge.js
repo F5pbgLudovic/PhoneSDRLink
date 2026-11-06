@@ -531,6 +531,54 @@
       }
     } catch (e) { }
   };
+  // Boutons + et − de l'écran principal : un palier du zoom propre au WebSDR (même effet que ses propres boutons de zoom). Renvoie
+  // true si c'est fait, false si ce WebSDR n'a pas de zoom connu (l'application garde alors le zoom de la page).
+  L.zoomStep = function (dir) {
+    clearTimeout(L.zoomTimer);
+    clearTimeout(L.zoomHold); L.zoomHold = 0;   // zoom voulu : la garde de fréquence n'a plus rien à remettre
+    var k = detect();
+    try {
+      if (k === 'ubersdr') {
+        var bs = document.querySelectorAll('button'), want = dir > 0 ? /^zoom in/i : /^zoom out/i, i;
+        for (i = 0; i < bs.length; i++) if (want.test(bs[i].title || '')) { bs[i].click(); return true; }
+        return false;
+      }
+      if (k === 'kiwi' && typeof zoom_step === 'function' && typeof ext_zoom === 'object' && ext_zoom.IN !== undefined && ext_zoom.OUT !== undefined) { zoom_step(dir > 0 ? ext_zoom.IN : ext_zoom.OUT); return true; }
+      if (k === 'websdr' && typeof wfset === 'function') { wfset(dir > 0 ? 0 : 1); return true; }
+      if ((k === 'owrx' || k === 'owrx+') && typeof zoom_set === 'function' && typeof zoom_level === 'number' && typeof zoom_levels !== 'undefined') { zoom_set(Math.max(0, Math.min(zoom_levels.length - 1, zoom_level + dir))); return true; }
+    } catch (e) { }
+    return false;
+  };
+  // Zoom propre du WebSDR retenu par WebSDR (favori) : zoomReport() envoie « zv|valeur » à l'application (valeur entière : niveau de zoom de
+  // Kiwi et d'OpenWebRX, largeur de spectre en Hz d'UberSDR, log2 de khz/pixel x 100 de websdr.org) ; zoomWrite(v) remet cette valeur.
+  L.zoomReport = function () {
+    try {
+      var k = detect();
+      if (k === 'kiwi' || k === 'owrx' || k === 'owrx+') { if (typeof zoom_level === 'number') __post('zv|' + Math.round(zoom_level)); }
+      else if (k === 'websdr') { if (typeof khzperpixel === 'number' && khzperpixel > 0) __post('zv|' + Math.round(Math.log(khzperpixel) / Math.LN2 * 100)); }
+      else if (k === 'ubersdr') UberSDR.get('spectrum').then(function (r) { if (r && r.span) __post('zv|' + Math.round(r.span)); }, function () { });
+    } catch (e) { }
+  };
+  L.zoomWrite = function (v) {
+    clearTimeout(L.zoomTimer);
+    clearTimeout(L.zoomHold); L.zoomHold = 0;
+    try {
+      var k = detect();
+      if (k === 'kiwi') ext_set_zoom(ext_zoom.ABS, v);
+      else if (k === 'owrx' || k === 'owrx+') zoom_set(v);
+      else if (k === 'ubersdr') UberSDR.command('spectrum', { span: v }).catch(function () { });
+      else if (k === 'websdr') {
+        var tries = 0, step = function () {
+          if (typeof khzperpixel !== 'number' || typeof wfset !== 'function') return;
+          var cur = Math.log(khzperpixel) / Math.LN2 * 100, d = v - cur;
+          if (Math.abs(d) < 50 || tries++ > 16) return;
+          wfset(d < 0 ? 0 : 1);   // wfset(0) zoome d'un palier (khz/pixel divisé par 2), wfset(1) dézoome
+          L.zoomTimer = setTimeout(step, 700);
+        };
+        step();
+      }
+    } catch (e) { }
+  };
   function detect() {
     if (window.UberSDR && typeof UberSDR.command === 'function' && typeof UberSDR.state === 'function') return 'ubersdr';
     // PhantomSDR (avec module CATsync) : imite en partie Kiwi/websdr.org, à reconnaître avant eux.

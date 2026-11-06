@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Bevestigen
 Back	Terug
 Highlight: callsigns or texts to spot, separated by commas	Markeren: roepletters of teksten om te signaleren, gescheiden door komma's
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Ring: vertraging tussen twee wieltjebewegingen om te versnellen
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Twee wieltjebewegingen in dezelfde richting die dichter bij elkaar liggen dan deze vertraging starten het snelle scrollen; anders is elke beweging een enkele stap.
+Headset / Wheel	Headset / Wieltje
+Finger ring: speed of the fast scroll (100 % = original speed)	Ring: snelheid van het snelle scrollen (100 % = oorspronkelijke snelheid)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Snelheid die wordt bereikt wanneer meerdere wieltjesslagen op elkaar volgen: van bijna nul (10 %) tot 150 %; 100 % is de oorspronkelijke snelheid.
+Reception buffer	Ontvangstbuffer

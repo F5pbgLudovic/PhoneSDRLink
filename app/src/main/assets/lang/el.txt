@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Επικύρωση
 Back	Πίσω
 Highlight: callsigns or texts to spot, separated by commas	Επισήμανση: διακριτικά κλήσης ή κείμενα προς εντοπισμό, χωρισμένα με κόμματα
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Δαχτυλίδι: καθυστέρηση μεταξύ δύο κινήσεων του τροχού για επιτάχυνση
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Δύο κινήσεις του τροχού προς την ίδια κατεύθυνση με μικρότερο διάστημα από αυτή την καθυστέρηση ξεκινούν τη γρήγορη κύλιση· διαφορετικά, κάθε κίνηση είναι ένα μόνο βήμα.
+Headset / Wheel	Ακουστικά / Τροχός
+Finger ring: speed of the fast scroll (100 % = original speed)	Δαχτυλίδι: ταχύτητα της γρήγορης κύλισης (100 % = αρχική ταχύτητα)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Ταχύτητα που επιτυγχάνεται όταν διαδέχονται το ένα το άλλο αρκετά χτυπήματα του τροχού: από σχεδόν μηδέν (10 %) έως 150 %· το 100 % είναι η αρχική ταχύτητα.
+Reception buffer	Προσωρινή μνήμη λήψης

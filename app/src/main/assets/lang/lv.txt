@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Apstiprināt
 Back	Atpakaļ
 Highlight: callsigns or texts to spot, separated by commas	Izcelšana: izsaukuma zīmes vai teksti, kas jāatrod, atdalīti ar komatiem
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Gredzens: aizkave starp diviem riteņa pagriezieniem paātrināšanai
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Divi riteņa pagriezieni vienā virzienā, kas atrodas tuvāk nekā šī aizkave, sāk ātro ritināšanu; pretējā gadījumā katrs pagrieziens ir viens solis.
+Headset / Wheel	Austiņas / Ritenis
+Finger ring: speed of the fast scroll (100 % = original speed)	Gredzens: ātrās ritināšanas ātrums (100 % = sākotnējais ātrums)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Ātrums, kas tiek sasniegts, kad pēc kārtas seko vairāki riteņa grieziena kustības: no gandrīz nulles (10 %) līdz 150 %; 100 % ir sākotnējais ātrums.
+Reception buffer	Uztveršanas buferis

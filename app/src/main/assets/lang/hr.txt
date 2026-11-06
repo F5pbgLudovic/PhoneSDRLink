@@ -680,5 +680,9 @@ USB or DATA mode, on an FT2 frequency (3.578, 7.052, 14.084 MHz…). FT2 is FT4 
 Validate	Potvrdi
 Back	Natrag
 Highlight: callsigns or texts to spot, separated by commas	Isticanje: pozivni znakovi ili tekstovi za uočavanje, odvojeni zarezima
-Finger ring: delay between two wheel strokes to accelerate	Пръстен: забавяне между два удара на колелцето за ускорение
-Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Два удара на колелцето в една и съща посока, по-близо един до друг от това забавяне, стартират бързото превъртане; в противен случай всеки удар е една стъпка.
+Finger ring: delay between two wheel strokes to accelerate	Prsten: odgoda između dva pomaka kotačića za ubrzanje
+Two wheel strokes in the same direction closer together than this delay start the fast scroll; otherwise each stroke is a single step.	Dva pomaka kotačića u istom smjeru bliže jedan drugome od ove odgode pokreću brzo pomicanje; inače je svaki pomak jedan korak.
+Headset / Wheel	Slušalice / Kotačić
+Finger ring: speed of the fast scroll (100 % = original speed)	Prsten: brzina brzog pomicanja (100 % = izvorna brzina)
+Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.	Brzina postignuta kada se više okretaja kotačića nižu jedan za drugim: od gotovo nule (10 %) do 150 %; 100 % je izvorna brzina.
+Reception buffer	Međuspremnik prijema
