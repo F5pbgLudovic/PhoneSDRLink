@@ -40,7 +40,8 @@
         construct: function (t, a) {
           var o = {}, k;
           if (a[0] && typeof a[0] === 'object') for (k in a[0]) o[k] = a[0][k];
-          if (o.latencyHint === undefined) o.latencyHint = 'playback';
+          if (window.__sdrlinkBufMs > 0) o.latencyHint = window.__sdrlinkBufMs / 1000;   // mémoire tampon supplémentaire demandée dans SET (essai)
+          else if (o.latencyHint === undefined) o.latencyHint = 'playback';
           return Reflect.construct(t, [o]);
         }
       });

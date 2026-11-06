@@ -619,3 +619,54 @@ signal at %.0f Hz	signál na %.0f Hz
 too short, not saved	príliš krátke, neuložené
 unsupported mode (VIS %d)	nepodporovaný režim (VIS %d)
 The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). PSK31: USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…), the audio frequency is found automatically. SSTV: USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the mode is recognised automatically, the picture is shown and saved when it ends. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Zvuk z WebSDR sa neustále analyzuje, aj keď je stlmený. FT8 / FT4: režim USB alebo DATA, na frekvencii FT8 alebo FT4 (7,074 / 7,0475, 14,074 / 14,080 MHz…); hodiny telefónu musia byť presné. CW: režim CW alebo USB, na signáli CW. RTTY: režim USB alebo LSB (šírka pásma aspoň 500 Hz), na signáli RTTY (14,080 až 14,099 MHz…). PSK31: režim USB, na signáli PSK31 (14,070, 7,035, 3,580 MHz…), zvuková frekvencia sa nájde automaticky. SSTV: režim USB (šírka pásma aspoň 2,4 kHz), na frekvencii SSTV (14,230, 7,033, 3,730 MHz…); režim sa rozpozná automaticky, obrázok sa zobrazí a po skončení uloží. FreeDV RADE: režim USB, na signáli RADE (14,236 MHz…); dekódovaná reč nahradí zvuk z WebSDR.
+CW or USB mode, on a CW signal. Settings (tone, filter, speed, thresholds…) under the text.	Režim CW alebo USB, na signáli CW. Nastavenia (tón, filter, rýchlosť, prahy…) pod textom.
+Received text (reception frame): it will appear here.	Prijatý text (prijímací rámček): zobrazí sa tu.
+The WebSDR sound is analysed continuously, even when muted.	Zvuk WebSDR sa neustále analyzuje, aj keď je stlmený.
+USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the picture mode is recognised automatically, the picture builds up line by line and is saved when it ends.	Režim USB (šírka pásma aspoň 2,4 kHz), na frekvencii SSTV (14.230, 7.033, 3.730 MHz…); režim obrazu sa rozpozná automaticky, obraz sa skladá riadok po riadku a na konci sa uloží.
+USB mode, on a FreeDV RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Režim USB, na signáli FreeDV RADE (14.236 MHz…); dekódovaná reč nahradí zvuk WebSDR.
+USB mode, on a JT9 frequency (14.078, 7.078, 3.578 MHz…). 1-minute slots; the phone clock must be accurate.	Režim USB, na frekvencii JT9 (14.078, 7.078, 3.578 MHz…). Časové sloty po 1 minúte; hodiny telefónu musia byť presné.
+USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…); the audio frequency is found automatically (or set by hand). PSK63 possible.	Režim USB, na signáli PSK31 (14.070, 7.035, 3.580 MHz…); zvuková frekvencia sa nájde automaticky (alebo sa nastaví ručne). PSK63 možný.
+USB mode, on a WSPR frequency (14.0956, 7.0386, 10.1387 MHz…: carrier frequency + 1500 Hz). 2-minute slots; the phone clock must be accurate; first results at the end of the first slot.	Režim USB, na frekvencii WSPR (14.0956, 7.0386, 10.1387 MHz…: frekvencia nosnej + 1500 Hz). Časové sloty po 2 minútach; hodiny telefónu musia byť presné; prvé výsledky na konci prvého slotu.
+USB or DATA mode, on an FT8 (7.074, 14.074 MHz…) or FT4 (7.0475, 14.080 MHz…) frequency. The phone clock must be accurate.	Režim USB alebo DATA, na frekvencii FT8 (7.074, 14.074 MHz…) alebo FT4 (7.0475, 14.080 MHz…). Hodiny telefónu musia byť presné.
+USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). Settings under the text.	Režim USB alebo LSB (šírka pásma aspoň 500 Hz), na signáli RTTY (14.080 až 14.099 MHz…). Nastavenia pod textom.
+UTC time · DT (s) · audio frequency (Hz) · message. The two periods (even and odd) are shown in two colours.	Čas UTC · DT (s) · zvuková frekvencia (Hz) · správa. Dve periódy (párna a nepárna) sú zobrazené dvoma farbami.
+UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · callsign, locator, power (dBm).	Čas UTC · SNR (dB) · DT (s) · zvuková frekvencia (Hz) · volacia značka, lokátor, výkon (dBm).
+UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · message.	Čas UTC · SNR (dB) · DT (s) · zvuková frekvencia (Hz) · správa.
+UTC time · picture mode.	Čas UTC · režim obrazu.
+UTC time · text.	Čas UTC · text.
+FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…	Dekodér FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV…
+(original position)	(pôvodná poloha)
+Asks the WebSDR for a larger audio output buffer: more latency, in the hope of removing small dropouts. The WebSDR is reloaded when the value is changed.	Žiada WebSDR o väčšiu výstupnú audio vyrovnávaciu pamäť: väčšie oneskorenie v nádeji, že zmiznú drobné výpadky zvuku. Pri zmene hodnoty sa WebSDR znova načíta.
+Audio buffer: {0} ms; reloading the WebSDR	Audio vyrovnávacia pamäť: {0} ms; opätovné načítanie WebSDR
+Bottom left	Vľavo dole
+Bottom right	Vpravo dole
+Copy "{0}" to ▸	Kopírovať "{0}" do ▸
+Digital modes	Digitálne režimy
+Extra audio buffer (test)	Ďalšia audio vyrovnávacia pamäť (test)
+IARU Region 1 (Europe, Africa)	IARU Región 1 (Európa, Afrika)
+IARU Region 2 (Americas)	IARU Región 2 (Amerika)
+IARU Region 3 (Asia-Pacific)	IARU Región 3 (Ázia a Tichomorie)
+INIT + − buttons	Tlačidlá INIT + −
+None (original setting)	Žiadna (pôvodné nastavenie)
+Top left	Vľavo hore
+Top right	Vpravo hore
+Usual {0} frequencies, {1}: they follow the decoder mode. Click to go there (long press: copy to a list).	Bežné frekvencie {0}, {1}: sledujú režim dekodéra. Kliknutím tam prejdete (dlhé stlačenie: kopírovať do zoznamu).
+horizontal	vodorovne
+vertical	zvisle
+Active digital mode (frequency box)	Aktívny digitálny režim (pole frekvencie)
+Detection threshold (applied immediately):	Prah detekcie (použije sa okamžite):
+normal (original)	normálny (pôvodný)
+slightly more sensitive	mierne citlivejší
+sensitive	citlivý
+very sensitive	veľmi citlivý
+maximum (risk of false detections)	maximálny (riziko falošných detekcií)
+Weak-signal sensitivity: {0}	Citlivosť na slabé signály: {0}
+The higher the value, the more the start code, the sync pulses and the lines are accepted with little signal.	Čím vyššia hodnota, tým skôr sa pri slabom signáli prijmú štartovací kód, synchronizačné impulzy a riadky.
+— signal found again, line	— signál znova nájdený, riadok
+— start missing, picked up in progress	— chýba začiatok, zachytené za behu
+Sensitivity	Citlivosť
+Data loss	Strata dát
+Sensitivity (1 to 10): the higher the number, the weaker the signals the decoder accepts (start code, sync pulses, lines), at the risk of a few false detections. Data loss (1 to 10): how long the decoder keeps going with a picture when the signal disappears (3 s at 1, 12 s at 4, 120 s at 10); if the signal comes back in that time, the picture resumes at the right line and the lost lines stay grey; after that time the picture is saved as it is and the decoder listens again (it then finds the mode by itself).	Citlivosť (1 až 10): čím vyššie číslo, tým slabšie signály dekodér prijíma (štartovací kód, synchronizačné impulzy, riadky), s rizikom niekoľkých falošných detekcií. Strata dát (1 až 10): ako dlho dekodér pokračuje s obrázkom, keď signál zmizne (3 s pri 1, 12 s pri 4, 120 s pri 10); ak sa signál v tomto čase vráti, obrázok pokračuje na správnom riadku a stratené riadky zostanú sivé; po uplynutí tohto času sa obrázok uloží tak, ako je, a dekodér opäť počúva (režim potom nájde sám).
+Sensitivity (1 to 10): the higher the number, the weaker the signals the decoder accepts (start code, sync pulses, lines), at the risk of a few false detections.	Citlivosť (1 až 10): čím vyššie číslo, tým slabšie signály dekodér prijíma (štartovací kód, synchronizačné impulzy, riadky), s rizikom niekoľkých falošných detekcií.
+Data loss (1 to 10): how long the decoder keeps going with a picture when the signal disappears (3 s at 1, 12 s at 4, 120 s at 10). If the signal comes back in that time, the picture resumes at the right line and the lost lines stay grey. After that time the picture is saved as it is and the decoder listens again (it then finds the mode by itself).	Strata dát (1 až 10): ako dlho dekodér pokračuje s obrázkom, keď signál zmizne (3 s pri 1, 12 s pri 4, 120 s pri 10). Ak sa signál v tomto čase vráti, obrázok pokračuje na správnom riadku a stratené riadky zostanú sivé. Po uplynutí tohto času sa obrázok uloží tak, ako je, a dekodér opäť počúva (režim potom nájde sám).
+USB mode, on a FreeDV RADE V2 signal (FreeDV 3.0). Warning: V2 is still in development (waveform and neural networks may change, not compatible with FreeDV 2.x's V1): this version uses a snapshot of the sources of 6 November 2026 and may not decode future V2 signals. The decoded speech replaces the WebSDR sound.	Režim USB, na signáli FreeDV RADE V2 (FreeDV 3.0). Upozornenie: V2 je stále vo vývoji (priebeh vlny a neurónové siete sa môžu zmeniť, nie je kompatibilný s V1 z FreeDV 2.x): táto verzia používa snímku zdrojových kódov zo 6. novembra 2026 a nemusí dekódovať budúce signály V2. Dekódovaná reč nahrádza zvuk WebSDR.

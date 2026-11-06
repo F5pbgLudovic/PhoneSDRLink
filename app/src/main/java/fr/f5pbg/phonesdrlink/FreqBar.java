@@ -23,7 +23,7 @@ final class FreqBar extends View {
     private boolean down;
     String hint = "";
     boolean locked;
-    Runnable onLong;            // appui de 3 secondes sans bouger
+    Runnable onLong;            // appui de 2 secondes sans bouger
     private boolean longDone;
     private float downX, downY;
     private final Runnable longRun = new Runnable() { public void run() { longDone = true; down = false; carry = 0; invalidate(); if (onLong != null) onLong.run(); } };
@@ -83,7 +83,7 @@ final class FreqBar extends View {
         switch (e.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 stopFling();
-                longDone = false; downX = e.getX(); downY = e.getY(); removeCallbacks(longRun); postDelayed(longRun, 3000);
+                longDone = false; downX = e.getX(); downY = e.getY(); removeCallbacks(longRun); postDelayed(longRun, 2000);
                 vt.clear();
                 vt.addMovement(e);
                 getParent().requestDisallowInterceptTouchEvent(true);

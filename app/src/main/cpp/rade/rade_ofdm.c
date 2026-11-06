@@ -36,6 +36,7 @@
 #include "rade_ofdm.h"
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 /*---------------------------------------------------------------------------*\
                            INITIALIZATION
@@ -409,12 +410,12 @@ float rade_ofdm_pilot_eq(const rade_ofdm *ofdm, RADE_COMP *rx_sym,
     }
     S2 += 1e-12f;  /* Avoid division by zero */
     float snr_est = S1 / (2.0f * S2) - 1.0f;
-    if (snr_est <= 0.0f) snr_est = 0.1f;
+    if (snr_est <= 0.1f) snr_est = 0.1f;
     float snrdB_est = 10.0f * log10f(snr_est);
 
     /* Correction based on average of straight line fit to AWGN/MPG/MPP */
-    float m_corr = 0.8070f;
-    float c_corr = 2.513f;
+    float m_corr = 0.7650f;
+    float c_corr = 4.1343f;
     snrdB_est = (snrdB_est - c_corr) / m_corr;
 
     /* Convert to 3kHz noise bandwidth */

@@ -1,0 +1,8 @@
+Essai de bouclage RADE V2 (émetteur V2 -> bruit -> récepteur de PhoneSDRLink), sur le téléphone, pas dans l'application finale.
+Pour le refaire : télécharger dans app\src\main\cpp\rade2test\ les fichiers rade_enc_v2.c/.h, rade_enc_v2_data.c/.h, rade_tx_v2.c/.h depuis
+https://github.com/freedv/rade_c (dossier src, branche main) et y copier sdrdec_rade_test.c de ce dossier ; CMakeLists.txt l'ajoute tout seul quand
+rade2test\rade_enc_v2_data.c existe (le fichier de poids de l'émetteur fait 24 Mo : l'APK d'essai grossit d'autant). Compiler, installer, puis :
+  adb shell am start -n fr.f5pbg.phonesdrlink/.MainActivity --es radev2test "300,40,200,40,100,40"   (paires : SNR en dixièmes de dB, durée en s)
+Résultats dans logcat, étiquette PSDR (RADEV2 ...). Supprimer ensuite le dossier rade2test avant de compiler la version publiée.
+Résultat du 6 nov. 2026 : 30 et 20 dB : 993 blocs sur 1000 synchronisés, parole produite ; 10 dB : 59 sur 1000 ; 5 dB et moins : 0.
+(le calibrage du bruit de l'essai est approximatif : le SNR estimé par le récepteur est plus bas que celui demandé.)

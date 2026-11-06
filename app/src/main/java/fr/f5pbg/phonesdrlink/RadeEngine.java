@@ -28,10 +28,11 @@ final class RadeEngine {
     boolean voiceOn;
     short[] outBuf = new short[0];
 
-    RadeEngine(Listener l) { ls = l; }
+    final boolean v2;   // RADE V2 (FreeDV 3.0, en développement) au lieu de V1 (FreeDV 2.x)
+    RadeEngine(boolean v2, Listener l) { this.v2 = v2; ls = l; }
 
     boolean start() {
-        handle = Decoders.radeNew();
+        handle = Decoders.radeNewV(v2 ? 1 : 0);
         if (handle == 0) return false;
         try {
             int minBuf = AudioTrack.getMinBufferSize(16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
@@ -108,8 +109,8 @@ final class RadeEngine {
             }
             if (now - lastMs > 1000) {
                 lastMs = now;
-                final String s = sync ? String.format(Locale.US, "RADE : %s, SNR %d dB, %s %+.1f Hz", Lang.T("synchronisé", "in sync"), st[1], Lang.T("décalage", "offset"), st[2] / 10.0)
-                                      : "RADE : " + Lang.T("recherche du signal…", "searching for the signal…");
+                final String s = sync ? String.format(Locale.US, (v2 ? "RADE V2" : "RADE") + " : %s, SNR %d dB, %s %+.1f Hz", Lang.T("synchronisé", "in sync"), st[1], Lang.T("décalage", "offset"), st[2] / 10.0)
+                                      : (v2 ? "RADE V2" : "RADE") + " : " + Lang.T("recherche du signal…", "searching for the signal…");
                 h.post(new Runnable() { public void run() { if (running && ls != null) ls.onStatus(s); } });
             }
         }

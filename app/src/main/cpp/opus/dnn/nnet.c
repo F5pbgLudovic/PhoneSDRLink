@@ -119,7 +119,7 @@ void compute_glu(const LinearLayer *layer, float *output, const float *input, in
    }
 }
 
-#define MAX_CONV_INPUTS_ALL DRED_MAX_CONV_INPUTS
+#define MAX_CONV_INPUTS_ALL 2048   /* RADE V2 : la 5e convolution du décodeur a 1792 entrées (> DRED_MAX_CONV_INPUTS = 1536) */
 
 void compute_generic_conv1d(const LinearLayer *layer, float *output, float *mem, const float *input, int input_size, int activation, int arch)
 {

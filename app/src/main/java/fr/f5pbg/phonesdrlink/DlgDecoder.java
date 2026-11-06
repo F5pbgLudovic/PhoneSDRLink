@@ -31,29 +31,143 @@ final class DlgDecoder {
         if (sstvImgBox != null) sstvImgBox.setVisibility(mode == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
     }
 
+    // Ordre des modes dans la liste déroulante.
+    static final int[] MODES = { MainActivity.DEC_FT8, MainActivity.DEC_FT4, MainActivity.DEC_WSPR, MainActivity.DEC_JT9, MainActivity.DEC_CW,
+        MainActivity.DEC_RTTY, MainActivity.DEC_PSK, MainActivity.DEC_SSTV, MainActivity.DEC_RADE, MainActivity.DEC_RADE2 };
+    static int lastSel = MainActivity.DEC_FT8;     // dernier mode choisi dans la liste (gardé tant que l'application tourne)
+    static Runnable onState;                       // appelé quand le décodeur démarre ou s'arrête : remet à jour les boutons
+
+    // Texte du bouton « i » : change avec le mode choisi.
+    static String info(int mode) {
+        String head, cols;
+        switch (mode) {
+            case MainActivity.DEC_FT8: case MainActivity.DEC_FT4:
+                head = Lang.T("Mode USB ou DATA, sur une fréquence FT8 (7.074, 14.074 MHz…) ou FT4 (7.0475, 14.080 MHz…). L'heure du téléphone doit être exacte.", "USB or DATA mode, on an FT8 (7.074, 14.074 MHz…) or FT4 (7.0475, 14.080 MHz…) frequency. The phone clock must be accurate.");
+                cols = Lang.T("Heure UTC · DT (s) · fréquence audio (Hz) · message. Les deux périodes (paire et impaire) sont affichées en deux couleurs.", "UTC time · DT (s) · audio frequency (Hz) · message. The two periods (even and odd) are shown in two colours.");
+                break;
+            case MainActivity.DEC_WSPR:
+                head = Lang.T("Mode USB, sur une fréquence WSPR (14.0956, 7.0386, 10.1387 MHz… : fréquence de la porteuse + 1500 Hz). Tranches de 2 minutes ; l'heure du téléphone doit être exacte ; premiers résultats à la fin de la première tranche.", "USB mode, on a WSPR frequency (14.0956, 7.0386, 10.1387 MHz…: carrier frequency + 1500 Hz). 2-minute slots; the phone clock must be accurate; first results at the end of the first slot.");
+                cols = Lang.T("Heure UTC · SNR (dB) · DT (s) · fréquence audio (Hz) · indicatif, locator, puissance (dBm).", "UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · callsign, locator, power (dBm).");
+                break;
+            case MainActivity.DEC_JT9:
+                head = Lang.T("Mode USB, sur une fréquence JT9 (14.078, 7.078, 3.578 MHz…). Tranches d'une minute ; l'heure du téléphone doit être exacte.", "USB mode, on a JT9 frequency (14.078, 7.078, 3.578 MHz…). 1-minute slots; the phone clock must be accurate.");
+                cols = Lang.T("Heure UTC · SNR (dB) · DT (s) · fréquence audio (Hz) · message.", "UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · message.");
+                break;
+            case MainActivity.DEC_CW:
+                head = Lang.T("Mode CW ou USB, sur un signal CW. Réglages (tonalité, filtre, vitesse, seuils…) sous le texte.", "CW or USB mode, on a CW signal. Settings (tone, filter, speed, thresholds…) under the text.");
+                cols = Lang.T("Heure UTC · texte.", "UTC time · text.");
+                break;
+            case MainActivity.DEC_RTTY:
+                head = Lang.T("Mode USB ou LSB (au moins 500 Hz de bande), sur un signal RTTY (14.080 à 14.099 MHz…). Réglages sous le texte.", "USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). Settings under the text.");
+                cols = Lang.T("Heure UTC · texte.", "UTC time · text.");
+                break;
+            case MainActivity.DEC_PSK:
+                head = Lang.T("Mode USB, sur un signal PSK31 (14.070, 7.035, 3.580 MHz…) ; la fréquence audio est trouvée automatiquement (ou réglée à la main). PSK63 possible.", "USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…); the audio frequency is found automatically (or set by hand). PSK63 possible.");
+                cols = Lang.T("Heure UTC · texte.", "UTC time · text.");
+                break;
+            case MainActivity.DEC_SSTV:
+                head = Lang.T("Mode USB (au moins 2,4 kHz de bande), sur une fréquence SSTV (14.230, 7.033, 3.730 MHz…) ; le mode de l'image est reconnu tout seul, l'image se construit ligne par ligne, puis elle est enregistrée à la fin.", "USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the picture mode is recognised automatically, the picture builds up line by line and is saved when it ends.");
+                cols = Lang.T("Heure UTC · mode de l'image.", "UTC time · picture mode.");
+                cols += "\n\n" + Lang.T("Sensibilité (1 à 10) : plus le chiffre est haut, plus le décodeur accepte les signaux faibles (code de début, synchros, lignes), au risque de quelques fausses détections.", "Sensitivity (1 to 10): the higher the number, the weaker the signals the decoder accepts (start code, sync pulses, lines), at the risk of a few false detections.") + "\n\n" + Lang.T("Perte data (1 à 10) : combien de temps le décodeur continue une image quand le signal disparaît (3 s au chiffre 1, 12 s au 4, 120 s au 10). Si le signal revient dans ce temps, l'image reprend à la bonne ligne et les lignes perdues restent grises. Passé ce temps, l'image est enregistrée telle quelle et le décodeur se remet à l'écoute (il retrouve alors le mode tout seul).", "Data loss (1 to 10): how long the decoder keeps going with a picture when the signal disappears (3 s at 1, 12 s at 4, 120 s at 10). If the signal comes back in that time, the picture resumes at the right line and the lost lines stay grey. After that time the picture is saved as it is and the decoder listens again (it then finds the mode by itself).");
+                break;
+            case MainActivity.DEC_RADE2:
+                head = Lang.T("Mode USB, sur un signal FreeDV RADE V2 (FreeDV 3.0). Attention : la V2 est encore en développement (forme d'onde et réseaux de neurones susceptibles de changer, non compatible avec la V1 de FreeDV 2.x) : cette version reprend un état des sources du 6 novembre 2026 et ne décodera pas forcément les signaux V2 à venir. La parole décodée remplace le son du WebSDR.", "USB mode, on a FreeDV RADE V2 signal (FreeDV 3.0). Warning: V2 is still in development (waveform and neural networks may change, not compatible with FreeDV 2.x's V1): this version uses a snapshot of the sources of 6 November 2026 and may not decode future V2 signals. The decoded speech replaces the WebSDR sound.");
+                cols = null;
+                break;
+            default:
+                head = Lang.T("Mode USB, sur un signal FreeDV RADE (14.236 MHz…) ; la parole décodée remplace le son du WebSDR.", "USB mode, on a FreeDV RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.");
+                cols = null;
+        }
+        return Lang.T("Le son du WebSDR est analysé en continu, même coupé.", "The WebSDR sound is analysed continuously, even when muted.") + "\n\n" + head + (cols != null ? "\n\n" + cols : "");
+    }
+
+    // Zone de réglages : prend la hauteur de son contenu, plafonnée pour laisser de la place au texte reçu (ascenseur au-delà).
+    static final class Capped extends ScrollView {
+        final int cap;
+        Capped(MainActivity a, int capPx) { super(a); cap = capPx; }
+        @Override protected void onMeasure(int w, int h) {
+            super.onMeasure(w, View.MeasureSpec.makeMeasureSpec(cap, View.MeasureSpec.AT_MOST));
+        }
+    }
+
+    static Capped capped(MainActivity a, LinearLayout content) {
+        Capped s = new Capped(a, (int) (a.getResources().getDisplayMetrics().heightPixels * 0.50f));
+        s.addView(content);
+        return s;
+    }
+
     static void show(final MainActivity a) {
         LinearLayout col = Ui.column(a);
-        final TextView help = Ui.small(a, Lang.T("Le son du WebSDR est analysé en continu, même coupé. FT8 / FT4 : mode USB ou DATA, sur une fréquence FT8 ou FT4 (7.074 / 7.0475, 14.074 / 14.080 MHz…) ; l'heure du téléphone doit être exacte. CW : mode CW ou USB, sur un signal CW. RTTY : mode USB ou LSB (au moins 500 Hz de bande), sur un signal RTTY (14.080 à 14.099 MHz…). PSK31 : mode USB, sur un signal PSK31 (14.070, 7.035, 3.580 MHz…), recherche automatique de la fréquence audio. SSTV : mode USB (au moins 2,4 kHz de bande), sur une fréquence SSTV (14.230, 7.033, 3.730 MHz…) ; le mode est reconnu tout seul, l'image s'affiche et s'enregistre à la fin. FreeDV RADE : mode USB, sur un signal RADE (14.236 MHz…) ; la parole décodée remplace le son du WebSDR.",
-                "The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). PSK31: USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…), the audio frequency is found automatically. SSTV: USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the mode is recognised automatically, the picture is shown and saved when it ends. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound."));
-        col.addView(help);
-        if (a.decMode != 0) help.setVisibility(View.GONE);   // l'aide ne sert qu'au premier lancement : on rend la place au texte décodé
         final TextView state = Ui.label(a, "");
         final Dialog[] dd = new Dialog[1];
-        LinearLayout r1 = Ui.row(a), r2 = Ui.row(a), r3 = Ui.row(a);
-        r1.addView(modeButton(a, help, "FT8", MainActivity.DEC_FT8), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r1.addView(modeButton(a, help, "FT4", MainActivity.DEC_FT4), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r1.addView(modeButton(a, help, "CW", MainActivity.DEC_CW), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r1.addView(modeButton(a, help, "RTTY", MainActivity.DEC_RTTY), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r2.addView(modeButton(a, help, "PSK31", MainActivity.DEC_PSK), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r2.addView(modeButton(a, help, "SSTV", MainActivity.DEC_SSTV), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r2.addView(modeButton(a, help, "FreeDV RADE", MainActivity.DEC_RADE), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.6f, a, 2));
-        r3.addView(Ui.button(a, Lang.T("Arrêter", "Stop"), new View.OnClickListener() { public void onClick(View v) { a.decoderStopUser(); } }), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1, a, 2));
-        r3.addView(Ui.button(a, Lang.T("Réglages (SET)…", "Settings (SET)…"), new View.OnClickListener() {
+        final int[] sel = { a.decMode != 0 ? a.decMode : lastSel };
+        // Ligne 1 : liste des modes, bouton du mode (vert en marche), STOP (rouge en marche, grisé à l'arrêt)
+        LinearLayout r1 = Ui.row(a), r2 = Ui.row(a);
+        final String[] names = new String[MODES.length];
+        int selIdx = 0;
+        for (int i = 0; i < MODES.length; i++) { names[i] = MainActivity.decName(MODES[i]); if (MODES[i] == sel[0]) selIdx = i; }
+        final android.widget.Spinner sp = Ui.spinner(a, new java.util.ArrayList<String>(java.util.Arrays.asList(names)));
+        sp.setSelection(selIdx);
+        final Button go = Ui.button(a, "", null);
+        final Button stop = Ui.button(a, "STOP", null);
+        r1.addView(sp, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.7f, a, 2));
+        r1.addView(go, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.1f, a, 2));
+        r1.addView(stop, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f, a, 2));
+        final Runnable refresh = new Runnable() {
+            public void run() {
+                go.setText(MainActivity.decName(sel[0]));
+                Ui.paint(go, a.decMode == sel[0], Ui.on());
+                boolean running = a.decMode != 0;
+                stop.setEnabled(running);
+                stop.setAlpha(running ? 1f : 0.45f);
+                Ui.paint(stop, running, Ui.danger());
+            }
+        };
+        onState = refresh;
+        go.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (a.decMode == sel[0]) return;   // déjà en marche
+                showPanels(sel[0]);
+                a.decoderStart(sel[0]);
+                refresh.run();
+            }
+        });
+        stop.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (a.decMode == 0) return;
+                a.decoderStopUser();
+                refresh.run();
+                Ui.toast(a, Lang.T("Décodeur arrêté", "Decoder stopped"));
+            }
+        });
+        sp.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(android.widget.AdapterView<?> par, View v, int pos, long id) {
+                boolean changed = MODES[pos] != sel[0];   // l'appel de départ de la liste (rien de changé) ne lance rien
+                sel[0] = MODES[pos];
+                lastSel = sel[0];
+                showPanels(sel[0]);
+                if (changed) a.decoderStart(sel[0]);      // choisir un mode dans la liste le lance (le bouton passe au vert)
+                refresh.run();
+            }
+            public void onNothingSelected(android.widget.AdapterView<?> par) { }
+        });
+        // Ligne 2 : info (petit) et réglages
+        r2.addView(Ui.button(a, "ⓘ Info", new View.OnClickListener() {
+            public void onClick(View v) {
+                TextView t = Ui.label(a, info(sel[0]));
+                t.setTextSize(14);
+                LinearLayout c = Ui.column(a);
+                c.addView(Ui.scroll(a, t), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                final Dialog di = Ui.window(a, MainActivity.decName(sel[0]), c, false);
+                c.addView(Ui.button(a, "OK", new View.OnClickListener() { public void onClick(View x) { di.dismiss(); } }));
+                di.show();
+            }
+        }), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.6f, a, 2));
+        r2.addView(Ui.button(a, Lang.T("Réglages (SET)…", "Settings (SET)…"), new View.OnClickListener() {
             public void onClick(View v) { if (dd[0] != null) dd[0].dismiss(); DlgSettings.show(a); }
         }), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.4f, a, 2));
         col.addView(r1);
         col.addView(r2);
-        col.addView(r3);
         final CheckBox ov = Ui.check(a, Lang.T("Afficher les derniers messages sur l'écran principal", "Show the latest messages on the main screen"), a.st.decOverlay);
         ov.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { a.st.decOverlay = on; a.st.save(); a.decRefresh(); }
@@ -68,36 +182,47 @@ final class DlgDecoder {
         if (a.sstvBmp != null) pic.setImageBitmap(a.sstvBmp);
         sstvImgBox = pic;
         col.addView(pic, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (a.getResources().getDisplayMetrics().heightPixels * 0.34f)));
-        pic.setVisibility(a.decMode == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
+        pic.setVisibility(sel[0] == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
+        // Fenêtre de réception (encadrée) : prend toute la place libre au-dessus des réglages
         final TextView log = new TextView(a);
         log.setTypeface(Typeface.MONOSPACE);
         log.setTextSize(11);
         log.setTextColor(Ui.fg());
+        log.setHintTextColor(Ui.sub());
+        log.setHint(Lang.T("Texte reçu (cadre de réception) : il s'affichera ici.", "Received text (reception frame): it will appear here."));
         log.setPadding(Ui.dp(a, 4), Ui.dp(a, 4), Ui.dp(a, 4), Ui.dp(a, 4));
         final ScrollView sv = Ui.scroll(a, log);
-        col.addView(Ui.small(a, Lang.T("Heure UTC · DT (s) · fréquence audio (Hz) · message (FT8, FT4) ; heure UTC · texte (CW, RTTY, PSK31) ; heure UTC · mode de l'image (SSTV)", "UTC time · DT (s) · audio frequency (Hz) · message (FT8, FT4); UTC time · text (CW, RTTY, PSK31); UTC time · picture mode (SSTV)")));
-        col.addView(sv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
-        // Réglages CW sous le texte décodé
+        LinearLayout frame = new LinearLayout(a);
+        android.graphics.drawable.GradientDrawable border = new android.graphics.drawable.GradientDrawable();
+        border.setColor(Ui.bg());
+        border.setStroke(Ui.dp(a, 2), Ui.accent());
+        border.setCornerRadius(Ui.dp(a, 8));
+        frame.setBackground(border);
+        frame.setPadding(Ui.dp(a, 3), Ui.dp(a, 3), Ui.dp(a, 3), Ui.dp(a, 3));
+        frame.addView(sv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        frame.setMinimumHeight(Ui.dp(a, 110));
+        LinearLayout.LayoutParams flp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f);
+        flp.setMargins(0, Ui.dp(a, 4), 0, Ui.dp(a, 4));
+        col.addView(frame, flp);
+        // Réglages sous le texte reçu : hauteur adaptée au contenu
         LinearLayout cw = Ui.column(a);
         cwPanel(a, cw);
-        cwBox = Ui.scroll(a, cw);
-        col.addView(cwBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (a.getResources().getDisplayMetrics().heightPixels * 0.30f)));
-        cwBox.setVisibility(a.decMode == MainActivity.DEC_CW ? View.VISIBLE : View.GONE);
+        cwBox = capped(a, cw);
+        col.addView(cwBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         LinearLayout rt = Ui.column(a);
         rttyPanel(a, rt);
-        rttyBox = Ui.scroll(a, rt);
-        col.addView(rttyBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (a.getResources().getDisplayMetrics().heightPixels * 0.30f)));
-        rttyBox.setVisibility(a.decMode == MainActivity.DEC_RTTY ? View.VISIBLE : View.GONE);
+        rttyBox = capped(a, rt);
+        col.addView(rttyBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         LinearLayout ps = Ui.column(a);
         pskPanel(a, ps);
-        pskBox = Ui.scroll(a, ps);
-        col.addView(pskBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (a.getResources().getDisplayMetrics().heightPixels * 0.30f)));
-        pskBox.setVisibility(a.decMode == MainActivity.DEC_PSK ? View.VISIBLE : View.GONE);
+        pskBox = capped(a, ps);
+        col.addView(pskBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         LinearLayout ss = Ui.column(a);
         sstvPanel(a, ss);
-        sstvBox = Ui.scroll(a, ss);
+        sstvBox = capped(a, ss);
         col.addView(sstvBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        sstvBox.setVisibility(a.decMode == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
+        showPanels(sel[0]);
+        refresh.run();
         final Dialog d = Ui.window(a, Lang.T("Décodeur", "Decoder"), col, true);
         dd[0] = d;
         a.decView = log;
@@ -106,19 +231,9 @@ final class DlgDecoder {
         state.setText(a.decStatus);
         a.decRefresh();
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() {
-            public void onDismiss(android.content.DialogInterface x) { a.decView = null; a.decScroll = null; a.decState = null; a.sstvDlgImg = null; cwBox = null; rttyBox = null; pskBox = null; sstvBox = null; sstvImgBox = null; }
+            public void onDismiss(android.content.DialogInterface x) { a.decView = null; a.decScroll = null; a.decState = null; a.sstvDlgImg = null; cwBox = null; rttyBox = null; pskBox = null; sstvBox = null; sstvImgBox = null; onState = null; }
         });
         d.show();
-    }
-
-    static Button modeButton(final MainActivity a, final TextView help, String name, final int mode) {
-        return Ui.button(a, name, new View.OnClickListener() {
-            public void onClick(View v) {
-                help.setVisibility(View.GONE);
-                showPanels(mode);
-                a.decoderStart(mode);
-            }
-        });
     }
 
     interface Fmt { String text(int v); }
@@ -197,7 +312,9 @@ final class DlgDecoder {
 
     // Une ligne « texte + liste déroulante ».
     static void choice(final MainActivity a, LinearLayout box, String label, String[] items, int selected, final Pick p) {
-        box.addView(Ui.small(a, label));
+        TextView lbl = Ui.small(a, label);
+        lbl.setPadding(0, Ui.dp(a, 8), 0, 0);
+        box.addView(lbl);
         java.util.ArrayList<String> l = new java.util.ArrayList<String>(java.util.Arrays.asList(items));
         final android.widget.Spinner sp = Ui.spinner(a, l);
         sp.setSelection(selected);
@@ -284,8 +401,28 @@ final class DlgDecoder {
         }));
     }
 
+    // Liste déroulante de chiffres ; p est appelé quand le choix change (pas à l'affichage).
+    static android.widget.Spinner numSpinner(MainActivity a, String[] items, int selected, final Pick p) {
+        final android.widget.Spinner sp = Ui.spinner(a, new java.util.ArrayList<String>(java.util.Arrays.asList(items)));
+        sp.setSelection(selected);
+        final int[] cur = { selected };
+        sp.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(android.widget.AdapterView<?> par, View v, int pos, long id) { if (pos != cur[0]) { cur[0] = pos; p.chose(pos); } }
+            public void onNothingSelected(android.widget.AdapterView<?> par) { }
+        });
+        return sp;
+    }
+
     static void sstvPanel(final MainActivity a, final LinearLayout box) {
         final Store st = a.st;
+        // Une seule ligne de réglages : sensibilité (1 à 10) et perte data (1 à 10) ; leur effet est expliqué dans « Info ».
+        LinearLayout line = Ui.row(a);
+        String[] nums = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+        line.addView(Ui.small(a, Lang.T("Sensibilité", "Sensitivity")), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        line.addView(numSpinner(a, nums, st.sstvSens - 1, new Pick() { public void chose(int i) { st.sstvSens = i + 1; st.save(); a.applySstvSettings(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        line.addView(Ui.small(a, Lang.T("Perte data", "Data loss")), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        line.addView(numSpinner(a, nums, st.sstvLoss - 1, new Pick() { public void chose(int i) { st.sstvLoss = i + 1; st.save(); a.applySstvSettings(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        box.addView(line);
         final CheckBox save = Ui.check(a, Lang.T("Enregistrer automatiquement les images (Images › PhoneSDRLink)", "Save the pictures automatically (Pictures › PhoneSDRLink)"), st.sstvSave);
         save.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.sstvSave = on; st.save(); }

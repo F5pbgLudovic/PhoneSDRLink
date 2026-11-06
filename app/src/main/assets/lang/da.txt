@@ -619,3 +619,54 @@ signal at %.0f Hz	signal på %.0f Hz
 too short, not saved	for kort, ikke gemt
 unsupported mode (VIS %d)	tilstanden understøttes ikke (VIS %d)
 The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). PSK31: USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…), the audio frequency is found automatically. SSTV: USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the mode is recognised automatically, the picture is shown and saved when it ends. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	WebSDR-lyden analyseres hele tiden, også når den er slået fra. FT8 / FT4: tilstand USB eller DATA, på en FT8- eller FT4-frekvens (7,074 / 7,0475, 14,074 / 14,080 MHz…); telefonens ur skal gå rigtigt. CW: tilstand CW eller USB, på et CW-signal. RTTY: tilstand USB eller LSB (mindst 500 Hz båndbredde), på et RTTY-signal (14,080 til 14,099 MHz…). PSK31: tilstand USB, på et PSK31-signal (14,070, 7,035, 3,580 MHz…), audiofrekvensen findes automatisk. SSTV: tilstand USB (mindst 2,4 kHz båndbredde), på en SSTV-frekvens (14,230, 7,033, 3,730 MHz…); tilstanden genkendes automatisk, billedet vises og gemmes, når det er slut. FreeDV RADE: tilstand USB, på et RADE-signal (14,236 MHz…); den afkodede tale erstatter WebSDR-lyden.
+CW or USB mode, on a CW signal. Settings (tone, filter, speed, thresholds…) under the text.	CW- eller USB-mode, på et CW-signal. Indstillinger (tone, filter, hastighed, tærskler…) under teksten.
+Received text (reception frame): it will appear here.	Modtaget tekst (modtagelsesramme): den vises her.
+The WebSDR sound is analysed continuously, even when muted.	WebSDR-lyden analyseres hele tiden, også når den er slået fra.
+USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the picture mode is recognised automatically, the picture builds up line by line and is saved when it ends.	USB-mode (mindst 2,4 kHz båndbredde), på en SSTV-frekvens (14.230, 7.033, 3.730 MHz…); billedmode genkendes automatisk, billedet opbygges linje for linje og gemmes, når det er slut.
+USB mode, on a FreeDV RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	USB-mode, på et FreeDV RADE-signal (14.236 MHz…); den afkodede tale erstatter WebSDR-lyden.
+USB mode, on a JT9 frequency (14.078, 7.078, 3.578 MHz…). 1-minute slots; the phone clock must be accurate.	USB-mode, på en JT9-frekvens (14.078, 7.078, 3.578 MHz…). Tidsslots på 1 minut; telefonens ur skal være nøjagtigt.
+USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…); the audio frequency is found automatically (or set by hand). PSK63 possible.	USB-mode, på et PSK31-signal (14.070, 7.035, 3.580 MHz…); lydfrekvensen findes automatisk (eller indstilles manuelt). PSK63 muligt.
+USB mode, on a WSPR frequency (14.0956, 7.0386, 10.1387 MHz…: carrier frequency + 1500 Hz). 2-minute slots; the phone clock must be accurate; first results at the end of the first slot.	USB-mode, på en WSPR-frekvens (14.0956, 7.0386, 10.1387 MHz…: bærefrekvens + 1500 Hz). Tidsslots på 2 minutter; telefonens ur skal være nøjagtigt; første resultater i slutningen af første tidsslot.
+USB or DATA mode, on an FT8 (7.074, 14.074 MHz…) or FT4 (7.0475, 14.080 MHz…) frequency. The phone clock must be accurate.	USB- eller DATA-mode, på en FT8- (7.074, 14.074 MHz…) eller FT4-frekvens (7.0475, 14.080 MHz…). Telefonens ur skal være nøjagtigt.
+USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). Settings under the text.	USB- eller LSB-mode (mindst 500 Hz båndbredde), på et RTTY-signal (14.080 til 14.099 MHz…). Indstillinger under teksten.
+UTC time · DT (s) · audio frequency (Hz) · message. The two periods (even and odd) are shown in two colours.	UTC-tid · DT (s) · lydfrekvens (Hz) · meddelelse. De to perioder (lige og ulige) vises i to farver.
+UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · callsign, locator, power (dBm).	UTC-tid · SNR (dB) · DT (s) · lydfrekvens (Hz) · kaldesignal, locator, effekt (dBm).
+UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · message.	UTC-tid · SNR (dB) · DT (s) · lydfrekvens (Hz) · meddelelse.
+UTC time · picture mode.	UTC-tid · billedmode.
+UTC time · text.	UTC-tid · tekst.
+FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…	FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV-dekoder…
+(original position)	(oprindelig position)
+Asks the WebSDR for a larger audio output buffer: more latency, in the hope of removing small dropouts. The WebSDR is reloaded when the value is changed.	Beder WebSDR om en større lydudgangsbuffer: mere forsinkelse i håb om at fjerne små udfald i lyden. WebSDR genindlæses, når værdien ændres.
+Audio buffer: {0} ms; reloading the WebSDR	Lydbuffer: {0} ms; genindlæser WebSDR
+Bottom left	Nederst til venstre
+Bottom right	Nederst til højre
+Copy "{0}" to ▸	Kopiér "{0}" til ▸
+Digital modes	Digitale driftsarter
+Extra audio buffer (test)	Ekstra lydbuffer (test)
+IARU Region 1 (Europe, Africa)	IARU Region 1 (Europa, Afrika)
+IARU Region 2 (Americas)	IARU Region 2 (Amerika)
+IARU Region 3 (Asia-Pacific)	IARU Region 3 (Asien og Stillehavet)
+INIT + − buttons	INIT + − knapper
+None (original setting)	Ingen (oprindelig indstilling)
+Top left	Øverst til venstre
+Top right	Øverst til højre
+Usual {0} frequencies, {1}: they follow the decoder mode. Click to go there (long press: copy to a list).	Almindelige {0}-frekvenser, {1}: de følger dekodertilstanden. Klik for at gå dertil (langt tryk: kopiér til en liste).
+horizontal	vandret
+vertical	lodret
+Active digital mode (frequency box)	Aktiv digital tilstand (frekvensfelt)
+Detection threshold (applied immediately):	Detektionstærskel (anvendes med det samme):
+normal (original)	normal (original)
+slightly more sensitive	lidt mere følsom
+sensitive	følsom
+very sensitive	meget følsom
+maximum (risk of false detections)	maksimum (risiko for falske detektioner)
+Weak-signal sensitivity: {0}	Følsomhed over for svage signaler: {0}
+The higher the value, the more the start code, the sync pulses and the lines are accepted with little signal.	Jo højere værdi, desto lettere accepteres startkoden, synkroniseringsimpulserne og linjerne ved svagt signal.
+— signal found again, line	— signal fundet igen, linje
+— start missing, picked up in progress	— start mangler, opfanget undervejs
+Sensitivity	Følsomhed
+Data loss	Datatab
+Sensitivity (1 to 10): the higher the number, the weaker the signals the decoder accepts (start code, sync pulses, lines), at the risk of a few false detections. Data loss (1 to 10): how long the decoder keeps going with a picture when the signal disappears (3 s at 1, 12 s at 4, 120 s at 10); if the signal comes back in that time, the picture resumes at the right line and the lost lines stay grey; after that time the picture is saved as it is and the decoder listens again (it then finds the mode by itself).	Følsomhed (1 til 10): jo højere tal, jo svagere signaler accepterer dekoderen (startkode, synkroniseringspulser, linjer), med risiko for nogle få falske registreringer. Datatab (1 til 10): hvor længe dekoderen fortsætter med et billede, når signalet forsvinder (3 s ved 1, 12 s ved 4, 120 s ved 10); hvis signalet vender tilbage inden for den tid, fortsætter billedet på den rigtige linje, og de tabte linjer forbliver grå; efter denne tid gemmes billedet, som det er, og dekoderen lytter igen (den finder så selv tilstanden).
+Sensitivity (1 to 10): the higher the number, the weaker the signals the decoder accepts (start code, sync pulses, lines), at the risk of a few false detections.	Følsomhed (1 til 10): jo højere tal, jo svagere signaler accepterer dekoderen (startkode, synkroniseringspulser, linjer), med risiko for et par falske detektioner.
+Data loss (1 to 10): how long the decoder keeps going with a picture when the signal disappears (3 s at 1, 12 s at 4, 120 s at 10). If the signal comes back in that time, the picture resumes at the right line and the lost lines stay grey. After that time the picture is saved as it is and the decoder listens again (it then finds the mode by itself).	Datatab (1 til 10): hvor længe dekoderen fortsætter med et billede, når signalet forsvinder (3 s ved 1, 12 s ved 4, 120 s ved 10). Hvis signalet vender tilbage inden for den tid, fortsætter billedet på den rigtige linje, og de tabte linjer forbliver grå. Efter den tid gemmes billedet, som det er, og dekoderen lytter igen (den finder så selv tilstanden).
+USB mode, on a FreeDV RADE V2 signal (FreeDV 3.0). Warning: V2 is still in development (waveform and neural networks may change, not compatible with FreeDV 2.x's V1): this version uses a snapshot of the sources of 6 November 2026 and may not decode future V2 signals. The decoded speech replaces the WebSDR sound.	USB-tilstand, på et FreeDV RADE V2-signal (FreeDV 3.0). Advarsel: V2 er stadig under udvikling (bølgeformen og de neurale netværk kan ændre sig, ikke kompatibel med V1 i FreeDV 2.x): denne version bruger et øjebliksbillede af kilderne fra 6. november 2026 og kan muligvis ikke afkode fremtidige V2-signaler. Den afkodede tale erstatter WebSDR-lyden.

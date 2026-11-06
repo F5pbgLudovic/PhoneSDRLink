@@ -38,6 +38,11 @@ JNIEXPORT jlong JNICALL Java_fr_f5pbg_phonesdrlink_Decoders_radeNew(JNIEnv *env,
     return (jlong)(intptr_t)sdrdec_rade_new();
 }
 
+JNIEXPORT jlong JNICALL Java_fr_f5pbg_phonesdrlink_Decoders_radeNewV(JNIEnv *env, jclass cls, jint v2) {
+    (void)env; (void)cls;
+    return (jlong)(intptr_t)sdrdec_rade_new_v(v2);
+}
+
 JNIEXPORT void JNICALL Java_fr_f5pbg_phonesdrlink_Decoders_radeFree(JNIEnv *env, jclass cls, jlong h) {
     (void)env; (void)cls;
     sdrdec_rade_free((sdrdec_rade *)(intptr_t)h);
@@ -65,6 +70,7 @@ JNIEXPORT jint JNICALL Java_fr_f5pbg_phonesdrlink_Decoders_radeProcess(JNIEnv *e
 }
 #else
 JNIEXPORT jlong JNICALL Java_fr_f5pbg_phonesdrlink_Decoders_radeNew(JNIEnv *env, jclass cls) { (void)env; (void)cls; return 0; }
+JNIEXPORT jlong JNICALL Java_fr_f5pbg_phonesdrlink_Decoders_radeNewV(JNIEnv *env, jclass cls, jint v2) { (void)env; (void)cls; (void)v2; return 0; }
 JNIEXPORT void JNICALL Java_fr_f5pbg_phonesdrlink_Decoders_radeFree(JNIEnv *env, jclass cls, jlong h) { (void)env; (void)cls; (void)h; }
 JNIEXPORT jint JNICALL Java_fr_f5pbg_phonesdrlink_Decoders_radeProcess(JNIEnv *env, jclass cls, jlong h, jshortArray in, jint n, jshortArray out, jintArray status) {
     (void)env; (void)cls; (void)h; (void)in; (void)n; (void)out; (void)status; return 0;

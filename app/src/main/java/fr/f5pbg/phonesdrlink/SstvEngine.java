@@ -21,16 +21,18 @@ final class SstvEngine extends TextEngine {
 
     static final int RING = 1 << 17, MASK = RING - 1, FIRN = 31;
     static final double CENTER = 1700.0, SPMS = 8.0;      // 8 échantillons par ms
-    static final int RGB = 0, R36 = 1, R72 = 2, PD = 3;
+    static final int RGB = 0, R36 = 1, R72 = 2, PD = 3, GRAY = 4;
     static final int R = 0, G = 1, B = 2, Y = 3, CR = 4, CB = 5, Y1 = 6;
 
     static final class Mode {
-        final String name; final int vis, w, h, kind;
+        final String name; final int vis, w, kind;
+        int h, rep = 1;      // rep : chaque ligne reçue est répétée rep fois (Martin M3 et M4, Scottie S3 et S4, Robot 12 et 8 N&B : moitié moins de lignes)
         final double syncMs, periodMs, scanMs;
         double[] st, len; int[] role;
         boolean scottie;
         Mode(String n, int v, int w, int h, int kind, double sync, double period, double scan) { name = n; vis = v; this.w = w; this.h = h; this.kind = kind; syncMs = sync; periodMs = period; scanMs = scan; }
         Mode ch(double[] s, double[] l, int[] r) { st = s; len = l; role = r; return this; }
+        Mode twice() { rep = 2; return this; }
     }
 
     static final Mode[] MODES = build();
@@ -57,6 +59,21 @@ final class SstvEngine extends TextEngine {
         l.add(pd("PD180", 96, 640, 496, 183.040));
         l.add(pd("PD240", 97, 640, 496, 244.480));
         l.add(pd("PD290", 94, 800, 616, 228.800));
+        // Modes ajoutés ensuite (tableau de slowrx et de l'encodeur libsstvenc ; S3 et S4 d'après la famille Scottie, non vérifiés sur un vrai signal)
+        l.add(martin("Martin M3", 36, 146.432).twice());
+        l.add(martin("Martin M4", 32, 73.216).twice());
+        l.add(scottie("Scottie S3", 52, 138.240).twice());
+        l.add(scottie("Scottie S4", 48, 88.064).twice());
+        double w1 = 320 * 0.489039081;
+        l.add(new Mode("Wraase SC2-120", 63, 320, 256, RGB, 5.5225, 5.5225 + 0.5 + 3 * w1, w1).ch(
+            new double[] { 6.0225 + 2 * w1, 6.0225, 6.0225 + w1 }, new double[] { w1, w1, w1 }, new int[] { B, R, G }));
+        l.add(pasokon("Pasokon P3", 113, 5.208, 1.042, 0.2083));
+        l.add(pasokon("Pasokon P5", 114, 7.813, 1.563, 0.3125));
+        l.add(pasokon("Pasokon P7", 115, 10.417, 2.083, 0.4167));
+        // Robot noir et blanc : synchro 7 ms puis les pixels (pas d'intervalle)
+        l.add(new Mode("Robot 24 BW", 10, 320, 240, GRAY, 7, 100, 93.12).ch(new double[] { 7 }, new double[] { 93.12 }, new int[] { Y }));
+        l.add(new Mode("Robot 12 BW", 6, 320, 240, GRAY, 7, 100, 93.12).ch(new double[] { 7 }, new double[] { 93.12 }, new int[] { Y }).twice());
+        l.add(new Mode("Robot 8 BW", 2, 320, 240, GRAY, 7, 66.9, 59.9).ch(new double[] { 7 }, new double[] { 59.9 }, new int[] { Y }).twice());
         return l.toArray(new Mode[0]);
     }
 
@@ -73,12 +90,39 @@ final class SstvEngine extends TextEngine {
         return m;
     }
 
+    // Pasokon : synchro, intervalle, puis R, G, B de 640 pixels séparés par un intervalle (même durée que celui qui suit la synchro)
+    static Mode pasokon(String n, int vis, double sync, double gap, double px) {
+        double scan = 640 * px;
+        return new Mode(n, vis, 640, 496, RGB, sync, sync + gap + 3 * (scan + gap), scan).ch(
+            new double[] { sync + gap, sync + gap + scan + gap, sync + gap + 2 * (scan + gap) }, new double[] { scan, scan, scan }, new int[] { R, G, B });
+    }
+
     static Mode pd(String n, int vis, int w, int h, double scan) {
         return new Mode(n, vis, w, h, PD, 20, 22.08 + 4 * scan, scan).ch(
             new double[] { 22.08, 22.08 + scan, 22.08 + 2 * scan, 22.08 + 3 * scan }, new double[] { scan, scan, scan, scan }, new int[] { Y, CR, CB, Y1 });
     }
 
     static Mode byVis(int v) { for (Mode m : MODES) if (m.vis == v) return m; return null; }
+
+    // Sensibilité (0 = d'origine … 4 = signaux très faibles) : élargit les tolérances de fréquence et de synchro, allonge la moyenne de fréquence
+    // et la patience avant d'abandonner une image ; au prix de plus de fausses détections.
+    volatile double sens = 1;   // réglage 1 à 10 de l'application -> 0 à 4 (voir setLevels)
+    volatile int lossMs = 12000;   // temps pendant lequel on continue une image sans synchro avant d'y renoncer
+    int tv1() { return (int) (130 + 25 * sens); }
+    int tv2() { return (int) (150 + 25 * sens); }
+    int tb() { return (int) (110 + 15 * sens); }
+    int tp() { return (int) (140 + 15 * sens); }
+    int ts() { return (int) (160 + 15 * sens); }
+    double sf() { return 0.5 - 0.06 * sens; }
+    int win() { return 16 + (int) (2 * sens); }
+
+    static final int[] LOSS_S = { 3, 5, 8, 12, 18, 25, 35, 50, 75, 120 };   // « perte data » 1 à 10 : secondes
+
+    /** Réglages de l'application : sensibilité 1 à 10 et perte data 1 à 10. */
+    void setLevels(int sensitivity, int loss) {
+        sens = (Math.max(1, Math.min(10, sensitivity)) - 1) * 4.0 / 9.0;
+        lossMs = LOSS_S[Math.max(1, Math.min(10, loss)) - 1] * 1000;
+    }
 
     final Images im;
     SstvEngine(Listener l, Images im) { super(l); this.im = im; }
@@ -134,7 +178,7 @@ final class SstvEngine extends TextEngine {
             cum[(int) (n & MASK)] = cumv;
             n++;
             if (img != null) imgStep();
-            else if ((n & 7) == 0 && n > 400) visStep();
+            if ((n & 7) == 0 && n > 400) { visStep(); pulseStep(); }   // le code VIS est cherché aussi pendant une image : une nouvelle image qui commence interrompt la précédente
         }
     }
 
@@ -148,28 +192,28 @@ final class SstvEngine extends TextEngine {
     void visReset() { vs = 0; lead = 0; miss = 0; brk = 0; lead2 = 0; }
 
     void visStep() {
-        double f = freqAvg(n - 16, n - 1);
+        double f = freqAvg(n - win(), n - 1);
         switch (vs) {
             case 0:
-                if (near(f, 1900, 130)) { lead++; miss = 0; }
+                if (near(f, 1900, tv1())) { lead++; miss = 0; }
                 else if (lead >= 120 && f < 1500) { vs = 1; brk = 1; miss = 0; }
-                else if (++miss > 2) { lead = 0; miss = 0; }
+                else if (++miss > 2 + sens) { lead = 0; miss = 0; }
                 break;
             case 1:
-                if (near(f, 1200, 150)) { brk++; miss = 0; }
-                else if (brk >= 3 && brk <= 22 && near(f, 1900, 150)) { vs = 2; lead2 = 1; miss = 0; }
-                else if (++miss > 2) visReset();
+                if (near(f, 1200, tv2())) { brk++; miss = 0; }
+                else if (brk >= 3 && brk <= 22 && near(f, 1900, tv2())) { vs = 2; lead2 = 1; miss = 0; }
+                else if (++miss > 2 + sens) visReset();
                 break;
             case 2:
-                if (near(f, 1900, 150)) { lead2++; miss = 0; }
-                else if (++miss > 2 && f < 1550) {
+                if (near(f, 1900, tv2())) { if (++lead2 > 700) visReset(); miss = 0; }   // un début de code VIS dure 300 ms : au-delà, ce n est pas un VIS
+                else if (++miss > 2 + sens && f < 1550) {
                     if (lead2 >= 200) {
                         tStart = n - 8L * miss - 8;
                         double lf = freqAvg(tStart - 150 * SPMS, tStart - 30 * SPMS);
                         ofs = Math.abs(lf - 1900) < 120 ? lf - 1900 : 0;
                         vs = 3;
                     } else visReset();
-                } else if (miss > 8) visReset();
+                } else if (miss > 8 + 2 * sens) visReset();
                 break;
             case 3:
                 if (n >= tStart + (long) (300 * SPMS) + 24) visDecode();
@@ -180,10 +224,10 @@ final class SstvEngine extends TextEngine {
     void visDecode() {
         double[] bit = new double[10];
         for (int j = 0; j < 10; j++) bit[j] = freqAvg(tStart + (30 * j + 8) * SPMS, tStart + (30 * j + 22) * SPMS) - ofs;
-        boolean ok = near(bit[0], 1200, 110);
+        boolean ok = near(bit[0], 1200, tb());
         int code = 0, ones = 0;
         for (int j = 1; j <= 8; j++) {
-            if (!(near(bit[j], 1100, 110) || near(bit[j], 1300, 110))) ok = false;
+            if (!(near(bit[j], 1100, tb()) || near(bit[j], 1300, tb()))) ok = false;
             int b = bit[j] < 1200 ? 1 : 0;
             ones += b;
             if (j <= 7) code |= b << (j - 1);
@@ -193,6 +237,93 @@ final class SstvEngine extends TextEngine {
         visReset();
         if (m == null) { if (ok) ls.onStatus("SSTV : " + String.format(Locale.US, Lang.T("mode non pris en charge (VIS %d)", "unsupported mode (VIS %d)"), code)); return; }
         startImage(m, tStart + (long) (300 * SPMS));
+    }
+
+    // ---- image en cours de route (sans code VIS) : les impulsions de synchro à 1200 Hz sont notées (durée et instant) ; une suite de cinq
+    // impulsions au rythme exact d'un mode (ligne, ou paire de lignes en PD) et de la bonne durée donne le mode, et la réception commence
+    // à cette ligne (le haut de l'image manque : la première ligne reçue devient la première ligne de l'image).
+    static final int NP = 48;
+    final long[] pT = new long[NP];
+    final int[] pL = new int[NP];
+    final double[] pF = new double[NP];
+    int np, pRun;
+    long pStart;
+    double pSum;
+
+    void pulseStep() {
+        double f = freqAvg(n - win(), n - 1);
+        if (near(f, 1200, tp())) {
+            if (pRun == 0) { pStart = n - 8; pSum = 0; }
+            pRun++;
+            pSum += f;
+        } else if (pRun > 0) {
+            int effLen = pRun + win() / 8 - 2;   // la moyenne de fréquence raccourcit l impulsion vue (fenêtre plus longue aux hauts niveaux de sensibilité)
+            if (effLen >= 3 && effLen <= 26) {
+                if (np == NP) { System.arraycopy(pT, 1, pT, 0, NP - 1); System.arraycopy(pL, 1, pL, 0, NP - 1); System.arraycopy(pF, 1, pF, 0, NP - 1); np--; }
+                pT[np] = pStart; pL[np] = effLen; pF[np] = pSum / pRun; np++;
+            }
+            pRun = 0;
+        }
+        if ((n & 2047) == 0 && np >= 5 && vs != 3 && (img == null || misses >= 4)) blindStep();   // au repos, ou signal perdu pendant une image : on cherche le mode
+    }
+
+    void blindStep() {
+        Mode best = null;
+        int bestChain = 0;
+        long bestLast = 0;
+        double bestOfs = 0;
+        for (Mode m : MODES) {
+            double P = m.periodMs * SPMS, tol = 3 * SPMS + 0.002 * P, wl = Math.max(2.5, 0.3 * m.syncMs);
+            int j = -1;
+            for (int i = np - 1; i >= 0; i--) if (Math.abs(pL[i] - m.syncMs) <= wl) { j = i; break; }
+            if (j < 0) continue;
+            long last = pT[j];
+            int chain = 0, skips = 0;
+            double[] fr = new double[NP];
+            fr[0] = pF[j];
+            for (int i = j - 1; i >= 0; i--) {
+                double d = pT[j] - pT[i];
+                if (Math.abs(pL[i] - m.syncMs) > wl) { if (d < P - tol) continue; else break; }
+                if (Math.abs(d - P) <= tol) { fr[++chain] = pF[i]; j = i; }
+                else if (d < P - tol) skips++;
+                else break;
+            }
+            if (chain >= 4 && skips <= 1 && chain > bestChain) {
+                java.util.Arrays.sort(fr, 0, chain + 1);
+                bestChain = chain; best = m; bestLast = last; bestOfs = fr[(chain + 1) / 2] - 1200;
+            }
+        }
+        if (best == null) return;
+        if (Math.abs(bestOfs) < 120) ofs = bestOfs;
+        if (img != null) {   // signal perdu pendant une image : il faut des impulsions plus récentes que la dernière synchro trouvée
+            if (bestLast <= sLast + (long) (0.5 * period) || n - bestLast > 6 * 8000L) return;
+            if (best == md) { resync(bestLast); return; }   // même mode : on reprend l'image à la bonne ligne (les lignes perdues restent grises)
+            finish(false);                                    // autre mode : la première image est gardée telle quelle, la nouvelle commence
+        }
+        startBlind(best, bestLast);
+    }
+
+    void resync(long syncStart) {
+        int k = kLast + (int) Math.round((syncStart - sLast) / period);
+        if (k < blockIdx || k >= blocksTotal()) return;
+        blockIdx = k; sLast = syncStart; kLast = k; expected = syncStart; hw = 12 * SPMS;
+        misses = 0; pendY = null; awaitSync = true;
+        ls.onStatus("SSTV : " + md.name + " " + Lang.T("— signal retrouvé, ligne", "— signal found again, line") + " " + k);
+    }
+
+    void startBlind(Mode m, long syncStart) {
+        np = 0; pRun = 0;
+        md = m;
+        px = new int[m.w * m.h];
+        java.util.Arrays.fill(px, 0xFF202020);
+        blockIdx = 0; rowsDone = 0; misses = 0; foundCount = 0; kLast = 0; pendY = null;
+        period = m.periodMs * SPMS;
+        expected = syncStart;
+        hw = 12 * SPMS;
+        awaitSync = true;
+        img = this;
+        im.begin(m.name, m.w, m.h, px);
+        ls.onStatus("SSTV : " + m.name + " (" + m.w + "×" + m.h + ") " + Lang.T("— début manquant, réception en cours de route", "— start missing, picked up in progress"));
     }
 
     // ---- image
@@ -209,6 +340,8 @@ final class SstvEngine extends TextEngine {
     int pendRow;
 
     void startImage(Mode m, long visEnd) {
+        if (img != null) finish(false);   // une autre image commence : la précédente est abandonnée (enregistrée partielle si assez longue)
+        np = 0; pRun = 0;
         md = m;
         px = new int[m.w * m.h];
         java.util.Arrays.fill(px, 0xFF202020);
@@ -224,7 +357,7 @@ final class SstvEngine extends TextEngine {
 
     static final int PAIR = 2;
 
-    int blocksTotal() { return md.kind == PD ? md.h / 2 : md.h; }
+    int blocksTotal() { return md.kind == PD ? md.h / 2 : md.h / md.rep; }
 
     void imgStep() {
         int L = (int) Math.round(md.syncMs * SPMS);
@@ -247,7 +380,7 @@ final class SstvEngine extends TextEngine {
                     if (Math.abs(pm - md.periodMs * SPMS) < 0.004 * md.periodMs * SPMS) period = pm;
                 }
             }
-            if (misses > 10) { finish(false); return; }
+            if (misses * md.periodMs > lossMs) { finish(false); return; }   // signal perdu depuis trop longtemps : retour à l'écoute
             curS = s;
             awaitSync = false;
         }
@@ -255,7 +388,7 @@ final class SstvEngine extends TextEngine {
         for (int i = 0; i < md.st.length; i++) after = Math.max(after, md.st[i] + md.len[i]);
         if (md.kind == R36) after = 150;
         if (n < curS + after * SPMS + 16) return;
-        decodeBlock(curS);
+        if (misses <= 6) decodeBlock(curS);   // au-delà de quelques lignes sans synchro, on ne dessine plus du bruit : les lignes restent grises
         blockIdx++;
         if (blockIdx >= blocksTotal()) { finish(true); return; }
         expected = sLast + (blockIdx - kLast) * period;
@@ -274,7 +407,7 @@ final class SstvEngine extends TextEngine {
         for (int i = 0; i < span; i++) {
             long x = lo + i;
             double f = freqAvg(x - 3, x + 1) - ofs;
-            pre[i + 1] = pre[i] + (near(f, 1200, 160) ? 1 : -1);
+            pre[i + 1] = pre[i] + (near(f, 1200, ts()) ? 1 : -1);
         }
         long best = -1;
         int bs = Integer.MIN_VALUE;
@@ -282,7 +415,7 @@ final class SstvEngine extends TextEngine {
             int sc = pre[(int) (c - lo) + L] - pre[(int) (c - lo)];
             if (sc >= bs) { bs = sc; best = c; }
         }
-        return bs >= 0.5 * L ? best : -1;
+        return bs >= sf() * L ? best : -1;
     }
 
     // Pixels d'un canal : cnt valeurs 0..255 (1500 Hz = 0, 2300 Hz = 255).
@@ -300,18 +433,21 @@ final class SstvEngine extends TextEngine {
 
     static int clip(int v) { return v < 0 ? 0 : v > 255 ? 255 : v; }
 
-    void put(int row, int[] a, int[] b, int[] c, boolean ycc) {
-        if (row >= md.h) return;
+    void put(int row0, int[] a, int[] b, int[] c, boolean ycc) {
         int w = md.w;
-        for (int x = 0; x < w; x++) {
-            int r, g, bl;
-            if (ycc) {
-                int y = a[x], cr = b[x], cb = c[x];
-                r = clip((100 * y + 140 * cr - 17850) / 100);
-                g = clip((100 * y - 71 * cr - 33 * cb + 13260) / 100);
-                bl = clip((100 * y + 178 * cb - 22780) / 100);
-            } else { r = a[x]; g = b[x]; bl = c[x]; }
-            px[row * w + x] = 0xFF000000 | (r << 16) | (g << 8) | bl;
+        for (int q = 0; q < md.rep; q++) {
+            int row = row0 * md.rep + q;
+            if (row >= md.h) break;
+            for (int x = 0; x < w; x++) {
+                int r, g, bl;
+                if (ycc) {
+                    int y = a[x], cr = b[x], cb = c[x];
+                    r = clip((100 * y + 140 * cr - 17850) / 100);
+                    g = clip((100 * y - 71 * cr - 33 * cb + 13260) / 100);
+                    bl = clip((100 * y + 178 * cb - 22780) / 100);
+                } else { r = a[x]; g = b[x]; bl = c[x]; }
+                px[row * w + x] = 0xFF000000 | (r << 16) | (g << 8) | bl;
+            }
         }
     }
 
@@ -324,7 +460,13 @@ final class SstvEngine extends TextEngine {
                 int[][] c = new int[3][];
                 for (int i = 0; i < 3; i++) c[md.role[i]] = pixels(s, md.st[i], md.len[i], w);
                 put(blockIdx, c[R], c[G], c[B], false);
-                rowsDone = Math.max(rowsDone, blockIdx + 1);
+                rowsDone = Math.max(rowsDone, (blockIdx + 1) * md.rep);
+                break;
+            }
+            case GRAY: {
+                int[] g = pixels(s, md.st[0], md.len[0], w);
+                put(blockIdx, g, g, g, false);
+                rowsDone = Math.max(rowsDone, (blockIdx + 1) * md.rep);
                 break;
             }
             case R72: {
@@ -365,5 +507,6 @@ final class SstvEngine extends TextEngine {
         img = null;
         px = null;
         visReset();
+        np = 0; pRun = 0;   // les impulsions de cette image ne doivent pas déclencher une nouvelle réception
     }
 }

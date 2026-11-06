@@ -13,6 +13,10 @@ final class Decoders {
 
     /** FreeDV RADE (64 bits seulement : radeNew renvoie 0 ailleurs). Entrée 8000 Hz, sortie parole 16000 Hz ; status = { sync, snr_dB, décalage en 0,1 Hz }. */
     static native long radeNew();
+    /** v2 = 1 : RADE V2 (FreeDV 3.0, en développement, sources de rade_c). */
+    static native long radeNewV(int v2);
+    /** Essai de bouclage V2 (présent seulement dans les versions d essai de la bibliothèque) : texte du résultat. */
+    static native String radeLoopTest(int snr10, int seconds);
     static native void radeFree(long h);
     static native int radeProcess(long h, short[] in8k, int n, short[] out16k, int[] status);
 

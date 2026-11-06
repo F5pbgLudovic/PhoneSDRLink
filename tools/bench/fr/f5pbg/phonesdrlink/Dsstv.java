@@ -61,7 +61,7 @@ public class Dsstv {
         for (int i = 0; i < 4000; i++) buf[cnt++] = 0;
         SstvEngine.Mode m = null;
         for (SstvEngine.Mode k : SstvEngine.MODES) if (k.name.equals(mode)) m = k;
-        makeImage(m.w, m.h);
+        makeImage(m.w, m.h / m.rep);
         vis(m.vis);
         double sc = m.scanMs;
         if (mode.startsWith("Martin")) {
@@ -76,7 +76,12 @@ public class Dsstv {
                 tone(1200, 9); tone(1500, 1.5); scan(row(0, y), sc); tone(1500, 1.5);
             }
         } else if (mode.startsWith("Wraase")) {
-            for (int y = 0; y < H; y++) { tone(1200, 5.5225); tone(1500, 0.5); scan(row(0, y), 235); scan(row(1, y), 235); scan(row(2, y), 235); }
+            for (int y = 0; y < H; y++) { tone(1200, 5.5225); tone(1500, 0.5); scan(row(0, y), sc); scan(row(1, y), sc); scan(row(2, y), sc); }
+        } else if (mode.startsWith("Pasokon")) {
+            double gap = (m.periodMs - m.syncMs - 3 * sc) / 4;
+            for (int y = 0; y < H; y++) { tone(1200, m.syncMs); tone(1500, gap); scan(row(0, y), sc); tone(1500, gap); scan(row(1, y), sc); tone(1500, gap); scan(row(2, y), sc); tone(1500, gap); }
+        } else if (mode.endsWith("BW")) {
+            for (int y = 0; y < H; y++) { tone(1200, m.syncMs); scan(ycc(y)[0], sc); }
         } else if (mode.equals("Robot 36")) {
             for (int p = 0; p < H / 2; p++) {
                 int[][] a = ycc(2 * p), b = ycc(2 * p + 1);
@@ -127,7 +132,9 @@ public class Dsstv {
         int n = 0;
         if (res[0] != null && done[0]) {
             for (int y = 2; y < H - 2; y++) for (int x = 4; x < W - 4; x++) {
-                int val = lastPx(res[0], y * W + x);
+                int rp = Math.max(1, res[0].length / (W * H));
+                int val = lastPx(res[0], (y * rp) * W + x);
+                if (mode.endsWith("BW")) { int lum = ycc(y)[0][x]; err[0] += Math.abs(((val >> 16) & 255) - lum); err[1] += Math.abs(((val >> 8) & 255) - lum); err[2] += Math.abs((val & 255) - lum); n++; continue; }
                 err[0] += Math.abs(((val >> 16) & 255) - src[0][y * W + x]);
                 err[1] += Math.abs(((val >> 8) & 255) - src[1][y * W + x]);
                 err[2] += Math.abs((val & 255) - src[2][y * W + x]);
@@ -141,7 +148,7 @@ public class Dsstv {
     static int lastPx(int[] a, int i) { return a[i]; }
 
     public static void main(String[] a) {
-        String[] only = a.length > 0 ? a : new String[] { "Martin M1", "Martin M2", "Scottie S1", "Scottie S2", "Scottie DX", "Wraase SC2-180", "Robot 36", "Robot 72", "PD50", "PD90", "PD120", "PD160", "PD180", "PD240", "PD290" };
+        String[] only = a.length > 0 ? a : new String[] { "Martin M3", "Martin M4", "Scottie S3", "Scottie S4", "Wraase SC2-120", "Pasokon P3", "Pasokon P5", "Pasokon P7", "Robot 24 BW", "Robot 12 BW", "Robot 8 BW", "Martin M1", "Martin M2", "Scottie S1", "Scottie S2", "Scottie DX", "Wraase SC2-180", "Robot 36", "Robot 72", "PD50", "PD90", "PD120", "PD160", "PD180", "PD240", "PD290" };
         for (String m : only) { run(m, false, 40, 1.0, 0); }
         run("Scottie S2", true, 40, 1.0, 0);
         run("Martin M2", false, 25, 1.0003, 0);

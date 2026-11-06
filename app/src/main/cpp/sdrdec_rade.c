@@ -7,6 +7,7 @@
 #include <string.h>
 #include <math.h>
 #include "rade/rade_rx.h"
+#include "rade2/rade_rx_v2.h"
 #include "rade/rade_dsp.h"
 #include "opus/dnn/fargan.h"
 #include "opus/dnn/lpcnet.h"
@@ -15,12 +16,21 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+/* Entrée du récepteur : 1 = signal réel (partie imaginaire nulle), comme FreeDV 2.4.1 (RADEReceiveStep : int16 / 32767, imag = 0) ;
+   0 = signal analytique (filtre de Hilbert), ancienne méthode de PhoneSDRLink 1.9 à 1.11. */
+#ifndef RADE_REAL_INPUT
+#define RADE_REAL_INPUT 1
+#endif
+
 #define HILBERT_NTAPS 127
 #define HILBERT_DELAY ((HILBERT_NTAPS - 1) / 2)
 #define IQ_CAP 8192
 
 struct sdrdec_rade {
     rade_rx_state rx;
+    rade_rx_v2_state rx2;          /* récepteur RADE V2 (FreeDV 3.0, en développement) */
+    int v2;
+    float features2[RADE_V2_FEATURES_OUT];
     FARGANState fargan;
     int fargan_primed, prime_n, was_sync;
     float prime[5 * NB_FEATURES];
@@ -34,13 +44,19 @@ struct sdrdec_rade {
     RADE_COMP *rx_in;
 };
 
-sdrdec_rade *sdrdec_rade_new(void) {
+sdrdec_rade *sdrdec_rade_new_v(int v2) {
     sdrdec_rade *s = (sdrdec_rade *)calloc(1, sizeof(*s));
     if (!s) return NULL;
-    if (rade_rx_init(&s->rx, NULL, 3, 1, 1) != 0) { free(s); return NULL; }
-    s->rx.verbose = 0;
+    s->v2 = v2 ? 1 : 0;
+    if (s->v2) {
+        if (rade_rx_v2_init(&s->rx2, 1) != 0) { free(s); return NULL; }
+        s->rx2.verbose = 0;
+    } else {
+        if (rade_rx_init(&s->rx, NULL, 3, 1, 1) != 0) { free(s); return NULL; }
+        s->rx.verbose = 0;
+    }
     fargan_init(&s->fargan);
-    s->nin_max = rade_rx_nin_max(&s->rx);
+    s->nin_max = s->v2 ? rade_rx_v2_nin_max() : rade_rx_nin_max(&s->rx);
     s->rx_in = (RADE_COMP *)malloc(sizeof(RADE_COMP) * (size_t)s->nin_max);
     if (!s->rx_in) { free(s); return NULL; }
     for (int i = 0; i < HILBERT_NTAPS; i++) {
@@ -50,6 +66,8 @@ sdrdec_rade *sdrdec_rade_new(void) {
     }
     return s;
 }
+
+sdrdec_rade *sdrdec_rade_new(void) { return sdrdec_rade_new_v(0); }
 
 void sdrdec_rade_free(sdrdec_rade *s) {
     if (!s) return;
@@ -63,24 +81,36 @@ int sdrdec_rade_process(sdrdec_rade *s, const float *in, int n, short *out, int 
         /* signal analytique : I = entrée retardée, Q = sortie du filtre de Hilbert */
         memmove(&s->hist[1], &s->hist[0], sizeof(float) * (HILBERT_NTAPS - 1));
         s->hist[0] = in[k];
+#if RADE_REAL_INPUT
+        if (s->iq_n < IQ_CAP) { s->iq[s->iq_n].real = in[k]; s->iq[s->iq_n].imag = 0.0f; s->iq_n++; }
+#else
         float q = 0.0f;
 
         for (int j = 0; j < HILBERT_NTAPS; j++) q += s->hil[j] * s->hist[j];
         if (s->iq_n < IQ_CAP) { s->iq[s->iq_n].real = s->hist[HILBERT_DELAY]; s->iq[s->iq_n].imag = q; s->iq_n++; }
+#endif
 
-        int nin = rade_rx_nin(&s->rx);
+        int nin = s->v2 ? rade_rx_v2_nin(&s->rx2) : rade_rx_nin(&s->rx);
         while (s->iq_n >= nin) {
             memcpy(s->rx_in, s->iq, sizeof(RADE_COMP) * (size_t)nin);
             memmove(s->iq, s->iq + nin, sizeof(RADE_COMP) * (size_t)(s->iq_n - nin));
             s->iq_n -= nin;
-            int r = rade_rx_process(&s->rx, s->features, s->eoo, s->rx_in);
-            int sy = rade_rx_sync(&s->rx);
+            int r, sy, nf, stride;
+            const float *base;
+            if (s->v2) {
+                r = rade_rx_v2_process(&s->rx2, s->features2, s->rx_in);
+                sy = s->rx2.state == RADE_RX_V2_SYNC;
+                base = s->features2; nf = RADE_V2_FRAMES_PER_STEP; stride = RADE_V2_NB_TOTAL_FEATURES;
+            } else {
+                r = rade_rx_process(&s->rx, s->features, s->eoo, s->rx_in);
+                sy = rade_rx_sync(&s->rx);
+                base = s->features; nf = RADE_NZMF * RADE_FRAMES_PER_STEP; stride = RADE_NB_TOTAL_FEATURES;
+            }
             if (sy && !s->was_sync) { s->fargan_primed = 0; s->prime_n = 0; }   /* nouvelle synchronisation : le vocodeur repart */
             s->was_sync = sy;
             if (r & 1) {
-                int nf = RADE_NZMF * RADE_FRAMES_PER_STEP;
                 for (int f = 0; f < nf; f++) {
-                    const float *ft = &s->features[f * RADE_NB_TOTAL_FEATURES];
+                    const float *ft = &base[f * stride];
                     if (!s->fargan_primed) {
                         memcpy(&s->prime[s->prime_n * NB_FEATURES], ft, sizeof(float) * NB_FEATURES);
                         if (++s->prime_n == 5) {
@@ -99,11 +129,11 @@ int sdrdec_rade_process(sdrdec_rade *s, const float *in, int n, short *out, int 
                     }
                 }
             }
-            nin = rade_rx_nin(&s->rx);
+            nin = s->v2 ? rade_rx_v2_nin(&s->rx2) : rade_rx_nin(&s->rx);
         }
     }
     if (sync) *sync = s->was_sync;
-    if (snr_db) *snr_db = (int)lroundf(rade_rx_snrdB_3k_est(&s->rx));
-    if (foff) *foff = rade_rx_freq_offset(&s->rx);
+    if (snr_db) *snr_db = (int)lroundf(s->v2 ? s->rx2.snr_est_dB : rade_rx_snrdB_3k_est(&s->rx));
+    if (foff) *foff = s->v2 ? s->rx2.freq_offset : rade_rx_freq_offset(&s->rx);
     return written;
 }

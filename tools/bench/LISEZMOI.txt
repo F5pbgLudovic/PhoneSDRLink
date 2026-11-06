@@ -9,3 +9,20 @@ Compiler et lancer (depuis la racine du projet) :
   ... Dt4 (CW : bruit seul, SNR bas, 12 et 35 mots/min)   Dt5 (réglages RTTY : débit, polarité, décalage, fréquence manuelle)
 Résultats attendus en 1.9 : CQ CQ DE F5PBG ..., TEST DE F4XYZ 599 73, aucun texte sur du bruit seul, "CQ CQ DE FPBG K" en RTTY (le 5 manque : le générateur n'envoie pas de chiffres).
 Dt2 (traces de la CW) et Dt3 (scores des décodeurs RTTY) servent à comprendre un échec.
+
+WSPR et JT9 (1.11, WsprEngine.java / Jt9Engine.java / SlotDecoder.java / WsjtCore.java)
+--------------------------------------------------------------------------------------
+Dwspr, Djt9 : encodeurs, essais avec bruit (SNR dans 2500 Hz), décalages de fréquence et d'instant, plusieurs signaux, bruit seul, enregistrements réels.
+Dengine : chemin complet des classes (feed, tranche UTC, fil de calcul) avec un WAV réel. stub\android\os : faux Handler/Looper pour compiler hors Android.
+Enregistrements réels de WSJT-X (à télécharger, non fournis) : https://github.com/WSJTX/wsjtx/raw/master/samples/WSPR/150426_0918.wav et .../samples/JT9/130418_1742.wav, à placer dans %TEMP%\wsjt\.
+  P=app\src\main\java\fr\f5pbg\phonesdrlink
+  toolchain\jdk\bin\javac -encoding UTF-8 -d tools\bench\out tools\bench\stub\android\os\*.java tools\bench\fr\f5pbg\phonesdrlink\Lang.java tools\bench\fr\f5pbg\phonesdrlink\Dwspr.java tools\bench\fr\f5pbg\phonesdrlink\Djt9.java tools\bench\fr\f5pbg\phonesdrlink\Dengine.java %P%\WsjtCore.java %P%\SlotDecoder.java %P%\WsprEngine.java %P%\Jt9Engine.java %P%\Ft8Engine.java %P%\Decoders.java
+  toolchain\jdk\bin\java -cp tools\bench\out fr.f5pbg.phonesdrlink.Dwspr all 40   (WSPR ; 40 fenêtres de bruit seul)
+  toolchain\jdk\bin\java -cp tools\bench\out fr.f5pbg.phonesdrlink.Djt9 all 60    (JT9)
+  toolchain\jdk\bin\java -cp tools\bench\out fr.f5pbg.phonesdrlink.Dengine
+Résultats : WSPR décode jusqu'à -28 dB (6/6), 1/6 à -30 dB ; JT9 jusqu'à -24 dB (6/6), 4/6 à -26 dB ; aucun faux décodage sur 40 (WSPR) et 60 (JT9) fenêtres de bruit ; 7 messages réels dans chaque enregistrement WSJT-X.
+Dslot (décode un WAV 12 kHz de fenêtre WSPR enregistré par le téléphone, avec dump-slots) et Dspec (spectre moyen 1400-1600 Hz) : compiler avec WsjtCore, SlotDecoder, WsprEngine, Ft8Engine, Decoders et stub\android\os, Lang.
+Dsstv2 (SSTV : image interrompue puis autre image, avec ou sans pause) : compiler avec Lang, Dsstv, Dsstv2, TextEngine, SstvEngine ; 4 scénarios, tous doivent décoder la seconde image.
+Dsstv3 (SSTV sans le début : mode trouvé par les synchros) : mêmes fichiers que Dsstv2 ; Dsstv3 wav <dossier> écrit sstv-blind.wav (8 kHz) à injecter avec --es decwav sstv:/sdcard/Android/data/fr.f5pbg.phonesdrlink/files/sstv-blind.wav.
+Dsstv4 [blind] (tableau : sensibilité 0 à 4 x SNR 12/9/6/3 dB x 4 modes, lignes reçues / erreur ; puis 600 s de bruit seul par niveau) et Dsstv5 <mode> <SNR> <niveau> [blind [dbg]] (suivi d'une réception) : compiler avec Lang, Dsstv, Dsstv4, Dsstv5, TextEngine, SstvEngine.
+Dsstv6 (perte data : trou de 4/10/40 s au milieu d'une image, niveaux 1/4/7/10) : compiler avec Lang, Dsstv, Dsstv6, TextEngine, SstvEngine.

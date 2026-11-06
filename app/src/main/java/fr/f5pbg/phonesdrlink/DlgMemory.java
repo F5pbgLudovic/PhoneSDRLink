@@ -17,6 +17,10 @@ import java.util.ArrayList;
 // Bouton Mémoires : listes de mémoires (1 à 10, nommées) et les 20 dernières utilisées. Appui = on y va ; appui long = modifier,
 // déplacer, supprimer. Les mémoires à scanner se cochent dans « Conf scan ».
 final class DlgMemory {
+    static int lastPos = -1, lastFirst, lastTop;   // liste habituelle : position du menu des listes et du défilement à la dernière fermeture
+    static int digFirst, digTop;                   // liste « Modes numériques » : défilement à la dernière fermeture
+    static boolean rec, dig;                       // « Dernières mémoires » ou « Modes numériques » choisie
+
     static void show(final MainActivity a) {
         final Store st = a.st;
         final LinearLayout col = Ui.column(a);
@@ -26,9 +30,17 @@ final class DlgMemory {
         final ListView lv = new ListView(a);
         lv.setDivider(null);
         final TextView info = Ui.small(a, "");
+        final LinearLayout regionRow = Ui.row(a);
+        regionRow.setVisibility(View.GONE);
         final ArrayList<Memory> shown = new ArrayList<Memory>();
         final Runnable[] fill = new Runnable[1];
         final boolean[] filling = { false };
+        if (lastPos < 0) { int[] mp = st.getPos("mem"); if (mp != null && mp.length >= 3) { lastPos = mp[0]; lastFirst = mp[1]; lastTop = mp[2]; } }   // après un redémarrage : positions du fichier de réglages
+        if (digFirst == 0 && digTop == 0) { int[] dp = st.getPos("memd"); if (dp != null && dp.length >= 2) { digFirst = dp[0]; digTop = dp[1]; } }
+        // Un mode numérique est actif : on ouvre la liste « Modes numériques » ; sinon on revient à la liste habituelle (celle de la dernière fermeture).
+        dig = a.decMode != 0;
+        rec = !dig && lastPos == 0;
+        final int restoreFirst = dig ? digFirst : lastFirst, restoreTop = dig ? digTop : lastTop;
         final String[] query = { "" };
 
         fill[0] = new Runnable() {
@@ -37,17 +49,20 @@ final class DlgMemory {
                 ArrayList<String> names = new ArrayList<String>();
                 names.add(Lang.F("Dernières {0} mémoires utilisées", "Last {0} memories used", Memory.RECENT));
                 for (int i = 0; i < st.memListCount; i++) names.add(st.memListLabel(i));
+                names.add(Lang.T("Modes numériques", "Digital modes"));
                 @SuppressWarnings("unchecked") ArrayAdapter<String> ad = (ArrayAdapter<String>) sp.getAdapter();
                 ad.clear();
                 ad.addAll(names);
-                int sel = Math.min(st.curMemList, st.memListCount - 1) + 1;
+                int sel = dig ? st.memListCount + 1 : rec ? 0 : Math.min(st.curMemList, st.memListCount - 1) + 1;
                 sp.setSelection(sel);
                 filling[0] = false;
                 list(sel);
             }
             void list(int sel) {
                 shown.clear();
-                if (sel == 0) shown.addAll(st.recent);
+                regionRow.setVisibility(sel == st.memListCount + 1 ? View.VISIBLE : View.GONE);
+                if (sel == st.memListCount + 1) shown.addAll(DigitalFreqs.list(digMode(a), st.iaruRegion));
+                else if (sel == 0) shown.addAll(st.recent);
                 else for (Memory m : st.memories) if (m.list == sel - 1) shown.add(m);
                 if (!query[0].isEmpty()) {
                     for (int k = shown.size() - 1; k >= 0; k--) {
@@ -76,13 +91,18 @@ final class DlgMemory {
                         return box;
                     }
                 });
-                info.setText(Lang.F("{0} mémoire(s). Appuyez sur une mémoire pour y aller (appui long : modifier).", "{0} memory(ies). Click a memory to go there.", shown.size()));
+                if (sel == st.memListCount + 1) info.setText(Lang.F("Fréquences habituelles de {0}, {1} : elles suivent le mode du décodeur. Appuyez pour y aller (appui long : copier dans une liste).", "Usual {0} frequencies, {1}: they follow the decoder mode. Click to go there (long press: copy to a list).", MainActivity.decName(digMode(a)), DigitalFreqs.regionName(st.iaruRegion)));
+                else                 info.setText(Lang.F("{0} mémoire(s). Appuyez sur une mémoire pour y aller (appui long : modifier).", "{0} memory(ies). Click a memory to go there.", shown.size()));
             }
         };
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
                 if (filling[0]) return;
-                if (pos > 0) st.curMemList = pos - 1;
+                int exp = dig ? st.memListCount + 1 : rec ? 0 : Math.min(st.curMemList, st.memListCount - 1) + 1;
+                if (pos == exp) return;   // appel de départ du menu : la liste est déjà affichée (on garde la position de défilement)
+                rec = pos == 0;
+                dig = pos == st.memListCount + 1;
+                if (pos > 0 && pos <= st.memListCount) st.curMemList = pos - 1;
                 fill[0].run();
             }
             public void onNothingSelected(AdapterView<?> p) { }
@@ -96,6 +116,7 @@ final class DlgMemory {
         });
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> p, View v, int pos, long id) {
+                if (sp.getSelectedItemPosition() == st.memListCount + 1) { copyMenu(a, shown.get(pos)); return true; }
                 itemMenu(a, shown.get(pos), sp.getSelectedItemPosition() == 0, fill[0]);
                 return true;
             }
@@ -122,6 +143,14 @@ final class DlgMemory {
         }), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
         col.addView(lr);
         col.addView(find);
+        final Spinner sr = Ui.spinner(a, new ArrayList<String>(java.util.Arrays.asList(DigitalFreqs.regionName(1), DigitalFreqs.regionName(2), DigitalFreqs.regionName(3))));
+        sr.setSelection(st.iaruRegion - 1);
+        sr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (st.iaruRegion != pos + 1) { st.iaruRegion = pos + 1; st.save(); fill[0].run(); } }
+            public void onNothingSelected(AdapterView<?> p) { }
+        });
+        regionRow.addView(sr, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        col.addView(regionRow);
         col.addView(lv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         col.addView(info);
         LinearLayout r1 = Ui.row(a);
@@ -138,13 +167,15 @@ final class DlgMemory {
             public void onClick(View v) {
                 if (st.memListCount >= Memory.MAX_LISTS) return;
                 st.curMemList = st.memListCount++;
+                dig = false;
+                rec = false;
                 fill[0].run();
             }
         }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
         r2.addView(Ui.button(a, Lang.T("Renommer la liste", "Rename list"), new View.OnClickListener() {
             public void onClick(View v) {
                 final int i = sp.getSelectedItemPosition() - 1;
-                if (i < 0) return;
+                if (i < 0 || i >= st.memListCount) return;
                 Ui.input(a, Lang.F("Renommer « {0} »…", "Rename \"{0}\"…", st.memListLabel(i)), "", st.memListLabel(i), new Ui.Text() {
                     public void got(String t) { if (t.trim().length() > 0) { st.memListNames[i] = t.trim(); fill[0].run(); } }
                 });
@@ -153,7 +184,7 @@ final class DlgMemory {
         r2.addView(Ui.button(a, Lang.T("Supprimer la liste…", "Delete list…"), new View.OnClickListener() {
             public void onClick(View v) {
                 final int i = sp.getSelectedItemPosition() - 1;
-                if (i < 0 || st.memListCount <= 1) return;
+                if (i < 0 || i >= st.memListCount || st.memListCount <= 1) return;
                 int n = 0;
                 for (Memory m : st.memories) if (m.list == i) n++;
                 String msg = n == 0 ? Lang.F("Supprimer la liste « {0} » (vide) ?", "Delete the list \"{0}\" (empty)?", st.memListLabel(i))
@@ -176,9 +207,36 @@ final class DlgMemory {
         r3.setGravity(Gravity.END);
         r3.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }));
         col.addView(r3);
-        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { st.save(); } });
+        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) {
+                int pos = sp.getSelectedItemPosition(), first = lv.getFirstVisiblePosition();
+                View c0 = lv.getChildAt(0);
+                int top = c0 == null ? 0 : c0.getTop() - lv.getPaddingTop();
+                if (pos == st.memListCount + 1) { digFirst = first; digTop = top; st.putPos("memd", digFirst, digTop); }
+                else { lastPos = pos; lastFirst = first; lastTop = top; st.putPos("mem", lastPos, lastFirst, lastTop); }
+                st.save();
+            } });
         fill[0].run();
+        lv.post(new Runnable() { public void run() { lv.setSelectionFromTop(restoreFirst, restoreTop); } });
         d.show();
+    }
+
+    // Mode du décodeur dont on affiche les fréquences : celui qui tourne, sinon le dernier choisi dans la fenêtre du décodeur.
+    static int digMode(MainActivity a) { return a.decMode != 0 ? a.decMode : DlgDecoder.lastSel; }
+
+    // Liste automatique : on ne la modifie pas, mais on peut copier une fréquence dans une liste de mémoires.
+    static void copyMenu(final MainActivity a, final Memory m) {
+        final Store st = a.st;
+        final String[] names = new String[st.memListCount];
+        for (int k = 0; k < names.length; k++) names[k] = st.memListLabel(k);
+        Ui.choose(a, Lang.F("Copier « {0} » dans ▸", "Copy \"{0}\" to ▸", m.label()), names, new Ui.Index() {
+            public void chose(int k) {
+                Memory c = new Memory(m.name, m.hz, m.mode);
+                c.list = k;
+                st.memories.add(c);
+                st.save();
+                a.status(Lang.F("Mémoire « {0} » ajoutée à « {1} ».", "Memory \"{0}\" added to \"{1}\".", c.label(), st.memListLabel(k)));
+            }
+        });
     }
 
     static void itemMenu(final MainActivity a, final Memory m, final boolean inRecent, final Runnable refresh) {
@@ -249,6 +307,8 @@ final class DlgMemory {
                 if (isNew) {
                     st.memories.add(m);
                     st.curMemList = m.list;
+                    rec = false;
+                    dig = false;
                     a.status(Lang.F("Mémoire « {0} » ajoutée à « {1} ».", "Memory \"{0}\" added to \"{1}\".", m.label(), st.memListLabel(m.list)));
                 }
                 st.save();

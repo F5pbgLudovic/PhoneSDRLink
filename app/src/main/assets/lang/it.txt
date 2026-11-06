@@ -619,3 +619,54 @@ signal at %.0f Hz	segnale a %.0f Hz
 too short, not saved	troppo breve, non salvata
 unsupported mode (VIS %d)	modo non supportato (VIS %d)
 The WebSDR sound is analysed continuously, even when muted. FT8 / FT4: USB or DATA mode, on an FT8 or FT4 frequency (7.074 / 7.0475, 14.074 / 14.080 MHz…); the phone clock must be accurate. CW: CW or USB mode, on a CW signal. RTTY: USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). PSK31: USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…), the audio frequency is found automatically. SSTV: USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the mode is recognised automatically, the picture is shown and saved when it ends. FreeDV RADE: USB mode, on a RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	L'audio del WebSDR viene analizzato di continuo, anche se silenziato. FT8 / FT4: modo USB o DATA, su una frequenza FT8 o FT4 (7,074 / 7,0475, 14,074 / 14,080 MHz…); l'orologio del telefono deve essere preciso. CW: modo CW o USB, su un segnale CW. RTTY: modo USB o LSB (larghezza di banda minima 500 Hz), su un segnale RTTY (da 14,080 a 14,099 MHz…). PSK31: modo USB, su un segnale PSK31 (14,070, 7,035, 3,580 MHz…), la frequenza audio viene trovata automaticamente. SSTV: modo USB (larghezza di banda minima 2,4 kHz), su una frequenza SSTV (14,230, 7,033, 3,730 MHz…); il modo viene riconosciuto automaticamente, l'immagine viene mostrata e salvata alla fine. FreeDV RADE: modo USB, su un segnale RADE (14,236 MHz…); il parlato decodificato sostituisce l'audio del WebSDR.
+CW or USB mode, on a CW signal. Settings (tone, filter, speed, thresholds…) under the text.	Modo CW o USB, su un segnale CW. Impostazioni (tono, filtro, velocità, soglie…) sotto il testo.
+Received text (reception frame): it will appear here.	Testo ricevuto (riquadro di ricezione): apparirà qui.
+The WebSDR sound is analysed continuously, even when muted.	Il suono del WebSDR viene analizzato continuamente, anche se disattivato.
+USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the picture mode is recognised automatically, the picture builds up line by line and is saved when it ends.	Modo USB (larghezza di banda di almeno 2,4 kHz), su una frequenza SSTV (14.230, 7.033, 3.730 MHz…); il modo immagine viene riconosciuto automaticamente, l'immagine si forma riga per riga e viene salvata al termine.
+USB mode, on a FreeDV RADE signal (14.236 MHz…); the decoded speech replaces the WebSDR sound.	Modo USB, su un segnale FreeDV RADE (14.236 MHz…); il parlato decodificato sostituisce il suono del WebSDR.
+USB mode, on a JT9 frequency (14.078, 7.078, 3.578 MHz…). 1-minute slots; the phone clock must be accurate.	Modo USB, su una frequenza JT9 (14.078, 7.078, 3.578 MHz…). Slot di 1 minuto; l'orologio del telefono deve essere preciso.
+USB mode, on a PSK31 signal (14.070, 7.035, 3.580 MHz…); the audio frequency is found automatically (or set by hand). PSK63 possible.	Modo USB, su un segnale PSK31 (14.070, 7.035, 3.580 MHz…); la frequenza audio viene trovata automaticamente (o impostata a mano). PSK63 possibile.
+USB mode, on a WSPR frequency (14.0956, 7.0386, 10.1387 MHz…: carrier frequency + 1500 Hz). 2-minute slots; the phone clock must be accurate; first results at the end of the first slot.	Modo USB, su una frequenza WSPR (14.0956, 7.0386, 10.1387 MHz…: frequenza della portante + 1500 Hz). Slot di 2 minuti; l'orologio del telefono deve essere preciso; primi risultati alla fine del primo slot.
+USB or DATA mode, on an FT8 (7.074, 14.074 MHz…) or FT4 (7.0475, 14.080 MHz…) frequency. The phone clock must be accurate.	Modo USB o DATA, su una frequenza FT8 (7.074, 14.074 MHz…) o FT4 (7.0475, 14.080 MHz…). L'orologio del telefono deve essere preciso.
+USB or LSB mode (at least 500 Hz bandwidth), on an RTTY signal (14.080 to 14.099 MHz…). Settings under the text.	Modo USB o LSB (larghezza di banda di almeno 500 Hz), su un segnale RTTY (da 14.080 a 14.099 MHz…). Impostazioni sotto il testo.
+UTC time · DT (s) · audio frequency (Hz) · message. The two periods (even and odd) are shown in two colours.	Ora UTC · DT (s) · frequenza audio (Hz) · messaggio. I due periodi (pari e dispari) sono mostrati in due colori.
+UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · callsign, locator, power (dBm).	Ora UTC · SNR (dB) · DT (s) · frequenza audio (Hz) · nominativo, locatore, potenza (dBm).
+UTC time · SNR (dB) · DT (s) · audio frequency (Hz) · message.	Ora UTC · SNR (dB) · DT (s) · frequenza audio (Hz) · messaggio.
+UTC time · picture mode.	Ora UTC · modo immagine.
+UTC time · text.	Ora UTC · testo.
+FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…	Decodificatore FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV…
+(original position)	(posizione originale)
+Asks the WebSDR for a larger audio output buffer: more latency, in the hope of removing small dropouts. The WebSDR is reloaded when the value is changed.	Chiede al WebSDR un buffer di uscita audio più grande: più latenza, nella speranza di eliminare piccole interruzioni del suono. Il WebSDR viene ricaricato quando il valore cambia.
+Audio buffer: {0} ms; reloading the WebSDR	Buffer audio: {0} ms; ricaricamento del WebSDR
+Bottom left	In basso a sinistra
+Bottom right	In basso a destra
+Copy "{0}" to ▸	Copia "{0}" in ▸
+Digital modes	Modi digitali
+Extra audio buffer (test)	Buffer audio aggiuntivo (test)
+IARU Region 1 (Europe, Africa)	IARU Regione 1 (Europa, Africa)
+IARU Region 2 (Americas)	IARU Regione 2 (Americhe)
+IARU Region 3 (Asia-Pacific)	IARU Regione 3 (Asia-Pacifico)
+INIT + − buttons	Pulsanti INIT + −
+None (original setting)	Nessuno (impostazione originale)
+Top left	In alto a sinistra
+Top right	In alto a destra
+Usual {0} frequencies, {1}: they follow the decoder mode. Click to go there (long press: copy to a list).	Frequenze {0} abituali, {1}: seguono il modo del decodificatore. Fare clic per andarci (pressione lunga: copia in un elenco).
+horizontal	orizzontale
+vertical	verticale
+Active digital mode (frequency box)	Modo digitale attivo (riquadro frequenza)
+Detection threshold (applied immediately):	Soglia di rilevamento (applicata subito):
+normal (original)	normale (originale)
+slightly more sensitive	leggermente più sensibile
+sensitive	sensibile
+very sensitive	molto sensibile
+maximum (risk of false detections)	massimo (rischio di falsi rilevamenti)
+Weak-signal sensitivity: {0}	Sensibilità ai segnali deboli: {0}
+The higher the value, the more the start code, the sync pulses and the lines are accepted with little signal.	Più alto è il valore, più facilmente vengono accettati il codice di avvio, gli impulsi di sincronismo e le righe con poco segnale.
+— signal found again, line	— segnale ritrovato, riga
+— start missing, picked up in progress	— avvio mancante, preso in corso d'opera
+Sensitivity	Sensibilità
+Data loss	Perdita di dati
+Sensitivity (1 to 10): the higher the number, the weaker the signals the decoder accepts (start code, sync pulses, lines), at the risk of a few false detections. Data loss (1 to 10): how long the decoder keeps going with a picture when the signal disappears (3 s at 1, 12 s at 4, 120 s at 10); if the signal comes back in that time, the picture resumes at the right line and the lost lines stay grey; after that time the picture is saved as it is and the decoder listens again (it then finds the mode by itself).	Sensibilità (da 1 a 10): più alto è il numero, più deboli sono i segnali accettati dal decodificatore (codice di avvio, impulsi di sincronismo, righe), con il rischio di qualche falso rilevamento. Perdita di dati (da 1 a 10): per quanto tempo il decodificatore continua con un'immagine quando il segnale scompare (3 s a 1, 12 s a 4, 120 s a 10); se il segnale ritorna in questo tempo, l'immagine riprende alla riga giusta e le righe perse restano grigie; dopo questo tempo l'immagine viene salvata così com'è e il decodificatore ascolta di nuovo (trova poi il modo da solo).
+Sensitivity (1 to 10): the higher the number, the weaker the signals the decoder accepts (start code, sync pulses, lines), at the risk of a few false detections.	Sensibilità (da 1 a 10): più il numero è alto, più deboli sono i segnali accettati dal decodificatore (codice di avvio, impulsi di sincronismo, righe), con il rischio di qualche falso rilevamento.
+Data loss (1 to 10): how long the decoder keeps going with a picture when the signal disappears (3 s at 1, 12 s at 4, 120 s at 10). If the signal comes back in that time, the picture resumes at the right line and the lost lines stay grey. After that time the picture is saved as it is and the decoder listens again (it then finds the mode by itself).	Perdita di dati (da 1 a 10): per quanto tempo il decodificatore continua con un'immagine quando il segnale scompare (3 s con 1, 12 s con 4, 120 s con 10). Se il segnale ritorna entro questo tempo, l'immagine riprende alla riga giusta e le righe perse restano grigie. Trascorso questo tempo l'immagine viene salvata così com'è e il decodificatore torna in ascolto (poi trova da solo la modalità).
+USB mode, on a FreeDV RADE V2 signal (FreeDV 3.0). Warning: V2 is still in development (waveform and neural networks may change, not compatible with FreeDV 2.x's V1): this version uses a snapshot of the sources of 6 November 2026 and may not decode future V2 signals. The decoded speech replaces the WebSDR sound.	Modo USB, su un segnale FreeDV RADE V2 (FreeDV 3.0). Attenzione: V2 è ancora in sviluppo (la forma d'onda e le reti neurali possono cambiare, non compatibile con V1 di FreeDV 2.x): questa versione usa un'istantanea dei sorgenti del 6 novembre 2026 e potrebbe non decodificare i futuri segnali V2. Il parlato decodificato sostituisce l'audio del WebSDR.

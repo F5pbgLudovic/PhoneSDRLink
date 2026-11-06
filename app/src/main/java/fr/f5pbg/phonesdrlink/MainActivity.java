@@ -126,6 +126,7 @@ public class MainActivity extends Activity {
         applyHeadset();
         if (getIntent() != null && getIntent().getStringExtra("radewav") != null) radeSelfTest(getIntent().getStringExtra("radewav"));
         if (getIntent() != null && getIntent().getStringExtra("radeeng") != null) radeEngineTest(getIntent().getStringExtra("radeeng"));
+        if (getIntent() != null && getIntent().getStringExtra("radev2test") != null) radeV2Loop(getIntent().getStringExtra("radev2test"));
         if (getIntent() != null && getIntent().getStringExtra("dectest") != null) decSelfTest(getIntent().getStringExtra("dectest"));
         if (getIntent() != null && getIntent().getStringExtra("decwav") != null) decWavTest(getIntent().getStringExtra("decwav"));
         setupWeb();
@@ -255,12 +256,24 @@ public class MainActivity extends Activity {
         LinearLayout r2 = Ui.row(this);
         tvFreq = new TextView(this) {
             // Nom de l'application en tout petit sous la fréquence, centré, sans changer la taille de la case ; s'il ne rentre pas, rien n'est écrit.
+            // Quand un mode numérique est actif, son nom s'écrit de la même taille dans le coin droit en bas (couleur réglable dans SET › Couleurs).
             final android.graphics.Paint tiny = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+            void drawDecName(android.graphics.Canvas c) {
+                if (decMode == 0) return;
+                String s = decName(decMode);
+                float dm = getResources().getDisplayMetrics().scaledDensity, dp = getResources().getDisplayMetrics().density;
+                tiny.setTypeface(Typeface.DEFAULT_BOLD);
+                tiny.setColor(Ui.decCol());
+                tiny.setTextSize(7 * dm);
+                float base = getHeight() - 2 * dp - tiny.descent();
+                c.drawText(s, getScrollX() + getWidth() - 6 * dp - tiny.measureText(s), getScrollY() + base, tiny);
+            }
             @Override
             protected void onDraw(android.graphics.Canvas c) {
                 super.onDraw(c);
                 android.text.Layout l = getLayout();
                 if (l == null || getText().length() == 0) return;
+                drawDecName(c);
                 String s = "PhoneSDRLink V" + versionName() + " @F5PBG 2026";
                 float dm = getResources().getDisplayMetrics().scaledDensity, dp = getResources().getDisplayMetrics().density;
                 float top = (getHeight() - l.getHeight()) / 2f + l.getLineBaseline(0);   // bas des chiffres
@@ -363,7 +376,7 @@ public class MainActivity extends Activity {
         layoutForOrientation();
     }
 
-    // Appui de 3 secondes sans lâcher sur un bouton : exécute r (le clic normal est alors ignoré).
+    // Appui de 2 secondes sans lâcher sur un bouton : exécute r (le clic normal est alors ignoré).
     void holdThen(final View v, final Runnable r) {
         final boolean[] fired = { false };
         final Runnable fire = new Runnable() { public void run() { fired[0] = true; v.setPressed(false); r.run(); } };
@@ -371,7 +384,7 @@ public class MainActivity extends Activity {
             float x0, y0;
             public boolean onTouch(View b, MotionEvent e) {
                 switch (e.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN: fired[0] = false; x0 = e.getX(); y0 = e.getY(); h.postDelayed(fire, 3000); break;
+                    case MotionEvent.ACTION_DOWN: fired[0] = false; x0 = e.getX(); y0 = e.getY(); h.postDelayed(fire, 2000); break;
                     case MotionEvent.ACTION_MOVE:
                         if (Math.abs(e.getX() - x0) > Ui.dp(MainActivity.this, 12) || Math.abs(e.getY() - y0) > Ui.dp(MainActivity.this, 12)) h.removeCallbacks(fire);
                         break;
@@ -383,20 +396,32 @@ public class MainActivity extends Activity {
         });
     }
 
-    // Les trois boutons INIT, + et − : à droite (position d'origine) ou à gauche ; plus hauts quand la barre est en bas.
+    // Les trois boutons INIT, + et − : dans l'un des quatre coins de la zone WebSDR, en colonne ou en ligne (st.zoomPos : voir Store).
     void placeZoom() {
         if (zoomBox == null) return;
         if (zoomBox.getParent() != null) ((ViewGroup) zoomBox.getParent()).removeView(zoomBox);
-        FrameLayout.LayoutParams zp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | (st.zoomLeft ? Gravity.START : Gravity.END));
+        int corner = st.zoomPos & 3;
+        boolean horiz = (st.zoomPos & 4) != 0, left = corner == 1 || corner == 3, top = corner >= 2;
+        zoomBox.setOrientation(horiz ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
+        for (int i = 0; i < zoomBox.getChildCount(); i++) {
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) zoomBox.getChildAt(i).getLayoutParams();
+            lp.setMargins(horiz ? Ui.dp(this, 4) : 0, horiz ? 0 : Ui.dp(this, 4), 0, 0);
+            zoomBox.getChildAt(i).setLayoutParams(lp);
+        }
+        FrameLayout.LayoutParams zp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (top ? Gravity.TOP : Gravity.BOTTOM) | (left ? Gravity.START : Gravity.END));
         int m = Ui.dp(this, 10);
-        zp.setMargins(st.zoomLeft ? m : 0, 0, st.zoomLeft ? 0 : m, st.barBottom ? Ui.dp(this, 28) : m);
+        zp.setMargins(left ? m : 0, top ? m : 0, left ? 0 : m, top ? 0 : (st.barBottom ? Ui.dp(this, 28) : m));
         webFrame.addView(zoomBox, zp);
         placeDecOverlay();
     }
 
     void chooseZoomSide() {
-        Ui.choose(this, Lang.T("Boutons INIT + −", "INIT + − buttons"), new String[] { Lang.T("À gauche de l'écran", "Left of the screen"), Lang.T("À droite de l'écran", "Right of the screen") }, new Ui.Index() {
-            public void chose(int i) { st.zoomLeft = i == 0; st.save(); placeZoom(); }
+        String[] c = { Lang.T("Bas à droite", "Bottom right"), Lang.T("Bas à gauche", "Bottom left"), Lang.T("Haut à droite", "Top right"), Lang.T("Haut à gauche", "Top left") };
+        String v = Lang.T("vertical", "vertical"), hz = Lang.T("horizontal", "horizontal");
+        String[] items = new String[8];
+        for (int i = 0; i < 4; i++) { items[i] = c[i] + " — " + v + (i == 0 ? " " + Lang.T("(position d'origine)", "(original position)") : ""); items[4 + i] = c[i] + " — " + hz; }
+        Ui.choose(this, Lang.T("Boutons INIT + −", "INIT + − buttons"), items, new Ui.Index() {
+            public void chose(int i) { st.zoomPos = i; st.zoomLeft = (i & 3) == 1 || (i & 3) == 3; st.save(); placeZoom(); }
         });
     }
 
@@ -422,6 +447,7 @@ public class MainActivity extends Activity {
                 sdrKind = "";
                 status(Lang.T("INIT : le WebSDR est relancé", "INIT: restarting the WebSDR"));
                 cancelScaleGuard();
+                st.putPos(zoomKey(), 1000);   // INIT remet l'écran d'origine : le zoom retenu est oublié
                 initReset = true;
                 String cu = web.getUrl();
                 if (cu != null && !cu.isEmpty()) web.loadUrl(cu); else web.reload();   // nouveau chargement : zoom et affichage d'origine
@@ -446,7 +472,7 @@ public class MainActivity extends Activity {
 
     Button zoomButton(String text, final boolean in) {
         Button b = Ui.button(this, text, new View.OnClickListener() {
-            public void onClick(View v) { if (blocked()) return; cancelScaleGuard(); if (in) web.zoomIn(); else web.zoomOut(); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 700); }
+            public void onClick(View v) { if (blocked()) return; cancelScaleGuard(); if (in) web.zoomIn(); else web.zoomOut(); h.postDelayed(new Runnable() { public void run() { applySpectrumZoom(); } }, 700); h.removeCallbacks(recordZoomRun); h.postDelayed(recordZoomRun, 1500); }
         });
         b.setTextSize(22);
         b.setTypeface(Typeface.DEFAULT_BOLD);
@@ -548,7 +574,8 @@ public class MainActivity extends Activity {
         web.setBackgroundColor(Color.BLACK);
         web.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, android.view.MotionEvent e) {
-                if (e.getPointerCount() > 1) cancelScaleGuard();   // zoom à la main
+                if (e.getPointerCount() > 1) { cancelScaleGuard(); pinched = true; }   // zoom à la main
+                if (pinched && e.getActionMasked() == android.view.MotionEvent.ACTION_UP) { pinched = false; h.removeCallbacks(recordZoomRun); h.postDelayed(recordZoomRun, 1500); }
                 if (locked && e.getActionMasked() == android.view.MotionEvent.ACTION_DOWN) blocked();
                 return locked;
             }
@@ -587,10 +614,24 @@ public class MainActivity extends Activity {
         });
     }
 
+    // Script du pont : précédé de la mémoire tampon audio supplémentaire demandée dans SET (ms).
+    String bridgeSrc() { return "window.__sdrlinkBufMs=" + st.bufMs + ";" + bridgeScript; }
+
+    // Nouvelle mémoire tampon : le script est réinstallé et la page rechargée (le tampon se choisit à la création du contexte audio).
+    void applyBuffer() {
+        installBridgeScripts();
+        status(Lang.F("Mémoire tampon audio : {0} ms ; le WebSDR est rechargé", "Audio buffer: {0} ms; reloading the WebSDR", st.bufMs));
+        sdrKind = "";
+        cancelScaleGuard();
+        initReset = true;
+        String cu = web.getUrl();
+        if (cu != null && !cu.isEmpty()) web.loadUrl(cu); else web.reload();
+    }
+
     void installBridgeScripts() {
         if (!WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) return;
         if (bridgeHandle != null) bridgeHandle.remove();
-        bridgeHandle = WebViewCompat.addDocumentStartJavaScript(web, bridgeScript, Collections.singleton("*"));
+        bridgeHandle = WebViewCompat.addDocumentStartJavaScript(web, bridgeSrc(), Collections.singleton("*"));
         updateIdentity();
     }
 
@@ -629,7 +670,7 @@ public class MainActivity extends Activity {
 
     // WebView trop ancien pour les scripts « au début du document » : injection au début et à la fin du chargement.
     void injectFallback() {
-        web.evaluateJavascript(bridgeScript, null);
+        web.evaluateJavascript(bridgeSrc(), null);
         String s = identityScript();
         if (s != null) web.evaluateJavascript(s, null);
     }
@@ -675,7 +716,7 @@ public class MainActivity extends Activity {
     }
 
     void applyVolume() {
-        boolean m = muted || callMute || focusMute || (decMode == DEC_RADE && radeVoice);
+        boolean m = muted || callMute || focusMute || (isRade(decMode) && radeVoice);
         js("if(window.__sdrlink)__sdrlink.setVolume(" + (m ? 0 : 1) + ");");
     }
 
@@ -685,12 +726,12 @@ public class MainActivity extends Activity {
     final Runnable watchRun = new Runnable() {
         public void run() {
             h.postDelayed(this, 5000);
-            if (!st.autoReload || sdrKind.isEmpty() || muted || callMute || focusMute || (decMode == DEC_RADE && radeVoice) || audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0 || autoTries >= 3) return;
+            if (!st.autoReload || sdrKind.isEmpty() || muted || callMute || focusMute || (isRade(decMode) && radeVoice) || audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0 || autoTries >= 3) return;
             web.evaluateJavascript("(function(){try{return window.__sdrlink?__sdrlink.silentMs():-1}catch(e){return -1}})()", new android.webkit.ValueCallback<String>() {
                 public void onReceiveValue(String v) {
                     long ms;
                     try { ms = Long.parseLong(v.trim()); } catch (Exception e) { return; }
-                    if (ms >= 30000 && st.autoReload && !muted && !callMute && !focusMute && !(decMode == DEC_RADE && radeVoice)) {
+                    if (ms >= 30000 && st.autoReload && !muted && !callMute && !focusMute && !(isRade(decMode) && radeVoice)) {
                         autoTries++;
                         status(Lang.T("Plus de son depuis 30 s : le WebSDR est rechargé.", "No sound for 30 s: the WebSDR is reloaded."));
                         web.reload();
@@ -701,7 +742,10 @@ public class MainActivity extends Activity {
     };
 
     // Le notch automatique n'est pas appliqué en CW ni en DATA (la coche reste telle que l'opérateur l'a mise).
-    boolean notchNow() { return st.autoNotch && !"CW".equals(mode) && !(mode != null && mode.startsWith("DATA")); }
+    // Notch et réducteur de bruit sont coupés (sans décocher les cases) tant qu'un mode numérique est actif : ils abîmeraient le son.
+    boolean dnrNow() { return st.autoDnr && decMode == 0; }
+
+    boolean notchNow() { return st.autoNotch && decMode == 0 && !"CW".equals(mode) && !(mode != null && mode.startsWith("DATA")); }
 
     boolean notchSent;
 
@@ -709,7 +753,7 @@ public class MainActivity extends Activity {
         applyVolume();
         notchSent = notchNow();
         js("if(window.__sdrlink)__sdrlink.setWatch(" + st.autoReload + ");");
-        js("if(window.__sdrlink){__sdrlink.setNotch(" + notchSent + "," + st.notchLevel + ");__sdrlink.setDnr(" + st.autoDnr + "," + st.dnrLevel + ");}");
+        js("if(window.__sdrlink){__sdrlink.setNotch(" + notchSent + "," + st.notchLevel + ");__sdrlink.setDnr(" + dnrNow() + "," + st.dnrLevel + ");}");
     }
 
     static String toSdr(String m) {
@@ -747,15 +791,42 @@ public class MainActivity extends Activity {
     int initTries;
     boolean captureScale = true, initReset;   // initScale : échelle d'une page fraîchement ouverte ; INIT y remet l'écran
 
+    // Zoom de l'écran retenu par WebSDR (rapport à l'échelle d'une page fraîchement ouverte, en millièmes, dans PhoneViewPos) : retrouvé quand on
+    // revient sur ce WebSDR et à la relance de l'application. INIT l'oublie.
+    boolean zoomApplying, pinched;
+    String zoomKey() { String u = web != null ? web.getUrl() : null; return "z" + Integer.toHexString(Finder.urlKey(u == null ? st.lastUrl : u).hashCode()); }
+
+    float savedRatio() {
+        int[] p = st.getPos(zoomKey());
+        return p == null || p.length < 1 ? 1f : Math.max(0.2f, Math.min(10f, p[0] / 1000f));
+    }
+
+    @SuppressWarnings("deprecation")
+    final Runnable recordZoomRun = new Runnable() {
+        public void run() {
+            if (zoomApplying || initReset || captureScale || scaleRef != 0 || initScale <= 0) return;   // échelle en cours de mise en place : rien à noter
+            float s = web.getScale();
+            if (s <= 0) return;
+            int r = Math.round(s / initScale * 1000);
+            int[] p = st.getPos(zoomKey());
+            if (p != null && Math.abs(p[0] - r) <= 15) return;
+            if (p == null && Math.abs(r - 1000) <= 15) return;   // pas de zoom voulu
+            st.putPos(zoomKey(), r);
+            st.save();
+        }
+    };
+
     final Runnable scaleInit = new Runnable() {
         @SuppressWarnings("deprecation")
         public void run() {
             float s = web.getScale();
-            if (initReset) {
-                boolean off = initScale > 0 && s > 0 && Math.abs(s / initScale - 1) > 0.02f;
-                if (off && initTries++ < 5) { web.zoomBy(initScale / s); h.postDelayed(this, 1500); }   // la page peut refuser le premier essai : on revérifie
-                else { initReset = false; initTries = 0; }
-            } else if (captureScale) { initScale = s; captureScale = false; }
+            if (captureScale) { initScale = s; captureScale = false; zoomApplying = true; }   // page fraîchement ouverte : on y remet le zoom retenu
+            if (initReset || zoomApplying) {
+                float target = initScale * savedRatio();
+                boolean off = initScale > 0 && s > 0 && Math.abs(s / target - 1) > 0.02f;
+                if (off && initTries++ < 5) { web.zoomBy(target / s); h.postDelayed(this, 1500); }   // la page peut refuser le premier essai : on revérifie
+                else { initReset = false; zoomApplying = false; initTries = 0; }
+            }
         }
     };
     final Runnable scaleCheck = new Runnable() {
@@ -1344,10 +1415,13 @@ public class MainActivity extends Activity {
 
     // ------------------------------------------------------------------ décodeurs numériques (FT8, FT4, CW, RTTY, FreeDV RADE)
 
-    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7;
+    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7, DEC_WSPR = 8, DEC_JT9 = 9, DEC_RADE2 = 10;
+    static boolean isRade(int m) { return m == DEC_RADE || m == DEC_RADE2; }   // FreeDV RADE V1 (FreeDV 2.x) ou V2 (FreeDV 3.0)
     int decMode;                       // 0 arrêté, sinon DEC_*
     boolean radeVoice;                 // RADE : des trames FreeDV sont décodées, la parole remplace le son du WebSDR
     Ft8Engine ft8;
+    WsprEngine wspr;
+    Jt9Engine jt9;
     RadeEngine rade;
     TextEngine txt;
     static final class DecLine { String text, slot; int col; DecLine(String t, int c) { text = t; col = c; int k = t.indexOf(" "); slot = c != 0 && k > 0 ? t.substring(0, k) : null; } }   // col : 0 normal, 1 période 1, 2 période 2
@@ -1358,8 +1432,8 @@ public class MainActivity extends Activity {
     ScrollView decScroll;
     int decTries;
 
-    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_RADE ? "FreeDV RADE" : ""; }
-    static int decRate(int m) { return (m == DEC_FT8 || m == DEC_FT4) ? Ft8Engine.RATE : 8000; }
+    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_WSPR ? "WSPR" : m == DEC_JT9 ? "JT9" : m == DEC_RADE ? "RADE V1" : m == DEC_RADE2 ? "RADE V2" : ""; }
+    static int decRate(int m) { return (m == DEC_FT8 || m == DEC_FT4 || m == DEC_WSPR || m == DEC_JT9) ? Ft8Engine.RATE : 8000; }
 
     android.text.SpannableStringBuilder decSpan(int last) {
         android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder();
@@ -1414,7 +1488,7 @@ public class MainActivity extends Activity {
             if (decScroll != null) decScroll.post(new Runnable() { public void run() { if (decScroll != null) decScroll.fullScroll(View.FOCUS_DOWN); } });
         }
         if (decOverlayView != null) {
-            boolean show = decMode != 0 && decMode != DEC_RADE && decMode != DEC_SSTV && st.decOverlay && !decLines.isEmpty();   // FreeDV : pas de lignes devant le spectre (la parole suffit)
+            boolean show = decMode != 0 && !isRade(decMode) && decMode != DEC_SSTV && st.decOverlay && !decLines.isEmpty();   // FreeDV : pas de lignes devant le spectre (la parole suffit)
             decOverlayView.setVisibility(show ? View.VISIBLE : View.GONE);
             if (show) decOverlayView.setText(decOverlaySpan());
         }
@@ -1478,7 +1552,9 @@ public class MainActivity extends Activity {
         if (redo) r.post(new Runnable() { public void run() { r.settingsChanged(); } });
     }
 
-    void applyDecSettings() { applyCwSettings(); applyRttySettings(); applyPskSettings(); }
+    void applyDecSettings() { applyCwSettings(); applyRttySettings(); applyPskSettings(); applySstvSettings(); }
+
+    void applySstvSettings() { if (txt instanceof SstvEngine) ((SstvEngine) txt).setLevels(st.sstvSens, st.sstvLoss); }
 
     // Réglages PSK31 : copiés du stockage vers le moteur (fréquence automatique ou manuelle, AFC, débit, squelch).
     void applyPskSettings() {
@@ -1627,12 +1703,50 @@ public class MainActivity extends Activity {
 
     // Essai PSK31 / SSTV sur un fichier WAV (8 kHz, 16 bits, mono) injecté à la place du son de la page :
     // am start … --es decwav psk:/chemin/fichier.wav  ou  sstv:/chemin/fichier.wav  (résultat dans la fenêtre du décodeur et dans logcat, étiquette PSDR).
+    // Essai WSPR / JT9 avec un enregistrement 12 kHz réel : injecté en temps réel à partir de la prochaine limite de tranche UTC.
+    void decSlotWav(final int mode, final String path) {
+        decTest = true;
+        js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();");
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    long per = mode == DEC_WSPR ? 120000L : 60000L;
+                    long now = System.currentTimeMillis(), t0 = (now / per + 1) * per;
+                    android.util.Log.i("PSDR", "DECWAV attente " + (t0 - now) + " ms");
+                    long tS = t0 - 3200;   // 3,2 s de silence avant : la fenêtre d analyse commence avant la tranche
+                    Thread.sleep(Math.max(0, tS - now));
+                    java.io.RandomAccessFile f = new java.io.RandomAccessFile(path, "r");
+                    f.seek(44);
+                    byte[] buf = new byte[3200];
+                    int r, k = 0;
+                    for (; k < 24; k++) {
+                        byte[] z = new byte[3200];
+                        if (wspr != null) wspr.feed(z, 3200); else if (jt9 != null) jt9.feed(z, 3200);
+                        long dz = tS + (k + 1) * 1600L * 1000L / 12000L - System.currentTimeMillis();
+                        if (dz > 0) Thread.sleep(dz);
+                    }
+                    while ((r = f.read(buf)) > 0) {
+                        if (wspr == null && jt9 == null) break;
+                        byte[] c = buf.clone();
+                        if (wspr != null) wspr.feed(c, r); else jt9.feed(c, r);
+                        k++;
+                        long due = tS + k * 1600L * 1000L / 12000L, w = due - System.currentTimeMillis();
+                        if (w > 0) Thread.sleep(w);
+                    }
+                    f.close();
+                    android.util.Log.i("PSDR", "DECWAV fin");
+                } catch (Throwable t) { android.util.Log.i("PSDR", "DECWAV erreur " + t); }
+            }
+        }).start();
+    }
+
     void decWavTest(final String spec) {
-        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : DEC_PSK;
+        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : spec.startsWith("wspr:") ? DEC_WSPR : spec.startsWith("jt9:") ? DEC_JT9 : DEC_PSK;
         final String path = spec.substring(spec.indexOf(':') + 1);
         h.postDelayed(new Runnable() {
             public void run() {
                 decoderStart(mode);
+                if (mode == DEC_WSPR || mode == DEC_JT9) { decSlotWav(mode, path); return; }
                 if (txt == null) return;
                 js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();");
                 new Thread(new Runnable() {
@@ -1656,14 +1770,15 @@ public class MainActivity extends Activity {
         }, 3000);
     }
 
-    void decSetStatus(String s) { decStatus = s; if (decState != null) decState.setText(s); }
+    void decSetStatus(String s) { decStatus = s; if (decState != null) decState.setText(s); if (DlgDecoder.onState != null) DlgDecoder.onState.run(); }
 
     void placeDecOverlay() {
         if (decOverlayView == null || webFrame == null) return;
         if (decOverlayView.getParent() != null) ((ViewGroup) decOverlayView.getParent()).removeView(decOverlayView);
         FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.START);
         int side = Ui.dp(this, 72), m = Ui.dp(this, 4);   // on laisse la place aux boutons INIT, + et −
-        p.setMargins(st.zoomLeft ? side : m, 0, st.zoomLeft ? m : side, st.barBottom ? Ui.dp(this, 28) : m);
+        int zc = st.zoomPos & 3; boolean zb = zc < 2 && (st.zoomPos & 4) == 0, zh = zc < 2 && (st.zoomPos & 4) != 0;   // boutons en bas : colonne = place sur le côté, ligne = place au-dessus
+        p.setMargins(zb && (zc == 1) ? side : m, 0, zb && (zc == 0) ? side : m, (st.barBottom ? Ui.dp(this, 28) : m) + (zh ? Ui.dp(this, 60) : 0));
         webFrame.addView(decOverlayView, p);
         if (sstvOverlay != null) {
             if (sstvOverlay.getParent() != null) ((ViewGroup) sstvOverlay.getParent()).removeView(sstvOverlay);
@@ -1681,7 +1796,7 @@ public class MainActivity extends Activity {
     void maybeStartAuto() {
         if (!st.freedvAuto || decMode != 0 || !Decoders.loaded) return;
         decoderStart(DEC_RADE);
-        if (decMode == DEC_RADE) radeAuto = true;
+        if (isRade(decMode)) radeAuto = true;
     }
 
     void applyFreedvAuto() {
@@ -1704,13 +1819,20 @@ public class MainActivity extends Activity {
         decNewLine = true;
         decRefresh();
         decSetStatus(Lang.T("Démarrage…", "Starting…"));
-        if (mode == DEC_RADE) {
-            rade = new RadeEngine(new RadeEngine.Listener() {
+        if (isRade(mode)) {
+            rade = new RadeEngine(mode == DEC_RADE2, new RadeEngine.Listener() {
                 public void onStatus(String s) { decSetStatus(s); }
                 public void onEvent(String line) { decAddLine(line, 0); decRefresh(); }
                 public void onVoice(boolean on) { radeVoice = on; applyVolume(); }
             });
             if (!rade.start()) { rade = null; decSetStatus(Lang.T("FreeDV RADE demande un téléphone 64 bits", "FreeDV RADE needs a 64-bit phone")); return; }
+        } else if (mode == DEC_WSPR || mode == DEC_JT9) {
+            Ft8Engine.Listener sl = new Ft8Engine.Listener() {
+                public void onLines(java.util.ArrayList<String> lines, int parity) { for (String s : lines) decAddLine(s, parity == 0 ? 1 : 2); decRefresh(); }
+                public void onStatus(String s) { decSetStatus(s); }
+            };
+            SlotDecoder.dumpDir = getExternalFilesDir(null);
+            if (mode == DEC_WSPR) { wspr = new WsprEngine(sl); wspr.start(); } else { jt9 = new Jt9Engine(sl); jt9.start(); }
         } else if (mode == DEC_FT8 || mode == DEC_FT4) {
             ft8 = new Ft8Engine(mode == DEC_FT4, new Ft8Engine.Listener() {
                 public void onLines(java.util.ArrayList<String> lines, int parity) { for (String s : lines) decAddLine(s, parity == 0 ? 1 : 2); decRefresh(); }
@@ -1726,10 +1848,13 @@ public class MainActivity extends Activity {
             applyCwSettings();
             applyRttySettings();
             applyPskSettings();
+            applySstvSettings();
         }
         decMode = mode;
+        if (DlgDecoder.onState != null) DlgDecoder.onState.run();
+        if (tvFreq != null) tvFreq.postInvalidate();   // nom du mode actif dans la case de la fréquence
         sstvShow();
-        applyVolume();   // en RADE, le son brut du WebSDR est coupé : on entend la parole décodée
+        applyAudio();   // volume (en RADE, le son brut du WebSDR est coupé : on entend la parole décodée) ; notch et réducteur de bruit coupés en mode numérique
         decStartJs();
     }
 
@@ -1738,15 +1863,19 @@ public class MainActivity extends Activity {
         decMode = 0;
         h.removeCallbacks(decStartRun);
         if (ft8 != null) { ft8.stop(); ft8 = null; }
+        if (wspr != null) { wspr.stop(); wspr = null; }
+        if (jt9 != null) { jt9.stop(); jt9 = null; }
         if (rade != null) { rade.stop(); rade = null; }
         radeVoice = false;
         radeAuto = false;
         if (txt instanceof SstvEngine && ((SstvEngine) txt).img != null) sstvEnd(false, sstvRows);   // image interrompue : on garde ce qui est reçu
         if (txt != null) { txt.shutdown(); txt = null; }
-        if (web != null) { js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();"); applyVolume(); }
+        if (web != null) { js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();"); applyAudio(); }
         if (was && message) decSetStatus(Lang.T("Décodeur arrêté", "Decoder stopped"));
         if (decOverlayView != null) decOverlayView.setVisibility(View.GONE);
         sstvShow();
+        if (DlgDecoder.onState != null) DlgDecoder.onState.run();
+        if (tvFreq != null) tvFreq.postInvalidate();   // nom du mode actif dans la case de la fréquence
     }
 
     void decStartJs() {
@@ -1756,18 +1885,20 @@ public class MainActivity extends Activity {
 
     final Runnable decStartRun = new Runnable() { public void run() { decStartJs(); } };
 
+    boolean decTest;   // essai avec fichier son : on ignore le son de la page
     void onDecMessage(String msg) {
+        if (decTest) return;
         if (msg.startsWith("dec|d|")) {
-            if (ft8 == null && rade == null && txt == null) return;
+            if (ft8 == null && wspr == null && jt9 == null && rade == null && txt == null) return;
             try {
                 byte[] b = android.util.Base64.decode(msg.substring(6), android.util.Base64.NO_WRAP);
-                if (ft8 != null) ft8.feed(b, b.length); else if (rade != null) rade.feed(b, b.length); else if (txt != null) txt.feedBytes(b, b.length);
+                if (ft8 != null) ft8.feed(b, b.length); else if (wspr != null) wspr.feed(b, b.length); else if (jt9 != null) jt9.feed(b, b.length); else if (rade != null) rade.feed(b, b.length); else if (txt != null) txt.feedBytes(b, b.length);
             } catch (Exception e) { }
             return;
         }
         if (msg.startsWith("dec|ok")) {
             decTries = 0;
-            decSetStatus(decMode == DEC_RADE ? "RADE : " + Lang.T("recherche du signal…", "searching for the signal…") : decName(decMode) + " : " + Lang.T("en écoute", "listening"));
+            decSetStatus(isRade(decMode) ? "RADE : " + Lang.T("recherche du signal…", "searching for the signal…") : decName(decMode) + " : " + Lang.T("en écoute", "listening"));
             return;
         }
         if (msg.startsWith("dec|err")) {   // le son de la page n'est pas encore démarré : on réessaie
@@ -1930,6 +2061,23 @@ public class MainActivity extends Activity {
                     Decoders.radeFree(h0);
                     android.util.Log.i("PSDR", "RADETEST fin : " + chunks + " s de son, " + syncChunks + " s synchronisées, " + outTotal + " échantillons de parole, " + (android.os.SystemClock.elapsedRealtime() - t0) + " ms de calcul (fichier " + len + " octets)");
                 } catch (Throwable t) { android.util.Log.i("PSDR", "RADETEST erreur " + t); }
+            }
+        }).start();
+    }
+
+    // Essai de bouclage RADE V2 (bibliothèque d'essai seulement) : am start … --es radev2test "200,60,100,60" = paires (SNR en dixièmes de dB, durée en s) ;
+    // résultats dans logcat (étiquette PSDR).
+    void radeV2Loop(final String spec) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String[] p = spec.split(",");
+                    for (int k = 0; k < p.length; k += 2) {
+                        int snr = Integer.parseInt(p[k].trim()), sec = p.length > k + 1 ? Integer.parseInt(p[k + 1].trim()) : 60;
+                        android.util.Log.i("PSDR", "RADEV2 " + Decoders.radeLoopTest(snr, sec));
+                    }
+                    android.util.Log.i("PSDR", "RADEV2 fin");
+                } catch (Throwable t) { android.util.Log.i("PSDR", "RADEV2 erreur " + t); }
             }
         }).start();
     }

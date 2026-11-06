@@ -37,15 +37,18 @@ final class DlgWebSdr {
     static List<FoundSdr> cache;
     // Position dans la liste des favoris (par liste) : on retrouve la même place en rouvrant la fenêtre.
     static final HashMap<Integer, int[]> LIST_POS = new HashMap<Integer, int[]>();
+    static int[] searchPos;   // position dans les résultats de la recherche de WebSDR
 
-    static void savePos(ListView lv, int list) {
+    static void savePos(Store st, ListView lv, int list) {
         View c = lv.getChildAt(0);
-        LIST_POS.put(list, new int[] { lv.getFirstVisiblePosition(), c == null ? 0 : c.getTop() });
+        int[] p = { lv.getFirstVisiblePosition(), c == null ? 0 : c.getTop() };
+        LIST_POS.put(list, p);
+        st.putPos("p" + list, p[0], p[1]);
     }
 
-    static void restorePos(final ListView lv, int list) {
-        final int[] p = LIST_POS.get(list);
-        if (p != null) lv.post(new Runnable() { public void run() { lv.setSelectionFromTop(p[0], p[1]); } });
+    static void restorePos(Store st, final ListView lv, int list) {
+        final int[] p = LIST_POS.containsKey(list) ? LIST_POS.get(list) : st.getPos("p" + list);   // sinon : position du fichier de réglages (après un redémarrage)
+        if (p != null && p.length >= 2) lv.post(new Runnable() { public void run() { lv.setSelectionFromTop(p[0], p[1]); } });
     }
 
     static LinearLayout.LayoutParams w(MainActivity a, float weight) { return Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, weight, a, 2); }
@@ -104,7 +107,7 @@ final class DlgWebSdr {
             }
         };
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (!filling[0]) { savePos(lv, st.curFavList); st.curFavList = pos; fill[0].run(); restorePos(lv, pos); } }
+            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (!filling[0] && pos != st.curFavList) { savePos(st, lv, st.curFavList); st.curFavList = pos; fill[0].run(); restorePos(st, lv, pos); } }
             public void onNothingSelected(AdapterView<?> p) { }
         });
         lv.setDivider(null);
@@ -167,9 +170,9 @@ final class DlgWebSdr {
         }), w(a, 1));
         r3.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 1));
         col.addView(r3);
-        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { savePos(lv, st.curFavList); st.save(); } });
+        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { savePos(st, lv, st.curFavList); st.save(); } });
         fill[0].run();
-        restorePos(lv, st.curFavList);
+        restorePos(st, lv, st.curFavList);
         d.show();
     }
 
@@ -297,7 +300,7 @@ final class DlgWebSdr {
             }
         };
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (!filling[0]) { st.curFavList = pos; fill[0].run(); } }
+            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (!filling[0] && pos != st.curFavList) { savePos(st, lv, 1000 + st.curFavList); st.curFavList = pos; fill[0].run(); restorePos(st, lv, 1000 + pos); } }
             public void onNothingSelected(AdapterView<?> p) { }
         });
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -440,8 +443,9 @@ final class DlgWebSdr {
         }), w(a, 1));
         r5.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 0.7f));
         col.addView(r5);
-        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { st.save(); } });
+        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { savePos(st, lv, 1000 + st.curFavList); st.save(); } });
         fill[0].run();
+        restorePos(st, lv, 1000 + st.curFavList);
         d.show();
     }
 
@@ -750,8 +754,13 @@ final class DlgWebSdr {
         };
         dist.addTextChangedListener(tw);
         filter.addTextChangedListener(tw);
+        final int[] prevSel = { 0, 4 };   // choix de départ du type et du tri
         AdapterView.OnItemSelectedListener again = new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { fill.run(); }
+            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+                if (p == sType ? pos == prevSel[0] : pos == prevSel[1]) return;   // appel de départ du menu : rien n'a changé (on garde la position)
+                if (p == sType) prevSel[0] = pos; else prevSel[1] = pos;
+                fill.run();
+            }
             public void onNothingSelected(AdapterView<?> p) { }
         };
         sType.setOnItemSelectedListener(again);
@@ -811,7 +820,15 @@ final class DlgWebSdr {
         r2.addView(Ui.button(a, Lang.T("Actualiser", "Refresh"), new View.OnClickListener() { public void onClick(View v) { load.run(); } }), w(a, 1));
         r2.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 0.8f));
         col.addView(r2);
+        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() {
+            public void onDismiss(android.content.DialogInterface x) { View c0 = lv.getChildAt(0); searchPos = new int[] { lv.getFirstVisiblePosition(), c0 == null ? 0 : c0.getTop() }; st.putPos("srch", searchPos[0], searchPos[1]); st.save(); }
+        });
         d.show();
-        if (cache == null) load.run(); else fill.run();
+        if (cache == null) load.run();
+        else {
+            fill.run();
+            if (searchPos == null) searchPos = st.getPos("srch");
+            if (searchPos != null && searchPos.length >= 2) lv.post(new Runnable() { public void run() { lv.setSelectionFromTop(searchPos[0], searchPos[1]); } });
+        }
     }
 }
