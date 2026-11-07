@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	gesynchroniseerd, S/N %.0f d
 searching for a signal… (centre %d Hz)	zoekt een signaal… (midden %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	ontvangt op %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	zoekt een signaal… (%.0f Hz)
+Stored: 	Opgeslagen: 

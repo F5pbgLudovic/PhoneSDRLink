@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	sünkroonis, S/N %.0f dB, ni
 searching for a signal… (centre %d Hz)	otsin signaali… (keskpunkt %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	vastuvõtt sagedusel %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	otsin signaali… (%.0f Hz)
+Stored: 	Salvestatud: 

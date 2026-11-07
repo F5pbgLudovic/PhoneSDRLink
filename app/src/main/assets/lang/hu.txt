@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	szinkronban, S/N %.0f dB, el
 searching for a signal… (centre %d Hz)	jel keresése… (közép %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	vétel %.0f Hz-en (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	jel keresése… (%.0f Hz)
+Stored: 	Mentve: 

@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	synchron, S/N %.0f dB, Versa
 searching for a signal… (centre %d Hz)	Suche nach einem Signal… (Mitte %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	Empfang bei %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	Suche nach einem Signal… (%.0f Hz)
+Stored: 	Gespeichert: 

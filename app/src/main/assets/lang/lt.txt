@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	sinchronizuota, S/N %.0f dB,
 searching for a signal… (centre %d Hz)	ieškoma signalo… (centras %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	priimama %.0f Hz dažniu (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	ieškoma signalo… (%.0f Hz)
+Stored: 	Išsaugota: 

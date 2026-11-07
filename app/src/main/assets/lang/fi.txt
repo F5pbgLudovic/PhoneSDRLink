@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	synkronissa, S/N %.0f dB, po
 searching for a signal… (centre %d Hz)	etsitään signaalia… (keskitaajuus %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	vastaanotto taajuudella %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	etsitään signaalia… (%.0f Hz)
+Stored: 	Tallennettu: 

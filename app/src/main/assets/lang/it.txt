@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	sincronizzato, S/N %.0f dB, 
 searching for a signal… (centre %d Hz)	ricerca di un segnale… (centro %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	ricezione a %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	ricerca di un segnale… (%.0f Hz)
+Stored: 	Memorizzato: 

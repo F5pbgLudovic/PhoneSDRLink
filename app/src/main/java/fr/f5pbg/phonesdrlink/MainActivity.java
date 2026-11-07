@@ -124,6 +124,7 @@ public class MainActivity extends Activity {
         build();
         applyKeepScreen();
         applyHeadset();
+        histSchedule();
         if (getIntent() != null && getIntent().getStringExtra("radewav") != null) radeSelfTest(getIntent().getStringExtra("radewav"));
         if (getIntent() != null && getIntent().getStringExtra("radeeng") != null) radeEngineTest(getIntent().getStringExtra("radeeng"));
         if (getIntent() != null && getIntent().getStringExtra("radev2test") != null) radeV2Loop(getIntent().getStringExtra("radev2test"));
@@ -1128,6 +1129,20 @@ public class MainActivity extends Activity {
         }
         updateDisplays();
         saveSoon();
+    }
+
+    // Historique « Mem » du clavier de fréquence : enregistrement automatique toutes les histMin minutes (0 = aucun)
+    final Runnable histTick = new Runnable() {
+        public void run() {
+            st.addHist(freq, mode);
+            st.save();
+            if (st.histMin > 0) h.postDelayed(this, st.histMin * 60000L);
+        }
+    };
+
+    void histSchedule() {
+        h.removeCallbacks(histTick);
+        if (st.histMin > 0) h.postDelayed(histTick, st.histMin * 60000L);
     }
 
     final Runnable saver = new Runnable() { public void run() { st.freqHz = freq; st.mode = mode; st.save(); } };

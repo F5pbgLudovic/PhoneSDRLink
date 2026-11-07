@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	sincronizat, S/N %.0f dB, ab
 searching for a signal… (centre %d Hz)	se caută un semnal… (centru %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	recepție la %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	se caută un semnal… (%.0f Hz)
+Stored: 	Salvat: 

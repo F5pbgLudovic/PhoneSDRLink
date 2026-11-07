@@ -118,13 +118,17 @@ final class Ui {
         return b;
     }
 
-    static Spinner spinner(Context c, List<String> items) {
+    static Spinner spinner(Context c, List<String> items) { return spinner(c, items, ""); }
+
+    // suffix : texte ajouté aux lignes de la liste déroulante seulement (pas à la case fermée)
+    static Spinner spinner(Context c, List<String> items, final String suffix) {
         Spinner s = new Spinner(c);
         ArrayAdapter<String> a = new ArrayAdapter<String>(c, android.R.layout.simple_spinner_item, items) {
             public View getView(int p, View v, ViewGroup g) { TextView t = (TextView) super.getView(p, v, g); t.setTextColor(fg()); return t; }
             public View getDropDownView(int p, View v, ViewGroup g) {
                 TextView t = (TextView) super.getDropDownView(p, v, g);
                 t.setTextColor(fg());
+                if (suffix.length() > 0) t.setText(t.getText() + suffix);
                 t.setBackgroundColor(panel());
                 t.setPadding(dp(getContext(), 14), dp(getContext(), 12), dp(getContext(), 14), dp(getContext(), 12));
                 return t;

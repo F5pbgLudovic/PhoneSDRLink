@@ -719,3 +719,4 @@ in sync, S/N %.0f dB, offset %+.0f Hz, centre %d Hz	synchronizované, S/N %.0f d
 searching for a signal… (centre %d Hz)	hľadanie signálu… (stred %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	príjem na %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	hľadanie signálu… (%.0f Hz)
+Stored: 	Uložené: 

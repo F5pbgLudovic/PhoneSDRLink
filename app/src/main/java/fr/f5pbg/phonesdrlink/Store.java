@@ -272,6 +272,17 @@ final class Store {
     final ArrayList<Memory> memories = new ArrayList<Memory>(), recent = new ArrayList<Memory>();
     final String[] memListNames = new String[Memory.MAX_LISTS];
     int memListCount = 1, curMemList;
+    // Historique « Mem » du clavier de fréquence : 20 dernières fréquences/modes écoutés, la plus récente en tête
+    final ArrayList<Memory> hist = new ArrayList<Memory>();
+    int histMin = 0;   // minutes entre deux enregistrements automatiques (0 = aucun)
+    void addHist(long hz, String mode) {
+        if (hz <= 0) return;
+        if (mode == null) mode = "";
+        if (!hist.isEmpty() && hist.get(0).hz == hz && hist.get(0).mode.equals(mode)) return;
+        for (int i = hist.size() - 1; i >= 0; i--) if (hist.get(i).hz == hz && hist.get(i).mode.equals(mode)) hist.remove(i);
+        hist.add(0, new Memory("", hz, mode));
+        while (hist.size() > Memory.RECENT) hist.remove(hist.size() - 1);
+    }
     // Scan
     int scanType;
     long scanStart, scanEnd, scanStep = 1000;
@@ -381,6 +392,11 @@ final class Store {
                 else if (k.equals("DarkMode")) dark = v.trim().equals("1");
                 else if (k.equals("AutoNotch")) autoNotch = v.trim().equals("1");
                 else if (k.equals("AutoDnr")) autoDnr = v.trim().equals("1");
+                else if (k.equals("PhoneHistMin")) histMin = oneOf(toInt(v, 0), 0, 1, 2, 3, 5, 10, 15, 20, 30);
+                else if (k.equals("PhoneHist")) {
+                    hist.clear();
+                    for (String e : v.split(";")) { String[] q = e.split("\\|", -1); if (q.length == 2 && hist.size() < Memory.RECENT) { long hz = toLong(q[0], 0); if (hz > 0) hist.add(new Memory("", hz, q[1])); } }
+                }
                 else if (k.equals("PhoneNotchLevel")) notchLevel = Math.max(1, Math.min(10, toInt(v, 1)));
                 else if (k.equals("PhoneDnrLevel")) dnrLevel = Math.max(1, Math.min(10, toInt(v, 1)));
                 else if (k.equals("PhoneAutoReload")) autoReload = v.trim().equals("1");
@@ -658,6 +674,10 @@ final class Store {
         for (int i = 0; i < memListCount; i++) line(sb, "MemList" + (i + 1), memListNames[i]);
         for (Memory m : memories) line(sb, "Mem", m.toSetting());
         for (Memory m : recent) line(sb, "MemRecent", m.toSetting());
+        line(sb, "PhoneHistMin", histMin);
+        StringBuilder hb = new StringBuilder();
+        for (Memory m : hist) { if (hb.length() > 0) hb.append(';'); hb.append(m.hz).append('|').append(m.mode); }
+        line(sb, "PhoneHist", hb.toString());
         line(sb, "ScanType", scanType);
         line(sb, "ScanStart", scanStart);
         line(sb, "ScanEnd", scanEnd);
