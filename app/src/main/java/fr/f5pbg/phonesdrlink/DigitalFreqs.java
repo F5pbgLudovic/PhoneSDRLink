@@ -58,6 +58,17 @@ final class DigitalFreqs {
         { MainActivity.DEC_CONTESTIA, 3582.5, "USB", "a", "8/250" }, { MainActivity.DEC_CONTESTIA, 7042.5, "USB", "a", "8/250" }, { MainActivity.DEC_CONTESTIA, 14072.5, "USB", "a", "8/250" }, 
         // Hellschreiber : Feld Hell Club (réseaux hebdomadaires FM Hell 105), DARC (concours Hell), fréquences d'usage Feld Hell
         { MainActivity.DEC_HELL, 3585.0, "USB", "a", "FM Hell 105" }, { MainActivity.DEC_HELL, 3592.0, "USB", "a", "Feld Hell" }, { MainActivity.DEC_HELL, 7046.0, "USB", "a", "Feld Hell" }, { MainActivity.DEC_HELL, 7069.5, "USB", "a", "FM Hell 105" }, { MainActivity.DEC_HELL, 10142.5, "USB", "a", "FM Hell 105" }, { MainActivity.DEC_HELL, 10144.0, "USB", "a", "" }, { MainActivity.DEC_HELL, 14063.0, "USB", "a", "Feld Hell" }, { MainActivity.DEC_HELL, 14073.0, "USB", "a", "Feld Hell" }, { MainActivity.DEC_HELL, 18098.0, "USB", "a", "" }, 
+        // WEFAX (fax météo, 120 lignes/min, USB) : fréquence affichée = fréquence de la porteuse publiée − 1,9 kHz. Stations : DWD Pinneberg (DDH), Northwood UK (GYA),
+        // Boston (NMF), Kodiak (NOJ), Point Reyes (NMC), Tokyo (JMH). Fréquences d'usage publiées, susceptibles de changer.  Réception seule : toutes les régions voient toutes les stations.
+        { MainActivity.DEC_WEFAX, 2616.6, "USB", "a", "Northwood 2618.5" }, { MainActivity.DEC_WEFAX, 3853.1, "USB", "a", "DWD DDH3 3855" }, { MainActivity.DEC_WEFAX, 4233.1, "USB", "a", "Boston NMF 4235" },
+        { MainActivity.DEC_WEFAX, 4296.1, "USB", "a", "Kodiak NOJ 4298" }, { MainActivity.DEC_WEFAX, 4344.1, "USB", "a", "Pt Reyes NMC 4346" }, { MainActivity.DEC_WEFAX, 4608.1, "USB", "a", "Northwood 4610" },
+        { MainActivity.DEC_WEFAX, 6338.6, "USB", "a", "Boston NMF 6340.5" }, { MainActivity.DEC_WEFAX, 6832.1, "USB", "a", "Northwood 6834" }, { MainActivity.DEC_WEFAX, 7793.1, "USB", "a", "Tokyo JMH 7795" },
+        { MainActivity.DEC_WEFAX, 7878.1, "USB", "a", "DWD DDK3 7880" }, { MainActivity.DEC_WEFAX, 8038.1, "USB", "a", "Northwood 8040" }, { MainActivity.DEC_WEFAX, 8457.1, "USB", "a", "Kodiak NOJ 8459" },
+        { MainActivity.DEC_WEFAX, 8680.1, "USB", "a", "Pt Reyes NMC 8682" }, { MainActivity.DEC_WEFAX, 9108.1, "USB", "a", "Boston NMF 9110" }, { MainActivity.DEC_WEFAX, 11084.6, "USB", "a", "Northwood 11086.5" },
+        { MainActivity.DEC_WEFAX, 12388.1, "USB", "a", "Northwood 12390" }, { MainActivity.DEC_WEFAX, 12410.6, "USB", "a", "Kodiak NOJ 12412.5" }, { MainActivity.DEC_WEFAX, 12748.1, "USB", "a", "Boston NMF 12750" },
+        { MainActivity.DEC_WEFAX, 12784.1, "USB", "a", "Pt Reyes NMC 12786" }, { MainActivity.DEC_WEFAX, 13595.1, "USB", "a", "Tokyo JMH 13597" }, { MainActivity.DEC_WEFAX, 13880.6, "USB", "a", "DWD DDK9 13882.5" },
+        { MainActivity.DEC_WEFAX, 17149.3, "USB", "a", "Pt Reyes NMC 17151.2" }, { MainActivity.DEC_WEFAX, 18218.1, "USB", "a", "Tokyo JMH 18220" }, { MainActivity.DEC_WEFAX, 18259.1, "USB", "a", "Northwood 18261" },
+        { MainActivity.DEC_WEFAX, 22540.1, "USB", "a", "Northwood 22542" },
         // SSTV
         { MainActivity.DEC_SSTV, 3730.0, "LSB", "13", "" }, { MainActivity.DEC_SSTV, 3845.0, "LSB", "2", "" }, { MainActivity.DEC_SSTV, 7033.0, "LSB", "13", "" },
         { MainActivity.DEC_SSTV, 7171.0, "LSB", "2", "" }, { MainActivity.DEC_SSTV, 14230.0, "USB", "a", "" }, { MainActivity.DEC_SSTV, 21340.0, "USB", "a", "" },

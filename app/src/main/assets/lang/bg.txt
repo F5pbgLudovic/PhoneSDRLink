@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	търсене на сигнал… (ц
 receiving at %.0f Hz (S/N %.0f dB)	приемане на %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	търсене на сигнал… (%.0f Hz)
 Stored: 	Запазено: 
+Delete from the "Mem" list?	Изтриване от списъка "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Празен списък: "Store" или автоматичният запис го пълнят.
+Long press a line to delete it.	Дълго натискане върху ред: изтриване.
+Decoder button (SET)	Бутон Декодер (SET)
+Store in "Memories" ▸	Запис в "Memories" ▸
+Delete from the "Mem" list	Изтриване от списъка "Mem"
+Long press a line: store it in "Memories" or delete it.	Дълго натискане върху ред: запис в "Memories" или изтриване.
+waiting for a signal…	изчакване на сигнал…
+looking for the phasing…	търсене на фазирането…
+picture: %d lines (%d:%02d)	изображение: %d реда (%d:%02d)
+phasing: %d lines	фазиране: %d реда
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB режим, на станция за метеорологичен факс (честота на носещата − 1,9 kHz; списъкът "Digital modes" дава правилната стойност). Изберете редовете в минута (120 при повечето станции). Декодерът изчаква фазирането, сам фиксира началото на реда и коригира наклона; изображението се записва накрая (спиращ тон или загуба на сигнала). Ако се включите по средата на изображението: "Започни изображението сега". Само приемане.
+UTC time · picture events. The picture stays visible under the status line.	UTC време · събития на изображението. Изображението остава видимо под реда за състоянието.
+Lines per minute	Редове в минута
+Reverse (LSB reception, or negative fax)	Обръщане (приемане в LSB или негативен факс)
+Start the picture now	Започни изображението сега
+End the picture	Завърши изображението
+Tolerant phasing detection	Толерантно откриване на фазирането
+A little	Малко
+A lot	Много
+Trigger on the 300 Hz start tone	Старт по началния тон от 300 Hz
+Re-align a picture joined midway	Подравняване на изображение, хванато по средата
+Black frame	Черна рамка
+White margin	Бял край
+start tone heard: looking for the phasing…	чуто начален тон: търсене на фазирането…
+Settings…	Параметри…
+Settings	Параметри

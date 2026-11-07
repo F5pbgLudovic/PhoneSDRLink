@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	meklē signālu… (centrs %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	uztver uz %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	meklē signālu… (%.0f Hz)
 Stored: 	Saglabāts: 
+Delete from the "Mem" list?	Dzēst no saraksta "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Tukšs saraksts: to aizpilda "Store" vai automātiskā saglabāšana.
+Long press a line to delete it.	Ilga piespiešana uz rindas: dzēst.
+Decoder button (SET)	Dekodera poga (SET)
+Store in "Memories" ▸	Saglabāt "Memories" ▸
+Delete from the "Mem" list	Dzēst no saraksta "Mem"
+Long press a line: store it in "Memories" or delete it.	Ilga piespiešana uz rindas: saglabāt "Memories" vai dzēst.
+waiting for a signal…	gaida signālu…
+looking for the phasing…	meklē fāzēšanu…
+picture: %d lines (%d:%02d)	attēls: %d rindas (%d:%02d)
+phasing: %d lines	fāzēšana: %d rindas
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB režīms, uz laika apstākļu faksa stacijas (nesēja frekvence − 1,9 kHz; saraksts "Digital modes" dod pareizo vērtību). Izvēlieties rindas minūtē (120 lielākajai daļai staciju). Dekodētājs gaida fāzēšanu, pats nofiksē rindas sākumu un izlabo slīpumu; attēls tiek saglabāts beigās (beigu tonis vai signāla zudums). Ja pievienojaties attēla vidū: "Sākt attēlu tagad". Tikai uztveršana.
+UTC time · picture events. The picture stays visible under the status line.	UTC laiks · attēla notikumi. Attēls paliek redzams zem statusa rindas.
+Lines per minute	Rindas minūtē
+Reverse (LSB reception, or negative fax)	Apgriezt (uztveršana LSB vai negatīvs fakss)
+Start the picture now	Sākt attēlu tagad
+End the picture	Beigt attēlu
+Tolerant phasing detection	Tolerants fāzēšanas noteikšana
+A little	Nedaudz
+A lot	Daudz
+Trigger on the 300 Hz start tone	Starts pēc 300 Hz sākuma toņa
+Re-align a picture joined midway	Pārlīdzināt attēlu, kas sākts vidū
+Black frame	Melns rāmis
+White margin	Balta mala
+start tone heard: looking for the phasing…	dzirdēts sākuma tonis: meklē fāzēšanu…
+Settings…	Parametri…
+Settings	Parametri

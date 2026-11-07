@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	otsin signaali… (keskpunkt %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	vastuvõtt sagedusel %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	otsin signaali… (%.0f Hz)
 Stored: 	Salvestatud: 
+Delete from the "Mem" list?	Kas kustutada loendist "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Tühi loend: seda täidavad "Store" või automaatne salvestus.
+Long press a line to delete it.	Pikk vajutus reale: kustuta see.
+Decoder button (SET)	Dekooderi nupp (SET)
+Store in "Memories" ▸	Salvesta "Memories" ▸
+Delete from the "Mem" list	Kustuta loendist "Mem"
+Long press a line: store it in "Memories" or delete it.	Pikk vajutus reale: salvesta "Memories" või kustuta.
+waiting for a signal…	ootan signaali…
+looking for the phasing…	otsin faasimist…
+picture: %d lines (%d:%02d)	pilt: %d rida (%d:%02d)
+phasing: %d lines	faasimine: %d rida
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB-režiim, ilmafaksi jaamas (kandesagedus − 1,9 kHz; loend "Digital modes" annab õige väärtuse). Vali ridu minutis (enamikul jaamadel 120). Dekooder ootab faasimist, lukustab rea alguse ise ja parandab kalde; pilt salvestatakse lõpus (lõpuheli või signaali kadumine). Kui liitud pildi keskel: "Alusta pilti nüüd". Ainult vastuvõtt.
+UTC time · picture events. The picture stays visible under the status line.	UTC-aeg · pildi sündmused. Pilt jääb nähtavale olekurea all.
+Lines per minute	Ridu minutis
+Reverse (LSB reception, or negative fax)	Pööra ümber (LSB-vastuvõtt või negatiivne faks)
+Start the picture now	Alusta pilti nüüd
+End the picture	Lõpeta pilt
+Tolerant phasing detection	Leebe faasimise tuvastus
+A little	Veidi
+A lot	Palju
+Trigger on the 300 Hz start tone	Käivitus 300 Hz algusheli peale
+Re-align a picture joined midway	Joonda keskelt alanud pilt uuesti
+Black frame	Must raam
+White margin	Valge veeris
+start tone heard: looking for the phasing…	algusheli kuuldud: otsin faasimist…
+Settings…	Parameetrid…
+Settings	Parameetrid

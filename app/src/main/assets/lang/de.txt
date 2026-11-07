@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	Suche nach einem Signal… (Mitte %d Hz
 receiving at %.0f Hz (S/N %.0f dB)	Empfang bei %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	Suche nach einem Signal… (%.0f Hz)
 Stored: 	Gespeichert: 
+Delete from the "Mem" list?	Aus der Liste "Mem" löschen?
+Empty list: "Store" or the automatic storing fills it.	Leere Liste: "Store" oder das automatische Speichern füllt sie.
+Long press a line to delete it.	Zeile lange drücken: löschen.
+Decoder button (SET)	Schaltfläche Decoder (SET)
+Store in "Memories" ▸	In "Memories" speichern ▸
+Delete from the "Mem" list	Aus der Liste "Mem" löschen
+Long press a line: store it in "Memories" or delete it.	Zeile lange drücken: in "Memories" speichern oder löschen.
+waiting for a signal…	warte auf ein Signal…
+looking for the phasing…	suche die Phasierung…
+picture: %d lines (%d:%02d)	Bild: %d Zeilen (%d:%02d)
+phasing: %d lines	Phasierung: %d Zeilen
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB-Modus, auf einer Wetterfax-Station (Trägerfrequenz − 1,9 kHz; die Liste "Digital modes" liefert den richtigen Wert). Zeilen pro Minute wählen (120 bei den meisten Stationen). Der Decoder wartet auf die Phasierung, rastet dann den Zeilenanfang selbst ein und korrigiert die Schräglage; das Bild wird am Ende gespeichert (Stoppton oder Signalverlust). Beim Einstieg mitten im Bild: "Bild jetzt starten". Nur Empfang.
+UTC time · picture events. The picture stays visible under the status line.	UTC-Zeit · Bildereignisse. Das Bild bleibt unter der Statuszeile sichtbar.
+Lines per minute	Zeilen pro Minute
+Reverse (LSB reception, or negative fax)	Umkehren (LSB-Empfang oder negatives Fax)
+Start the picture now	Bild jetzt starten
+End the picture	Bild beenden
+Tolerant phasing detection	Tolerante Phasierungserkennung
+A little	Etwas
+A lot	Viel
+Trigger on the 300 Hz start tone	Start auf den 300-Hz-Starton
+Re-align a picture joined midway	Bild bei Einstieg mittendrin neu ausrichten
+Black frame	Schwarzer Rahmen
+White margin	Weißer Rand
+start tone heard: looking for the phasing…	Startton gehört: suche die Phasierung…
+Settings…	Einstellungen…
+Settings	Einstellungen

@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	traženje signala… (središte %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	prijam na %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	traženje signala… (%.0f Hz)
 Stored: 	Spremljeno: 
+Delete from the "Mem" list?	Izbrisati s popisa "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Prazan popis: puni ga "Store" ili automatsko spremanje.
+Long press a line to delete it.	Dugi pritisak na redak: briše ga.
+Decoder button (SET)	Gumb Dekoder (SET)
+Store in "Memories" ▸	Spremi u "Memories" ▸
+Delete from the "Mem" list	Izbriši s popisa "Mem"
+Long press a line: store it in "Memories" or delete it.	Dugi pritisak na redak: spremi u "Memories" ili izbriši.
+waiting for a signal…	čekanje signala…
+looking for the phasing…	traženje faziranja…
+picture: %d lines (%d:%02d)	slika: %d redaka (%d:%02d)
+phasing: %d lines	faziranje: %d redaka
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB način, na postaji vremenskog faksa (frekvencija nosača − 1,9 kHz; popis "Digital modes" daje ispravnu vrijednost). Odaberite broj redaka u minuti (120 na većini postaja). Dekoder čeka faziranje, sam hvata početak retka i ispravlja nagib; slika se na kraju sprema (završni ton ili gubitak signala). Ako stignete usred slike: "Pokreni sliku sada". Samo prijem.
+UTC time · picture events. The picture stays visible under the status line.	UTC vrijeme · događaji slike. Slika ostaje vidljiva ispod retka stanja.
+Lines per minute	Redaka u minuti
+Reverse (LSB reception, or negative fax)	Obrni (prijem u LSB ili negativni faks)
+Start the picture now	Pokreni sliku sada
+End the picture	Završi sliku
+Tolerant phasing detection	Tolerantno otkrivanje faziranja
+A little	Malo
+A lot	Puno
+Trigger on the 300 Hz start tone	Početak na uvodni ton od 300 Hz
+Re-align a picture joined midway	Ponovno poravnaj sliku uhvaćenu usred prijenosa
+Black frame	Crni okvir
+White margin	Bijela margina
+start tone heard: looking for the phasing…	čuo se uvodni ton: traženje faziranja…
+Settings…	Parametri…
+Settings	Parametri

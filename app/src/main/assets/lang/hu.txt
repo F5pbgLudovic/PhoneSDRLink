@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	jel keresése… (közép %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	vétel %.0f Hz-en (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	jel keresése… (%.0f Hz)
 Stored: 	Mentve: 
+Delete from the "Mem" list?	Törli a "Mem" listából?
+Empty list: "Store" or the automatic storing fills it.	Üres lista: a "Store" vagy az automatikus mentés tölti fel.
+Long press a line to delete it.	Sor hosszú megnyomása: törlés.
+Decoder button (SET)	Dekóder gomb (SET)
+Store in "Memories" ▸	Mentés a "Memories" közé ▸
+Delete from the "Mem" list	Törlés a "Mem" listából
+Long press a line: store it in "Memories" or delete it.	Sor hosszú megnyomása: mentés a "Memories" közé vagy törlés.
+waiting for a signal…	jelre várakozás…
+looking for the phasing…	a fázisjel keresése…
+picture: %d lines (%d:%02d)	kép: %d sor (%d:%02d)
+phasing: %d lines	fázisjel: %d sor
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB mód, időjárási fax állomáson (vivőfrekvencia − 1,9 kHz; a "Digital modes" lista a helyes értéket adja). Válassza ki a percenkénti sorok számát (a legtöbb állomásnál 120). A dekóder megvárja a fázisjelet, magától ráfogja a sor elejét és kijavítja a ferdeséget; a kép a végén mentődik (záróhang vagy a jel elvesztése). Ha a kép közepén csatlakozik: "Kép indítása most". Csak vétel.
+UTC time · picture events. The picture stays visible under the status line.	UTC idő · képesemények. A kép látható marad az állapotsor alatt.
+Lines per minute	Sor percenként
+Reverse (LSB reception, or negative fax)	Megfordítás (LSB vétel vagy negatív fax)
+Start the picture now	Kép indítása most
+End the picture	Kép befejezése
+Tolerant phasing detection	Toleráns fázisjel-észlelés
+A little	Kicsit
+A lot	Nagyon
+Trigger on the 300 Hz start tone	Indítás a 300 Hz-es kezdőhangra
+Re-align a picture joined midway	Menet közben elkapott kép újraigazítása
+Black frame	Fekete keret
+White margin	Fehér margó
+start tone heard: looking for the phasing…	kezdőhang hallható: a fázisjel keresése…
+Settings…	Paraméterek…
+Settings	Paraméterek

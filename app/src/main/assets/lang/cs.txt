@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	hledání signálu… (střed %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	příjem na %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	hledání signálu… (%.0f Hz)
 Stored: 	Uloženo: 
+Delete from the "Mem" list?	Smazat ze seznamu "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Prázdný seznam: plní ho "Store" nebo automatické ukládání.
+Long press a line to delete it.	Dlouhý stisk řádku: smazat.
+Decoder button (SET)	Tlačítko Dekodér (SET)
+Store in "Memories" ▸	Uložit do "Memories" ▸
+Delete from the "Mem" list	Smazat ze seznamu "Mem"
+Long press a line: store it in "Memories" or delete it.	Dlouhý stisk řádku: uložit do "Memories" nebo smazat.
+waiting for a signal…	čekání na signál…
+looking for the phasing…	hledání fázování…
+picture: %d lines (%d:%02d)	obrázek: %d řádků (%d:%02d)
+phasing: %d lines	fázování: %d řádků
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	Režim USB, na stanici meteorologického faxu (kmitočet nosné − 1,9 kHz; seznam "Digital modes" udává správnou hodnotu). Zvolte řádky za minutu (120 u většiny stanic). Dekodér čeká na fázování, sám zachytí začátek řádku a opraví sklon; obrázek se na konci uloží (ukončovací tón nebo ztráta signálu). Při příchodu uprostřed obrázku: "Spustit obrázek nyní". Pouze příjem.
+UTC time · picture events. The picture stays visible under the status line.	Čas UTC · události obrázku. Obrázek zůstává vidět pod stavovým řádkem.
+Lines per minute	Řádků za minutu
+Reverse (LSB reception, or negative fax)	Obrátit (příjem v LSB nebo negativní fax)
+Start the picture now	Spustit obrázek nyní
+End the picture	Ukončit obrázek
+Tolerant phasing detection	Tolerantní detekce fázování
+A little	Trochu
+A lot	Hodně
+Trigger on the 300 Hz start tone	Start na úvodní tón 300 Hz
+Re-align a picture joined midway	Znovu vyrovnat obrázek zachycený uprostřed
+Black frame	Černý rámeček
+White margin	Bílý okraj
+start tone heard: looking for the phasing…	slyšen úvodní tón: hledání fázování…
+Settings…	Parametry…
+Settings	Parametry

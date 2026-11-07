@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	ieškoma signalo… (centras %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	priimama %.0f Hz dažniu (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	ieškoma signalo… (%.0f Hz)
 Stored: 	Išsaugota: 
+Delete from the "Mem" list?	Ištrinti iš sąrašo "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Tuščias sąrašas: jį užpildo "Store" arba automatinis išsaugojimas.
+Long press a line to delete it.	Ilgas paspaudimas ant eilutės: ištrinti.
+Decoder button (SET)	Dekoderio mygtukas (SET)
+Store in "Memories" ▸	Išsaugoti "Memories" ▸
+Delete from the "Mem" list	Ištrinti iš sąrašo "Mem"
+Long press a line: store it in "Memories" or delete it.	Ilgas paspaudimas ant eilutės: išsaugoti "Memories" arba ištrinti.
+waiting for a signal…	laukiama signalo…
+looking for the phasing…	ieškoma fazavimo…
+picture: %d lines (%d:%02d)	vaizdas: %d eilučių (%d:%02d)
+phasing: %d lines	fazavimas: %d eilučių
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB režimas, orų fakso stotyje (nešlio dažnis − 1,9 kHz; sąrašas "Digital modes" nurodo teisingą reikšmę). Pasirinkite eilutes per minutę (120 daugumoje stočių). Dekoderis laukia fazavimo, pats užfiksuoja eilutės pradžią ir ištaiso posvyrį; vaizdas išsaugomas pabaigoje (sustabdymo tonas arba signalo praradimas). Prisijungus vaizdo viduryje: "Pradėti vaizdą dabar". Tik priėmimas.
+UTC time · picture events. The picture stays visible under the status line.	UTC laikas · vaizdo įvykiai. Vaizdas lieka matomas po būsenos eilute.
+Lines per minute	Eilučių per minutę
+Reverse (LSB reception, or negative fax)	Apversti (priėmimas LSB arba neigiamas faksas)
+Start the picture now	Pradėti vaizdą dabar
+End the picture	Baigti vaizdą
+Tolerant phasing detection	Tolerantiškas fazavimo aptikimas
+A little	Šiek tiek
+A lot	Daug
+Trigger on the 300 Hz start tone	Pradžia pagal 300 Hz pradžios toną
+Re-align a picture joined midway	Perlygiuoti vaizdą, pradėtą viduryje
+Black frame	Juodas rėmelis
+White margin	Baltas kraštas
+start tone heard: looking for the phasing…	išgirstas pradžios tonas: ieškoma fazavimo…
+Settings…	Parametrai…
+Settings	Parametrai

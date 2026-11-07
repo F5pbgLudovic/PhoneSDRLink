@@ -82,6 +82,7 @@ final class Memory {
     long hz;
     int list;
     boolean scan;
+    int dec;                        // historique « Mem » : décodeur actif (DEC_*, 0 = aucun)
 
     Memory(String name, long hz, String mode) {
         this.name = name == null ? "" : name.trim();
@@ -235,11 +236,15 @@ final class Store {
     // Hell : variante (0 Feld Hell … 6 Hell 80), fréquence automatique ou imposée, squelch (0 à 10), FSK inversé
     int hellVar = 0, hellFreq = 1000, hellSq = 5;
     boolean hellAuto = true, hellInv = false;
+    int faxLpm = 2;                   // WEFAX : lignes par minute (0 = 60, 1 = 90, 2 = 120, 3 = 240)
+    int faxTol = 0, faxAlign = 0;     // WEFAX : phasage tolérant (0 non, 1 un peu, 2 beaucoup), recalage d'une image lancée à la main (0 non, 1 cadre noir, 2 marge blanche)
+    boolean faxTone = false;          // WEFAX : la tonalité de départ arme la recherche du phasage
+    boolean faxInv = false;           // WEFAX : tonalités inversées (réception en LSB, ou fax négatif)
     int js8Speed = 1;                 // JS8 : vitesse (0 Lent, 1 Normal, 2 Rapide, 3 Turbo, 4 Ultra)
     int sstvSens = 5, sstvLoss = 4;   // SSTV : sensibilité aux signaux faibles et « perte data » (patience avant d'abandonner une image), 1 à 10
     String viewPos = "";              // positions des listes (liste choisie, défilement) : "cle=a,b,c|cle=a,b"
     int iaruRegion = 1;               // liste de mémoires « Modes numériques » : région IARU 1, 2 ou 3
-    int colBtnBg, colBtnTx, colFreqTx, colFreqBg, colBarFg, colBarBg, colBg, colFt8A, colFt8B, colDec;   // couleurs choisies (0 = couleur d'origine)
+    int colBtnBg, colBtnTx, colFreqTx, colFreqBg, colBarFg, colBarBg, colBg, colFt8A, colFt8B, colDec, colDecBtn;   // couleurs choisies (0 = couleur d'origine)
     int notchLevel = 1, dnrLevel = 1;   // 1 = réglage d'origine, 10 = le plus fort
     String callsign = "PhoneSDRLink";
     String lastUrl = "http://websdr.ewi.utwente.nl:8901/";
@@ -275,12 +280,12 @@ final class Store {
     // Historique « Mem » du clavier de fréquence : 20 dernières fréquences/modes écoutés, la plus récente en tête
     final ArrayList<Memory> hist = new ArrayList<Memory>();
     int histMin = 0;   // minutes entre deux enregistrements automatiques (0 = aucun)
-    void addHist(long hz, String mode) {
+    void addHist(long hz, String mode, int dec) {
         if (hz <= 0) return;
         if (mode == null) mode = "";
-        if (!hist.isEmpty() && hist.get(0).hz == hz && hist.get(0).mode.equals(mode)) return;
-        for (int i = hist.size() - 1; i >= 0; i--) if (hist.get(i).hz == hz && hist.get(i).mode.equals(mode)) hist.remove(i);
-        hist.add(0, new Memory("", hz, mode));
+        if (!hist.isEmpty() && hist.get(0).hz == hz && hist.get(0).mode.equals(mode) && hist.get(0).dec == dec) return;
+        for (int i = hist.size() - 1; i >= 0; i--) if (hist.get(i).hz == hz && hist.get(i).mode.equals(mode) && hist.get(i).dec == dec) hist.remove(i);
+        { Memory hm = new Memory("", hz, mode); hm.dec = dec; hist.add(0, hm); }
         while (hist.size() > Memory.RECENT) hist.remove(hist.size() - 1);
     }
     // Scan
@@ -339,7 +344,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        notchLevel = 1; dnrLevel = 1; autoReload = false; digAuto = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); oliDefaults(); hellDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450; ringSpeed = 100;
+        notchLevel = 1; dnrLevel = 1; autoReload = false; digAuto = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = colDecBtn = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); oliDefaults(); hellDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450; ringSpeed = 100;
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
@@ -395,7 +400,7 @@ final class Store {
                 else if (k.equals("PhoneHistMin")) histMin = oneOf(toInt(v, 0), 0, 1, 2, 3, 5, 10, 15, 20, 30);
                 else if (k.equals("PhoneHist")) {
                     hist.clear();
-                    for (String e : v.split(";")) { String[] q = e.split("\\|", -1); if (q.length == 2 && hist.size() < Memory.RECENT) { long hz = toLong(q[0], 0); if (hz > 0) hist.add(new Memory("", hz, q[1])); } }
+                    for (String e : v.split(";")) { String[] q = e.split("\\|", -1); if (q.length >= 2 && hist.size() < Memory.RECENT) { long hz = toLong(q[0], 0); if (hz > 0) { Memory hm = new Memory("", hz, q[1]); if (q.length >= 3) hm.dec = Math.max(0, Math.min(15, toInt(q[2], 0))); hist.add(hm); } } }
                 }
                 else if (k.equals("PhoneNotchLevel")) notchLevel = Math.max(1, Math.min(10, toInt(v, 1)));
                 else if (k.equals("PhoneDnrLevel")) dnrLevel = Math.max(1, Math.min(10, toInt(v, 1)));
@@ -410,6 +415,7 @@ final class Store {
                 else if (k.equals("PhoneColFt8A")) colFt8A = hexColor(v);
                 else if (k.equals("PhoneColFt8B")) colFt8B = hexColor(v);
                 else if (k.equals("PhoneColDec")) colDec = hexColor(v);
+                else if (k.equals("PhoneColDecBtn")) colDecBtn = hexColor(v);
                 else if (k.equals("PhoneDecOverlay")) decOverlay = !v.trim().equals("0");
                 else if (k.equals("PhoneCwAutoTone")) cwAutoTone = !v.trim().equals("0");
                 else if (k.equals("PhoneCwAutoSpeed")) cwAutoSpeed = !v.trim().equals("0");
@@ -458,6 +464,11 @@ final class Store {
                 else if (k.equals("PhoneHellFreq")) hellFreq = Math.max(300, Math.min(2900, toInt(v, 1000)));
                 else if (k.equals("PhoneHellSq")) hellSq = Math.max(0, Math.min(10, toInt(v, 5)));
                 else if (k.equals("PhoneHellInv")) hellInv = v.trim().equals("1");
+                else if (k.equals("PhoneFaxLpm")) faxLpm = Math.max(0, Math.min(3, toInt(v, 2)));
+                else if (k.equals("PhoneFaxInv")) faxInv = v.trim().equals("1");
+                else if (k.equals("PhoneFaxTol")) faxTol = Math.max(0, Math.min(2, toInt(v, 0)));
+                else if (k.equals("PhoneFaxAlign")) faxAlign = Math.max(0, Math.min(2, toInt(v, 0)));
+                else if (k.equals("PhoneFaxTone")) faxTone = v.trim().equals("1");
                 else if (k.equals("PhoneHeadsetStop")) headsetStop = v.trim().equals("1");
                 else if (k.equals("PhoneColBtnBg")) colBtnBg = hexColor(v);
                 else if (k.equals("PhoneColBtnTx")) colBtnTx = hexColor(v);
@@ -544,7 +555,7 @@ final class Store {
         Store t = new Store();
         t.favorites.clear();
         t.parse(text, cats & ~IMP_CONFIG | (cats & IMP_CONFIG));
-        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; zoomPos = t.zoomPos; bufMs = t.bufMs; iaruRegion = t.iaruRegion; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; colDec = t.colDec; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; sstvSens = t.sstvSens; sstvLoss = t.sstvLoss; js8Speed = t.js8Speed; oliTones = t.oliTones; oliBw = t.oliBw; conTones = t.conTones; conBw = t.conBw; oliAuto = t.oliAuto; oliFreq = t.oliFreq; oliMargin = t.oliMargin; oliInteg = t.oliInteg; oliThr = t.oliThr; oliRev = t.oliRev; hellVar = t.hellVar; hellAuto = t.hellAuto; hellFreq = t.hellFreq; hellSq = t.hellSq; hellInv = t.hellInv; decHi = t.decHi; ringMs = t.ringMs; ringSpeed = t.ringSpeed; callsign = t.callsign; checkUpdates = t.checkUpdates; }
+        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; barBottom = t.barBottom; zoomLeft = t.zoomLeft; zoomPos = t.zoomPos; bufMs = t.bufMs; iaruRegion = t.iaruRegion; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; colDec = t.colDec; colDecBtn = t.colDecBtn; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; sstvSens = t.sstvSens; sstvLoss = t.sstvLoss; js8Speed = t.js8Speed; oliTones = t.oliTones; oliBw = t.oliBw; conTones = t.conTones; conBw = t.conBw; oliAuto = t.oliAuto; oliFreq = t.oliFreq; oliMargin = t.oliMargin; oliInteg = t.oliInteg; oliThr = t.oliThr; oliRev = t.oliRev; hellVar = t.hellVar; hellAuto = t.hellAuto; hellFreq = t.hellFreq; hellSq = t.hellSq; hellInv = t.hellInv; faxLpm = t.faxLpm; faxInv = t.faxInv; faxTol = t.faxTol; faxAlign = t.faxAlign; faxTone = t.faxTone; decHi = t.decHi; ringMs = t.ringMs; ringSpeed = t.ringSpeed; callsign = t.callsign; checkUpdates = t.checkUpdates; }
         if ((cats & IMP_WEBSDR) != 0) {
             for (int i = 0; i < Favorite.MAX_LISTS; i++) if (!t.favListNames[i].equals("Liste " + (i + 1)) && favListNames[i].equals("Liste " + (i + 1))) favListNames[i] = t.favListNames[i];
             for (Favorite f : t.favorites) {
@@ -634,6 +645,11 @@ final class Store {
         line(sb, "PhoneHellFreq", hellFreq);
         line(sb, "PhoneHellSq", hellSq);
         line(sb, "PhoneHellInv", hellInv ? 1 : 0);
+        line(sb, "PhoneFaxLpm", faxLpm);
+        line(sb, "PhoneFaxInv", faxInv ? 1 : 0);
+        line(sb, "PhoneFaxTol", faxTol);
+        line(sb, "PhoneFaxAlign", faxAlign);
+        line(sb, "PhoneFaxTone", faxTone ? 1 : 0);
         line(sb, "PhoneRingMs", ringMs);
         line(sb, "PhoneRingSpeed", ringSpeed);
         try { line(sb, "PhoneDecHighlight", java.net.URLEncoder.encode(decHi, "UTF-8")); } catch (Exception e) { }
@@ -648,6 +664,7 @@ final class Store {
         line(sb, "PhoneColFt8A", String.format("%08X", colFt8A));
         line(sb, "PhoneColFt8B", String.format("%08X", colFt8B));
         line(sb, "PhoneColDec", String.format("%08X", colDec));
+        line(sb, "PhoneColDecBtn", String.format("%08X", colDecBtn));
         line(sb, "KeepScreen", keepScreen ? 1 : 0);
         line(sb, "SpecZoom", spectrumZoom ? 1 : 0);
         line(sb, "CheckUpdates", checkUpdates ? 1 : 0);
@@ -676,7 +693,7 @@ final class Store {
         for (Memory m : recent) line(sb, "MemRecent", m.toSetting());
         line(sb, "PhoneHistMin", histMin);
         StringBuilder hb = new StringBuilder();
-        for (Memory m : hist) { if (hb.length() > 0) hb.append(';'); hb.append(m.hz).append('|').append(m.mode); }
+        for (Memory m : hist) { if (hb.length() > 0) hb.append(';'); hb.append(m.hz).append('|').append(m.mode).append('|').append(m.dec); }
         line(sb, "PhoneHist", hb.toString());
         line(sb, "ScanType", scanType);
         line(sb, "ScanStart", scanStart);

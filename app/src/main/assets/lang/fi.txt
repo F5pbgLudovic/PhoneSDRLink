@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	etsitään signaalia… (keskitaajuus %
 receiving at %.0f Hz (S/N %.0f dB)	vastaanotto taajuudella %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	etsitään signaalia… (%.0f Hz)
 Stored: 	Tallennettu: 
+Delete from the "Mem" list?	Poistetaanko "Mem"-luettelosta?
+Empty list: "Store" or the automatic storing fills it.	Tyhjä luettelo: "Store" tai automaattinen tallennus täyttää sen.
+Long press a line to delete it.	Pitkä painallus riville: poista se.
+Decoder button (SET)	Dekooderin painike (SET)
+Store in "Memories" ▸	Tallenna kohtaan "Memories" ▸
+Delete from the "Mem" list	Poista "Mem"-luettelosta
+Long press a line: store it in "Memories" or delete it.	Pitkä painallus riville: tallenna kohtaan "Memories" tai poista.
+waiting for a signal…	odotetaan signaalia…
+looking for the phasing…	etsitään vaiheistusta…
+picture: %d lines (%d:%02d)	kuva: %d riviä (%d:%02d)
+phasing: %d lines	vaiheistus: %d riviä
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB-tila, säämaksiaseman (sääfaksi) lähetykseen (kantoaallon taajuus − 1,9 kHz; "Digital modes" -luettelo antaa oikean arvon). Valitse rivit minuutissa (120 useimmilla asemilla). Dekooderi odottaa vaiheistusta, lukitsee rivin alun itse ja korjaa vinouden; kuva tallennetaan lopuksi (lopetusääni tai signaalin katoaminen). Jos tulet mukaan kuvan keskellä: "Aloita kuva nyt". Vain vastaanotto.
+UTC time · picture events. The picture stays visible under the status line.	UTC-aika · kuvatapahtumat. Kuva pysyy näkyvissä tilarivin alla.
+Lines per minute	Riviä minuutissa
+Reverse (LSB reception, or negative fax)	Käännä (LSB-vastaanotto tai negatiivinen faksi)
+Start the picture now	Aloita kuva nyt
+End the picture	Lopeta kuva
+Tolerant phasing detection	Salliva vaiheistuksen tunnistus
+A little	Vähän
+A lot	Paljon
+Trigger on the 300 Hz start tone	Käynnistys 300 Hz:n aloitusäänestä
+Re-align a picture joined midway	Kohdista kesken alkanut kuva uudelleen
+Black frame	Musta kehys
+White margin	Valkoinen marginaali
+start tone heard: looking for the phasing…	aloitusääni kuultu: etsitään vaiheistusta…
+Settings…	Parametrit…
+Settings	Parametrit

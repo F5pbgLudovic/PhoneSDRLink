@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	ricerca di un segnale… (centro %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	ricezione a %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	ricerca di un segnale… (%.0f Hz)
 Stored: 	Memorizzato: 
+Delete from the "Mem" list?	Eliminare dalla lista "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Elenco vuoto: lo riempiono "Store" o la memorizzazione automatica.
+Long press a line to delete it.	Pressione lunga su una riga: eliminarla.
+Decoder button (SET)	Pulsante Decodificatore (SET)
+Store in "Memories" ▸	Memorizza in "Memories" ▸
+Delete from the "Mem" list	Elimina dalla lista "Mem"
+Long press a line: store it in "Memories" or delete it.	Pressione lunga su una riga: memorizzarla in "Memories" o eliminarla.
+waiting for a signal…	in attesa di un segnale…
+looking for the phasing…	ricerca della fasatura…
+picture: %d lines (%d:%02d)	immagine: %d righe (%d:%02d)
+phasing: %d lines	fasatura: %d righe
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	Modo USB, su una stazione di fax meteo (frequenza della portante − 1,9 kHz; l'elenco "Digital modes" dà il valore giusto). Scegliere le righe al minuto (120 per la maggior parte delle stazioni). Il decodificatore attende la fasatura, aggancia da solo l'inizio riga e corregge l'inclinazione; l'immagine viene salvata alla fine (tono di arresto o segnale perso). Se si arriva a metà immagine: "Avvia l'immagine ora". Solo ricezione.
+UTC time · picture events. The picture stays visible under the status line.	Ora UTC · eventi dell'immagine. L'immagine resta visibile sotto la riga di stato.
+Lines per minute	Righe al minuto
+Reverse (LSB reception, or negative fax)	Inverti (ricezione in LSB o fax negativo)
+Start the picture now	Avvia l'immagine ora
+End the picture	Termina l'immagine
+Tolerant phasing detection	Rilevamento tollerante della fasatura
+A little	Poco
+A lot	Molto
+Trigger on the 300 Hz start tone	Avvio sul tono di inizio a 300 Hz
+Re-align a picture joined midway	Riallinea un'immagine presa a metà
+Black frame	Cornice nera
+White margin	Margine bianco
+start tone heard: looking for the phasing…	tono di inizio sentito: ricerca della fasatura…
+Settings…	Parametri…
+Settings	Parametri

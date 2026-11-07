@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	buscando una señal… (centro %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	recibiendo en %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	buscando una señal… (%.0f Hz)
 Stored: 	Guardado: 
+Delete from the "Mem" list?	¿Eliminar de la lista "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Lista vacía: "Store" o el guardado automático la rellenan.
+Long press a line to delete it.	Pulsación larga en una línea: eliminarla.
+Decoder button (SET)	Botón Decodificador (SET)
+Store in "Memories" ▸	Guardar en "Memories" ▸
+Delete from the "Mem" list	Eliminar de la lista "Mem"
+Long press a line: store it in "Memories" or delete it.	Pulsación larga en una línea: guardarla en "Memories" o eliminarla.
+waiting for a signal…	esperando una señal…
+looking for the phasing…	buscando la fasificación…
+picture: %d lines (%d:%02d)	imagen: %d líneas (%d:%02d)
+phasing: %d lines	fasificación: %d líneas
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	Modo USB, en una estación de fax meteorológico (frecuencia de la portadora − 1,9 kHz; la lista "Digital modes" da el valor correcto). Elija las líneas por minuto (120 en la mayoría de las estaciones). El decodificador espera la fasificación, fija solo el inicio de línea y corrige la inclinación; la imagen se guarda al final (tono de parada o pérdida de señal). Si llega a mitad de imagen: "Iniciar la imagen ahora". Solo recepción.
+UTC time · picture events. The picture stays visible under the status line.	Hora UTC · eventos de la imagen. La imagen sigue visible bajo la línea de estado.
+Lines per minute	Líneas por minuto
+Reverse (LSB reception, or negative fax)	Invertir (recepción en LSB o fax negativo)
+Start the picture now	Iniciar la imagen ahora
+End the picture	Terminar la imagen
+Tolerant phasing detection	Detección tolerante de la fasificación
+A little	Un poco
+A lot	Mucho
+Trigger on the 300 Hz start tone	Arrancar con el tono de inicio de 300 Hz
+Re-align a picture joined midway	Realinear una imagen tomada a mitad
+Black frame	Marco negro
+White margin	Margen blanco
+start tone heard: looking for the phasing…	tono de inicio oído: buscando la fasificación…
+Settings…	Parámetros…
+Settings	Parámetros

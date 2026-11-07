@@ -19,27 +19,20 @@ import java.util.Locale;
 // Les derniers messages restent aussi visibles en bas de l'écran principal (case à cocher ci-dessous). En CW, un panneau de
 // réglages (tonalité, filtre, vitesse, seuils…) s'affiche sous le texte décodé.
 final class DlgDecoder {
-    static ScrollView cwBox, rttyBox, pskBox, sstvBox, js8Box, oliBox, conBox, hellBox;
+    static Button setBtn;           // bouton « Paramètres… » (absent pour les modes sans réglages)
     static LinearLayout hiBox;      // champ « Surbrillance » (tous les modes qui font défiler du texte)
     static View sstvImgBox;
 
     // Panneaux de réglages et image selon le décodeur choisi.
     static void showPanels(int mode) {
-        if (cwBox != null) cwBox.setVisibility(mode == MainActivity.DEC_CW ? View.VISIBLE : View.GONE);
-        if (rttyBox != null) rttyBox.setVisibility(mode == MainActivity.DEC_RTTY ? View.VISIBLE : View.GONE);
-        if (pskBox != null) pskBox.setVisibility(mode == MainActivity.DEC_PSK ? View.VISIBLE : View.GONE);
-        if (sstvBox != null) sstvBox.setVisibility(mode == MainActivity.DEC_SSTV ? View.VISIBLE : View.GONE);
+        if (setBtn != null) setBtn.setVisibility(hasPanel(mode) ? View.VISIBLE : View.GONE);
         if (hiBox != null) hiBox.setVisibility(MainActivity.isImageDec(mode) || mode == MainActivity.DEC_RADE || mode == MainActivity.DEC_RADE2 ? View.GONE : View.VISIBLE);
-        if (oliBox != null) oliBox.setVisibility(mode == MainActivity.DEC_OLIVIA ? View.VISIBLE : View.GONE);
-        if (conBox != null) conBox.setVisibility(mode == MainActivity.DEC_CONTESTIA ? View.VISIBLE : View.GONE);
-        if (hellBox != null) hellBox.setVisibility(mode == MainActivity.DEC_HELL ? View.VISIBLE : View.GONE);
-        if (js8Box != null) js8Box.setVisibility(mode == MainActivity.DEC_JS8 ? View.VISIBLE : View.GONE);
         if (sstvImgBox != null) {
             sstvImgBox.setVisibility(MainActivity.isImageDec(mode) ? View.VISIBLE : View.GONE);
             ViewGroup.LayoutParams lp = sstvImgBox.getLayoutParams();
             boolean hell = mode == MainActivity.DEC_HELL;
             if (lp != null && sstvImgBox instanceof ImageView) {   // Hell : image large et basse, qui prend seulement sa hauteur ; SSTV : cadre à 34 % de l'écran
-                int hh = hell ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) (sstvImgBox.getResources().getDisplayMetrics().heightPixels * 0.34f);
+                int hh = hell ? ViewGroup.LayoutParams.WRAP_CONTENT : (int) (sstvImgBox.getResources().getDisplayMetrics().heightPixels * (mode == MainActivity.DEC_WEFAX ? 0.42f : 0.34f));
                 ((ImageView) sstvImgBox).setAdjustViewBounds(hell);
                 if (lp.height != hh) { lp.height = hh; sstvImgBox.setLayoutParams(lp); }
             }
@@ -48,7 +41,7 @@ final class DlgDecoder {
 
     // Ordre des modes dans la liste déroulante.
     static final int[] MODES = { MainActivity.DEC_FT8, MainActivity.DEC_FT4, MainActivity.DEC_FT2, MainActivity.DEC_WSPR, MainActivity.DEC_JT9, MainActivity.DEC_JS8, MainActivity.DEC_CW,
-        MainActivity.DEC_RTTY, MainActivity.DEC_PSK, MainActivity.DEC_OLIVIA, MainActivity.DEC_CONTESTIA, MainActivity.DEC_HELL, MainActivity.DEC_SSTV, MainActivity.DEC_RADE, MainActivity.DEC_RADE2 };
+        MainActivity.DEC_RTTY, MainActivity.DEC_PSK, MainActivity.DEC_OLIVIA, MainActivity.DEC_CONTESTIA, MainActivity.DEC_HELL, MainActivity.DEC_SSTV, MainActivity.DEC_WEFAX, MainActivity.DEC_RADE, MainActivity.DEC_RADE2 };
     static int lastSel = MainActivity.DEC_FT8;     // dernier mode choisi dans la liste (gardé tant que l'application tourne)
     static Runnable onState;                       // appelé quand le décodeur démarre ou s'arrête : remet à jour les boutons
 
@@ -100,6 +93,10 @@ final class DlgDecoder {
                 head = Lang.T("Mode USB, sur un signal Hellschreiber (Feld Hell : 14.063, 7.046, 3.592 MHz… ; FM Hell 105 : 3.585, 7.0695, 10.1425 MHz…). Choisissez la variante de l'émetteur dans la liste sous l'image : Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 ou Hell 80. Le texte n'est pas décodé en lettres : il s'écrit comme une image que l'on lit à l'œil, comme sur la machine d'origine (lignes de 14 points qui défilent). La fréquence est trouvée toute seule dans le spectre ; les rangs de points se calent d'eux-mêmes. Réception seule.", "USB mode, on a Hellschreiber signal (Feld Hell: 14.063, 7.046, 3.592 MHz…; FM Hell 105: 3.585, 7.0695, 10.1425 MHz…). Choose the transmitter's variant in the list under the picture: Feld Hell, Slow Hell, Hell X5, Hell X9, FM Hell 105, FM Hell 245 or Hell 80. The text is not decoded into letters: it is written as a picture that you read by eye, like on the original machine (14-dot lines scrolling up). The frequency is found automatically in the spectrum; the dot rows line up by themselves. Receive only.");
                 cols = Lang.T("Image : les lettres s'écrivent de gauche à droite et la ligne passe à la suivante en bout de ligne. Si le texte semble penché, la vitesse d'horloge des deux stations diffère un peu : le suivi se rattrape tout seul.", "Picture: the letters are written from left to right and the line wraps at its end. If the text looks slanted, the two stations' clocks differ slightly: tracking catches up by itself.");
                 break;
+            case MainActivity.DEC_WEFAX:
+                head = Lang.T("Mode USB, sur une station de fax météo (fréquence de la porteuse − 1,9 kHz : la liste « Modes numériques » donne la bonne valeur). Choisissez le nombre de lignes par minute (120 pour la plupart des stations). Le décodeur attend le phasage, cale alors tout seul le début de ligne et corrige l'inclinaison ; l'image est enregistrée à la fin (tonalité d'arrêt ou signal perdu). Arrivé en cours d'image : « Démarrer l'image maintenant ». Réception seule.", "USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the \"Digital modes\" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: \"Start the picture now\". Receive only.");
+                cols = Lang.T("Heure UTC · événements de l'image. L'image reste visible sous la ligne d'état.", "UTC time · picture events. The picture stays visible under the status line.");
+                break;
             case MainActivity.DEC_SSTV:
                 head = Lang.T("Mode USB (au moins 2,4 kHz de bande), sur une fréquence SSTV (14.230, 7.033, 3.730 MHz…) ; le mode de l'image est reconnu tout seul, l'image se construit ligne par ligne, puis elle est enregistrée à la fin.", "USB mode (at least 2.4 kHz bandwidth), on an SSTV frequency (14.230, 7.033, 3.730 MHz…); the picture mode is recognised automatically, the picture builds up line by line and is saved when it ends.");
                 cols = Lang.T("Heure UTC · mode de l'image.", "UTC time · picture mode.");
@@ -147,9 +144,18 @@ final class DlgDecoder {
         final Button stop = Ui.button(a, "STOP", null);
         r1.addView(sp, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.7f, a, 2));
         r1.addView(go, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.1f, a, 2));
-        r1.addView(stop, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.7f, a, 2));
+        // Muet (même effet que le bouton Muet de l'écran principal) au-dessus de STOP
+        final Button mute = Ui.button(a, "", null);
+        LinearLayout rc = new LinearLayout(a);
+        rc.setOrientation(LinearLayout.VERTICAL);
+        rc.addView(mute, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        rc.addView(stop, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        r1.addView(rc, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.9f, a, 2));
         final Runnable refresh = new Runnable() {
             public void run() {
+                boolean mm = a.muted || a.callMute || a.focusMute;
+                mute.setText(mm ? Lang.T("🔇 Muet", "🔇 Muted") : Lang.T("Muet", "Mute"));
+                Ui.paint(mute, a.muted, Ui.danger());
                 go.setText(MainActivity.decName(sel[0]));
                 Ui.paint(go, a.decMode == sel[0], Ui.on());
                 boolean running = a.decMode != 0;
@@ -159,6 +165,9 @@ final class DlgDecoder {
             }
         };
         onState = refresh;
+        mute.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { a.muted = !a.muted; a.applyVolume(); a.updateButtons(); refresh.run(); }
+        });
         go.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (a.decMode == sel[0]) return;   // déjà en marche
@@ -199,6 +208,10 @@ final class DlgDecoder {
                 di.show();
             }
         }), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.6f, a, 2));
+        setBtn = Ui.button(a, Lang.T("Paramètres…", "Settings…"), new View.OnClickListener() {
+            public void onClick(View v) { settings(a, sel[0]); }
+        });
+        r2.addView(setBtn, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.1f, a, 2));
         r2.addView(Ui.button(a, Lang.T("Réglages (SET)…", "Settings (SET)…"), new View.OnClickListener() {
             public void onClick(View v) { if (dd[0] != null) dd[0].dismiss(); DlgSettings.show(a); }
         }), Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.4f, a, 2));
@@ -267,39 +280,6 @@ final class DlgDecoder {
         LinearLayout.LayoutParams flp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f);
         flp.setMargins(0, Ui.dp(a, 4), 0, Ui.dp(a, 4));
         col.addView(frame, flp);
-        // Réglages sous le texte reçu : hauteur adaptée au contenu
-        LinearLayout cw = Ui.column(a);
-        cwPanel(a, cw);
-        cwBox = capped(a, cw);
-        col.addView(cwBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearLayout rt = Ui.column(a);
-        rttyPanel(a, rt);
-        rttyBox = capped(a, rt);
-        col.addView(rttyBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearLayout ps = Ui.column(a);
-        pskPanel(a, ps);
-        pskBox = capped(a, ps);
-        col.addView(pskBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearLayout ss = Ui.column(a);
-        sstvPanel(a, ss);
-        sstvBox = capped(a, ss);
-        col.addView(sstvBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearLayout js = Ui.column(a);
-        js8Panel(a, js);
-        js8Box = capped(a, js);
-        col.addView(js8Box, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearLayout ol = Ui.column(a);
-        oliPanel(a, ol, false);
-        oliBox = capped(a, ol);
-        col.addView(oliBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearLayout cn = Ui.column(a);
-        oliPanel(a, cn, true);
-        conBox = capped(a, cn);
-        col.addView(conBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearLayout hl = Ui.column(a);
-        hellPanel(a, hl);
-        hellBox = capped(a, hl);
-        col.addView(hellBox, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         showPanels(sel[0]);
         refresh.run();
         final Dialog d = Ui.window(a, Lang.T("Décodeur", "Decoder"), col, true);
@@ -310,9 +290,37 @@ final class DlgDecoder {
         state.setText(a.decStatus);
         a.decRefresh();
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() {
-            public void onDismiss(android.content.DialogInterface x) { a.decView = null; a.decScroll = null; a.decState = null; a.sstvDlgImg = null; cwBox = null; rttyBox = null; pskBox = null; sstvBox = null; js8Box = null; oliBox = null; conBox = null; hellBox = null; hiBox = null; sstvImgBox = null; onState = null; }
+            public void onDismiss(android.content.DialogInterface x) { a.decView = null; a.decScroll = null; a.decState = null; a.sstvDlgImg = null; setBtn = null; hiBox = null; sstvImgBox = null; onState = null; }
         });
         d.show();
+    }
+
+    static boolean hasPanel(int m) {
+        return m == MainActivity.DEC_CW || m == MainActivity.DEC_RTTY || m == MainActivity.DEC_PSK || m == MainActivity.DEC_SSTV || m == MainActivity.DEC_JS8
+            || m == MainActivity.DEC_OLIVIA || m == MainActivity.DEC_CONTESTIA || m == MainActivity.DEC_HELL || m == MainActivity.DEC_WEFAX;
+    }
+
+    // Fenêtre « Paramètres » du mode choisi : tous ses réglages, avec ascenseur ; OK referme et revient à la fenêtre Décodeur.
+    static void settings(final MainActivity a, int mode) {
+        LinearLayout pc = Ui.column(a);
+        switch (mode) {
+            case MainActivity.DEC_CW: cwPanel(a, pc); break;
+            case MainActivity.DEC_RTTY: rttyPanel(a, pc); break;
+            case MainActivity.DEC_PSK: pskPanel(a, pc); break;
+            case MainActivity.DEC_SSTV: sstvPanel(a, pc); break;
+            case MainActivity.DEC_JS8: js8Panel(a, pc); break;
+            case MainActivity.DEC_OLIVIA: oliPanel(a, pc, false); break;
+            case MainActivity.DEC_CONTESTIA: oliPanel(a, pc, true); break;
+            case MainActivity.DEC_HELL: hellPanel(a, pc); break;
+            case MainActivity.DEC_WEFAX: faxPanel(a, pc); break;
+            default: return;
+        }
+        LinearLayout c = Ui.column(a);
+        c.addView(Ui.scroll(a, pc), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+        final Dialog[] dd = new Dialog[1];
+        c.addView(Ui.button(a, "OK", new View.OnClickListener() { public void onClick(View v) { if (dd[0] != null) dd[0].dismiss(); } }));
+        dd[0] = Ui.window(a, MainActivity.decName(mode) + " — " + Lang.T("Paramètres", "Settings"), c, true);
+        dd[0].show();
     }
 
     interface Fmt { String text(int v); }
@@ -572,6 +580,55 @@ final class DlgDecoder {
         line.addView(Ui.small(a, Lang.T("Vitesse", "Speed")), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
         line.addView(numSpinner(a, names, st.js8Speed, new Pick() { public void chose(int i) { st.js8Speed = i; st.save(); a.applyJs8Settings(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
         box.addView(line);
+    }
+
+    static void faxPanel(final MainActivity a, final LinearLayout box) {
+        final Store st = a.st;
+        LinearLayout line = Ui.row(a);
+        line.addView(Ui.small(a, Lang.T("Lignes par minute", "Lines per minute")), Ui.lp(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        line.addView(numSpinner(a, new String[] { "60", "90", "120", "240" }, st.faxLpm, new Pick() { public void chose(int i) { st.faxLpm = i; st.save(); a.applyFaxSettings(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        box.addView(line);
+        final CheckBox inv = Ui.check(a, Lang.T("Inverser (réception en LSB, ou fax négatif)", "Reverse (LSB reception, or negative fax)"), st.faxInv);
+        inv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.faxInv = on; st.save(); a.applyFaxSettings(); }
+        });
+        box.addView(inv);
+        // Améliorations : case à cocher + liste à droite si le réglage a des niveaux
+        final CheckBox tolC = Ui.check(a, Lang.T("Détection tolérante du phasage", "Tolerant phasing detection"), st.faxTol > 0);
+        final android.widget.Spinner tolS = numSpinner(a, new String[] { Lang.T("Un peu", "A little"), Lang.T("Beaucoup", "A lot") }, Math.max(0, st.faxTol - 1), new Pick() { public void chose(int i) { if (st.faxTol > 0) { st.faxTol = i + 1; st.save(); a.applyFaxSettings(); } } });
+        tolC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.faxTol = on ? tolS.getSelectedItemPosition() + 1 : 0; st.save(); a.applyFaxSettings(); }
+        });
+        LinearLayout tr = Ui.row(a);
+        tr.addView(tolC, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.15f, a, 2));
+        tr.addView(tolS, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.45f, a, 2));
+        box.addView(tr);
+        final CheckBox toneC = Ui.check(a, Lang.T("Départ sur la tonalité de 300 Hz", "Trigger on the 300 Hz start tone"), st.faxTone);
+        toneC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.faxTone = on; st.save(); a.applyFaxSettings(); }
+        });
+        box.addView(toneC);
+        final CheckBox alC = Ui.check(a, Lang.T("Recaler un début d'image en cours", "Re-align a picture joined midway"), st.faxAlign > 0);
+        final android.widget.Spinner alS = numSpinner(a, new String[] { Lang.T("Cadre noir", "Black frame"), Lang.T("Marge blanche", "White margin") }, st.faxAlign == 2 ? 1 : 0, new Pick() { public void chose(int i) { if (st.faxAlign > 0) { st.faxAlign = i + 1; st.save(); a.applyFaxSettings(); } } });
+        alC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.faxAlign = on ? alS.getSelectedItemPosition() + 1 : 0; st.save(); a.applyFaxSettings(); }
+        });
+        LinearLayout ar = Ui.row(a);
+        ar.addView(alC, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.15f, a, 2));
+        ar.addView(alS, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.45f, a, 2));
+        box.addView(ar);
+        LinearLayout l2 = Ui.row(a);
+        l2.addView(Ui.button(a, Lang.T("Démarrer l'image maintenant", "Start the picture now"), new View.OnClickListener() { public void onClick(View v) { a.faxCmd(1); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        l2.addView(Ui.button(a, Lang.T("Terminer l'image", "End the picture"), new View.OnClickListener() { public void onClick(View v) { a.faxCmd(2); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        box.addView(l2);
+        final CheckBox save = Ui.check(a, Lang.T("Enregistrer automatiquement les images (Images › PhoneSDRLink)", "Save the pictures automatically (Pictures › PhoneSDRLink)"), st.sstvSave);
+        save.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.sstvSave = on; st.save(); }
+        });
+        box.addView(save);
+        box.addView(Ui.button(a, Lang.T("Ouvrir le dossier des images enregistrées", "Open the folder of saved pictures"), new View.OnClickListener() {
+            public void onClick(View v) { a.openSstvFolder(); }
+        }));
     }
 
     static void sstvPanel(final MainActivity a, final LinearLayout box) {

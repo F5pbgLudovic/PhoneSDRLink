@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	se caută un semnal… (centru %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	recepție la %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	se caută un semnal… (%.0f Hz)
 Stored: 	Salvat: 
+Delete from the "Mem" list?	Ștergi din lista "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Listă goală: o umplu "Store" sau salvarea automată.
+Long press a line to delete it.	Apăsare lungă pe un rând: îl șterge.
+Decoder button (SET)	Butonul Decodor (SET)
+Store in "Memories" ▸	Salvează în "Memories" ▸
+Delete from the "Mem" list	Șterge din lista "Mem"
+Long press a line: store it in "Memories" or delete it.	Apăsare lungă pe un rând: salvează în "Memories" sau șterge.
+waiting for a signal…	se așteaptă un semnal…
+looking for the phasing…	se caută faza de sincronizare…
+picture: %d lines (%d:%02d)	imagine: %d linii (%d:%02d)
+phasing: %d lines	fazare: %d linii
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	Mod USB, pe o stație de fax meteo (frecvența purtătoarei − 1,9 kHz; lista "Digital modes" dă valoarea corectă). Alegeți liniile pe minut (120 la majoritatea stațiilor). Decodorul așteaptă fazarea, fixează singur începutul liniei și corectează înclinarea; imaginea este salvată la final (ton de oprire sau semnal pierdut). Dacă ajungeți în mijlocul imaginii: "Pornește imaginea acum". Doar recepție.
+UTC time · picture events. The picture stays visible under the status line.	Ora UTC · evenimentele imaginii. Imaginea rămâne vizibilă sub linia de stare.
+Lines per minute	Linii pe minut
+Reverse (LSB reception, or negative fax)	Inversare (recepție în LSB sau fax negativ)
+Start the picture now	Pornește imaginea acum
+End the picture	Încheie imaginea
+Tolerant phasing detection	Detectare tolerantă a fazării
+A little	Puțin
+A lot	Mult
+Trigger on the 300 Hz start tone	Pornire pe tonul de început de 300 Hz
+Re-align a picture joined midway	Realiniază o imagine prinsă pe parcurs
+Black frame	Cadru negru
+White margin	Margine albă
+start tone heard: looking for the phasing…	ton de început auzit: se caută fazarea…
+Settings…	Parametri…
+Settings	Parametri

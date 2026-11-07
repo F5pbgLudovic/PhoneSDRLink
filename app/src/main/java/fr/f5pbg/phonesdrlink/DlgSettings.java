@@ -34,9 +34,12 @@ final class DlgSettings {
         ver.setBackground(Ui.round(0xFF1B2128, 10, a));
         ver.setPadding(Ui.dp(a, 12), Ui.dp(a, 8), Ui.dp(a, 12), Ui.dp(a, 8));
         col.addView(ver, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 0));
-        add(col, a, Lang.T("Décodeur FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV…", "FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…"), new View.OnClickListener() {
+        Button decB = add(col, a, Lang.T("Décodeur FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV…", "FT8 / FT4 / WSPR / JT9 / CW / RTTY / PSK31 / SSTV / FreeDV decoder…"), new View.OnClickListener() {
             public void onClick(View v) { d.dismiss(); DlgDecoder.show(a); }
         });
+        decB.setBackground(Ui.roundOutline(Ui.decBtn(), 10, a));
+        decB.setTextColor(Ui.onColor(Ui.decBtn()));
+        decB.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         col.addView(toggle(a, "FreeDV auto", st.freedvAuto, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.freedvAuto = on; st.save(); a.applyFreedvAuto(); }
         }));
@@ -145,11 +148,12 @@ final class DlgSettings {
             case 7: return c == Ui.ft8B() || c == Ui.panel();
             case 8: return c == Ui.ft8A() || c == Ui.panel();
             case 9: return c == Ui.freqBg();
+            case 10: return false;
             default: return c == Ui.btn();
         }
     }
     static void setColor(Store st, int id, int c) {
-        switch (id) { case 0: st.colBtnBg = c; break; case 1: st.colBtnTx = c; break; case 2: st.colFreqTx = c; break; case 3: st.colFreqBg = c; break; case 4: st.colBarFg = c; break; case 5: st.colBarBg = c; break; case 7: st.colFt8A = c; break; case 8: st.colFt8B = c; break; case 9: st.colDec = c; break; default: st.colBg = c; }
+        switch (id) { case 0: st.colBtnBg = c; break; case 1: st.colBtnTx = c; break; case 2: st.colFreqTx = c; break; case 3: st.colFreqBg = c; break; case 4: st.colBarFg = c; break; case 5: st.colBarBg = c; break; case 7: st.colFt8A = c; break; case 8: st.colFt8B = c; break; case 9: st.colDec = c; break; case 10: st.colDecBtn = c; break; default: st.colBg = c; }
     }
 
     // Bouton « Mémoire tampon réception » : mémoire tampon audio supplémentaire demandée au WebSDR (essai).
@@ -237,9 +241,15 @@ final class DlgSettings {
         bd.setTextColor(Ui.decCol());
         bd.setBackground(Ui.round(Ui.freqBg(), 10, a));
         col.addView(bd, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        Button bb = Ui.button(a, Lang.T("Bouton Décodeur (SET)", "Decoder button (SET)"), new View.OnClickListener() {
+            public void onClick(View v) { pick(a, d, 10); }
+        });
+        bb.setTextColor(Ui.onColor(Ui.decBtn()));
+        bb.setBackground(Ui.roundOutline(Ui.decBtn(), 10, a));
+        col.addView(bb, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
         col.addView(Ui.button(a, Lang.T("Couleurs par défaut", "Default colours"), new View.OnClickListener() {
             public void onClick(View v) {
-                st.colBtnBg = st.colBtnTx = st.colFreqTx = st.colFreqBg = st.colBarFg = st.colBarBg = st.colBg = st.colFt8A = st.colFt8B = st.colDec = 0;
+                st.colBtnBg = st.colBtnTx = st.colFreqTx = st.colFreqBg = st.colBarFg = st.colBarBg = st.colBg = st.colFt8A = st.colFt8B = st.colDec = st.colDecBtn = 0;
                 applyColors(a, d, null);
             }
         }), Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
@@ -281,7 +291,7 @@ final class DlgSettings {
         }
         // Couleur personnalisée : trois valeurs de 0 à 255 (rouge, vert, bleu).
         int cur;
-        switch (id) { case 0: cur = Ui.btn(); break; case 1: cur = Ui.btnTx(); break; case 2: cur = Ui.freqTx(); break; case 3: cur = Ui.freqBg(); break; case 4: cur = Ui.barFgText(); break; case 5: cur = Ui.barBg(); break; case 7: cur = Ui.ft8A(); break; case 8: cur = Ui.ft8B(); break; case 9: cur = Ui.decCol(); break; default: cur = Ui.bg(); }
+        switch (id) { case 0: cur = Ui.btn(); break; case 1: cur = Ui.btnTx(); break; case 2: cur = Ui.freqTx(); break; case 3: cur = Ui.freqBg(); break; case 4: cur = Ui.barFgText(); break; case 5: cur = Ui.barBg(); break; case 7: cur = Ui.ft8A(); break; case 8: cur = Ui.ft8B(); break; case 9: cur = Ui.decCol(); break; case 10: cur = Ui.decBtn(); break; default: cur = Ui.bg(); }
         final android.widget.EditText[] rgb = new android.widget.EditText[3];
         final LinearLayout custom = Ui.row(a);
         String[] hints = { "R", Lang.T("V", "G"), "B" };

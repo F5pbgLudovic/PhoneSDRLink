@@ -63,34 +63,15 @@ final class DlgKeypad {
         }
         // Historique « Mem » : 20 dernières fréquences/modes, enregistrement automatique réglable, bouton Store
         LinearLayout hr = Ui.row(a);
-        final java.util.ArrayList<String> names = new java.util.ArrayList<String>();
-        final Spinner mem = Ui.spinner(a, names);
-        final Runnable fill = new Runnable() {
-            public void run() {
-                names.clear();
-                names.add("Mem");
-                for (Memory m : a.st.hist) names.add(Memory.kHz(m.hz) + " kHz  " + (m.mode.isEmpty() ? "" : MainActivity.modeLabel(m.mode)));
-                ((android.widget.ArrayAdapter) mem.getAdapter()).notifyDataSetChanged();
-                mem.setSelection(0, false);
-            }
-        };
-        fill.run();
-        mem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> p, View v, int i, long id) {
-                if (i < 1 || i > a.st.hist.size()) return;
-                Memory m = a.st.hist.get(i - 1);
-                d.dismiss();
-                if (a.scanning) a.stopScan(null);
-                a.applyMemory(m);
-            }
-            public void onNothingSelected(AdapterView<?> p) { }
+        final Button mem = Ui.button(a, "Mem  ▾", new View.OnClickListener() {
+            public void onClick(View v) { memList(a, d); }
         });
+        mem.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         hr.addView(mem, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 3));
         hr.addView(Ui.button(a, "Store", new View.OnClickListener() {
             public void onClick(View v) {
-                a.st.addHist(a.freq, a.mode);
+                a.st.addHist(a.freq, a.mode, a.histDec());
                 a.st.save();
-                fill.run();
                 Ui.toast(a, Lang.T("Mémorisé : ", "Stored: ") + Memory.kHz(a.freq) + " kHz");
             }
         }));
@@ -128,6 +109,51 @@ final class DlgKeypad {
         }));
         col.addView(r);
         d.show();
+    }
+
+    static String memText(Memory m) { return Memory.kHz(m.hz) + " kHz  " + (m.mode.isEmpty() ? "" : MainActivity.modeLabel(m.mode)) + (m.dec != 0 ? "  " + MainActivity.decName(m.dec) : ""); }
+
+    // Liste « Mem » : un appui rappelle la fréquence (et le mode, et le décodeur numérique) ; un appui long propose de la supprimer.
+    static void memList(final MainActivity a, final Dialog keypad) {
+        final LinearLayout col = Ui.column(a);
+        final Dialog ld = Ui.window(a, "Mem", Ui.scroll(a, col), false);
+        final Runnable[] build = new Runnable[1];
+        build[0] = new Runnable() {
+            public void run() {
+                col.removeAllViews();
+                if (a.st.hist.isEmpty()) col.addView(Ui.small(a, Lang.T("Liste vide : « Store » ou l'enregistrement automatique l'alimentent.", "Empty list: \"Store\" or the automatic storing fills it.")));
+                for (int n = 0; n < a.st.hist.size(); n++) {
+                    final Memory m = a.st.hist.get(n);
+                    Button b = Ui.button(a, memText(m), new View.OnClickListener() {
+                        public void onClick(View v) {
+                            ld.dismiss();
+                            keypad.dismiss();
+                            if (a.scanning) a.stopScan(null);
+                            a.applyMemory(m);
+                            if (m.dec != 0) a.decoderStart(m.dec);
+                        }
+                    });
+                    b.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+                    b.setOnLongClickListener(new View.OnLongClickListener() {
+                        public boolean onLongClick(View v) {
+                            Ui.choose(a, memText(m), new String[] { Lang.T("Mémoriser dans « Mémoires » ▸", "Store in \"Memories\" ▸"), Lang.T("Supprimer de la liste « Mem »", "Delete from the \"Mem\" list") }, new Ui.Index() {
+                                public void chose(int i) {
+                                    if (i == 0) DlgMemory.copyMenu(a, m);   // choix de la liste de destination de l'onglet « Mémoires » de l'écran principal
+                                    else Ui.confirm(a, Lang.T("Supprimer de la liste « Mem » ?", "Delete from the \"Mem\" list?"), memText(m), Lang.T("Supprimer", "Delete"), Lang.T("Annuler", "Cancel"), new Ui.Yes() {
+                                        public void yes() { a.st.hist.remove(m); a.st.save(); build[0].run(); }
+                                    });
+                                }
+                            });
+                            return true;
+                        }
+                    });
+                    col.addView(b, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 3));
+                }
+                if (!a.st.hist.isEmpty()) col.addView(Ui.small(a, Lang.T("Appui long sur une ligne : la mémoriser dans « Mémoires » ou la supprimer.", "Long press a line: store it in \"Memories\" or delete it.")));
+            }
+        };
+        build[0].run();
+        ld.show();
     }
 
     // Texte en kHz → Hz (0 si illisible).

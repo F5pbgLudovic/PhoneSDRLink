@@ -33,8 +33,10 @@ final class Ui {
     static int sub() { return dark ? 0xFF9AA5B1 : 0xFF5A6570; }
     // Couleurs choisies dans SET (0 = couleur d'origine du thème).
     static boolean reopenColors;
-    static int cBtnBg, cBtnTx, cFreqTx, cFreqBg, cBarFg, cBarBg, cBg, cFt8A, cFt8B, cDec;
+    static int cBtnBg, cBtnTx, cFreqTx, cFreqBg, cBarFg, cBarBg, cBg, cFt8A, cFt8B, cDec, cDecBtn;
     // Décodeur : les deux périodes (paire et impaire) de FT8 / FT4 s'affichent en deux couleurs.
+    static int decBtn() { return cDecBtn != 0 ? cDecBtn : dark ? 0xFF0A1F4D : 0xFF0D2B6B; }   // bouton Décodeur de SET : bleu très foncé par défaut
+    static int onColor(int bg) { return (Color.red(bg) * 30 + Color.green(bg) * 59 + Color.blue(bg) * 11) / 100 > 128 ? Color.BLACK : Color.WHITE; }
     static int decCol() { return cDec != 0 ? cDec : dark ? 0xFFFF5252 : 0xFFC62828; }   // nom du mode numérique actif, dans la case de la fréquence (rouge par défaut)
     static int ft8A() { return cFt8A != 0 ? cFt8A : dark ? 0xFFFFD54F : 0xFF8D6E00; }
     static int ft8B() { return cFt8B != 0 ? cFt8B : dark ? 0xFFFFFFFF : 0xFF14181C; }
@@ -45,12 +47,19 @@ final class Ui {
     static int barBg() { return cBarBg != 0 ? cBarBg : btn(); }
     static int barFgTicks() { return cBarFg != 0 ? cBarFg : sub(); }
     static int barFgText() { return cBarFg != 0 ? cBarFg : fg(); }
-    static void loadColors(Store s) { cBtnBg = s.colBtnBg; cBtnTx = s.colBtnTx; cFreqTx = s.colFreqTx; cFreqBg = s.colFreqBg; cBarFg = s.colBarFg; cBarBg = s.colBarBg; cBg = s.colBg; cFt8A = s.colFt8A; cFt8B = s.colFt8B; cDec = s.colDec; }
+    static void loadColors(Store s) { cBtnBg = s.colBtnBg; cBtnTx = s.colBtnTx; cFreqTx = s.colFreqTx; cFreqBg = s.colFreqBg; cBarFg = s.colBarFg; cBarBg = s.colBarBg; cBg = s.colBg; cFt8A = s.colFt8A; cFt8B = s.colFt8B; cDec = s.colDec; cDecBtn = s.colDecBtn; }
     static int accent() { return dark ? 0xFF4FC3F7 : 0xFF0B5FA5; }
     static int on() { return dark ? 0xFF2E7D32 : 0xFF2E7D32; }
     static int danger() { return 0xFFC62828; }
 
     static int dp(Context c, float v) { return Math.round(v * c.getResources().getDisplayMetrics().density); }
+
+    // Bouton Décodeur : fond choisi + petit contour fixe (blanc en thème sombre, noir en thème clair).
+    static GradientDrawable roundOutline(int color, float radiusDp, Context c) {
+        GradientDrawable g = round(color, radiusDp, c);
+        g.setStroke(Math.max(2, dp(c, 1.5f)), dark ? 0xFFFFFFFF : 0xFF000000);
+        return g;
+    }
 
     static GradientDrawable round(int color, float radiusDp, Context c) {
         GradientDrawable g = new GradientDrawable();

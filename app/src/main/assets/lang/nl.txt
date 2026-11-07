@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	zoekt een signaal… (midden %d Hz)
 receiving at %.0f Hz (S/N %.0f dB)	ontvangt op %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	zoekt een signaal… (%.0f Hz)
 Stored: 	Opgeslagen: 
+Delete from the "Mem" list?	Verwijderen uit de lijst "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Lege lijst: "Store" of het automatisch opslaan vult hem.
+Long press a line to delete it.	Lang indrukken op een regel: verwijderen.
+Decoder button (SET)	Knop Decoder (SET)
+Store in "Memories" ▸	Opslaan in "Memories" ▸
+Delete from the "Mem" list	Verwijderen uit de lijst "Mem"
+Long press a line: store it in "Memories" or delete it.	Lang indrukken op een regel: opslaan in "Memories" of verwijderen.
+waiting for a signal…	wachten op een signaal…
+looking for the phasing…	zoeken naar de fasering…
+picture: %d lines (%d:%02d)	beeld: %d regels (%d:%02d)
+phasing: %d lines	fasering: %d regels
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB-modus, op een weerfaxstation (draaggolffrequentie − 1,9 kHz; de lijst "Digital modes" geeft de juiste waarde). Kies het aantal regels per minuut (120 bij de meeste stations). De decoder wacht op de fasering, vergrendelt dan zelf het regelbegin en corrigeert de scheefstand; het beeld wordt aan het einde opgeslagen (stoptoon of signaalverlies). Midden in een beeld ingestapt: "Beeld nu starten". Alleen ontvangst.
+UTC time · picture events. The picture stays visible under the status line.	UTC-tijd · beeldgebeurtenissen. Het beeld blijft zichtbaar onder de statusregel.
+Lines per minute	Regels per minuut
+Reverse (LSB reception, or negative fax)	Omkeren (LSB-ontvangst of negatieve fax)
+Start the picture now	Beeld nu starten
+End the picture	Beeld beëindigen
+Tolerant phasing detection	Tolerante fasering-detectie
+A little	Een beetje
+A lot	Veel
+Trigger on the 300 Hz start tone	Starten op de starttoon van 300 Hz
+Re-align a picture joined midway	Beeld dat midden erin is gestart opnieuw uitlijnen
+Black frame	Zwart kader
+White margin	Witte rand
+start tone heard: looking for the phasing…	starttoon gehoord: zoeken naar de fasering…
+Settings…	Instellingen…
+Settings	Instellingen

@@ -125,6 +125,8 @@ public class MainActivity extends Activity {
         applyKeepScreen();
         applyHeadset();
         histSchedule();
+        if (getIntent() != null && "clear".equals(getIntent().getStringExtra("histfill"))) { st.hist.clear(); st.save(); }
+        else if (getIntent() != null && getIntent().getStringExtra("histfill") != null) { for (int i = 0; i < 20; i++) st.addHist(3500000L + i * 100000L, i % 2 == 0 ? "USB" : "LSB", i % 3 == 0 ? DEC_FT8 : 0); st.save(); }   // essai : remplit la liste Mem
         if (getIntent() != null && getIntent().getStringExtra("radewav") != null) radeSelfTest(getIntent().getStringExtra("radewav"));
         if (getIntent() != null && getIntent().getStringExtra("radeeng") != null) radeEngineTest(getIntent().getStringExtra("radeeng"));
         if (getIntent() != null && getIntent().getStringExtra("radev2test") != null) radeV2Loop(getIntent().getStringExtra("radev2test"));
@@ -532,6 +534,7 @@ public class MainActivity extends Activity {
     }
 
     void updateDisplays() {
+        histNote();
         tvFreq.setText(formatFreq(freq));
         btnMode.setText(bwHz > 0 ? modeLabel(mode) + "\n" + bwText(bwHz).replace(" kHz", "k").replace(" Hz", "Hz") : modeLabel(mode));
         btnStep.setText(stepText(st.stepFor(mode)));
@@ -1134,7 +1137,7 @@ public class MainActivity extends Activity {
     // Historique « Mem » du clavier de fréquence : enregistrement automatique toutes les histMin minutes (0 = aucun)
     final Runnable histTick = new Runnable() {
         public void run() {
-            st.addHist(freq, mode);
+            st.addHist(freq, mode, histDec());
             st.save();
             if (st.histMin > 0) h.postDelayed(this, st.histMin * 60000L);
         }
@@ -1142,7 +1145,21 @@ public class MainActivity extends Activity {
 
     void histSchedule() {
         h.removeCallbacks(histTick);
+        histLastHz = freq; histLastMode = mode; histLastDec = histDec();
         if (st.histMin > 0) h.postDelayed(histTick, st.histMin * 60000L);
+    }
+
+    // Un changement de fréquence ou de mode avant l'échéance remet le compteur à zéro : on n'enregistre que si l'on reste le temps choisi sur la même fréquence.
+    long histLastHz = -1;
+    String histLastMode = "";
+    int histLastDec;
+    // décodeur choisi par l'utilisateur (RADE lancé tout seul par « FreeDV auto » exclu)
+    int histDec() { return decMode != 0 && !radeAuto ? decMode : 0; }
+    void histNote() {
+        if (freq == histLastHz && mode != null && mode.equals(histLastMode) && histDec() == histLastDec) return;
+        histSchedule();
+        if (getIntent() != null && "clear".equals(getIntent().getStringExtra("histfill"))) { st.hist.clear(); st.save(); }
+        else if (getIntent() != null && getIntent().getStringExtra("histfill") != null) { for (int i = 0; i < 20; i++) st.addHist(3500000L + i * 100000L, i % 2 == 0 ? "USB" : "LSB", i % 3 == 0 ? DEC_FT8 : 0); st.save(); }   // essai : remplit la liste Mem
     }
 
     final Runnable saver = new Runnable() { public void run() { st.freqHz = freq; st.mode = mode; st.save(); } };
@@ -1638,7 +1655,7 @@ public class MainActivity extends Activity {
 
     // ------------------------------------------------------------------ décodeurs numériques (FT8, FT4, CW, RTTY, FreeDV RADE)
 
-    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7, DEC_WSPR = 8, DEC_JT9 = 9, DEC_RADE2 = 10, DEC_JS8 = 11, DEC_FT2 = 12, DEC_OLIVIA = 13, DEC_CONTESTIA = 14, DEC_HELL = 15;
+    static final int DEC_FT8 = 1, DEC_RADE = 2, DEC_FT4 = 3, DEC_CW = 4, DEC_RTTY = 5, DEC_PSK = 6, DEC_SSTV = 7, DEC_WSPR = 8, DEC_JT9 = 9, DEC_RADE2 = 10, DEC_JS8 = 11, DEC_FT2 = 12, DEC_OLIVIA = 13, DEC_CONTESTIA = 14, DEC_HELL = 15, DEC_WEFAX = 16;
     static boolean isRade(int m) { return m == DEC_RADE || m == DEC_RADE2; }   // FreeDV RADE V1 (FreeDV 2.x) ou V2 (FreeDV 3.0)
     int decMode;                       // 0 arrêté, sinon DEC_*
     boolean radeVoice;                 // RADE : des trames FreeDV sont décodées, la parole remplace le son du WebSDR
@@ -1656,8 +1673,8 @@ public class MainActivity extends Activity {
     ScrollView decScroll;
     int decTries;
 
-    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_FT2 ? "FT2" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_WSPR ? "WSPR" : m == DEC_JT9 ? "JT9" : m == DEC_JS8 ? "JS8" : m == DEC_RADE ? "RADE V1" : m == DEC_RADE2 ? "RADE V2" : m == DEC_OLIVIA ? "Olivia" : m == DEC_CONTESTIA ? "Contestia" : m == DEC_HELL ? "Hell" : ""; }
-    static boolean isImageDec(int m) { return m == DEC_SSTV || m == DEC_HELL; }   // décodeurs dont le résultat est une image (SSTV, Hell)
+    static String decName(int m) { return m == DEC_FT8 ? "FT8" : m == DEC_FT4 ? "FT4" : m == DEC_FT2 ? "FT2" : m == DEC_CW ? "CW" : m == DEC_RTTY ? "RTTY" : m == DEC_PSK ? "PSK31" : m == DEC_SSTV ? "SSTV" : m == DEC_WSPR ? "WSPR" : m == DEC_JT9 ? "JT9" : m == DEC_JS8 ? "JS8" : m == DEC_RADE ? "RADE V1" : m == DEC_RADE2 ? "RADE V2" : m == DEC_OLIVIA ? "Olivia" : m == DEC_CONTESTIA ? "Contestia" : m == DEC_HELL ? "Hell" : m == DEC_WEFAX ? "WEFAX" : ""; }
+    static boolean isImageDec(int m) { return m == DEC_SSTV || m == DEC_HELL || m == DEC_WEFAX; }   // décodeurs dont le résultat est une image (SSTV, Hell, WEFAX)
     static int decRate(int m) { return (m == DEC_FT8 || m == DEC_FT4 || m == DEC_FT2 || m == DEC_WSPR || m == DEC_JT9 || m == DEC_JS8) ? Ft8Engine.RATE : 8000; }
 
     // Surbrillance (réglage « Surbrillance » de la fenêtre du décodeur) : chaque suite de caractères saisie (séparées par des virgules,
@@ -1806,7 +1823,32 @@ public class MainActivity extends Activity {
         if (redo) r.post(new Runnable() { public void run() { r.settingsChanged(); } });
     }
 
-    void applyDecSettings() { applyCwSettings(); applyRttySettings(); applyPskSettings(); applySstvSettings(); applyOliviaSettings(); applyHellSettings(); }
+    void applyDecSettings() { applyCwSettings(); applyRttySettings(); applyPskSettings(); applySstvSettings(); applyOliviaSettings(); applyHellSettings(); applyFaxSettings(); }
+
+    // WEFAX : réglages copiés du stockage vers le moteur ; les images passent par les mêmes vues que les images SSTV.
+    void applyFaxSettings() {
+        if (!(txt instanceof WefaxEngine)) return;
+        WefaxEngine e = (WefaxEngine) txt;
+        e.lpmIdx = st.faxLpm; e.invert = st.faxInv; e.tol = st.faxTol; e.tone = st.faxTone; e.align = st.faxAlign;
+    }
+
+    void faxCmd(int c) { if (txt instanceof WefaxEngine) ((WefaxEngine) txt).cmd = c; }
+
+    boolean sstvQuiet;   // WEFAX : le tableau de l'image grandit, ce n'est pas une nouvelle image
+    final WefaxEngine.Out faxOut = new WefaxEngine.Out() {
+        public void begin(final int w, final int hh, final int[] px, final boolean fresh) {
+            h.post(new Runnable() { public void run() { if (txt instanceof WefaxEngine) { sstvQuiet = !fresh; sstvBegin("WEFAX", w, hh, px); sstvQuiet = false; } } });
+        }
+        public void rows(int done) {
+            sstvRows = done;
+            if (sstvPending) return;
+            sstvPending = true;
+            h.postDelayed(new Runnable() { public void run() { sstvPending = false; sstvUpdate(); } }, 300);
+        }
+        public void end(final boolean complete, final int rows) {
+            h.post(new Runnable() { public void run() { sstvEnd(complete, rows); } });
+        }
+    };
 
     void applyJs8Settings() { if (decMode == DEC_JS8) decoderStart(DEC_JS8); }   // vitesse changée : le décodeur JS8 repart
     void applySstvSettings() { if (txt instanceof SstvEngine) ((SstvEngine) txt).setLevels(st.sstvSens, st.sstvLoss); }
@@ -1892,10 +1934,11 @@ public class MainActivity extends Activity {
     };
 
     void sstvBegin(String name, int w, int hh, int[] px) {
-        sstvName = name; sstvPx = px; sstvW = w; sstvH = hh; sstvShown = 0; sstvRows = 0;
+        sstvName = name; sstvPx = px; sstvW = w; sstvH = hh; sstvShown = 0;
+        if (!sstvQuiet) sstvRows = 0;
         sstvBmp = Bitmap.createBitmap(w, hh, Bitmap.Config.ARGB_8888);
         sstvBmp.eraseColor(0xFF202020);
-        if (!(txt instanceof HellEngine)) { decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  " + name + " (" + w + "×" + hh + ")", 0); decRefresh(); }
+        if (!(txt instanceof HellEngine) && !sstvQuiet) { decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  " + name + " (" + w + "×" + hh + ")", 0); decRefresh(); }
         sstvShow();
     }
 
@@ -1929,6 +1972,7 @@ public class MainActivity extends Activity {
         sstvRows = rows;
         sstvUpdate();
         if (sstvBmp == null) return;
+        if (sstvName.equals("WEFAX") && rows >= 16 && rows < sstvH) { sstvBmp = Bitmap.createBitmap(sstvBmp, 0, 0, sstvW, rows); sstvH = rows; sstvShow(); }   // WEFAX : l'image finie est montrée sans la partie vide
         if (!st.sstvSave || rows < 16) {
             decAddLine(RadeEngine.clock(System.currentTimeMillis()) + "  " + (complete ? Lang.T("image terminée", "image complete") : Lang.T("signal perdu", "signal lost")) + (rows < 16 ? " — " + Lang.T("trop courte, non enregistrée", "too short, not saved") : ""), 0);
             decRefresh();
@@ -1955,7 +1999,7 @@ public class MainActivity extends Activity {
     // Enregistre l'image en PNG dans Images/PhoneSDRLink (Android 10 et plus : galerie, sans permission) ou, plus ancien, dans le dossier
     // de l'application (Android/data/…/files/Pictures/SSTV). Renvoie le nom du fichier, ou null.
     String saveSstv(Bitmap b, String mode, boolean complete) {
-        String fn = (mode.startsWith("Hell") ? "" : "SSTV_") + mode.replace(" ", "") + "_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(new java.util.Date()) + (complete ? "" : "_partiel") + ".png";
+        String fn = (mode.startsWith("Hell") || mode.startsWith("WEFAX") ? "" : "SSTV_") + mode.replace(" ", "") + "_" + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(new java.util.Date()) + (complete ? "" : "_partiel") + ".png";
         try {
             if (android.os.Build.VERSION.SDK_INT >= 29) {
                 android.content.ContentValues cv = new android.content.ContentValues();
@@ -2040,7 +2084,7 @@ public class MainActivity extends Activity {
     }
 
     void decWavTest(final String spec) {
-        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : spec.startsWith("wspr:") ? DEC_WSPR : spec.startsWith("jt9:") ? DEC_JT9 : spec.startsWith("js8:") ? DEC_JS8 : spec.startsWith("oli:") ? DEC_OLIVIA : spec.startsWith("con:") ? DEC_CONTESTIA : spec.startsWith("hell:") ? DEC_HELL : DEC_PSK;
+        final int mode = spec.startsWith("sstv:") ? DEC_SSTV : spec.startsWith("wspr:") ? DEC_WSPR : spec.startsWith("jt9:") ? DEC_JT9 : spec.startsWith("js8:") ? DEC_JS8 : spec.startsWith("oli:") ? DEC_OLIVIA : spec.startsWith("con:") ? DEC_CONTESTIA : spec.startsWith("hell:") ? DEC_HELL : spec.startsWith("fax:") ? DEC_WEFAX : DEC_PSK;
         String body = spec.substring(spec.indexOf(':') + 1);
         if ((mode == DEC_OLIVIA || mode == DEC_CONTESTIA || mode == DEC_HELL) && !body.startsWith("/") && body.indexOf(':') > 0) {   // oli:tons/bande:chemin  hell:variante:chemin (essais seulement, non enregistré)
             String opt = body.substring(0, body.indexOf(':'));
@@ -2052,11 +2096,13 @@ public class MainActivity extends Activity {
         }
         final String path = body;
         HellEngine.debug = true;
+        if (mode == DEC_WEFAX) { st.faxTol = path.contains("_tol1") ? 1 : path.contains("_tol2") ? 2 : 0; st.faxTone = path.contains("_tone"); st.faxAlign = path.contains("_now") ? 1 : 0; }   // essais seulement (non enregistré)
         h.postDelayed(new Runnable() {
             public void run() {
                 decoderStart(mode);
                 if (mode == DEC_WSPR || mode == DEC_JT9 || mode == DEC_JS8) { decSlotWav(mode, path); return; }
                 if (txt == null) return;
+                if (mode == DEC_WEFAX && path.contains("_now")) faxCmd(1);
                 js("if(window.__sdrlink&&__sdrlink.decStop)__sdrlink.decStop();");
                 new Thread(new Runnable() {
                     public void run() {
@@ -2168,7 +2214,8 @@ public class MainActivity extends Activity {
                 public void onText(final String s) { h.post(new Runnable() { public void run() { if (txt != null) decAppendText(s); } }); }   // le calcul se fait dans un fil à part
                 public void onStatus(final String s) { h.post(new Runnable() { public void run() { if (txt != null) decSetStatus(s); } }); }
             };
-            txt = mode == DEC_CW ? new CwEngine(l) : mode == DEC_PSK ? new PskEngine(l) : mode == DEC_SSTV ? new SstvEngine(l, sstvImages) : mode == DEC_OLIVIA || mode == DEC_CONTESTIA ? new OliviaEngine(l, mode == DEC_CONTESTIA) : mode == DEC_HELL ? new HellEngine(l, hellDisplay) : new RttyEngine(l);
+            txt = mode == DEC_CW ? new CwEngine(l) : mode == DEC_PSK ? new PskEngine(l) : mode == DEC_SSTV ? new SstvEngine(l, sstvImages) : mode == DEC_OLIVIA || mode == DEC_CONTESTIA ? new OliviaEngine(l, mode == DEC_CONTESTIA) : mode == DEC_HELL ? new HellEngine(l, hellDisplay) : mode == DEC_WEFAX ? new WefaxEngine(l, faxOut) : new RttyEngine(l);
+            applyFaxSettings();
             applyCwSettings();
             applyOliviaSettings();
             applyHellSettings();
@@ -2177,6 +2224,7 @@ public class MainActivity extends Activity {
             applySstvSettings();
         }
         decMode = mode;
+        histNote();
         if (DlgDecoder.onState != null) DlgDecoder.onState.run();
         if (tvFreq != null) tvFreq.postInvalidate();   // nom du mode actif dans la case de la fréquence
         sstvShow();
@@ -2187,6 +2235,7 @@ public class MainActivity extends Activity {
     void decoderStop(boolean message) {
         boolean was = decMode != 0;
         decMode = 0;
+        histNote();
         h.removeCallbacks(decStartRun);
         if (ft8 != null) { ft8.stop(); ft8 = null; }
         if (wspr != null) { wspr.stop(); wspr = null; }

@@ -720,3 +720,30 @@ searching for a signal… (centre %d Hz)	söker efter en signal… (mittpunkt %d
 receiving at %.0f Hz (S/N %.0f dB)	tar emot på %.0f Hz (S/N %.0f dB)
 searching for a signal… (%.0f Hz)	söker efter en signal… (%.0f Hz)
 Stored: 	Sparat: 
+Delete from the "Mem" list?	Ta bort från listan "Mem"?
+Empty list: "Store" or the automatic storing fills it.	Tom lista: "Store" eller den automatiska lagringen fyller den.
+Long press a line to delete it.	Långt tryck på en rad: ta bort den.
+Decoder button (SET)	Knappen Avkodare (SET)
+Store in "Memories" ▸	Spara i "Memories" ▸
+Delete from the "Mem" list	Ta bort från listan "Mem"
+Long press a line: store it in "Memories" or delete it.	Långt tryck på en rad: spara i "Memories" eller ta bort.
+waiting for a signal…	väntar på en signal…
+looking for the phasing…	söker fasningen…
+picture: %d lines (%d:%02d)	bild: %d rader (%d:%02d)
+phasing: %d lines	fasning: %d rader
+USB mode, on a weather-fax station (carrier frequency − 1.9 kHz; the "Digital modes" list gives the right value). Choose the lines per minute (120 for most stations). The decoder waits for the phasing, then locks the line start and corrects the slant by itself; the picture is saved when it ends (stop tone or signal lost). Arriving in the middle of a picture: "Start the picture now". Receive only.	USB-läge, på en väderfaxstation (bärvågsfrekvens − 1,9 kHz; listan "Digital modes" ger rätt värde). Välj rader per minut (120 hos de flesta stationer). Avkodaren väntar på fasningen, låser själv radens början och rättar snedställningen; bilden sparas i slutet (stopptton eller signalförlust). Om du kommer in mitt i en bild: "Starta bilden nu". Endast mottagning.
+UTC time · picture events. The picture stays visible under the status line.	UTC-tid · bildhändelser. Bilden förblir synlig under statusraden.
+Lines per minute	Rader per minut
+Reverse (LSB reception, or negative fax)	Invertera (LSB-mottagning eller negativt fax)
+Start the picture now	Starta bilden nu
+End the picture	Avsluta bilden
+Tolerant phasing detection	Tolerant fasningsdetektering
+A little	Lite
+A lot	Mycket
+Trigger on the 300 Hz start tone	Starta på starttonen 300 Hz
+Re-align a picture joined midway	Justera om en bild som tagits mitt i
+Black frame	Svart ram
+White margin	Vit marginal
+start tone heard: looking for the phasing…	starttonen hörd: söker fasningen…
+Settings…	Parametrar…
+Settings	Parametrar
