@@ -413,10 +413,31 @@
     origConnect.call(sp, silent);
     origConnect.call(silent, ctx.destination);   // un ScriptProcessor ne tourne que s'il est relié à la sortie
     r.silent = silent;
+    r.er = er;
+    r.vq = [];
+    r.vpos = 0;
     sp.onaudioprocess = function (e) {
       var d = e.inputBuffer.getChannelData(0), n = d.length, j, q;
       if (er !== ctx.sampleRate) n = Math.round(d.length * er / ctx.sampleRate);   // rééchantillonnage (échantillon le plus proche)
       var p = new Int16Array(n);
+      if (L.voiceOn) {
+        // FreeDV : on enregistre la parole décodée (16 kHz, envoyée par SDRLink) et non la modulation numérique du WebSDR ;
+        // le silence comble les trous pour que le fichier garde la durée réelle
+        var vq = r.vq, step = 16000 / er, pos = r.vpos, i0;
+        if (vq.length > 24000) { vq.splice(0, vq.length - 8000); pos = 0; }   // trop de retard accumulé : on le rattrape
+        for (j = 0; j < n; j++) {
+          i0 = Math.floor(pos);
+          if (i0 + 1 >= vq.length) break;
+          p[j] = vq[i0] + (vq[i0 + 1] - vq[i0]) * (pos - i0);
+          pos += step;
+        }
+        i0 = Math.min(Math.floor(pos), vq.length);
+        vq.splice(0, i0);
+        r.vpos = pos - i0;
+        if (r.worker) r.worker.postMessage(p.buffer, [p.buffer]);
+        else { var o2 = r.enc.encodeBuffer(p); if (o2.length) send(new Uint8Array(o2.buffer)); }
+        return;
+      }
       for (j = 0; j < n; j++) {
         q = er === ctx.sampleRate ? d[j] : d[Math.min(d.length - 1, Math.floor(j * ctx.sampleRate / er))];
         p[j] = Math.max(-1, Math.min(1, q)) * 32767 | 0;
@@ -426,6 +447,14 @@
     };
     L.rec = r;
     __post('rec|ok|' + ctx.sampleRate);
+  };
+  L.voiceOn = false;
+  L.recVoice = function (on) { L.voiceOn = !!on; if (L.rec && !on) { L.rec.vq.length = 0; L.rec.vpos = 0; } };
+  L.recPcm = function (b64) {
+    var r = L.rec;
+    if (!r || !L.voiceOn) return;
+    var s = atob(b64), n = s.length >> 1, i;
+    for (i = 0; i < n; i++) { var v = s.charCodeAt(2 * i) | (s.charCodeAt(2 * i + 1) << 8); r.vq.push(v > 32767 ? v - 65536 : v); }
   };
   L.recStop = function () {
     var r = L.rec;

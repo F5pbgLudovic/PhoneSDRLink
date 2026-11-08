@@ -885,6 +885,7 @@ public class MainActivity extends Activity {
     void applyVolume() {
         boolean m = muted || callMute || focusMute || (isRade(decMode) && radeVoice);
         js("if(window.__sdrlink)__sdrlink.setVolume(" + (m ? 0 : 1) + ");");
+        if (rade != null) rade.setMuted(muted || callMute || focusMute);   // la parole FreeDV passe par une AudioTrack : Muet doit aussi la couper
     }
 
     // « Réinitialisation automatique WEBSDR » : si la page reste 30 s sans produire de son alors que le volume n'est pas à zéro
@@ -2189,9 +2190,18 @@ public class MainActivity extends Activity {
             rade = new RadeEngine(mode == DEC_RADE2, new RadeEngine.Listener() {
                 public void onStatus(String s) { decSetStatus(s); }
                 public void onEvent(String line) { decAddLine(line, 0); decRefresh(); }
-                public void onVoice(boolean on) { radeVoice = on; applyVolume(); }
+                public void onVoice(boolean on) { radeVoice = on; applyVolume(); js("if(window.__sdrlink)__sdrlink.recVoice(" + on + ");"); }
+                // Parole décodée (16 kHz, 16 bits) : copiée dans le REC à la place du son du WebSDR (qui n'est alors que la modulation numérique)
+                public void onPcm(short[] pcm, int n) {
+                    if (!recording) return;
+                    byte[] b = new byte[n * 2];
+                    for (int i = 0; i < n; i++) { b[2 * i] = (byte) pcm[i]; b[2 * i + 1] = (byte) (pcm[i] >> 8); }
+                    final String s = android.util.Base64.encodeToString(b, android.util.Base64.NO_WRAP);
+                    h.post(new Runnable() { public void run() { js("if(window.__sdrlink)__sdrlink.recPcm('" + s + "');"); } });
+                }
             });
             if (!rade.start()) { rade = null; decSetStatus(Lang.T("FreeDV RADE demande un téléphone 64 bits", "FreeDV RADE needs a 64-bit phone")); return; }
+            rade.setMuted(muted || callMute || focusMute);
         } else if (mode == DEC_WSPR || mode == DEC_JT9 || mode == DEC_JS8) {
             Ft8Engine.Listener sl = new Ft8Engine.Listener() {
                 public void onLines(java.util.ArrayList<String> lines, int parity) { for (String s : lines) decAddLine(s, parity == 0 ? 1 : 2); decRefresh(); }
@@ -2243,6 +2253,7 @@ public class MainActivity extends Activity {
         if (js8 != null) { js8.stop(); js8 = null; }
         if (rade != null) { rade.stop(); rade = null; }
         radeVoice = false;
+        js("if(window.__sdrlink)__sdrlink.recVoice(false);");
         radeAuto = false;
         if (txt instanceof SstvEngine && ((SstvEngine) txt).img != null) sstvEnd(false, sstvRows);   // image interrompue : on garde ce qui est reçu
         if (txt != null) { txt.shutdown(); txt = null; }
@@ -2595,7 +2606,7 @@ public class MainActivity extends Activity {
 
     void onRecMessage(String[] p) {
         if (recResume && recording) {
-            if (p.length >= 2 && p[1].equals("ok")) { recResume = false; status(Lang.T("Le REC continue sur le nouveau WebSDR", "The recording continues on the new WebSDR")); }
+            if (p.length >= 2 && p[1].equals("ok")) { recResume = false; if (radeVoice) js("if(window.__sdrlink)__sdrlink.recVoice(true);"); status(Lang.T("Le REC continue sur le nouveau WebSDR", "The recording continues on the new WebSDR")); }
             else if (++recTries < 20) h.postDelayed(recResumeRun, 2000);   // le son n'est pas encore démarré : on réessaie
             else { recResume = false; recFinish(); }
             return;
@@ -2604,6 +2615,7 @@ public class MainActivity extends Activity {
             try { recRate = Integer.parseInt(p[2]); } catch (Exception e) { recRate = 0; }
             recording = true;
             recStart = System.currentTimeMillis();
+            if (radeVoice) js("if(window.__sdrlink)__sdrlink.recVoice(true);");
             status(Lang.F("Enregistrement du son de « {0} » (appuyez sur REC pour arrêter)", "Recording the sound of \"{0}\" (click REC to stop)", currentTitle()));
             updateButtons();
             h.postDelayed(recTick, 1000);

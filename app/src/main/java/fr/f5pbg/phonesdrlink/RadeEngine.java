@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 // Réception FreeDV RADE V1 : le son du WebSDR (8 kHz, 16 bits) est décodé par le code natif ; la parole obtenue (16 kHz) est
 // jouée sur une AudioTrack. Le fil de décodage est séparé du fil principal (le décodage demande du calcul).
 final class RadeEngine {
-    interface Listener { void onStatus(String s); void onEvent(String line); void onVoice(boolean on); }
+    interface Listener { void onStatus(String s); void onEvent(String line); void onVoice(boolean on); void onPcm(short[] pcm, int n); }
 
     static final int RATE = 8000;
     final Listener ls;
@@ -42,6 +42,7 @@ final class RadeEngine {
                 .setBufferSizeInBytes(Math.max(minBuf, 16000 * 2))
                 .setTransferMode(AudioTrack.MODE_STREAM).build();
             track.play();
+            if (mutedNow) track.setVolume(0f);
         } catch (Exception e) { track = null; }
         running = true;
         worker = new Thread(new Runnable() { public void run() { loop(); } }, "rade");
@@ -49,6 +50,13 @@ final class RadeEngine {
         worker.start();
         return true;
     }
+
+    void setMuted(boolean m) {
+        AudioTrack t = track;
+        if (t != null) { try { t.setVolume(m ? 0f : 1f); } catch (Exception e) { } }
+        mutedNow = m;
+    }
+    volatile boolean mutedNow;
 
     void stop() {
         running = false;
@@ -99,6 +107,7 @@ final class RadeEngine {
                 h.post(new Runnable() { public void run() { if (running && ls != null) ls.onVoice(vv); } });
             }
             if (w > 0 && track != null && voiceOn) track.write(out, 0, w);
+            if (w > 0 && voiceOn && ls != null) ls.onPcm(out, w);   // pour l'enregistrement (REC) : la parole décodée, 16 kHz
             boolean sync = st[0] != 0;
             long now = System.currentTimeMillis();
             if (sync != lastSync) {
