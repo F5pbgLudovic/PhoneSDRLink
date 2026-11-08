@@ -83,6 +83,7 @@ final class Memory {
     int list;
     boolean scan;
     int dec;                        // historique « Mem » : décodeur actif (DEC_*, 0 = aucun)
+    long t;                         // historique « Mem » : heure d'enregistrement (ms, 0 = inconnue)
 
     Memory(String name, long hz, String mode) {
         this.name = name == null ? "" : name.trim();
@@ -283,9 +284,9 @@ final class Store {
     void addHist(long hz, String mode, int dec) {
         if (hz <= 0) return;
         if (mode == null) mode = "";
-        if (!hist.isEmpty() && hist.get(0).hz == hz && hist.get(0).mode.equals(mode) && hist.get(0).dec == dec) return;
+        if (!hist.isEmpty() && hist.get(0).hz == hz && hist.get(0).mode.equals(mode) && hist.get(0).dec == dec) { hist.get(0).t = System.currentTimeMillis(); return; }
         for (int i = hist.size() - 1; i >= 0; i--) if (hist.get(i).hz == hz && hist.get(i).mode.equals(mode) && hist.get(i).dec == dec) hist.remove(i);
-        { Memory hm = new Memory("", hz, mode); hm.dec = dec; hist.add(0, hm); }
+        { Memory hm = new Memory("", hz, mode); hm.dec = dec; hm.t = System.currentTimeMillis(); hist.add(0, hm); }
         while (hist.size() > Memory.RECENT) hist.remove(hist.size() - 1);
     }
     // Scan
@@ -400,7 +401,7 @@ final class Store {
                 else if (k.equals("PhoneHistMin")) histMin = oneOf(toInt(v, 0), 0, 1, 2, 3, 5, 10, 15, 20, 30);
                 else if (k.equals("PhoneHist")) {
                     hist.clear();
-                    for (String e : v.split(";")) { String[] q = e.split("\\|", -1); if (q.length >= 2 && hist.size() < Memory.RECENT) { long hz = toLong(q[0], 0); if (hz > 0) { Memory hm = new Memory("", hz, q[1]); if (q.length >= 3) hm.dec = Math.max(0, Math.min(15, toInt(q[2], 0))); hist.add(hm); } } }
+                    for (String e : v.split(";")) { String[] q = e.split("\\|", -1); if (q.length >= 2 && hist.size() < Memory.RECENT) { long hz = toLong(q[0], 0); if (hz > 0) { Memory hm = new Memory("", hz, q[1]); if (q.length >= 3) hm.dec = Math.max(0, Math.min(15, toInt(q[2], 0))); if (q.length >= 4) hm.t = Math.max(0, toLong(q[3], 0)); hist.add(hm); } } }
                 }
                 else if (k.equals("PhoneNotchLevel")) notchLevel = Math.max(1, Math.min(10, toInt(v, 1)));
                 else if (k.equals("PhoneDnrLevel")) dnrLevel = Math.max(1, Math.min(10, toInt(v, 1)));
@@ -693,7 +694,7 @@ final class Store {
         for (Memory m : recent) line(sb, "MemRecent", m.toSetting());
         line(sb, "PhoneHistMin", histMin);
         StringBuilder hb = new StringBuilder();
-        for (Memory m : hist) { if (hb.length() > 0) hb.append(';'); hb.append(m.hz).append('|').append(m.mode).append('|').append(m.dec); }
+        for (Memory m : hist) { if (hb.length() > 0) hb.append(';'); hb.append(m.hz).append('|').append(m.mode).append('|').append(m.dec).append('|').append(m.t); }
         line(sb, "PhoneHist", hb.toString());
         line(sb, "ScanType", scanType);
         line(sb, "ScanStart", scanStart);

@@ -113,6 +113,17 @@ final class DlgKeypad {
 
     static String memText(Memory m) { return Memory.kHz(m.hz) + " kHz  " + (m.mode.isEmpty() ? "" : MainActivity.modeLabel(m.mode)) + (m.dec != 0 ? "  " + MainActivity.decName(m.dec) : ""); }
 
+    // Texte d'une ligne de la liste « Mem » : fréquence et mode à la taille normale, puis heure et date en plus petit (rien si l'heure est inconnue)
+    static CharSequence memLine(Memory m) {
+        String base = memText(m);
+        if (m.t <= 0) return base;
+        String when = new java.text.SimpleDateFormat("HH:mm d/M/yyyy", java.util.Locale.ROOT).format(new java.util.Date(m.t));
+        android.text.SpannableString s = new android.text.SpannableString(base + "  " + when);
+        s.setSpan(new android.text.style.RelativeSizeSpan(MEM_WHEN), base.length() + 2, s.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return s;
+    }
+    static final float MEM_WHEN = 1.0f;   // taille relative de l'heure et de la date
+
     // Liste « Mem » : un appui rappelle la fréquence (et le mode, et le décodeur numérique) ; un appui long propose de la supprimer.
     static void memList(final MainActivity a, final Dialog keypad) {
         final LinearLayout col = Ui.column(a);
@@ -124,7 +135,7 @@ final class DlgKeypad {
                 if (a.st.hist.isEmpty()) col.addView(Ui.small(a, Lang.T("Liste vide : « Store » ou l'enregistrement automatique l'alimentent.", "Empty list: \"Store\" or the automatic storing fills it.")));
                 for (int n = 0; n < a.st.hist.size(); n++) {
                     final Memory m = a.st.hist.get(n);
-                    Button b = Ui.button(a, memText(m), new View.OnClickListener() {
+                    Button b = Ui.button(a, "", new View.OnClickListener() {
                         public void onClick(View v) {
                             ld.dismiss();
                             keypad.dismiss();
@@ -133,6 +144,7 @@ final class DlgKeypad {
                             if (m.dec != 0) a.decoderStart(m.dec);
                         }
                     });
+                    b.setText(memLine(m));
                     b.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
                     b.setOnLongClickListener(new View.OnLongClickListener() {
                         public boolean onLongClick(View v) {
