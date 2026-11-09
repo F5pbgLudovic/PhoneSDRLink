@@ -25,11 +25,16 @@ final class ShareLink {
         this.url = url; this.hz = hz; this.mode = mode; this.bwHz = bwHz; this.decoder = decoder;
     }
 
-    static String build(String url, long hz, String mode, int bwHz, String decoder) {
+    static String build(String url, long hz, String mode, int bwHz, String decoder) { return build(url, hz, mode, bwHz, decoder, ""); }
+
+    // kind : type de WebSDR (websdr, kiwi, owrx ; "" = autre ou inconnu). La page de partage en tire l'adresse qui règle la fréquence
+    // et le mode dans le navigateur (docs/s/index.html) ; l'application ignore ce paramètre à la réception.
+    static String build(String url, long hz, String mode, int bwHz, String decoder, String kind) {
         StringBuilder sb = new StringBuilder(WEB_BASE).append('?');
         sb.append("u=").append(enc(url)).append("&f=").append(hz).append("&m=").append(enc(mode));
         if (bwHz > 0) sb.append("&bw=").append(bwHz);
         if (decoder != null && !decoder.isEmpty()) sb.append("&d=").append(enc(decoder));
+        if (kind != null && !kind.isEmpty()) sb.append("&k=").append(enc(kind));
         return sb.toString();
     }
 

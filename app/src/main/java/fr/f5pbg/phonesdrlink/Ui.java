@@ -26,6 +26,7 @@ import java.util.List;
 // Petits outils d'interface : couleurs du thème clair/sombre, boutons, fenêtres de dialogue (tout est dessiné par le code).
 final class Ui {
     static boolean dark = true;
+    static boolean big;   // grand affichage (malvoyants) ouvert : les listes de choix s'agrandissent
 
     static int bg() { return cBg != 0 ? cBg : dark ? 0xFF101418 : 0xFFF2F4F7; }
     static int panel() { return dark ? 0xFF1B2128 : 0xFFFFFFFF; }
@@ -72,11 +73,11 @@ final class Ui {
         Button b = new Button(c);
         b.setText(text);
         b.setAllCaps(false);
-        b.setTextSize(14);
+        b.setTextSize(big ? 32 : 14);
         b.setTextColor(btnTx());
         b.setBackground(round(btn(), 10, c));
-        b.setMinHeight(dp(c, 44));
-        b.setMinimumHeight(dp(c, 44));
+        b.setMinHeight(dp(c, big ? 80 : 44));
+        b.setMinimumHeight(dp(c, big ? 80 : 44));
         b.setMinWidth(0);
         b.setMinimumWidth(0);
         b.setPadding(dp(c, 10), 0, dp(c, 10), 0);
@@ -96,7 +97,7 @@ final class Ui {
         TextView t = new TextView(c);
         t.setText(text);
         t.setTextColor(fg());
-        t.setTextSize(15);
+        t.setTextSize(big ? 30 : 15);
         return t;
     }
 
@@ -115,6 +116,7 @@ final class Ui {
         e.setHintTextColor(sub());
         e.setInputType(inputType);
         e.setSingleLine(true);
+        if (big) e.setTextSize(32);
         return e;
     }
 
@@ -185,7 +187,7 @@ final class Ui {
         root.setBackgroundColor(panel());
         if (title != null) {
             TextView t = label(c, title);
-            t.setTextSize(18);
+            t.setTextSize(big ? 36 : 18);
             t.setTypeface(Typeface.DEFAULT_BOLD);
             t.setPadding(dp(c, 16), dp(c, 14), dp(c, 16), dp(c, 6));
             root.addView(t);
@@ -260,10 +262,11 @@ final class Ui {
     // Liste de choix : un appui choisit et ferme.
     static void choose(Context c, String title, String[] items, final Index cb) {
         LinearLayout col = column(c);
-        final Dialog d = window(c, title, scroll(c, col), false);
+        final Dialog d = window(c, title, scroll(c, col), big);
         for (int i = 0; i < items.length; i++) {
             final int k = i;
             Button b = button(c, items[i], new View.OnClickListener() { public void onClick(View v) { d.dismiss(); cb.chose(k); } });
+            if (big) { b.setTextSize(44); b.setMinHeight(dp(c, 100)); b.setMinimumHeight(dp(c, 100)); }
             b.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             col.addView(b, lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, c, 3));
         }

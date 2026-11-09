@@ -177,6 +177,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         h.removeCallbacksAndMessages(null);
+        if (bigDlg != null) { try { bigDlg.dismiss(); } catch (Exception e) { } }
         stopService(new Intent(this, PlayService.class));
         if (focusReq != null) audio.abandonAudioFocusRequest(focusReq);
         if (mediaSession != null) { try { mediaSession.release(); } catch (Exception e) { } }
@@ -216,6 +217,8 @@ public class MainActivity extends Activity {
         }
         if (i.getBooleanExtra("rec", false)) onRecButton();
         if (i.getBooleanExtra("openrec", false)) openRecordings();
+        if (i.getLongExtra("bigfreq", 0) > 0) freq = i.getLongExtra("bigfreq", 0);   // essai : fixe la fréquence AFFICHÉE puis ouvre le grand affichage (--el bigfreq 14362500)
+        if (i.getLongExtra("bigfreq", 0) > 0) { updateDisplays(); showBig(); }
         String code = i.getStringExtra("js");
         if (code != null) web.evaluateJavascript("(function(){try{Promise.resolve((0, eval)(" + org.json.JSONObject.quote(code) + ")).then(function(v){PhoneSdr.post(\"dbg|\"+(typeof v===\"string\"?v:JSON.stringify(v)))},function(e){PhoneSdr.post(\"dbg|ERR \"+e)})}catch(e){PhoneSdr.post(\"dbg|ERR \"+e)}})()", null);
     }
@@ -306,6 +309,7 @@ public class MainActivity extends Activity {
         tvFreq.setSingleLine(true);
         tvFreq.setBackground(Ui.round(Ui.freqBg(), 10, this));
         tvFreq.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgKeypad.show(MainActivity.this); } });
+        tvFreq.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { showBig(); return true; } });   // grand affichage (malvoyants)
         btnMode = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseMode(); } });
         btnMode.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { chooseBandwidth(); return true; } });
         btnMode.setTextSize(18);
@@ -372,6 +376,7 @@ public class MainActivity extends Activity {
         sstvOverlay.setBackgroundColor(0xB0000000);
         sstvOverlay.setVisibility(View.GONE);
         sstvOverlay.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { if (!blocked()) DlgDecoder.show(MainActivity.this); } });
+        holdThen(sstvOverlay, new Runnable() { public void run() { sstvBig = !sstvBig; sstvShow(); } });   // 2 secondes sur l'image : taille x2, puis retour à la taille précédente
         holdThen(plus, new Runnable() { public void run() { chooseZoomSide(); } });
         holdThen(minus, new Runnable() { public void run() { chooseZoomSide(); } });
         right = new LinearLayout(this);
@@ -386,6 +391,99 @@ public class MainActivity extends Activity {
         layoutForOrientation();
     }
 
+
+    // ---- Grand affichage (pour les malvoyants) : appui long sur la fréquence. Fenêtre plein écran au premier plan : la fréquence sur toute la
+    // largeur (même police et même couleur), gros boutons MODE / SCAN / REC / Muet / pas, réglette deux fois plus haute en bas, bouton Retour.
+    // Le WebSDR n'est pas affiché mais reste entendu. Les listes de choix ouvertes depuis cette fenêtre sont agrandies (Ui.big).
+    Dialog bigDlg;
+    TextView bigFreq;
+    Button bigMode, bigScan, bigRec, bigMute, bigStep;
+    FreqBar bigBar;
+
+    void showBig() {
+        if (bigDlg != null && bigDlg.isShowing()) return;
+        final Dialog d = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        LinearLayout col = new LinearLayout(this);
+        col.setOrientation(LinearLayout.VERTICAL);
+        col.setBackgroundColor(Ui.bg());
+        col.setPadding(Ui.dp(this, 4), Ui.dp(this, 4), Ui.dp(this, 4), Ui.dp(this, 4));
+        bigFreq = new TextView(this);
+        bigFreq.setTextColor(Ui.freqTx());
+        bigFreq.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+        bigFreq.setGravity(Gravity.CENTER);
+        bigFreq.setSingleLine(true);
+        bigFreq.setIncludeFontPadding(false);
+        bigFreq.setPadding(Ui.dp(this, 8), Ui.dp(this, 8), Ui.dp(this, 8), Ui.dp(this, 8));
+        bigFreq.setBackground(Ui.round(Ui.freqBg(), 10, this));
+        col.addView(bigFreq, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, this, 2));
+        bigMode = bigButton(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseMode(); } });
+        bigMode.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { chooseBandwidth(); return true; } });
+        bigScan = bigButton(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; onScanButton(); } });
+        bigRec = bigButton(new View.OnClickListener() { public void onClick(View v) { onRecButton(); } });
+        bigRec.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { openRecordings(); return true; } });
+        bigMute = bigButton(new View.OnClickListener() { public void onClick(View v) { muted = !muted; applyVolume(); updateButtons(); } });
+        bigMute.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { onMuteLongPress(); return true; } });
+        bigStep = bigButton(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseStep(); } });
+        Button back = bigButton(new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } });
+        back.setText("◀ " + Lang.T("Retour", "Back"));
+        Button[][] grid = { { bigMode, bigScan }, { bigRec, bigMute }, { bigStep, back } };
+        for (Button[] rw : grid) {
+            LinearLayout r = Ui.row(this);
+            for (Button b : rw) r.addView(b, Ui.lp(0, ViewGroup.LayoutParams.MATCH_PARENT, 1, this, 3));
+            col.addView(r, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1, this, 0));
+        }
+        bigBar = new FreqBar(this);
+        bigBar.hint = Lang.T("◀ glisser : − fréquence | + fréquence ▶", "◀ swipe: − frequency | + frequency ▶");
+        bigBar.setListener(new FreqBar.Listener() { public void onSteps(int n, double ms) { tuneBySteps(n, ms); } });
+        col.addView(bigBar, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(this, 104), 0, this, 2));
+        d.setContentView(col);
+        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() {
+            public void onDismiss(android.content.DialogInterface x) { Ui.big = false; bigDlg = null; }
+        });
+        Ui.big = true;
+        bigDlg = d;
+        d.show();
+        bigRefresh();
+    }
+
+    // Bouton du grand affichage : texte 4 fois plus gros que les boutons ordinaires (13 → 52), réduit seulement s'il ne tient pas.
+    Button bigButton(View.OnClickListener l) {
+        Button b = Ui.button(this, "", l);
+        b.setTypeface(Typeface.DEFAULT_BOLD);
+        b.setPadding(Ui.dp(this, 4), 0, Ui.dp(this, 4), 0);
+        b.setAutoSizeTextTypeUniformWithConfiguration(14, 52, 2, android.util.TypedValue.COMPLEX_UNIT_SP);
+        return b;
+    }
+
+    // Fréquence du grand affichage, sans les deux derniers chiffres (14.238.000 -> 14.238.0) ; à partir de 100.000.000 Hz, sans le dernier groupe (145.500.000 -> 145.500).
+    static String bigFreqText(long hz) {
+        String s = formatFreq(hz);
+        return hz >= 100000000L ? s.substring(0, s.length() - 4) : s.substring(0, s.length() - 2);
+    }
+
+    // Remet à jour la fenêtre du grand affichage (appelé par updateDisplays et updateButtons).
+    void bigRefresh() {
+        if (bigDlg == null || !bigDlg.isShowing()) return;
+        String s = bigFreqText(freq);
+        {   // taille recalculée à chaque fois (rotation de l'écran)
+            if (!s.contentEquals(bigFreq.getText())) bigFreq.setText(s);
+            android.graphics.Paint p = new android.graphics.Paint();
+            p.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));   // même police que la case, sinon le dernier chiffre est coupé
+            p.setTextSize(100);
+            float avail = (getResources().getDisplayMetrics().widthPixels - Ui.dp(this, 8 + 16)) * 0.95f;   // marge de sécurité
+            float size = Math.min(100f * avail / Math.max(1f, p.measureText(s)), getResources().getDisplayMetrics().heightPixels * 0.25f);
+            bigFreq.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, size);
+        }
+        bigMode.setText(btnMode.getText());
+        bigScan.setText(btnScan.getText());
+        Ui.paint(bigScan, scanning, Ui.danger());
+        bigRec.setText(btnRec.getText());
+        Ui.paint(bigRec, recording, Ui.danger());
+        bigMute.setText(btnMute.getText());
+        Ui.paint(bigMute, muted, Ui.danger());
+        bigStep.setText(btnStep.getText());
+        bigBar.locked = locked;
+    }
     // Appui de 2 secondes sans lâcher sur un bouton : exécute r (le clic normal est alors ignoré).
     void holdThen(final View v, final Runnable r) {
         final boolean[] fired = { false };
@@ -497,7 +595,7 @@ public class MainActivity extends Activity {
         if (u == null || !ShareLink.isWeb(u)) { status(Lang.T("Aucun WebSDR à partager", "No WebSDR to share")); return; }
         String title = currentTitle().trim();
         if (title.isEmpty()) title = Uri.parse(u).getHost();
-        String link = ShareLink.build(u, freq, mode, bwHz, decMode != 0 ? decName(decMode) : "");
+        String link = ShareLink.build(u, freq, mode, bwHz, decMode != 0 ? decName(decMode) : "", sdrKind.startsWith("owrx") ? "owrx" : sdrKind.equals("websdr") || sdrKind.equals("kiwi") ? sdrKind : "");
         String text = "📻 " + Lang.F("{0} sur {1}", "{0} on {1}", listenText(freq, mode, decMode), title)
             + "\n" + link;   // la page du lien propose d'ouvrir PhoneSDRLink, de l'installer ou d'écouter dans le navigateur
         Intent i = new Intent(Intent.ACTION_SEND);
@@ -562,6 +660,7 @@ public class MainActivity extends Activity {
             right.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         }
         tvFreq.setTextSize(land ? 30 : 36);
+        bigRefresh();
     }
 
     // Relit les réglages pour réafficher tous les textes (après un changement de langue ou de thème : l'écran est recréé).
@@ -575,6 +674,7 @@ public class MainActivity extends Activity {
         tvFreq.setText(formatFreq(freq));
         btnMode.setText(bwHz > 0 ? modeLabel(mode) + "\n" + bwText(bwHz).replace(" kHz", "k").replace(" Hz", "Hz") : modeLabel(mode));
         btnStep.setText(stepText(st.stepFor(mode)));
+        bigRefresh();
     }
 
     void updateButtons() {
@@ -587,6 +687,7 @@ public class MainActivity extends Activity {
         Ui.paint(btnRec, recording, Ui.danger());
         btnScan.setText(scanning ? Lang.T("■ Arrêter le scan", "■ Stop scan") : "▶ Scan");
         Ui.paint(btnScan, scanning, Ui.danger());
+        bigRefresh();
     }
 
     void status(String s) {
@@ -1986,6 +2087,7 @@ public class MainActivity extends Activity {
 
     // ---- SSTV : image en cours (bitmap rempli ligne par ligne), incrustation en bas de l'écran principal, enregistrement automatique
     ImageView sstvOverlay, sstvDlgImg;
+    boolean sstvBig;   // image de l'écran principal en taille x2 (appui de 2 secondes dessus, qui bascule)
     Bitmap sstvBmp;
     int[] sstvPx;
     int sstvW, sstvH, sstvShown;
@@ -2035,6 +2137,7 @@ public class MainActivity extends Activity {
         int fw = webFrame != null ? webFrame.getWidth() : 0, fh = webFrame != null ? webFrame.getHeight() : 0;
         if (fw <= 0 || fh <= 0) { fw = getResources().getDisplayMetrics().widthPixels; fh = getResources().getDisplayMetrics().heightPixels / 2; }
         float k = decMode == DEC_HELL ? Math.min((fw * 0.92f) / sstvW, (fh * 0.40f) / sstvH) : Math.min((fw * 0.42f) / sstvW, (fh * 0.42f) / sstvH);
+        if (sstvBig) k = Math.min(k * 2, Math.min((fw * 0.98f) / sstvW, (fh * 0.98f) / sstvH));   // 2 secondes sur l'image : taille doublée (dans la limite de la zone WebSDR)
         FrameLayout.LayoutParams p = (FrameLayout.LayoutParams) sstvOverlay.getLayoutParams();
         if (p != null) {
             int nw = Math.max(1, (int) (sstvW * k)), nh = Math.max(1, (int) (sstvH * k));

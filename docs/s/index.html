@@ -127,8 +127,23 @@
       "PhoneSDRLink is an Android app. On this device, listen to the WebSDR in the browser.");
   }
 
+  // Adresse du WebSDR réglée sur la même fréquence et le même mode (paramètre k = type de WebSDR, donné par l'application) :
+  // websdr.org ?tune=14074usb ; KiwiSDR ?f=14074usb ; OpenWebRX #freq=14074000,mod=usb. Autre type ou k absent : adresse brute.
+  // La largeur de bande n'a pas d'équivalent dans ces adresses.
+  function tunedUrl() {
+    var k = (q.get("k") || "").trim().toLowerCase();
+    var kh = String(Number((hz / 1000).toFixed(3)));   // kHz sans zéros inutiles
+    var sub = { USB: "usb", LSB: "lsb", AM: "am", FM: "fm", CW: "cw", DATAU: "usb" }[m];
+    try {
+      var x = new URL(u);
+      if (k === "websdr") { x.searchParams.set("tune", kh + sub); return x.toString(); }
+      if (k === "kiwi") { x.searchParams.set("f", kh + (m === "FM" ? "nbfm" : sub)); return x.toString(); }
+      if (k === "owrx") { x.hash = "freq=" + hz + ",mod=" + (m === "FM" ? "nfm" : sub); return x.toString(); }
+    } catch (e) { }
+    return u;
+  }
   var listen = document.getElementById("listen");
-  listen.href = u;
+  listen.href = tunedUrl();
   listen.textContent = t("Écouter dans le navigateur", "Listen in the browser");
 
   document.getElementById("ok").hidden = false;
