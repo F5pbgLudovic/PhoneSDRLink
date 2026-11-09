@@ -107,3 +107,11 @@ Les messageries ne rendent pas `phonesdrlink://` cliquable. Le lien partagé dev
   l'ajoute dans Ouvrir par défaut.
 - Message partagé : ligne d'écoute + lien https (la page remplace la ligne « Navigateur »).
 - Passage au dépôt de F5PBG : changer `ShareLink.WEB_BASE`, l'hôte et le chemin de l'intent-filter, `APK_URL` de la page.
+
+## Révision du 2026-11-09 : dépôt de F5PBG
+
+Après l'essai sur le fork `bt0r`, le lien pointe sur les Pages du dépôt de F5PBG :
+`https://f5pbgludovic.github.io/PhoneSDRLink/s/` (`ShareLink.WEB_BASE`, intent-filter https du manifeste, tests).
+Les liens de l'essai (`bt0r.github.io`) ne sont plus reconnus. Réglage GitHub Pages (dossier `docs` de `main`) et
+ouverture directe facultative (`assetlinks.json` dans le dépôt `F5pbgLudovic.github.io`, empreinte de la clé des
+releases) : `docs/GITHUB-PAGES.md`.
