@@ -91,3 +91,19 @@ le lien reste utile si la messagerie ne rend pas `phonesdrlink://` cliquable ou 
 ## Hors périmètre
 
 Lien https / App Links, QR code, zoom de la cascade, partage depuis SDRLink (PC).
+
+## Révision du 2026-11-09 : lien https
+
+Les messageries ne rendent pas `phonesdrlink://` cliquable. Le lien partagé devient
+`https://bt0r.github.io/PhoneSDRLink/s/?u=…&f=…&m=…[&bw=…][&d=…]` (`ShareLink.WEB_BASE`, mêmes paramètres) ;
+`phonesdrlink://tune?…` reste accepté.
+
+- Page GitHub Pages `docs/s/index.html` (Pages du fork `bt0r`, source : dossier `docs`) : affiche l'écoute, bouton
+  « Ouvrir dans PhoneSDRLink » (`intent://` vers `phonesdrlink://`, repli vers la page d'installation), « Écouter dans le
+  navigateur », « Installer PhoneSDRLink ». Elle refait le lien à partir des seuls paramètres connus et refuse toute adresse
+  autre que http/https.
+- Manifeste : `intent-filter` https (`autoVerify`) sur `bt0r.github.io/PhoneSDRLink/s`. Sans `assetlinks.json` à la racine
+  du domaine (dépôt `bt0r.github.io`), Android ne vérifie pas le lien : il s'ouvre dans le navigateur, sauf si l'utilisateur
+  l'ajoute dans Ouvrir par défaut.
+- Message partagé : ligne d'écoute + lien https (la page remplace la ligne « Navigateur »).
+- Passage au dépôt de F5PBG : changer `ShareLink.WEB_BASE`, l'hôte et le chemin de l'intent-filter, `APK_URL` de la page.
