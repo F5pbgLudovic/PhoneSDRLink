@@ -32,8 +32,9 @@ final class CheckList<T> extends BaseAdapter {
     void set(List<T> list) {
         items.clear();
         items.addAll(list);
-        checked.retainAll(items);
-        if (selected != null && !items.contains(selected)) selected = null;
+        HashSet<T> now = new HashSet<T>(items);   // recherche en O(1) : avec plusieurs milliers d'éléments, retainAll/contains sur la liste étaient quadratiques
+        checked.retainAll(now);
+        if (selected != null && !now.contains(selected)) selected = null;
         notifyDataSetChanged();
     }
 

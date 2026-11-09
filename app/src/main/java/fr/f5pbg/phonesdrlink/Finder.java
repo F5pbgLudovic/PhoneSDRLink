@@ -18,6 +18,8 @@ import org.json.JSONObject;
 final class FoundSdr {
     String name = "", location = "", type = "", url = "", users = "", country = "";
     double lat, lon, distanceKm;
+    private String k;
+    String key() { if (k == null) { k = Finder.urlKey(url); if (k == null) k = ""; } return k; }
 }
 
 // Lecture des annuaires publics : websdr.org, KiwiSDR (kiwisdr.com via rx.linkfanel.net) et ReceiverBook (comme SDRLink).

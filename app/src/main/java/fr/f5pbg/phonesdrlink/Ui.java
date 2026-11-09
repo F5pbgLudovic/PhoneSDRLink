@@ -93,6 +93,37 @@ final class Ui {
         b.setTextColor(active ? Color.WHITE : btnTx());
     }
 
+    // Retour visuel des boutons d'une fenêtre : au toucher le bouton prend brièvement la couleur d'accent (retour à la normale 0,35 s après le relâchement,
+    // sauf si l'action a entre-temps changé son aspect, par exemple le rouge « en cours »).
+    static void flashButtons(View v) {
+        if (v instanceof ViewGroup) { ViewGroup g = (ViewGroup) v; for (int i = 0; i < g.getChildCount(); i++) flashButtons(g.getChildAt(i)); }
+        if (!(v instanceof Button)) return;
+        final Button b = (Button) v;
+        final Object[] mem = new Object[3];   // fond d'origine, couleur du texte d'origine, fond de l'éclair
+        b.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View x, android.view.MotionEvent e) {
+                int ac = e.getActionMasked();
+                if (ac == android.view.MotionEvent.ACTION_DOWN) {
+                    if (mem[2] == null || b.getBackground() != mem[2]) { mem[0] = b.getBackground(); mem[1] = b.getTextColors(); }
+                    GradientDrawable g = round(accent(), 10, b.getContext());
+                    mem[2] = g;
+                    b.setBackground(g);
+                    b.setTextColor(onColor(accent()));
+                } else if (ac == android.view.MotionEvent.ACTION_UP || ac == android.view.MotionEvent.ACTION_CANCEL) {
+                    b.postDelayed(new Runnable() {
+                        public void run() {
+                            if (mem[2] != null && b.getBackground() == mem[2]) {
+                                b.setBackground((android.graphics.drawable.Drawable) mem[0]);
+                                b.setTextColor((android.content.res.ColorStateList) mem[1]);
+                            }
+                        }
+                    }, 350);
+                }
+                return false;
+            }
+        });
+    }
+
     static TextView label(Context c, String text) {
         TextView t = new TextView(c);
         t.setText(text);

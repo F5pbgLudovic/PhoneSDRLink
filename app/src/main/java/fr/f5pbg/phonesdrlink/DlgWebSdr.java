@@ -125,7 +125,7 @@ final class DlgWebSdr {
         find.addTextChangedListener(new android.text.TextWatcher() {
             public void beforeTextChanged(CharSequence s, int x, int y, int z) { }
             public void onTextChanged(CharSequence s, int x, int y, int z) { }
-            public void afterTextChanged(android.text.Editable s) { query[0] = s.toString().trim().toLowerCase(); fill[0].run(); }
+            public void afterTextChanged(android.text.Editable s) { query[0] = s.toString().trim().toLowerCase(); UI.removeCallbacks(fill[0]); UI.postDelayed(fill[0], 400); }
         });
         lr.addView(Ui.button(a, "🔍", new View.OnClickListener() {
             public void onClick(View v) {
@@ -158,10 +158,10 @@ final class DlgWebSdr {
         col.addView(r1);
         LinearLayout r2 = Ui.row(a);
         r2.addView(Ui.button(a, Lang.T("Gérer les favoris…", "Manage favorites…"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); manage(a); }
+            public void onClick(View v) { d.dismiss(); manage(a, true); }
         }), w(a, 1));
         r2.addView(Ui.button(a, Lang.T("Chercher des WebSDR…", "Find WebSDRs…"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); search(a); }
+            public void onClick(View v) { d.dismiss(); search(a, true); }
         }), w(a, 1));
         col.addView(r2);
         LinearLayout r3 = Ui.row(a);
@@ -173,6 +173,7 @@ final class DlgWebSdr {
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { savePos(st, lv, st.curFavList); st.save(); } });
         fill[0].run();
         restorePos(st, lv, st.curFavList);
+        Ui.flashButtons(col);
         d.show();
     }
 
@@ -251,7 +252,10 @@ final class DlgWebSdr {
 
     // ------------------------------------------------------------------ gestion des favoris
 
-    static void manage(final MainActivity a) {
+    static void manage(MainActivity a) { manage(a, false); }
+
+    // back : ouvert depuis la fenêtre WEBSDR, qui se rouvre quand on referme celle-ci.
+    static void manage(final MainActivity a, final boolean back) {
         final Store st = a.st;
         LinearLayout col = Ui.column(a);
         col.setPadding(Ui.dp(a, 10), Ui.dp(a, 6), Ui.dp(a, 10), Ui.dp(a, 10));
@@ -314,7 +318,7 @@ final class DlgWebSdr {
         find.addTextChangedListener(new android.text.TextWatcher() {
             public void beforeTextChanged(CharSequence s, int x, int y, int z) { }
             public void onTextChanged(CharSequence s, int x, int y, int z) { }
-            public void afterTextChanged(android.text.Editable s) { query[0] = s.toString().trim().toLowerCase(); fill[0].run(); }
+            public void afterTextChanged(android.text.Editable s) { query[0] = s.toString().trim().toLowerCase(); UI.removeCallbacks(fill[0]); UI.postDelayed(fill[0], 400); }
         });
         lr.addView(Ui.button(a, "🔍", new View.OnClickListener() {
             public void onClick(View v) {
@@ -390,9 +394,11 @@ final class DlgWebSdr {
         LinearLayout r3 = Ui.row(a);
         r3.addView(Ui.button(a, Lang.T("Tout cocher", "Check all"), new View.OnClickListener() { public void onClick(View v) { cl.checkAll(true); } }), w(a, 1));
         r3.addView(Ui.button(a, Lang.T("Tout décocher", "Uncheck all"), new View.OnClickListener() { public void onClick(View v) { cl.checkAll(false); } }), w(a, 1));
-        r3.addView(Ui.button(a, Lang.T("Vérifier les favoris", "Check favorites"), new View.OnClickListener() {
-            public void onClick(View v) { checkFavorites(a, cl, status, info, fill[0]); }
-        }), w(a, 1.3f));
+        final android.widget.Button bCheck = Ui.button(a, Lang.T("Vérifier les favoris", "Check favorites"), null);
+        bCheck.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { checkFavorites(a, cl, status, info, fill[0], bCheck); }
+        });
+        r3.addView(bCheck, w(a, 1.3f));
         col.addView(r3);
 
         LinearLayout r4 = Ui.row(a);
@@ -443,9 +449,10 @@ final class DlgWebSdr {
         }), w(a, 1));
         r5.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 0.7f));
         col.addView(r5);
-        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { savePos(st, lv, 1000 + st.curFavList); st.save(); } });
+        d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { savePos(st, lv, 1000 + st.curFavList); st.save(); if (back) UI.post(new Runnable() { public void run() { show(a); } }); } });
         fill[0].run();
         restorePos(st, lv, 1000 + st.curFavList);
+        Ui.flashButtons(col);
         d.show();
     }
 
@@ -485,17 +492,26 @@ final class DlgWebSdr {
 
     // Vérifie les adresses (réponse du serveur) ; retire les doublons ; coche les liens morts pour que « Supprimer… » les retire.
     static void checkFavorites(final MainActivity a, final CheckList<Favorite> cl, final HashMap<Favorite, String> status,
-                               final TextView info, final Runnable refresh) {
+                               final TextView info, final Runnable refresh, final android.widget.Button busy) {
         final Store st = a.st;
+        if (busy.getTag() != null) return;   // une vérification est déjà en cours
+        busy.setTag("busy");
+        Ui.paint(busy, true, Ui.danger());   // rouge pendant toute la vérification
+        // Doublons (même liste, même adresse) parmi les favoris affichés : on garde le premier. Une seule passe avec des tables de hachage ;
+        // l'ancienne double boucle (avec analyse d'adresse à chaque comparaison) figeait l'application sur une liste de plusieurs milliers de favoris.
         int dup = 0;
-        for (Favorite f : new ArrayList<Favorite>(cl.items)) {
-            for (Favorite g : st.favorites) {
-                if (g != f && g.list == f.list && g.matches(f.url) && st.favorites.indexOf(g) < st.favorites.indexOf(f)) { st.favorites.remove(f); dup++; break; }
-            }
+        HashSet<Favorite> shownSet = new HashSet<Favorite>(cl.items);
+        HashSet<String> seenKeys = new HashSet<String>();
+        HashSet<Favorite> remove = new HashSet<Favorite>();
+        for (Favorite g : st.favorites) {
+            String k = Finder.urlKey(g.url);
+            if (k != null && !seenKeys.add(g.list + "|" + k) && shownSet.contains(g)) { remove.add(g); dup++; }
         }
+        if (!remove.isEmpty()) st.favorites.removeAll(remove);
         refresh.run();
         final int dups = dup;
         final ArrayList<Favorite> todo = new ArrayList<Favorite>(cl.items);
+        if (todo.isEmpty()) { busy.setTag(null); Ui.paint(busy, false, 0); return; }
         final int[] left = { todo.size() };
         final ArrayList<Favorite> dead = new ArrayList<Favorite>();
         info.setText(Lang.F("Vérification de {0} adresse(s)…", "Checking {0} address(es)…", todo.size()));
@@ -518,6 +534,8 @@ final class DlgWebSdr {
                             left[0]--;
                             info.setText(Lang.F("Vérification… {0} restant(s)", "Checking… {0} left", left[0]));
                             if (left[0] == 0) {
+                                busy.setTag(null);
+                                Ui.paint(busy, false, 0);
                                 cl.checked.clear();
                                 cl.checked.addAll(dead);
                                 cl.notifyDataSetChanged();   // couleurs d'état mises à jour
@@ -611,7 +629,11 @@ final class DlgWebSdr {
         try { return Integer.parseInt(s.users.split("/")[0].trim()); } catch (Exception e) { return -1; }
     }
 
-    static void search(final MainActivity a) {
+    static void search(MainActivity a) { search(a, false); }
+
+    // back : ouvert depuis la fenêtre WEBSDR, qui se rouvre quand on referme celle-ci (sauf si on part écouter un récepteur).
+    static void search(final MainActivity a, final boolean back) {
+        final boolean[] left = { false };
         final Store st = a.st;
         LinearLayout col = Ui.column(a);
         col.setPadding(Ui.dp(a, 10), Ui.dp(a, 6), Ui.dp(a, 10), Ui.dp(a, 10));
@@ -684,13 +706,13 @@ final class DlgWebSdr {
                     String q = filter.getText().toString().trim().toLowerCase(Locale.ROOT);
                     int ti = sType.getSelectedItemPosition();
                     String type = ti > 0 ? (String) sType.getSelectedItem() : null;
+                    HashSet<String> favKeys = new HashSet<String>();   // adresses des favoris, calculées une seule fois (avant : des milliers d'analyses d'adresse à chaque frappe)
+                    for (Favorite f : st.favorites) { String fk = Finder.urlKey(f.url); if (fk != null) favKeys.add(fk); }
                     for (FoundSdr s : cache) {
                         if (s.distanceKm > max) continue;
                         if (type != null && !s.type.equalsIgnoreCase(type)) continue;
                         if (!q.isEmpty() && !(s.name + " " + s.location + " " + s.country + " " + s.url).toLowerCase(Locale.ROOT).contains(q)) continue;
-                        boolean isFav = false;
-                        for (Favorite f : st.favorites) if (f.matches(s.url)) isFav = true;
-                        if (isFav) { hiddenFavs[0]++; continue; }
+                        if (favKeys.contains(s.key())) { hiddenFavs[0]++; continue; }
                         shown.add(s);
                     }
                     final int sortCol = sSort.getSelectedItemPosition();
@@ -710,7 +732,7 @@ final class DlgWebSdr {
                         }
                     });
                 }
-                for (FoundSdr s : shown) if (checkedKeys.contains(Finder.urlKey(s.url))) cl.checked.add(s);
+                for (FoundSdr s : shown) if (checkedKeys.contains(s.key())) cl.checked.add(s);
                 cl.set(shown);
                 statusRun.run();
             }
@@ -719,14 +741,16 @@ final class DlgWebSdr {
         cl.onChange = new Runnable() {
             public void run() {
                 for (FoundSdr s : cl.items) {
-                    String k = Finder.urlKey(s.url);
+                    String k = s.key();
                     if (cl.checked.contains(s)) checkedKeys.add(k); else checkedKeys.remove(k);
                 }
                 statusRun.run();
             }
         };
+        final android.widget.Button bRefresh = Ui.button(a, Lang.T("Actualiser", "Refresh"), null);
         final Runnable load = new Runnable() {
             public void run() {
+                Ui.paint(bRefresh, true, Ui.danger());   // rouge pendant la recherche
                 info.setText(Lang.T("Recherche dans les annuaires (websdr.org, KiwiSDR, ReceiverBook)…", "Searching directories (websdr.org, KiwiSDR, ReceiverBook)…"));
                 new Thread(new Runnable() {
                     public void run() {
@@ -734,6 +758,7 @@ final class DlgWebSdr {
                         final List<FoundSdr> list = Finder.loadAll(rep);
                         UI.post(new Runnable() {
                             public void run() {
+                                Ui.paint(bRefresh, false, 0);
                                 if (!d.isShowing()) return;
                                 cache = list;
                                 cl.checked.clear();
@@ -747,11 +772,21 @@ final class DlgWebSdr {
                 }).start();
             }
         };
+        // La saisie n'est prise en compte qu'une fois terminée (0,8 s sans frappe, ou touche Entrée/OK) : sans cela, taper 20000 lançait
+        // trois recherches intermédiaires (2, 20, 200, 2000…) sur des milliers de récepteurs.
+        final Runnable[] later = new Runnable[1];
+        final Runnable typed = new Runnable() { public void run() { UI.removeCallbacks(later[0]); fill.run(); } };
+        later[0] = typed;
         android.text.TextWatcher tw = new android.text.TextWatcher() {
             public void beforeTextChanged(CharSequence s, int a1, int b, int c) { }
             public void onTextChanged(CharSequence s, int a1, int b, int c) { }
-            public void afterTextChanged(android.text.Editable e) { fill.run(); }
+            public void afterTextChanged(android.text.Editable e) { UI.removeCallbacks(later[0]); UI.postDelayed(later[0], 800); }
         };
+        android.widget.TextView.OnEditorActionListener done = new android.widget.TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, android.view.KeyEvent ev) { typed.run(); return false; }
+        };
+        dist.setOnEditorActionListener(done);
+        filter.setOnEditorActionListener(done);
         dist.addTextChangedListener(tw);
         filter.addTextChangedListener(tw);
         final int[] prevSel = { 0, 4 };   // choix de départ du type et du tri
@@ -772,13 +807,14 @@ final class DlgWebSdr {
             public void onItemClick(AdapterView<?> p, View v, int pos, long id) { cl.select(pos); }
         });
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            public boolean onItemLongClick(AdapterView<?> p, View v, int pos, long id) { d.dismiss(); a.openUrl(cl.items.get(pos).url); return true; }
+            public boolean onItemLongClick(AdapterView<?> p, View v, int pos, long id) { left[0] = true; d.dismiss(); a.openUrl(cl.items.get(pos).url); return true; }
         });
 
         LinearLayout r1 = Ui.row(a);
         r1.addView(Ui.button(a, Lang.T("Écouter la sélection", "Listen to selection"), new View.OnClickListener() {
             public void onClick(View v) {
                 if (cl.selected == null) { Ui.message(a, "WebSDR", Lang.T("Sélectionnez d'abord un récepteur dans la liste.", "Please select a receiver in the list first.")); return; }
+                left[0] = true;
                 d.dismiss();
                 a.openUrl(cl.selected.url);
             }
@@ -796,7 +832,7 @@ final class DlgWebSdr {
                     public void chose(int list) {
                         int n = 0;
                         for (FoundSdr s : cache) {
-                            if (!checkedKeys.contains(Finder.urlKey(s.url))) continue;
+                            if (!checkedKeys.contains(s.key())) continue;
                             boolean dup = false;
                             for (Favorite f : st.favorites) if (f.list == list && f.matches(s.url)) dup = true;
                             if (dup) continue;
@@ -817,12 +853,14 @@ final class DlgWebSdr {
                 });
             }
         }), w(a, 1.6f));
-        r2.addView(Ui.button(a, Lang.T("Actualiser", "Refresh"), new View.OnClickListener() { public void onClick(View v) { load.run(); } }), w(a, 1));
+        bRefresh.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { load.run(); } });
+        r2.addView(bRefresh, w(a, 1));
         r2.addView(Ui.button(a, Lang.T("Fermer", "Close"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), w(a, 0.8f));
         col.addView(r2);
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() {
-            public void onDismiss(android.content.DialogInterface x) { View c0 = lv.getChildAt(0); searchPos = new int[] { lv.getFirstVisiblePosition(), c0 == null ? 0 : c0.getTop() }; st.putPos("srch", searchPos[0], searchPos[1]); st.save(); }
+            public void onDismiss(android.content.DialogInterface x) { View c0 = lv.getChildAt(0); searchPos = new int[] { lv.getFirstVisiblePosition(), c0 == null ? 0 : c0.getTop() }; st.putPos("srch", searchPos[0], searchPos[1]); st.save(); if (back && !left[0]) UI.post(new Runnable() { public void run() { show(a); } }); }
         });
+        Ui.flashButtons(col);
         d.show();
         if (cache == null) load.run();
         else {
