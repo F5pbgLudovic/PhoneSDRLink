@@ -760,3 +760,5 @@ Downloading…	Ladataan…
 Installing… confirm in the Android window if it appears.	Asennetaan… vahvista Androidin ikkunassa, jos se tulee näkyviin.
 Update failed. Check the connection and try again.	Päivitys epäonnistui. Tarkista yhteys ja yritä uudelleen.
 Installation cancelled or failed. You can try again.	Asennus peruttiin tai se epäonnistui. Voit yrittää uudelleen.
+Max distance from the current position (km):	Enimmäisetäisyys nykyisestä sijainnista (km):
+Find WebSDRs	Etsi WebSDR-vastaanottimia

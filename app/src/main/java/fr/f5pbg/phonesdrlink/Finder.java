@@ -160,6 +160,11 @@ final class Finder {
         } catch (Exception e) { return null; }
     }
 
+    // Distances de la liste depuis un point de référence (position de l'appareil, ou centre de la France).
+    static void setRef(List<FoundSdr> list, double lat, double lon) {
+        for (FoundSdr s : list) s.distanceKm = distance(lat, lon, s.lat, s.lon);
+    }
+
     static double distance(double lat1, double lon1, double lat2, double lon2) {
         double r = Math.PI / 180, dLat = (lat2 - lat1) * r, dLon = (lon2 - lon1) * r;
         double h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin(dLon / 2) * Math.sin(dLon / 2);

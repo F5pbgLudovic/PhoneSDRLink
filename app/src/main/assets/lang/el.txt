@@ -760,3 +760,5 @@ Downloading…	Λήψη…
 Installing… confirm in the Android window if it appears.	Εγκατάσταση… επιβεβαιώστε στο παράθυρο του Android, αν εμφανιστεί.
 Update failed. Check the connection and try again.	Η ενημέρωση απέτυχε. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.
 Installation cancelled or failed. You can try again.	Η εγκατάσταση ακυρώθηκε ή απέτυχε. Μπορείτε να δοκιμάσετε ξανά.
+Max distance from the current position (km):	Μέγιστη απόσταση από την τρέχουσα θέση (km):
+Find WebSDRs	Αναζήτηση WebSDR

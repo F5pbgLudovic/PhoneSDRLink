@@ -195,6 +195,12 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int code, String[] perms, int[] res) {
+        super.onRequestPermissionsResult(code, perms, res);
+        if (code == 8) MyPos.afterPermission(this);   // position approximative pour la recherche de WebSDR
+    }
+
+    @Override
     protected void onNewIntent(Intent i) {
         super.onNewIntent(i);
         debugIntent(i);

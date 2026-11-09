@@ -760,3 +760,5 @@ Downloading…	Prenašanje…
 Installing… confirm in the Android window if it appears.	Nameščanje… potrdite v oknu Androida, če se prikaže.
 Update failed. Check the connection and try again.	Posodobitev ni uspela. Preverite povezavo in poskusite znova.
 Installation cancelled or failed. You can try again.	Namestitev je bila preklicana ali ni uspela. Poskusite lahko znova.
+Max distance from the current position (km):	Najv. razdalja od trenutnega položaja (km):
+Find WebSDRs	Poišči WebSDR

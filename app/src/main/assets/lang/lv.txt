@@ -760,3 +760,5 @@ Downloading…	Lejupielāde…
 Installing… confirm in the Android window if it appears.	Instalēšana… apstipriniet Android logā, ja tas parādās.
 Update failed. Check the connection and try again.	Atjaunināšana neizdevās. Pārbaudiet savienojumu un mēģiniet vēlreiz.
 Installation cancelled or failed. You can try again.	Instalēšana atcelta vai neizdevās. Varat mēģināt vēlreiz.
+Max distance from the current position (km):	Maks. attālums no pašreizējās atrašanās vietas (km):
+Find WebSDRs	Meklēt WebSDR

@@ -760,3 +760,5 @@ Downloading…	Letöltés…
 Installing… confirm in the Android window if it appears.	Telepítés… erősítse meg az Android ablakában, ha megjelenik.
 Update failed. Check the connection and try again.	A frissítés nem sikerült. Ellenőrizze a kapcsolatot, és próbálja újra.
 Installation cancelled or failed. You can try again.	A telepítés megszakadt vagy sikertelen volt. Próbálja újra.
+Max distance from the current position (km):	Max. távolság a jelenlegi pozíciótól (km):
+Find WebSDRs	WebSDR keresése

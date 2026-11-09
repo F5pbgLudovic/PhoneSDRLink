@@ -637,10 +637,11 @@ final class DlgWebSdr {
         final Store st = a.st;
         LinearLayout col = Ui.column(a);
         col.setPadding(Ui.dp(a, 10), Ui.dp(a, 6), Ui.dp(a, 10), Ui.dp(a, 10));
-        final Dialog d = Ui.window(a, Lang.T("Rechercher des WebSDR (France et pays voisins)", "Find WebSDRs (France and neighbouring countries)"), col, true);
+        final Dialog d = Ui.window(a, Lang.T("Rechercher des WebSDR", "Find WebSDRs"), col, true);
 
         LinearLayout dr = Ui.row(a);
-        dr.addView(Ui.small(a, Lang.T("Distance max du centre de la France (km) :", "Max distance from the centre of France (km):")), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        final TextView distLabel = Ui.small(a, "");
+        dr.addView(distLabel, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
         final EditText dist = Ui.edit(a, "1000", "", InputType.TYPE_CLASS_NUMBER);
         dr.addView(dist, Ui.lp(Ui.dp(a, 90), ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
         col.addView(dr);
@@ -747,6 +748,18 @@ final class DlgWebSdr {
                 statusRun.run();
             }
         };
+        // Point de référence des distances : position de l'appareil si elle est connue (permission « position approximative »), sinon centre de la France.
+        final Runnable applyRef = new Runnable() {
+            public void run() {
+                boolean here = MyPos.has();
+                distLabel.setText(here ? Lang.T("Distance max par rapport à la position actuelle (km) :", "Max distance from the current position (km):")
+                    : Lang.T("Distance max du centre de la France (km) :", "Max distance from the centre of France (km):"));
+                if (cache != null) Finder.setRef(cache, here ? MyPos.lat : Finder.CENTER_LAT, here ? MyPos.lon : Finder.CENTER_LON);
+                fill.run();
+            }
+        };
+        distLabel.setText(Lang.T("Distance max du centre de la France (km) :", "Max distance from the centre of France (km):"));
+        MyPos.ensure(a, new Runnable() { public void run() { if (d.isShowing()) applyRef.run(); } });
         final android.widget.Button bRefresh = Ui.button(a, Lang.T("Actualiser", "Refresh"), null);
         final Runnable load = new Runnable() {
             public void run() {
@@ -765,7 +778,7 @@ final class DlgWebSdr {
                                 StringBuilder sb = new StringBuilder();
                                 for (String s : rep) { if (sb.length() > 0) sb.append(", "); sb.append(s); }
                                 report[0] = sb.toString();
-                                fill.run();
+                                applyRef.run();
                             }
                         });
                     }
@@ -864,7 +877,7 @@ final class DlgWebSdr {
         d.show();
         if (cache == null) load.run();
         else {
-            fill.run();
+            applyRef.run();
             if (searchPos == null) searchPos = st.getPos("srch");
             if (searchPos != null && searchPos.length >= 2) lv.post(new Runnable() { public void run() { lv.setSelectionFromTop(searchPos[0], searchPos[1]); } });
         }

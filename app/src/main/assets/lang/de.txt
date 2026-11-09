@@ -760,3 +760,5 @@ Downloading…	Wird heruntergeladen…
 Installing… confirm in the Android window if it appears.	Installation… bestätigen Sie im Android-Fenster, falls es erscheint.
 Update failed. Check the connection and try again.	Update fehlgeschlagen. Prüfen Sie die Verbindung und versuchen Sie es erneut.
 Installation cancelled or failed. You can try again.	Installation abgebrochen oder fehlgeschlagen. Sie können es erneut versuchen.
+Max distance from the current position (km):	Max. Entfernung von der aktuellen Position (km):
+Find WebSDRs	WebSDRs suchen

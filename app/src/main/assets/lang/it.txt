@@ -760,3 +760,5 @@ Downloading…	Download in corso…
 Installing… confirm in the Android window if it appears.	Installazione in corso… confermi nella finestra di Android se compare.
 Update failed. Check the connection and try again.	Aggiornamento non riuscito. Controlli la connessione e riprovi.
 Installation cancelled or failed. You can try again.	Installazione annullata o non riuscita. Può riprovare.
+Max distance from the current position (km):	Distanza max dalla posizione attuale (km):
+Find WebSDRs	Cerca WebSDR

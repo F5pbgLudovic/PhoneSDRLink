@@ -760,3 +760,5 @@ Downloading…	Downloaden…
 Installing… confirm in the Android window if it appears.	Installeren… bevestig in het Android-venster als het verschijnt.
 Update failed. Check the connection and try again.	Bijwerken mislukt. Controleer de verbinding en probeer het opnieuw.
 Installation cancelled or failed. You can try again.	Installatie geannuleerd of mislukt. U kunt het opnieuw proberen.
+Max distance from the current position (km):	Max. afstand tot de huidige positie (km):
+Find WebSDRs	WebSDR's zoeken

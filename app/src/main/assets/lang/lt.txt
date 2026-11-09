@@ -760,3 +760,5 @@ Downloading…	Atsisiunčiama…
 Installing… confirm in the Android window if it appears.	Diegiama… patvirtinkite „Android“ lange, jei jis pasirodys.
 Update failed. Check the connection and try again.	Atnaujinti nepavyko. Patikrinkite ryšį ir bandykite dar kartą.
 Installation cancelled or failed. You can try again.	Diegimas atšauktas arba nepavyko. Galite bandyti dar kartą.
+Max distance from the current position (km):	Maks. atstumas nuo dabartinės vietos (km):
+Find WebSDRs	Ieškoti WebSDR

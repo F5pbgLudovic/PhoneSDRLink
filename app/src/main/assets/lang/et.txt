@@ -760,3 +760,5 @@ Downloading…	Allalaadimine…
 Installing… confirm in the Android window if it appears.	Paigaldamine… kinnitage Androidi aknas, kui see ilmub.
 Update failed. Check the connection and try again.	Uuendamine ebaõnnestus. Kontrollige ühendust ja proovige uuesti.
 Installation cancelled or failed. You can try again.	Paigaldamine katkestati või ebaõnnestus. Võite proovida uuesti.
+Max distance from the current position (km):	Maksimaalne kaugus praegusest asukohast (km):
+Find WebSDRs	Otsi WebSDR-e

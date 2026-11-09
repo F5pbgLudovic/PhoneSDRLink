@@ -760,3 +760,5 @@ Downloading…	Stahování…
 Installing… confirm in the Android window if it appears.	Instalace… potvrďte v okně Androidu, pokud se zobrazí.
 Update failed. Check the connection and try again.	Aktualizace se nezdařila. Zkontrolujte připojení a zkuste to znovu.
 Installation cancelled or failed. You can try again.	Instalace byla zrušena nebo se nezdařila. Můžete to zkusit znovu.
+Max distance from the current position (km):	Max. vzdálenost od aktuální polohy (km):
+Find WebSDRs	Hledat WebSDR

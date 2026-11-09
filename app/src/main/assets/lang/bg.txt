@@ -760,3 +760,5 @@ Downloading…	Изтегляне…
 Installing… confirm in the Android window if it appears.	Инсталиране… потвърдете в прозореца на Android, ако се появи.
 Update failed. Check the connection and try again.	Актуализацията не успя. Проверете връзката и опитайте отново.
 Installation cancelled or failed. You can try again.	Инсталирането е отменено или неуспешно. Можете да опитате отново.
+Max distance from the current position (km):	Максимално разстояние от текущата позиция (км):
+Find WebSDRs	Търсене на WebSDR
