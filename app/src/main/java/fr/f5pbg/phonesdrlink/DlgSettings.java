@@ -40,9 +40,15 @@ final class DlgSettings {
         decB.setBackground(Ui.roundOutline(Ui.decBtn(), 10, a));
         decB.setTextColor(Ui.onColor(Ui.decBtn()));
         decB.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
-        col.addView(toggle(a, "FreeDV auto", st.freedvAuto, new CompoundButton.OnCheckedChangeListener() {
+        LinearLayout fdv = Ui.row(a);
+        fdv.addView(toggle(a, "FreeDV auto", st.freedvAuto, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.freedvAuto = on; st.save(); a.applyFreedvAuto(); }
-        }));
+        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 0));
+        // À droite : garder le notch automatique (DNF) et le réducteur de bruit (DNR) pendant FreeDV auto (coupés par défaut en mode numérique).
+        fdv.addView(toggle(a, "DNF + DNR", st.freedvFilters, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.freedvFilters = on; st.save(); a.applyAudio(); }
+        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 0));
+        col.addView(fdv);
         col.addView(Ui.small(a, Lang.T("Écoute classique en permanence ; dès que des trames FreeDV RADE sont décodées, le son bascule sur la parole décodée. Coupé pendant qu'un autre décodeur est actif, remis en route dès qu'il s'arrête.", "Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.")));
         col.addView(toggle(a, Lang.T("Mode sombre", "Dark mode"), st.dark, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.dark = on; st.save(); d.dismiss(); a.recreate(); }

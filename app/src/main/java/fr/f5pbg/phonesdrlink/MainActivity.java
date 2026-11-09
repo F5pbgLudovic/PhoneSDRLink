@@ -1049,9 +1049,11 @@ public class MainActivity extends Activity {
 
     // Le notch automatique n'est pas appliqué en CW ni en DATA (la coche reste telle que l'opérateur l'a mise).
     // Notch et réducteur de bruit sont coupés (sans décocher les cases) tant qu'un mode numérique est actif : ils abîmeraient le son.
-    boolean dnrNow() { return st.autoDnr && decMode == 0; }
+    // FreeDV auto (radeAuto) : coche « DNF + DNR » de SET (st.freedvFilters) pour les garder ; le décodeur et REC lisent le son avant ces filtres.
+    boolean filtersOk() { return decMode == 0 || (radeAuto && st.freedvFilters); }
+    boolean dnrNow() { return st.autoDnr && filtersOk(); }
 
-    boolean notchNow() { return st.autoNotch && decMode == 0 && !"CW".equals(mode) && !(mode != null && mode.startsWith("DATA")); }
+    boolean notchNow() { return st.autoNotch && filtersOk() && !"CW".equals(mode) && !(mode != null && mode.startsWith("DATA")); }
 
     boolean notchSent;
 
@@ -2329,7 +2331,7 @@ public class MainActivity extends Activity {
     void maybeStartAuto() {
         if (!st.freedvAuto || decMode != 0 || !Decoders.loaded) return;
         decoderStart(DEC_RADE);
-        if (isRade(decMode)) radeAuto = true;
+        if (isRade(decMode)) { radeAuto = true; applyAudio(); }   // les filtres DNF / DNR dépendent de radeAuto (coche de SET)
     }
 
     void applyFreedvAuto() {

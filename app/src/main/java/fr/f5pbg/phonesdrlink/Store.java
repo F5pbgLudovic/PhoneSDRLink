@@ -222,7 +222,7 @@ final class Store {
     int cwTone = 700, cwBw = 80, cwWpm = 18, cwThr = 55, cwChar = 20, cwWord = 50, cwSq = 5, cwAgc = 1;   // réglages du décodeur CW
     boolean cwAfc = true, cwAutoBw = true;
     int rttyBaud = 0, rttyShift = 0, rttyPol = 0, rttySq = 15, rttyFreq = 0;   // réglages du décodeur RTTY (0 = automatique ; débit en centièmes de baud)
-    boolean rttyUos = true, rttyAfc = true, freedvAuto;   // freedvAuto : décodeur FreeDV RADE permanent (SET › FreeDV auto)
+    boolean rttyUos = true, rttyAfc = true, freedvAuto, freedvFilters;   // freedvAuto : décodeur FreeDV RADE permanent (SET › FreeDV auto)
     boolean pskAuto = true, pskAfc = true, sstvSave = true;   // PSK31 : fréquence automatique, suivi de dérive ; SSTV : enregistrement automatique des images
     int pskFreq = 1000, pskBaud = 31, pskSq = 75;             // PSK31 : fréquence audio manuelle (Hz), débit (31 ou 63), squelch (% de cohérence de phase)
     int zoomPos;                      // boutons INIT + − : coin (bits 0-1 : 0 bas droit, 1 bas gauche, 2 haut droit, 3 haut gauche) et sens (bit 2 : horizontal)
@@ -438,6 +438,7 @@ final class Store {
                 else if (k.equals("PhoneRttyUos")) rttyUos = !v.trim().equals("0");
                 else if (k.equals("PhoneRttyAfc")) rttyAfc = !v.trim().equals("0");
                 else if (k.equals("PhoneFreeDvAuto")) freedvAuto = v.trim().equals("1");
+                else if (k.equals("PhoneFreeDvFilters")) freedvFilters = v.trim().equals("1");
                 else if (k.equals("PhonePskAuto")) pskAuto = !v.trim().equals("0");
                 else if (k.equals("PhonePskAfc")) pskAfc = !v.trim().equals("0");
                 else if (k.equals("PhonePskFreq")) pskFreq = Math.max(300, Math.min(2900, toInt(v, 1000)));
@@ -622,6 +623,7 @@ final class Store {
         line(sb, "PhoneRttyUos", rttyUos ? 1 : 0);
         line(sb, "PhoneRttyAfc", rttyAfc ? 1 : 0);
         line(sb, "PhoneFreeDvAuto", freedvAuto ? 1 : 0);
+        line(sb, "PhoneFreeDvFilters", freedvFilters ? 1 : 0);
         line(sb, "PhonePskAuto", pskAuto ? 1 : 0);
         line(sb, "PhonePskAfc", pskAfc ? 1 : 0);
         line(sb, "PhonePskFreq", pskFreq);
