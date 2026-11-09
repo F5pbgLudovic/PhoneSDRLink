@@ -753,3 +753,10 @@ Invalid share link	Neplatný odkaz na zdieľanie
 Shared frequency	Zdieľaná frekvencia
 Open {0} on {1}?	Otvoriť {0} na {1}?
 {0} on {1}	{0} na {1}
+Update now	Aktualizovať teraz
+The update downloads and installs by itself; Android may ask for a final confirmation.	Aktualizácia sa stiahne a nainštaluje sama; Android môže požiadať o posledné potvrdenie.
+Downloading… {0}%	Sťahovanie… {0} %
+Downloading…	Sťahovanie…
+Installing… confirm in the Android window if it appears.	Inštalácia… potvrďte v okne Androidu, ak sa zobrazí.
+Update failed. Check the connection and try again.	Aktualizácia zlyhala. Skontrolujte pripojenie a skúste to znova.
+Installation cancelled or failed. You can try again.	Inštalácia bola zrušená alebo zlyhala. Môžete to skúsiť znova.

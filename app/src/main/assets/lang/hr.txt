@@ -753,3 +753,10 @@ Invalid share link	Neispravna poveznica za dijeljenje
 Shared frequency	Podijeljena frekvencija
 Open {0} on {1}?	Otvoriti {0} na {1}?
 {0} on {1}	{0} na {1}
+Update now	Ažuriraj sada
+The update downloads and installs by itself; Android may ask for a final confirmation.	Ažuriranje se samo preuzima i instalira; Android može zatražiti završnu potvrdu.
+Downloading… {0}%	Preuzimanje… {0} %
+Downloading…	Preuzimanje…
+Installing… confirm in the Android window if it appears.	Instalacija… potvrdite u Androidovu prozoru ako se pojavi.
+Update failed. Check the connection and try again.	Ažuriranje nije uspjelo. Provjerite vezu i pokušajte ponovno.
+Installation cancelled or failed. You can try again.	Instalacija je otkazana ili nije uspjela. Možete pokušati ponovno.

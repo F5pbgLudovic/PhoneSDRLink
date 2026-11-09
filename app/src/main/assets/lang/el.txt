@@ -753,3 +753,10 @@ Invalid share link	Μη έγκυρος σύνδεσμος κοινοποίηση
 Shared frequency	Κοινόχρηστη συχνότητα
 Open {0} on {1}?	Άνοιγμα {0} στα {1};
 {0} on {1}	{0} στα {1}
+Update now	Ενημέρωση τώρα
+The update downloads and installs by itself; Android may ask for a final confirmation.	Η ενημέρωση γίνεται λήψη και εγκατάσταση αυτόματα· το Android μπορεί να ζητήσει μια τελική επιβεβαίωση.
+Downloading… {0}%	Λήψη… {0}%
+Downloading…	Λήψη…
+Installing… confirm in the Android window if it appears.	Εγκατάσταση… επιβεβαιώστε στο παράθυρο του Android, αν εμφανιστεί.
+Update failed. Check the connection and try again.	Η ενημέρωση απέτυχε. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.
+Installation cancelled or failed. You can try again.	Η εγκατάσταση ακυρώθηκε ή απέτυχε. Μπορείτε να δοκιμάσετε ξανά.

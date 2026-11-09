@@ -753,3 +753,10 @@ Invalid share link	Ongeldige deellink
 Shared frequency	Gedeelde frequentie
 Open {0} on {1}?	{0} openen op {1}?
 {0} on {1}	{0} op {1}
+Update now	Nu bijwerken
+The update downloads and installs by itself; Android may ask for a final confirmation.	De update wordt vanzelf gedownload en geïnstalleerd; Android kan om een laatste bevestiging vragen.
+Downloading… {0}%	Downloaden… {0}%
+Downloading…	Downloaden…
+Installing… confirm in the Android window if it appears.	Installeren… bevestig in het Android-venster als het verschijnt.
+Update failed. Check the connection and try again.	Bijwerken mislukt. Controleer de verbinding en probeer het opnieuw.
+Installation cancelled or failed. You can try again.	Installatie geannuleerd of mislukt. U kunt het opnieuw proberen.

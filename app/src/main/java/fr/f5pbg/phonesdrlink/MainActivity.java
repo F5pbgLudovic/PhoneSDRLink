@@ -36,6 +36,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.webkit.ScriptHandler;
@@ -344,7 +345,7 @@ public class MainActivity extends Activity {
         tvStatus.setPadding(Ui.dp(this, 6), Ui.dp(this, 2), Ui.dp(this, 6), 0);
         tvStatus.setMinLines(1);
         tvStatus.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { if (updateUrl != null) startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))); }
+            public void onClick(View v) { if (apkUrl != null) offerUpdate(updateTag); else if (updateUrl != null) startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))); }
         });
         controls.addView(tvStatus);
         tvPage = Ui.small(this, "");
@@ -2906,7 +2907,7 @@ public class MainActivity extends Activity {
     // Vérifie la dernière release GitHub. manual : affiche toujours un résultat (sans quitter la fenêtre en cours).
     // Au démarrage, une mise à jour trouvée ouvre une alerte qui propose de l'installer (téléchargement de l'APK de la release,
     // puis installation par Android, qui demande confirmation) ; sans APK dans la release, la page GitHub s'ouvre.
-    String apkUrl;
+    String apkUrl, updateTag = "";
 
     void checkUpdate(final boolean manual) {
         new Thread(new Runnable() {
@@ -2936,7 +2937,7 @@ public class MainActivity extends Activity {
                             return;
                         }
                         updateUrl = furl;
-                        apkUrl = fapk;
+                        apkUrl = fapk; updateTag = ftag;
                         status(Lang.F("⚠ Mise à jour V{0} disponible : cliquez pour la télécharger", "⚠ Update V{0} available: click to download it", ftag));
                         offerUpdate(ftag);
                     }
@@ -2945,22 +2946,69 @@ public class MainActivity extends Activity {
         }).start();
     }
 
+    // Fenêtre de mise à jour au premier plan : « Mettre à jour » télécharge (barre de progression) puis lance l'installation sans autre
+    // action ; « Plus tard » la ferme. Android affiche lui-même une dernière confirmation (obligatoire pour une application hors Play Store).
+    Dialog updDlg;
+    ProgressBar updBar;
+    TextView updInfo;
+    Button updGo, updLater;
+    boolean updBusy;
+
     void offerUpdate(String tag) {
+        if (updDlg != null && updDlg.isShowing()) return;
         String msg = Lang.F("La version V{0} de PhoneSDRLink est disponible (vous utilisez la V{1}).", "PhoneSDRLink V{0} is available (you are using V{1}).", tag, versionName());
+        LinearLayout col = Ui.column(this);
+        col.addView(Ui.label(this, msg));
         if (apkUrl != null) {
-            Ui.confirm(this, "⚠ " + Lang.T("Mise à jour disponible", "Update available"),
-                msg + "\n\n" + Lang.T("Télécharger et installer maintenant ? Android demandera une confirmation.", "Download and install now? Android will ask for confirmation."),
-                Lang.T("Installer", "Install"), Lang.T("Plus tard", "Later"), new Ui.Yes() { public void yes() { downloadAndInstall(); } });
+            col.addView(Ui.small(this, Lang.T("Le téléchargement et l'installation se font tout seuls ; Android peut demander une dernière confirmation.", "The update downloads and installs by itself; Android may ask for a final confirmation.")));
+            updBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+            updBar.setMax(100);
+            updBar.setProgressTintList(android.content.res.ColorStateList.valueOf(Ui.accent()));
+            updBar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(Ui.btn()));
+            updBar.setIndeterminateTintList(android.content.res.ColorStateList.valueOf(Ui.accent()));
+            updBar.setVisibility(View.GONE);
+            LinearLayout.LayoutParams pl = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(this, 14));
+            pl.topMargin = Ui.dp(this, 12);
+            col.addView(updBar, pl);
+            updInfo = Ui.label(this, "");
+            col.addView(updInfo);
         } else {
-            Ui.confirm(this, "⚠ " + Lang.T("Mise à jour disponible", "Update available"),
-                msg + "\n\n" + Lang.T("Ouvrir la page de téléchargement ?", "Open the download page?"),
-                Lang.T("Ouvrir", "Open"), Lang.T("Plus tard", "Later"), new Ui.Yes() { public void yes() { try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))); } catch (Exception e) { } } });
+            col.addView(Ui.label(this, Lang.T("Ouvrir la page de téléchargement ?", "Open the download page?")));
         }
+        updDlg = Ui.window(this, "⚠ " + Lang.T("Mise à jour disponible", "Update available"), col, false);
+        LinearLayout r = Ui.row(this);
+        r.setGravity(Gravity.END);
+        updLater = Ui.button(this, Lang.T("Plus tard", "Later"), new View.OnClickListener() { public void onClick(View v) { if (!updBusy) updDlg.dismiss(); } });
+        updGo = Ui.button(this, apkUrl != null ? Lang.T("Mettre à jour", "Update now") : Lang.T("Ouvrir", "Open"), new View.OnClickListener() {
+            public void onClick(View v) {
+                if (apkUrl == null) { updDlg.dismiss(); try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))); } catch (Exception e) { } return; }
+                downloadAndInstall();
+            }
+        });
+        r.addView(updLater);
+        r.addView(updGo);
+        col.addView(r);
+        updDlg.show();
+    }
+
+    // Change l'état de la fenêtre pendant le téléchargement (appelé sur le fil de l'interface).
+    void updState(boolean busy, int percent, String text) {
+        updBusy = busy;
+        if (updDlg == null || !updDlg.isShowing() || updBar == null) return;
+        updDlg.setCancelable(!busy);
+        updGo.setEnabled(!busy);
+        updLater.setEnabled(!busy);
+        updGo.setAlpha(busy ? 0.4f : 1f);
+        updLater.setAlpha(busy ? 0.4f : 1f);
+        updBar.setVisibility(busy || percent >= 0 ? View.VISIBLE : View.GONE);
+        updBar.setIndeterminate(busy && percent < 0);
+        if (percent >= 0) updBar.setProgress(percent);
+        updInfo.setText(text);
     }
 
     void downloadAndInstall() {
         final String src = apkUrl;
-        status(Lang.T("Téléchargement de la mise à jour…", "Downloading the update…"));
+        updState(true, 0, Lang.F("Téléchargement… {0} %", "Downloading… {0}%", 0));
         new Thread(new Runnable() {
             public void run() {
                 String err = null;
@@ -2970,20 +3018,33 @@ public class MainActivity extends Activity {
                     c.setConnectTimeout(10000);
                     c.setReadTimeout(20000);
                     c.setInstanceFollowRedirects(true);
+                    final long total = c.getContentLength();
                     InputStream in = c.getInputStream();
                     java.io.FileOutputStream o = new java.io.FileOutputStream(f);
                     byte[] b = new byte[65536];
-                    int n;
-                    while ((n = in.read(b)) > 0) o.write(b, 0, n);
+                    int n, last = -2;
+                    long got = 0;
+                    while ((n = in.read(b)) > 0) {
+                        o.write(b, 0, n);
+                        got += n;
+                        final int pc = total > 0 ? (int) Math.min(100, got * 100 / total) : -1;
+                        if (pc != last) {
+                            last = pc;
+                            h.post(new Runnable() { public void run() {
+                                updState(true, pc, pc >= 0 ? Lang.F("Téléchargement… {0} %", "Downloading… {0}%", pc) : Lang.T("Téléchargement…", "Downloading…"));
+                            } });
+                        }
+                    }
                     o.close();
                     in.close();
                     if (f.length() < 100000) throw new Exception("APK");
+                    h.post(new Runnable() { public void run() {
+                        updState(true, 100, Lang.T("Installation… confirmez dans la fenêtre d'Android si elle s'affiche.", "Installing… confirm in the Android window if it appears."));
+                    } });
                     installApk(f);
                 } catch (Exception e) { err = String.valueOf(e.getMessage()); }
-                final String ferr = err;
-                if (ferr != null) h.post(new Runnable() { public void run() {
-                    status(Lang.T("Mise à jour impossible : ouverture de la page de téléchargement", "Update failed: opening the download page"));
-                    try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))); } catch (Exception e) { }
+                if (err != null) h.post(new Runnable() { public void run() {
+                    updState(false, -1, Lang.T("Échec de la mise à jour. Vérifiez la connexion puis réessayez.", "Update failed. Check the connection and try again."));
                 } });
             }
         }).start();
@@ -3009,6 +3070,7 @@ public class MainActivity extends Activity {
                     if (confirm != null) { confirm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); startActivity(confirm); }
                 } else if (st2 != android.content.pm.PackageInstaller.STATUS_SUCCESS) {
                     status(Lang.T("Installation de la mise à jour annulée ou impossible", "Update installation cancelled or failed"));
+                    updState(false, -1, Lang.T("Installation annulée ou impossible. Vous pouvez réessayer.", "Installation cancelled or failed. You can try again."));
                     try { unregisterReceiver(this); } catch (Exception e) { }
                 }
             }

@@ -753,3 +753,10 @@ Invalid share link	Link de partajare nevalid
 Shared frequency	Frecvență partajată
 Open {0} on {1}?	Deschideți {0} pe {1}?
 {0} on {1}	{0} pe {1}
+Update now	Actualizează acum
+The update downloads and installs by itself; Android may ask for a final confirmation.	Actualizarea se descarcă și se instalează singură; Android poate cere o ultimă confirmare.
+Downloading… {0}%	Se descarcă… {0}%
+Downloading…	Se descarcă…
+Installing… confirm in the Android window if it appears.	Se instalează… confirmați în fereastra Android, dacă apare.
+Update failed. Check the connection and try again.	Actualizarea a eșuat. Verificați conexiunea și încercați din nou.
+Installation cancelled or failed. You can try again.	Instalarea a fost anulată sau a eșuat. Puteți încerca din nou.

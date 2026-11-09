@@ -753,3 +753,10 @@ Invalid share link	Érvénytelen megosztási hivatkozás
 Shared frequency	Megosztott frekvencia
 Open {0} on {1}?	Megnyitja: {0} – {1}?
 {0} on {1}	{0} – {1}
+Update now	Frissítés most
+The update downloads and installs by itself; Android may ask for a final confirmation.	A frissítés magától letöltődik és települ; az Android egy utolsó megerősítést kérhet.
+Downloading… {0}%	Letöltés… {0}%
+Downloading…	Letöltés…
+Installing… confirm in the Android window if it appears.	Telepítés… erősítse meg az Android ablakában, ha megjelenik.
+Update failed. Check the connection and try again.	A frissítés nem sikerült. Ellenőrizze a kapcsolatot, és próbálja újra.
+Installation cancelled or failed. You can try again.	A telepítés megszakadt vagy sikertelen volt. Próbálja újra.

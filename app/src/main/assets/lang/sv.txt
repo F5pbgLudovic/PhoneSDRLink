@@ -753,3 +753,10 @@ Invalid share link	Ogiltig delningslänk
 Shared frequency	Delad frekvens
 Open {0} on {1}?	Öppna {0} på {1}?
 {0} on {1}	{0} på {1}
+Update now	Uppdatera nu
+The update downloads and installs by itself; Android may ask for a final confirmation.	Uppdateringen laddas ned och installeras av sig själv; Android kan be om en sista bekräftelse.
+Downloading… {0}%	Laddar ned… {0} %
+Downloading…	Laddar ned…
+Installing… confirm in the Android window if it appears.	Installerar… bekräfta i Android-fönstret om det visas.
+Update failed. Check the connection and try again.	Uppdateringen misslyckades. Kontrollera anslutningen och försök igen.
+Installation cancelled or failed. You can try again.	Installationen avbröts eller misslyckades. Du kan försöka igen.

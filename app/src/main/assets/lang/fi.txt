@@ -753,3 +753,10 @@ Invalid share link	Virheellinen jakolinkki
 Shared frequency	Jaettu taajuus
 Open {0} on {1}?	Avataanko {0}: {1}?
 {0} on {1}	{0} – {1}
+Update now	Päivitä nyt
+The update downloads and installs by itself; Android may ask for a final confirmation.	Päivitys latautuu ja asentuu itsestään; Android voi pyytää vielä viimeisen vahvistuksen.
+Downloading… {0}%	Ladataan… {0} %
+Downloading…	Ladataan…
+Installing… confirm in the Android window if it appears.	Asennetaan… vahvista Androidin ikkunassa, jos se tulee näkyviin.
+Update failed. Check the connection and try again.	Päivitys epäonnistui. Tarkista yhteys ja yritä uudelleen.
+Installation cancelled or failed. You can try again.	Asennus peruttiin tai se epäonnistui. Voit yrittää uudelleen.

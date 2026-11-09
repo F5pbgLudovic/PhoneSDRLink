@@ -753,3 +753,10 @@ Invalid share link	Vigane jagamislink
 Shared frequency	Jagatud sagedus
 Open {0} on {1}?	Kas avada {0}: {1}?
 {0} on {1}	{0} – {1}
+Update now	Uuenda kohe
+The update downloads and installs by itself; Android may ask for a final confirmation.	Uuendus laaditakse alla ja paigaldatakse ise; Android võib küsida viimast kinnitust.
+Downloading… {0}%	Allalaadimine… {0}%
+Downloading…	Allalaadimine…
+Installing… confirm in the Android window if it appears.	Paigaldamine… kinnitage Androidi aknas, kui see ilmub.
+Update failed. Check the connection and try again.	Uuendamine ebaõnnestus. Kontrollige ühendust ja proovige uuesti.
+Installation cancelled or failed. You can try again.	Paigaldamine katkestati või ebaõnnestus. Võite proovida uuesti.

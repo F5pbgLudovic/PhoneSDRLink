@@ -753,3 +753,10 @@ Invalid share link	Neveljavna povezava za deljenje
 Shared frequency	Deljena frekvenca
 Open {0} on {1}?	Odprem {0} na {1}?
 {0} on {1}	{0} na {1}
+Update now	Posodobi zdaj
+The update downloads and installs by itself; Android may ask for a final confirmation.	Posodobitev se prenese in namesti sama; Android lahko zahteva zadnjo potrditev.
+Downloading… {0}%	Prenašanje… {0} %
+Downloading…	Prenašanje…
+Installing… confirm in the Android window if it appears.	Nameščanje… potrdite v oknu Androida, če se prikaže.
+Update failed. Check the connection and try again.	Posodobitev ni uspela. Preverite povezavo in poskusite znova.
+Installation cancelled or failed. You can try again.	Namestitev je bila preklicana ali ni uspela. Poskusite lahko znova.

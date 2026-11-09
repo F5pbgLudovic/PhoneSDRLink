@@ -753,3 +753,10 @@ Invalid share link	Neplatný odkaz ke sdílení
 Shared frequency	Sdílená frekvence
 Open {0} on {1}?	Otevřít {0} na {1}?
 {0} on {1}	{0} na {1}
+Update now	Aktualizovat nyní
+The update downloads and installs by itself; Android may ask for a final confirmation.	Aktualizace se stáhne a nainstaluje sama; Android může požádat o poslední potvrzení.
+Downloading… {0}%	Stahování… {0} %
+Downloading…	Stahování…
+Installing… confirm in the Android window if it appears.	Instalace… potvrďte v okně Androidu, pokud se zobrazí.
+Update failed. Check the connection and try again.	Aktualizace se nezdařila. Zkontrolujte připojení a zkuste to znovu.
+Installation cancelled or failed. You can try again.	Instalace byla zrušena nebo se nezdařila. Můžete to zkusit znovu.

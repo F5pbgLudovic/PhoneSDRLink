@@ -753,3 +753,10 @@ Invalid share link	Nederīga kopīgošanas saite
 Shared frequency	Kopīgotā frekvence
 Open {0} on {1}?	Atvērt {0}: {1}?
 {0} on {1}	{0} – {1}
+Update now	Atjaunināt tagad
+The update downloads and installs by itself; Android may ask for a final confirmation.	Atjauninājums tiek lejupielādēts un instalēts pats; Android var lūgt pēdējo apstiprinājumu.
+Downloading… {0}%	Lejupielāde… {0}%
+Downloading…	Lejupielāde…
+Installing… confirm in the Android window if it appears.	Instalēšana… apstipriniet Android logā, ja tas parādās.
+Update failed. Check the connection and try again.	Atjaunināšana neizdevās. Pārbaudiet savienojumu un mēģiniet vēlreiz.
+Installation cancelled or failed. You can try again.	Instalēšana atcelta vai neizdevās. Varat mēģināt vēlreiz.

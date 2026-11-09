@@ -753,3 +753,10 @@ Invalid share link	Невалидна връзка за споделяне
 Shared frequency	Споделена честота
 Open {0} on {1}?	Да се отвори ли {0} на {1}?
 {0} on {1}	{0} на {1}
+Update now	Актуализирай сега
+The update downloads and installs by itself; Android may ask for a final confirmation.	Актуализацията се изтегля и инсталира сама; Android може да поиска последно потвърждение.
+Downloading… {0}%	Изтегляне… {0}%
+Downloading…	Изтегляне…
+Installing… confirm in the Android window if it appears.	Инсталиране… потвърдете в прозореца на Android, ако се появи.
+Update failed. Check the connection and try again.	Актуализацията не успя. Проверете връзката и опитайте отново.
+Installation cancelled or failed. You can try again.	Инсталирането е отменено или неуспешно. Можете да опитате отново.

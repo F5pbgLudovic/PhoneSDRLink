@@ -753,3 +753,10 @@ Invalid share link	Link de partilha inválido
 Shared frequency	Frequência partilhada
 Open {0} on {1}?	Abrir {0} em {1}?
 {0} on {1}	{0} em {1}
+Update now	Atualizar agora
+The update downloads and installs by itself; Android may ask for a final confirmation.	A atualização é descarregada e instalada sozinha; o Android pode pedir uma última confirmação.
+Downloading… {0}%	A descarregar… {0}%
+Downloading…	A descarregar…
+Installing… confirm in the Android window if it appears.	A instalar… confirme na janela do Android, se aparecer.
+Update failed. Check the connection and try again.	A atualização falhou. Verifique a ligação e tente novamente.
+Installation cancelled or failed. You can try again.	Instalação cancelada ou falhada. Pode tentar novamente.

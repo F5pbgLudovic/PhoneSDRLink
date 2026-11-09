@@ -753,3 +753,10 @@ Invalid share link	Netinkama bendrinimo nuoroda
 Shared frequency	Bendrintas dažnis
 Open {0} on {1}?	Atidaryti {0}: {1}?
 {0} on {1}	{0} – {1}
+Update now	Atnaujinti dabar
+The update downloads and installs by itself; Android may ask for a final confirmation.	Naujinimas atsisiunčiamas ir įdiegiamas pats; „Android“ gali paprašyti paskutinio patvirtinimo.
+Downloading… {0}%	Atsisiunčiama… {0} %
+Downloading…	Atsisiunčiama…
+Installing… confirm in the Android window if it appears.	Diegiama… patvirtinkite „Android“ lange, jei jis pasirodys.
+Update failed. Check the connection and try again.	Atnaujinti nepavyko. Patikrinkite ryšį ir bandykite dar kartą.
+Installation cancelled or failed. You can try again.	Diegimas atšauktas arba nepavyko. Galite bandyti dar kartą.

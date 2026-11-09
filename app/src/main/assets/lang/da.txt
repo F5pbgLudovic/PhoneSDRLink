@@ -753,3 +753,10 @@ Invalid share link	Ugyldigt delingslink
 Shared frequency	Delt frekvens
 Open {0} on {1}?	Åbn {0} på {1}?
 {0} on {1}	{0} på {1}
+Update now	Opdater nu
+The update downloads and installs by itself; Android may ask for a final confirmation.	Opdateringen downloades og installeres af sig selv; Android kan bede om en sidste bekræftelse.
+Downloading… {0}%	Downloader… {0} %
+Downloading…	Downloader…
+Installing… confirm in the Android window if it appears.	Installerer… bekræft i Android-vinduet, hvis det vises.
+Update failed. Check the connection and try again.	Opdateringen mislykkedes. Kontroller forbindelsen, og prøv igen.
+Installation cancelled or failed. You can try again.	Installationen blev annulleret eller mislykkedes. Du kan prøve igen.
