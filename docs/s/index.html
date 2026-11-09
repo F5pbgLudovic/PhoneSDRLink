@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>PhoneSDRLink — fréquence partagée</title>
+<!--
+  Page des liens de partage de PhoneSDRLink : <cette page>?u=<WebSDR>&f=<Hz>&m=<mode>[&bw=<Hz>][&d=<décodeur>]
+  (format : ShareLink.java). Elle propose d'ouvrir l'application (lien phonesdrlink://), de l'installer, ou d'écouter
+  le WebSDR dans le navigateur. Si l'application est réglée pour ouvrir ces liens, cette page n'est même pas affichée.
+-->
+<style>
+  :root {
+    --bg: #f4f5f7; --card: #ffffff; --text: #16181d; --muted: #5d6470; --line: #dfe2e7;
+    --accent: #1f6feb; --accent-text: #ffffff; --button: #e9ecf1; --error: #b42318;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115; --card: #181b21; --text: #eceef2; --muted: #9aa2ae; --line: #2a2f38;
+      --accent: #4c8dff; --accent-text: #0b0d10; --button: #242933; --error: #ff8a80;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex; align-items: center; justify-content: center; padding: 24px 16px;
+  }
+  main { width: 100%; max-width: 420px; }
+  .brand { font-size: 14px; font-weight: 600; letter-spacing: .02em; color: var(--muted); margin: 0 0 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px 20px; }
+  .freq { font-size: 34px; font-weight: 700; line-height: 1.15; margin: 0; font-variant-numeric: tabular-nums; }
+  .mode { font-size: 18px; font-weight: 600; margin: 4px 0 0; }
+  .sdr { color: var(--muted); margin: 12px 0 0; overflow-wrap: anywhere; }
+  .actions { display: grid; gap: 10px; margin-top: 24px; }
+  .btn {
+    display: block; text-align: center; text-decoration: none; font-weight: 600; font-size: 17px;
+    padding: 14px 16px; border-radius: 12px; background: var(--button); color: var(--text);
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-text); }
+  .hint { color: var(--muted); font-size: 13px; margin: 18px 0 0; }
+  .error { color: var(--error); font-weight: 600; margin: 0; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <p class="brand">📻 PhoneSDRLink</p>
+  <div class="card">
+    <div id="ok" hidden>
+      <p class="freq" id="freq"></p>
+      <p class="mode" id="mode"></p>
+      <p class="sdr" id="sdr"></p>
+      <div class="actions">
+        <a class="btn primary" id="open" hidden></a>
+        <a class="btn" id="listen" rel="noopener noreferrer"></a>
+        <a class="btn" id="install" hidden rel="noopener noreferrer"></a>
+      </div>
+      <p class="hint" id="hint"></p>
+    </div>
+    <p class="error" id="bad" hidden></p>
+  </div>
+</main>
+<script>
+(function () {
+  // À adapter pour le dépôt de F5PBG : page d'installation de l'APK.
+  var APK_URL = "https://github.com/F5pbgLudovic/PhoneSDRLink/releases/latest";
+  var PACKAGE = "fr.f5pbg.phonesdrlink";
+  var MODES = ["USB", "LSB", "AM", "FM", "DATAU", "CW"];
+  var MIN_HZ = 1800000, MAX_HZ = 440000000;
+
+  var fr = (navigator.language || "en").toLowerCase().indexOf("fr") === 0;
+  function t(f, e) { return fr ? f : e; }
+  document.documentElement.lang = fr ? "fr" : "en";
+
+  var q = new URLSearchParams(location.search);
+  var u = (q.get("u") || "").trim();
+  var hz = Number(q.get("f"));
+  var m = (q.get("m") || "").trim().toUpperCase();
+  var bw = Number(q.get("bw"));
+  var d = (q.get("d") || "").trim();
+  var valid = /^https?:\/\/[^\s]+$/i.test(u) && Number.isInteger(hz) && hz >= MIN_HZ && hz <= MAX_HZ && MODES.indexOf(m) >= 0;
+
+  if (!valid) {
+    document.title = "PhoneSDRLink";
+    var bad = document.getElementById("bad");
+    bad.textContent = t("Lien de partage invalide.", "Invalid share link.");
+    bad.hidden = false;
+    return;
+  }
+
+  function kHz(v) { return String(Number((v / 1000).toFixed(3))).replace(".", fr ? "," : "."); }
+  var modeText = (m === "DATAU" ? "DATA" : m) + (bw >= 100 && bw <= 15000 ? " · " + kHz(bw) + " kHz" : "") + (d ? " · " + d : "");
+  var host = new URL(u).host;
+
+  document.getElementById("freq").textContent = kHz(hz) + " kHz";
+  document.getElementById("mode").textContent = modeText;
+  document.getElementById("sdr").textContent = t("sur ", "on ") + host;
+  document.title = kHz(hz) + " kHz " + (m === "DATAU" ? "DATA" : m) + " — PhoneSDRLink";
+
+  // Lien vers l'application, refait à partir des seuls paramètres connus (l'application les vérifie à nouveau).
+  var p = new URLSearchParams();
+  p.set("u", u); p.set("f", String(hz)); p.set("m", m);
+  if (bw >= 100 && bw <= 15000) p.set("bw", String(bw));
+  if (d) p.set("d", d);
+  var query = "?" + p.toString();
+
+  var android = /Android/i.test(navigator.userAgent);
+  var open = document.getElementById("open");
+  var install = document.getElementById("install");
+  if (android) {
+    // Chrome : intent:// ouvre l'application, ou la page d'installation si elle est absente.
+    open.href = "intent://tune" + query + "#Intent;scheme=phonesdrlink;package=" + PACKAGE +
+      ";S.browser_fallback_url=" + encodeURIComponent(APK_URL) + ";end";
+    open.textContent = t("Ouvrir dans PhoneSDRLink", "Open in PhoneSDRLink");
+    open.hidden = false;
+    install.href = APK_URL;
+    install.textContent = t("Installer PhoneSDRLink", "Install PhoneSDRLink");
+    install.hidden = false;
+    document.getElementById("hint").textContent = t(
+      "Pour que ces liens ouvrent directement l'application : Paramètres › Applis › PhoneSDRLink › Ouvrir par défaut › Ajouter des liens.",
+      "To open these links straight in the app: Settings › Apps › PhoneSDRLink › Open by default › Add links.");
+  } else {
+    document.getElementById("hint").textContent = t(
+      "PhoneSDRLink est une application Android. Sur cet appareil, écoutez le WebSDR dans le navigateur.",
+      "PhoneSDRLink is an Android app. On this device, listen to the WebSDR in the browser.");
+  }
+
+  var listen = document.getElementById("listen");
+  listen.href = u;
+  listen.textContent = t("Écouter dans le navigateur", "Listen in the browser");
+
+  document.getElementById("ok").hidden = false;
+})();
+</script>
+</body>
+</html>
