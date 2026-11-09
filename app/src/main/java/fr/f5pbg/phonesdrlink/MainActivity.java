@@ -492,7 +492,7 @@ public class MainActivity extends Activity {
         return b;
     }
 
-    // Texte partagé : écoute lisible, lien PhoneSDRLink, et adresse du WebSDR pour ceux qui n'ont pas l'application.
+    // Texte partagé : écoute lisible et lien https de partage (ShareLink.WEB_BASE).
     void shareCurrent() {
         String u = currentUrl();
         if (u == null || !ShareLink.isWeb(u)) { status(Lang.T("Aucun WebSDR à partager", "No WebSDR to share")); return; }
@@ -500,8 +500,7 @@ public class MainActivity extends Activity {
         if (title.isEmpty()) title = Uri.parse(u).getHost();
         String link = ShareLink.build(u, freq, mode, bwHz, decMode != 0 ? decName(decMode) : "");
         String text = "📻 " + Lang.F("{0} sur {1}", "{0} on {1}", listenText(freq, mode, decMode), title)
-            + "\nPhoneSDRLink : " + link
-            + "\n" + Lang.F("Navigateur : {0}", "Browser: {0}", u);
+            + "\n" + link;   // la page du lien propose d'ouvrir PhoneSDRLink, de l'installer ou d'écouter dans le navigateur
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_TEXT, text);
@@ -1084,7 +1083,7 @@ public class MainActivity extends Activity {
             new Ui.Yes() { public void yes() { applyShare(s, dec); } });
     }
 
-    static boolean isShareIntent(Intent i) { return i != null && i.getData() != null && ShareLink.SCHEME.equalsIgnoreCase(i.getData().getScheme()); }
+    static boolean isShareIntent(Intent i) { return i != null && i.getData() != null && ShareLink.isShareLink(i.getData().toString()); }
 
     void applyShare(ShareLink s, int dec) {
         if (blocked()) return;

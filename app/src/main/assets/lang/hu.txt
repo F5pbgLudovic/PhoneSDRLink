@@ -753,4 +753,3 @@ Invalid share link	Érvénytelen megosztási hivatkozás
 Shared frequency	Megosztott frekvencia
 Open {0} on {1}?	Megnyitja: {0} – {1}?
 {0} on {1}	{0} – {1}
-Browser: {0}	Böngésző: {0}

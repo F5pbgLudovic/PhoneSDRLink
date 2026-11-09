@@ -753,4 +753,3 @@ Invalid share link	Ugyldigt delingslink
 Shared frequency	Delt frekvens
 Open {0} on {1}?	Åbn {0} på {1}?
 {0} on {1}	{0} på {1}
-Browser: {0}	Browser: {0}

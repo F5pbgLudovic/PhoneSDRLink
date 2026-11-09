@@ -753,4 +753,3 @@ Invalid share link	Netinkama bendrinimo nuoroda
 Shared frequency	Bendrintas dažnis
 Open {0} on {1}?	Atidaryti {0}: {1}?
 {0} on {1}	{0} – {1}
-Browser: {0}	Naršyklė: {0}

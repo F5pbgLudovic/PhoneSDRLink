@@ -753,4 +753,3 @@ Invalid share link	Nederīga kopīgošanas saite
 Shared frequency	Kopīgotā frekvence
 Open {0} on {1}?	Atvērt {0}: {1}?
 {0} on {1}	{0} – {1}
-Browser: {0}	Pārlūks: {0}

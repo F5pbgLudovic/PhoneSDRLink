@@ -8,7 +8,7 @@ public class ShareLinkTest {
     static final String TW = "http://websdr.ewi.utwente.nl:8901/";
 
     @Test public void buildMinimalIsExact() {
-        assertEquals("phonesdrlink://tune?u=http%3A%2F%2Fwebsdr.ewi.utwente.nl%3A8901%2F&f=7100000&m=LSB",
+        assertEquals("https://bt0r.github.io/PhoneSDRLink/s/?u=http%3A%2F%2Fwebsdr.ewi.utwente.nl%3A8901%2F&f=7100000&m=LSB",
             ShareLink.build(TW, 7100000L, "LSB", 0, ""));
     }
 
@@ -42,6 +42,24 @@ public class ShareLinkTest {
         assertEquals("USB", s.mode);
     }
 
+    @Test public void customSchemeStillAccepted() {
+        ShareLink s = ShareLink.parse("phonesdrlink://tune?u=http%3A%2F%2Fa.b%2F&f=7074000&m=USB", MODES);
+        assertNotNull(s);
+        assertEquals("http://a.b/", s.url);
+    }
+
+    @Test public void webLinkWithoutTrailingSlashAccepted() {
+        assertNotNull(ShareLink.parse("https://bt0r.github.io/PhoneSDRLink/s?u=http%3A%2F%2Fa.b%2F&f=7074000&m=USB", MODES));
+    }
+
+    @Test public void recognisesOnlyOwnLinks() {
+        assertTrue(ShareLink.isShareLink("https://bt0r.github.io/PhoneSDRLink/s/?u=x"));
+        assertTrue(ShareLink.isShareLink("phonesdrlink://tune?u=x"));
+        assertFalse(ShareLink.isShareLink("https://bt0r.github.io/PhoneSDRLink/"));
+        assertFalse(ShareLink.isShareLink("https://evil.example/PhoneSDRLink/s/?u=x"));
+        assertFalse(ShareLink.isShareLink(null));
+    }
+
     @Test public void unknownParametersIgnored() {
         assertNotNull(ShareLink.parse("phonesdrlink://tune?v=2&u=http%3A%2F%2Fa.b%2F&zz=1&f=7074000&m=USB", MODES));
     }
@@ -50,6 +68,7 @@ public class ShareLinkTest {
         assertNull(ShareLink.parse(null, MODES));
         assertNull(ShareLink.parse("https://tune?u=http%3A%2F%2Fa.b%2F&f=7074000&m=USB", MODES));
         assertNull(ShareLink.parse("phonesdrlink://other?u=http%3A%2F%2Fa.b%2F&f=7074000&m=USB", MODES));
+        assertNull(ShareLink.parse("https://evil.example/PhoneSDRLink/s/?u=http%3A%2F%2Fa.b%2F&f=7074000&m=USB", MODES));
     }
 
     @Test public void rejectsMissingRequired() {

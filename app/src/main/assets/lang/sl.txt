@@ -753,4 +753,3 @@ Invalid share link	Neveljavna povezava za deljenje
 Shared frequency	Deljena frekvenca
 Open {0} on {1}?	Odprem {0} na {1}?
 {0} on {1}	{0} na {1}
-Browser: {0}	Brskalnik: {0}

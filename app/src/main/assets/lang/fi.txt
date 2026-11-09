@@ -753,4 +753,3 @@ Invalid share link	Virheellinen jakolinkki
 Shared frequency	Jaettu taajuus
 Open {0} on {1}?	Avataanko {0}: {1}?
 {0} on {1}	{0} – {1}
-Browser: {0}	Selain: {0}

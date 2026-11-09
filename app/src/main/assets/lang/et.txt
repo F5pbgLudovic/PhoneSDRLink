@@ -753,4 +753,3 @@ Invalid share link	Vigane jagamislink
 Shared frequency	Jagatud sagedus
 Open {0} on {1}?	Kas avada {0}: {1}?
 {0} on {1}	{0} – {1}
-Browser: {0}	Brauser: {0}

@@ -753,4 +753,3 @@ Invalid share link	Neispravna poveznica za dijeljenje
 Shared frequency	Podijeljena frekvencija
 Open {0} on {1}?	Otvoriti {0} na {1}?
 {0} on {1}	{0} na {1}
-Browser: {0}	Preglednik: {0}

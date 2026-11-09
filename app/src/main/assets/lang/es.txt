@@ -753,4 +753,3 @@ Invalid share link	Enlace compartido no válido
 Shared frequency	Frecuencia compartida
 Open {0} on {1}?	¿Abrir {0} en {1}?
 {0} on {1}	{0} en {1}
-Browser: {0}	Navegador: {0}

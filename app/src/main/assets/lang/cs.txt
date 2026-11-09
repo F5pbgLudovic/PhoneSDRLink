@@ -753,4 +753,3 @@ Invalid share link	Neplatný odkaz ke sdílení
 Shared frequency	Sdílená frekvence
 Open {0} on {1}?	Otevřít {0} na {1}?
 {0} on {1}	{0} na {1}
-Browser: {0}	Prohlížeč: {0}

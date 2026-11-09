@@ -753,4 +753,3 @@ Invalid share link	Link de partajare nevalid
 Shared frequency	Frecvență partajată
 Open {0} on {1}?	Deschideți {0} pe {1}?
 {0} on {1}	{0} pe {1}
-Browser: {0}	Browser: {0}

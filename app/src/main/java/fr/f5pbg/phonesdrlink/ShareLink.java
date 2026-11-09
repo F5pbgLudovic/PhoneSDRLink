@@ -4,12 +4,16 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Locale;
 
-// Lien de partage d'une écoute : phonesdrlink://tune?u=<WebSDR>&f=<Hz>&m=<mode>[&bw=<Hz>][&d=<décodeur>].
+// Lien de partage d'une écoute : WEB_BASE?u=<WebSDR>&f=<Hz>&m=<mode>[&bw=<Hz>][&d=<décodeur>] (lien https, cliquable dans
+// les messageries ; la page GitHub Pages docs/s/index.html propose d'ouvrir l'application), aussi accepté sous la forme
+// phonesdrlink://tune?… (premiers liens, et bouton de la page).
 // Java pur (testé en JUnit, sans téléphone). Le décodeur est désigné par son nom (MainActivity.decName), pas par son numéro,
 // pour que les liens restent valables si les numéros changent. Paramètres inconnus ignorés (versions futures).
 final class ShareLink {
     static final String SCHEME = "phonesdrlink";
-    static final String PREFIX = SCHEME + "://tune?";
+    // Page de partage (GitHub Pages du dépôt) : à changer avec l'hôte et le chemin de l'intent-filter https d'AndroidManifest.xml.
+    static final String WEB_BASE = "https://bt0r.github.io/PhoneSDRLink/s/";
+    static final String[] PREFIXES = { SCHEME + "://tune?", WEB_BASE + "?", WEB_BASE.substring(0, WEB_BASE.length() - 1) + "?" };
     static final int MIN_BW = 100, MAX_BW = 15000;
 
     final String url, mode, decoder;   // decoder : "" = aucun
@@ -21,7 +25,7 @@ final class ShareLink {
     }
 
     static String build(String url, long hz, String mode, int bwHz, String decoder) {
-        StringBuilder sb = new StringBuilder(PREFIX);
+        StringBuilder sb = new StringBuilder(WEB_BASE).append('?');
         sb.append("u=").append(enc(url)).append("&f=").append(hz).append("&m=").append(enc(mode));
         if (bwHz > 0) sb.append("&bw=").append(bwHz);
         if (decoder != null && !decoder.isEmpty()) sb.append("&d=").append(enc(decoder));
@@ -30,8 +34,9 @@ final class ShareLink {
 
     // null si le lien n'est pas valable (u, f ou m manquant ou invalide, échappement % abîmé) ; bw et d invalides sont ignorés.
     static ShareLink parse(String link, String[] modes) {
-        if (link == null || !link.regionMatches(true, 0, PREFIX, 0, PREFIX.length())) return null;
-        String q = link.substring(PREFIX.length());
+        String p = prefixOf(link);
+        if (p == null) return null;
+        String q = link.substring(p.length());
         int hash = q.indexOf('#');
         if (hash >= 0) q = q.substring(0, hash);
         String url = null, mode = null, dec = "";
@@ -52,6 +57,14 @@ final class ShareLink {
         if (hz < Store.MIN_HZ || hz > Store.MAX_HZ) return null;
         if (mode == null || !contains(modes, mode)) return null;
         return new ShareLink(url, hz, mode, bw, dec);
+    }
+
+    // Vrai si le lien est un lien de partage de PhoneSDRLink (sans vérifier ses paramètres).
+    static boolean isShareLink(String link) { return prefixOf(link) != null; }
+
+    private static String prefixOf(String link) {
+        if (link != null) for (String p : PREFIXES) if (link.regionMatches(true, 0, p, 0, p.length())) return p;
+        return null;
     }
 
     static boolean isWeb(String u) {

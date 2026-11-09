@@ -753,4 +753,3 @@ Invalid share link	Nieprawidłowy link udostępniania
 Shared frequency	Udostępniona częstotliwość
 Open {0} on {1}?	Otworzyć {0} na {1}?
 {0} on {1}	{0} na {1}
-Browser: {0}	Przeglądarka: {0}
