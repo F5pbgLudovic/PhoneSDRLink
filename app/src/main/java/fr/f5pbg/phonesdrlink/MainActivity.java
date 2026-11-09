@@ -353,6 +353,7 @@ public class MainActivity extends Activity {
         LinearLayout zoom = new LinearLayout(this);
         zoom.setOrientation(LinearLayout.VERTICAL);
         Button plus = zoomButton("+", true), minus = zoomButton("−", false);
+        zoom.addView(shareButton());
         zoom.addView(initButton());
         zoom.addView(plus);
         zoom.addView(minus);
@@ -470,6 +471,39 @@ public class MainActivity extends Activity {
         p.setMargins(0, Ui.dp(this, 4), 0, 0);
         b.setLayoutParams(p);
         return b;
+    }
+
+    // Rond « partage » (au-dessus de INIT) : partage de l'écoute en cours par la fenêtre de partage d'Android. Actif même verrouillé.
+    View shareButton() {
+        android.widget.ImageButton b = new android.widget.ImageButton(this);
+        b.setImageResource(android.R.drawable.ic_menu_share);
+        b.setColorFilter(Color.WHITE);
+        b.setScaleType(android.widget.ImageView.ScaleType.CENTER_INSIDE);
+        int pad = Ui.dp(this, 10);
+        b.setPadding(pad, pad, pad, pad);
+        b.setBackground(Ui.round(0xAA000000, 24, this));
+        b.setContentDescription(Lang.T("Partager la fréquence", "Share the frequency"));
+        b.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { shareCurrent(); } });
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(Ui.dp(this, 48), Ui.dp(this, 48));
+        p.setMargins(0, Ui.dp(this, 4), 0, 0);
+        b.setLayoutParams(p);
+        return b;
+    }
+
+    // Texte partagé : écoute lisible, lien PhoneSDRLink, et adresse du WebSDR pour ceux qui n'ont pas l'application.
+    void shareCurrent() {
+        String u = currentUrl();
+        if (u == null || !ShareLink.isWeb(u)) { status(Lang.T("Aucun WebSDR à partager", "No WebSDR to share")); return; }
+        String title = currentTitle().trim();
+        if (title.isEmpty()) title = Uri.parse(u).getHost();
+        String link = ShareLink.build(u, freq, mode, bwHz, decMode != 0 ? decName(decMode) : "");
+        String text = "📻 " + Lang.F("{0} sur {1}", "{0} on {1}", listenText(freq, mode, decMode), title)
+            + "\nPhoneSDRLink : " + link
+            + "\n" + Lang.F("Navigateur : {0}", "Browser: {0}", u);
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(i, Lang.T("Partager la fréquence", "Share the frequency")));
     }
 
     // Verrou : tant qu'il est rouge, aucune commande ne change rien (seuls Muet et Verrou restent actifs).
