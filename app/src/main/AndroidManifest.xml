@@ -29,6 +29,21 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="phonesdrlink" android:host="tune" />
+            </intent-filter>
+            <!-- Lien https de partage (ShareLink.WEB_BASE, voir docs/GITHUB-PAGES.md) : sans assetlinks.json à la racine du domaine, Android ne le vérifie pas ;
+                 il s'ouvre alors dans le navigateur (page docs/s/index.html), sauf si l'utilisateur l'ajoute dans
+                 Paramètres › Applis › PhoneSDRLink › Ouvrir par défaut. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="f5pbgludovic.github.io" android:pathPrefix="/PhoneSDRLink/s" />
+            </intent-filter>
         </activity>
         <service
             android:name=".PlayService"

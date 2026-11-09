@@ -747,3 +747,9 @@ White margin	Baltas kraštas
 start tone heard: looking for the phasing…	išgirstas pradžios tonas: ieškoma fazavimo…
 Settings…	Parametrai…
 Settings	Parametrai
+Share the frequency	Bendrinti dažnį
+No WebSDR to share	Nėra WebSDR bendrinimui
+Invalid share link	Netinkama bendrinimo nuoroda
+Shared frequency	Bendrintas dažnis
+Open {0} on {1}?	Atidaryti {0}: {1}?
+{0} on {1}	{0} – {1}

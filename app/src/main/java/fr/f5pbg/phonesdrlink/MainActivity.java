@@ -138,7 +138,11 @@ public class MainActivity extends Activity {
         if (Ui.reopenColors) { Ui.reopenColors = false; h.post(new Runnable() { public void run() { DlgSettings.showColors(MainActivity.this); } }); }
         String first = getIntent() != null ? getIntent().getStringExtra("url") : null;
         web.loadUrl(first != null ? first : st.lastUrl);
-        h.postDelayed(new Runnable() { public void run() { firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
+        final Intent shareIntent = getIntent();
+        h.post(new Runnable() { public void run() { handleShareIntent(shareIntent); } });   // lien de partage : question posée devant la page habituelle
+        // Lancé par un lien de partage : la recherche du premier démarrage attend le lancement suivant (elle masquerait la confirmation du lien).
+        final boolean shareLaunch = isShareIntent(shareIntent);
+        h.postDelayed(new Runnable() { public void run() { if (!shareLaunch) firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
         h.postDelayed(callWatch, 1000);
         if (st.freedvAuto) h.postDelayed(new Runnable() { public void run() { maybeStartAuto(); } }, 4000);   // FreeDV auto : démarre avec l'application
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission("android.permission.POST_NOTIFICATIONS") != android.content.pm.PackageManager.PERMISSION_GRANTED)
@@ -194,6 +198,7 @@ public class MainActivity extends Activity {
         debugIntent(i);
         String u = i.getStringExtra("url");
         if (u != null) openUrl(u);
+        handleShareIntent(i);
     }
 
     // Outils de mise au point par adb : --ez dump true (copie settings.ini dans le dossier public de l'application),
@@ -350,6 +355,7 @@ public class MainActivity extends Activity {
         LinearLayout zoom = new LinearLayout(this);
         zoom.setOrientation(LinearLayout.VERTICAL);
         Button plus = zoomButton("+", true), minus = zoomButton("−", false);
+        zoom.addView(shareButton());
         zoom.addView(initButton());
         zoom.addView(plus);
         zoom.addView(minus);
@@ -467,6 +473,37 @@ public class MainActivity extends Activity {
         p.setMargins(0, Ui.dp(this, 4), 0, 0);
         b.setLayoutParams(p);
         return b;
+    }
+
+    // Rond « partage » (au-dessus de INIT) : partage de l'écoute en cours par la fenêtre de partage d'Android. Actif même verrouillé.
+    View shareButton() {
+        android.widget.ImageButton b = new android.widget.ImageButton(this);
+        b.setImageResource(R.drawable.ic_share);   // blanc plein (l'icône système ic_menu_share est semi-transparente : grise)
+        b.setScaleType(android.widget.ImageView.ScaleType.CENTER_INSIDE);
+        int pad = Ui.dp(this, 10);
+        b.setPadding(pad, pad, pad, pad);
+        b.setBackground(Ui.round(0xAA000000, 24, this));
+        b.setContentDescription(Lang.T("Partager la fréquence", "Share the frequency"));
+        b.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { shareCurrent(); } });
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(Ui.dp(this, 48), Ui.dp(this, 48));
+        p.setMargins(0, Ui.dp(this, 4), 0, 0);
+        b.setLayoutParams(p);
+        return b;
+    }
+
+    // Texte partagé : écoute lisible et lien https de partage (ShareLink.WEB_BASE).
+    void shareCurrent() {
+        String u = currentUrl();
+        if (u == null || !ShareLink.isWeb(u)) { status(Lang.T("Aucun WebSDR à partager", "No WebSDR to share")); return; }
+        String title = currentTitle().trim();
+        if (title.isEmpty()) title = Uri.parse(u).getHost();
+        String link = ShareLink.build(u, freq, mode, bwHz, decMode != 0 ? decName(decMode) : "");
+        String text = "📻 " + Lang.F("{0} sur {1}", "{0} on {1}", listenText(freq, mode, decMode), title)
+            + "\n" + link;   // la page du lien propose d'ouvrir PhoneSDRLink, de l'installer ou d'écouter dans le navigateur
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(Intent.createChooser(i, Lang.T("Partager la fréquence", "Share the frequency")));
     }
 
     // Verrou : tant qu'il est rouge, aucune commande ne change rien (seuls Muet et Verrou restent actifs).
@@ -1030,6 +1067,43 @@ public class MainActivity extends Activity {
         captureScale = true;
         updateDisplays();
         web.loadUrl(url);
+    }
+
+    // Lien de partage reçu (phonesdrlink://tune?…, voir ShareLink) : confirmation, puis WebSDR, fréquence, mode, largeur et décodeur.
+    // La confirmation est obligatoire : le lien vient d'un tiers et fait charger une page quelconque dans la WebView (pont PhoneSdr).
+    void handleShareIntent(Intent i) {
+        if (!isShareIntent(i)) return;
+        final ShareLink s = ShareLink.parse(i.getData().toString(), MODES);
+        if (s == null) { status(Lang.T("Lien de partage invalide", "Invalid share link")); return; }
+        if (blocked()) return;
+        final int dec = decFromName(s.decoder);
+        Ui.confirm(this, Lang.T("Fréquence partagée", "Shared frequency"),
+            Lang.F("Ouvrir {0} sur {1} ?", "Open {0} on {1}?", Uri.parse(s.url).getHost(), listenText(s.hz, s.mode, dec)),
+            new Ui.Yes() { public void yes() { applyShare(s, dec); } });
+    }
+
+    static boolean isShareIntent(Intent i) { return i != null && i.getData() != null && ShareLink.isShareLink(i.getData().toString()); }
+
+    void applyShare(ShareLink s, int dec) {
+        if (blocked()) return;
+        if (scanning) stopScan(null);
+        freq = s.hz;
+        mode = s.mode;
+        openUrl(s.url);                      // bwHz = largeur retenue pour le mode ; au premier état de la page, fréquence et mode sont imposés
+        if (s.bwHz > 0) bwHz = s.bwHz;       // pour cette écoute seulement : st.setBwFor n'est pas appelé
+        if (dec != 0) decoderStart(dec);     // sans décodeur dans le lien, celui qui tourne continue (comme la liste « Mem »)
+        updateDisplays();
+        saveSoon();
+    }
+
+    // « 7074 kHz USB (FT8) » : texte du partage et de la confirmation.
+    static String listenText(long hz, String m, int dec) { return Memory.kHz(hz) + " kHz " + modeLabel(m) + (dec != 0 ? " (" + decName(dec) + ")" : ""); }
+
+    // Inverse de decName : 0 si le nom est inconnu.
+    static int decFromName(String n) {
+        if (n == null || n.isEmpty()) return 0;
+        for (int d = 1; d <= DEC_WEFAX; d++) if (decName(d).equalsIgnoreCase(n)) return d;
+        return 0;
     }
 
     // Zoom propre du WebSDR (palier de zoom du spectre/cascade) retenu pour chaque favori, dans PhoneViewPos (clé s<hash>, comme la clé z<hash>

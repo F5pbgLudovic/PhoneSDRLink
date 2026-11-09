@@ -747,3 +747,9 @@ White margin	Balta mala
 start tone heard: looking for the phasing…	dzirdēts sākuma tonis: meklē fāzēšanu…
 Settings…	Parametri…
 Settings	Parametri
+Share the frequency	Kopīgot frekvenci
+No WebSDR to share	Nav WebSDR, ko kopīgot
+Invalid share link	Nederīga kopīgošanas saite
+Shared frequency	Kopīgotā frekvence
+Open {0} on {1}?	Atvērt {0}: {1}?
+{0} on {1}	{0} – {1}

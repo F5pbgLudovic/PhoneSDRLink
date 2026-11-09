@@ -747,3 +747,9 @@ White margin	Бял край
 start tone heard: looking for the phasing…	чуто начален тон: търсене на фазирането…
 Settings…	Параметри…
 Settings	Параметри
+Share the frequency	Сподели честотата
+No WebSDR to share	Няма WebSDR за споделяне
+Invalid share link	Невалидна връзка за споделяне
+Shared frequency	Споделена честота
+Open {0} on {1}?	Да се отвори ли {0} на {1}?
+{0} on {1}	{0} на {1}

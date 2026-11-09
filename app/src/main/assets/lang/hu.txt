@@ -747,3 +747,9 @@ White margin	Fehér margó
 start tone heard: looking for the phasing…	kezdőhang hallható: a fázisjel keresése…
 Settings…	Paraméterek…
 Settings	Paraméterek
+Share the frequency	Frekvencia megosztása
+No WebSDR to share	Nincs megosztható WebSDR
+Invalid share link	Érvénytelen megosztási hivatkozás
+Shared frequency	Megosztott frekvencia
+Open {0} on {1}?	Megnyitja: {0} – {1}?
+{0} on {1}	{0} – {1}

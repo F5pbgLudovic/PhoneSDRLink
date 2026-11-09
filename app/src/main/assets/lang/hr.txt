@@ -747,3 +747,9 @@ White margin	Bijela margina
 start tone heard: looking for the phasing…	čuo se uvodni ton: traženje faziranja…
 Settings…	Parametri…
 Settings	Parametri
+Share the frequency	Podijeli frekvenciju
+No WebSDR to share	Nema WebSDR-a za dijeljenje
+Invalid share link	Neispravna poveznica za dijeljenje
+Shared frequency	Podijeljena frekvencija
+Open {0} on {1}?	Otvoriti {0} na {1}?
+{0} on {1}	{0} na {1}
