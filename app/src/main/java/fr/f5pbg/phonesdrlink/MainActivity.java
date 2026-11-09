@@ -140,7 +140,9 @@ public class MainActivity extends Activity {
         web.loadUrl(first != null ? first : st.lastUrl);
         final Intent shareIntent = getIntent();
         h.post(new Runnable() { public void run() { handleShareIntent(shareIntent); } });   // lien de partage : question posée devant la page habituelle
-        h.postDelayed(new Runnable() { public void run() { firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
+        // Lancé par un lien de partage : la recherche du premier démarrage attend le lancement suivant (elle masquerait la confirmation du lien).
+        final boolean shareLaunch = isShareIntent(shareIntent);
+        h.postDelayed(new Runnable() { public void run() { if (!shareLaunch) firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
         h.postDelayed(callWatch, 1000);
         if (st.freedvAuto) h.postDelayed(new Runnable() { public void run() { maybeStartAuto(); } }, 4000);   // FreeDV auto : démarre avec l'application
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission("android.permission.POST_NOTIFICATIONS") != android.content.pm.PackageManager.PERMISSION_GRANTED)
@@ -1072,7 +1074,7 @@ public class MainActivity extends Activity {
     // Lien de partage reçu (phonesdrlink://tune?…, voir ShareLink) : confirmation, puis WebSDR, fréquence, mode, largeur et décodeur.
     // La confirmation est obligatoire : le lien vient d'un tiers et fait charger une page quelconque dans la WebView (pont PhoneSdr).
     void handleShareIntent(Intent i) {
-        if (i == null || i.getData() == null || !ShareLink.SCHEME.equalsIgnoreCase(i.getData().getScheme())) return;
+        if (!isShareIntent(i)) return;
         final ShareLink s = ShareLink.parse(i.getData().toString(), MODES);
         if (s == null) { status(Lang.T("Lien de partage invalide", "Invalid share link")); return; }
         if (blocked()) return;
@@ -1081,6 +1083,8 @@ public class MainActivity extends Activity {
             Lang.F("Ouvrir {0} sur {1} ?", "Open {0} on {1}?", Uri.parse(s.url).getHost(), listenText(s.hz, s.mode, dec)),
             new Ui.Yes() { public void yes() { applyShare(s, dec); } });
     }
+
+    static boolean isShareIntent(Intent i) { return i != null && i.getData() != null && ShareLink.SCHEME.equalsIgnoreCase(i.getData().getScheme()); }
 
     void applyShare(ShareLink s, int dec) {
         if (blocked()) return;
