@@ -138,6 +138,8 @@ public class MainActivity extends Activity {
         if (Ui.reopenColors) { Ui.reopenColors = false; h.post(new Runnable() { public void run() { DlgSettings.showColors(MainActivity.this); } }); }
         String first = getIntent() != null ? getIntent().getStringExtra("url") : null;
         web.loadUrl(first != null ? first : st.lastUrl);
+        final Intent shareIntent = getIntent();
+        h.post(new Runnable() { public void run() { handleShareIntent(shareIntent); } });   // lien de partage : question posée devant la page habituelle
         h.postDelayed(new Runnable() { public void run() { firstRunSearch(); if (st.checkUpdates) checkUpdate(false); } }, 1200);
         h.postDelayed(callWatch, 1000);
         if (st.freedvAuto) h.postDelayed(new Runnable() { public void run() { maybeStartAuto(); } }, 4000);   // FreeDV auto : démarre avec l'application
@@ -194,6 +196,7 @@ public class MainActivity extends Activity {
         debugIntent(i);
         String u = i.getStringExtra("url");
         if (u != null) openUrl(u);
+        handleShareIntent(i);
     }
 
     // Outils de mise au point par adb : --ez dump true (copie settings.ini dans le dossier public de l'application),
@@ -1030,6 +1033,41 @@ public class MainActivity extends Activity {
         captureScale = true;
         updateDisplays();
         web.loadUrl(url);
+    }
+
+    // Lien de partage reçu (phonesdrlink://tune?…, voir ShareLink) : confirmation, puis WebSDR, fréquence, mode, largeur et décodeur.
+    // La confirmation est obligatoire : le lien vient d'un tiers et fait charger une page quelconque dans la WebView (pont PhoneSdr).
+    void handleShareIntent(Intent i) {
+        if (i == null || i.getData() == null || !ShareLink.SCHEME.equalsIgnoreCase(i.getData().getScheme())) return;
+        final ShareLink s = ShareLink.parse(i.getData().toString(), MODES);
+        if (s == null) { status(Lang.T("Lien de partage invalide", "Invalid share link")); return; }
+        if (blocked()) return;
+        final int dec = decFromName(s.decoder);
+        Ui.confirm(this, Lang.T("Fréquence partagée", "Shared frequency"),
+            Lang.F("Ouvrir {0} sur {1} ?", "Open {0} on {1}?", Uri.parse(s.url).getHost(), listenText(s.hz, s.mode, dec)),
+            new Ui.Yes() { public void yes() { applyShare(s, dec); } });
+    }
+
+    void applyShare(ShareLink s, int dec) {
+        if (blocked()) return;
+        if (scanning) stopScan(null);
+        freq = s.hz;
+        mode = s.mode;
+        openUrl(s.url);                      // bwHz = largeur retenue pour le mode ; au premier état de la page, fréquence et mode sont imposés
+        if (s.bwHz > 0) bwHz = s.bwHz;       // pour cette écoute seulement : st.setBwFor n'est pas appelé
+        if (dec != 0) decoderStart(dec);     // sans décodeur dans le lien, celui qui tourne continue (comme la liste « Mem »)
+        updateDisplays();
+        saveSoon();
+    }
+
+    // « 7074 kHz USB (FT8) » : texte du partage et de la confirmation.
+    static String listenText(long hz, String m, int dec) { return Memory.kHz(hz) + " kHz " + modeLabel(m) + (dec != 0 ? " (" + decName(dec) + ")" : ""); }
+
+    // Inverse de decName : 0 si le nom est inconnu.
+    static int decFromName(String n) {
+        if (n == null || n.isEmpty()) return 0;
+        for (int d = 1; d <= DEC_WEFAX; d++) if (decName(d).equalsIgnoreCase(n)) return d;
+        return 0;
     }
 
     // Zoom propre du WebSDR (palier de zoom du spectre/cascade) retenu pour chaque favori, dans PhoneViewPos (clé s<hash>, comme la clé z<hash>
