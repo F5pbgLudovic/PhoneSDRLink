@@ -11,8 +11,9 @@ import java.util.Locale;
 // pour que les liens restent valables si les numéros changent. Paramètres inconnus ignorés (versions futures).
 final class ShareLink {
     static final String SCHEME = "phonesdrlink";
-    // Page de partage (GitHub Pages du dépôt) : à changer avec l'hôte et le chemin de l'intent-filter https d'AndroidManifest.xml.
-    static final String WEB_BASE = "https://bt0r.github.io/PhoneSDRLink/s/";
+    // Page de partage : GitHub Pages du dépôt F5pbgLudovic/PhoneSDRLink (dossier docs, voir docs/GITHUB-PAGES.md).
+    // À changer avec l'hôte et le chemin de l'intent-filter https d'AndroidManifest.xml.
+    static final String WEB_BASE = "https://f5pbgludovic.github.io/PhoneSDRLink/s/";
     static final String[] PREFIXES = { SCHEME + "://tune?", WEB_BASE + "?", WEB_BASE.substring(0, WEB_BASE.length() - 1) + "?" };
     static final int MIN_BW = 100, MAX_BW = 15000;
 

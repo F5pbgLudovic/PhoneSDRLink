@@ -8,7 +8,7 @@ public class ShareLinkTest {
     static final String TW = "http://websdr.ewi.utwente.nl:8901/";
 
     @Test public void buildMinimalIsExact() {
-        assertEquals("https://bt0r.github.io/PhoneSDRLink/s/?u=http%3A%2F%2Fwebsdr.ewi.utwente.nl%3A8901%2F&f=7100000&m=LSB",
+        assertEquals("https://f5pbgludovic.github.io/PhoneSDRLink/s/?u=http%3A%2F%2Fwebsdr.ewi.utwente.nl%3A8901%2F&f=7100000&m=LSB",
             ShareLink.build(TW, 7100000L, "LSB", 0, ""));
     }
 
@@ -49,14 +49,15 @@ public class ShareLinkTest {
     }
 
     @Test public void webLinkWithoutTrailingSlashAccepted() {
-        assertNotNull(ShareLink.parse("https://bt0r.github.io/PhoneSDRLink/s?u=http%3A%2F%2Fa.b%2F&f=7074000&m=USB", MODES));
+        assertNotNull(ShareLink.parse("https://f5pbgludovic.github.io/PhoneSDRLink/s?u=http%3A%2F%2Fa.b%2F&f=7074000&m=USB", MODES));
     }
 
     @Test public void recognisesOnlyOwnLinks() {
-        assertTrue(ShareLink.isShareLink("https://bt0r.github.io/PhoneSDRLink/s/?u=x"));
+        assertTrue(ShareLink.isShareLink("https://f5pbgludovic.github.io/PhoneSDRLink/s/?u=x"));
         assertTrue(ShareLink.isShareLink("phonesdrlink://tune?u=x"));
-        assertFalse(ShareLink.isShareLink("https://bt0r.github.io/PhoneSDRLink/"));
+        assertFalse(ShareLink.isShareLink("https://f5pbgludovic.github.io/PhoneSDRLink/"));
         assertFalse(ShareLink.isShareLink("https://evil.example/PhoneSDRLink/s/?u=x"));
+        assertFalse(ShareLink.isShareLink("https://bt0r.github.io/PhoneSDRLink/s/?u=x"));   // ancienne page de test du fork
         assertFalse(ShareLink.isShareLink(null));
     }
 
