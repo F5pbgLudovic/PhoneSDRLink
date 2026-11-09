@@ -143,7 +143,14 @@ final class DlgDecoder {
         final Button go = Ui.button(a, "", null);
         final Button stop = Ui.button(a, "STOP", null);
         r1.addView(sp, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.7f, a, 2));
-        r1.addView(go, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.1f, a, 2));
+        // Bouton du mode en haut, QSY AUTO en dessous : actif = lancer un décodeur place aussi sur la fréquence habituelle du mode
+        // (liste « Modes numériques ») ; inactif = seul le mode change, la fréquence reste.
+        final Button qsy = Ui.button(a, "QSY AUTO", null);
+        LinearLayout rg = new LinearLayout(a);
+        rg.setOrientation(LinearLayout.VERTICAL);
+        rg.addView(go, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        rg.addView(qsy, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        r1.addView(rg, Ui.lp(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.1f, a, 2));
         // Muet (même effet que le bouton Muet de l'écran principal) au-dessus de STOP
         final Button mute = Ui.button(a, "", null);
         LinearLayout rc = new LinearLayout(a);
@@ -158,6 +165,7 @@ final class DlgDecoder {
                 Ui.paint(mute, a.muted, Ui.danger());
                 go.setText(MainActivity.decName(sel[0]));
                 Ui.paint(go, a.decMode == sel[0], Ui.on());
+                Ui.paint(qsy, a.st.digAuto, Ui.danger());   // mêmes couleurs que SCAN
                 boolean running = a.decMode != 0;
                 stop.setEnabled(running);
                 stop.setAlpha(running ? 1f : 0.45f);
@@ -167,6 +175,9 @@ final class DlgDecoder {
         onState = refresh;
         mute.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) { a.muted = !a.muted; a.applyVolume(); a.updateButtons(); refresh.run(); }
+        });
+        qsy.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { a.st.digAuto = !a.st.digAuto; a.st.save(); refresh.run(); }
         });
         go.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
