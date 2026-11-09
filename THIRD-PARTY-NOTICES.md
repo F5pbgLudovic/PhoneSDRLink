@@ -25,4 +25,6 @@ ft8_lib (MIT) a été légèrement modifié pour FT2 (durée de symbole et de tr
 
 Olivia et Contestia : le décodeur utilise la bibliothèque MFSK de Pawel Jalocha (app/src/main/cpp/jalocha/, reprise telle quelle de fldigi, W1HKJ et contributeurs, GNU GPL), compatible avec la GPL v3 ; Hell : paramètres de modulation (cadence des colonnes, largeurs de filtre, écarts de tonalité) repris des sources de fldigi (feld.cxx, GPL v3).
 
+Icône « partage » (app/src/main/res/drawable/ic_share.xml) : icône « share » des Material Icons de Google, licence Apache 2.0 (https://github.com/google/material-design-icons).
+
 Le texte complet de la GPL v3 est dans le fichier LICENSE à la racine du dépôt.

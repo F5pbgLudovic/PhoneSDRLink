@@ -478,8 +478,7 @@ public class MainActivity extends Activity {
     // Rond « partage » (au-dessus de INIT) : partage de l'écoute en cours par la fenêtre de partage d'Android. Actif même verrouillé.
     View shareButton() {
         android.widget.ImageButton b = new android.widget.ImageButton(this);
-        b.setImageResource(android.R.drawable.ic_menu_share);
-        b.setColorFilter(Color.WHITE);
+        b.setImageResource(R.drawable.ic_share);   // blanc plein (l'icône système ic_menu_share est semi-transparente : grise)
         b.setScaleType(android.widget.ImageView.ScaleType.CENTER_INSIDE);
         int pad = Ui.dp(this, 10);
         b.setPadding(pad, pad, pad, pad);
