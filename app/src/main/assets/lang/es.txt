@@ -747,3 +747,10 @@ White margin	Margen blanco
 start tone heard: looking for the phasing…	tono de inicio oído: buscando la fasificación…
 Settings…	Parámetros…
 Settings	Parámetros
+Share the frequency	Compartir la frecuencia
+No WebSDR to share	Ningún WebSDR para compartir
+Invalid share link	Enlace compartido no válido
+Shared frequency	Frecuencia compartida
+Open {0} on {1}?	¿Abrir {0} en {1}?
+{0} on {1}	{0} en {1}
+Browser: {0}	Navegador: {0}

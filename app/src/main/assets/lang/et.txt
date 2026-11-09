@@ -747,3 +747,10 @@ White margin	Valge veeris
 start tone heard: looking for the phasing…	algusheli kuuldud: otsin faasimist…
 Settings…	Parameetrid…
 Settings	Parameetrid
+Share the frequency	Jaga sagedust
+No WebSDR to share	Pole WebSDR-i, mida jagada
+Invalid share link	Vigane jagamislink
+Shared frequency	Jagatud sagedus
+Open {0} on {1}?	Kas avada {0}: {1}?
+{0} on {1}	{0} – {1}
+Browser: {0}	Brauser: {0}

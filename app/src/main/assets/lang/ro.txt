@@ -747,3 +747,10 @@ White margin	Margine albă
 start tone heard: looking for the phasing…	ton de început auzit: se caută fazarea…
 Settings…	Parametri…
 Settings	Parametri
+Share the frequency	Partajează frecvența
+No WebSDR to share	Niciun WebSDR de partajat
+Invalid share link	Link de partajare nevalid
+Shared frequency	Frecvență partajată
+Open {0} on {1}?	Deschideți {0} pe {1}?
+{0} on {1}	{0} pe {1}
+Browser: {0}	Browser: {0}

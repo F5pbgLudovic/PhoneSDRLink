@@ -747,3 +747,10 @@ White margin	Vit marginal
 start tone heard: looking for the phasing…	starttonen hörd: söker fasningen…
 Settings…	Parametrar…
 Settings	Parametrar
+Share the frequency	Dela frekvensen
+No WebSDR to share	Ingen WebSDR att dela
+Invalid share link	Ogiltig delningslänk
+Shared frequency	Delad frekvens
+Open {0} on {1}?	Öppna {0} på {1}?
+{0} on {1}	{0} på {1}
+Browser: {0}	Webbläsare: {0}

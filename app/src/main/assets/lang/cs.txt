@@ -747,3 +747,10 @@ White margin	Bílý okraj
 start tone heard: looking for the phasing…	slyšen úvodní tón: hledání fázování…
 Settings…	Parametry…
 Settings	Parametry
+Share the frequency	Sdílet frekvenci
+No WebSDR to share	Žádné WebSDR ke sdílení
+Invalid share link	Neplatný odkaz ke sdílení
+Shared frequency	Sdílená frekvence
+Open {0} on {1}?	Otevřít {0} na {1}?
+{0} on {1}	{0} na {1}
+Browser: {0}	Prohlížeč: {0}

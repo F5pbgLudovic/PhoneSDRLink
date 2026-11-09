@@ -747,3 +747,10 @@ White margin	Weißer Rand
 start tone heard: looking for the phasing…	Startton gehört: suche die Phasierung…
 Settings…	Einstellungen…
 Settings	Einstellungen
+Share the frequency	Frequenz teilen
+No WebSDR to share	Kein WebSDR zum Teilen
+Invalid share link	Ungültiger Freigabelink
+Shared frequency	Geteilte Frequenz
+Open {0} on {1}?	{0} auf {1} öffnen?
+{0} on {1}	{0} auf {1}
+Browser: {0}	Browser: {0}

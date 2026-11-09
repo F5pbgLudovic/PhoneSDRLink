@@ -747,3 +747,10 @@ White margin	Valkoinen marginaali
 start tone heard: looking for the phasing…	aloitusääni kuultu: etsitään vaiheistusta…
 Settings…	Parametrit…
 Settings	Parametrit
+Share the frequency	Jaa taajuus
+No WebSDR to share	Ei jaettavaa WebSDR:ää
+Invalid share link	Virheellinen jakolinkki
+Shared frequency	Jaettu taajuus
+Open {0} on {1}?	Avataanko {0}: {1}?
+{0} on {1}	{0} – {1}
+Browser: {0}	Selain: {0}

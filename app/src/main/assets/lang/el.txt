@@ -747,3 +747,10 @@ White margin	Λευκό περιθώριο
 start tone heard: looking for the phasing…	ακούστηκε ο τόνος έναρξης: αναζήτηση φάσης…
 Settings…	Παράμετροι…
 Settings	Παράμετροι
+Share the frequency	Κοινοποίηση συχνότητας
+No WebSDR to share	Κανένα WebSDR για κοινοποίηση
+Invalid share link	Μη έγκυρος σύνδεσμος κοινοποίησης
+Shared frequency	Κοινόχρηστη συχνότητα
+Open {0} on {1}?	Άνοιγμα {0} στα {1};
+{0} on {1}	{0} στα {1}
+Browser: {0}	Πρόγραμμα περιήγησης: {0}
