@@ -214,7 +214,7 @@ final class DlgSettings {
         for (int i = 0; i < 11; i++) { secs[i] = 10 + 5 * i; names[i] = secs[i] + " s"; if (secs[i] == st.reloadSec) si = i; }
         DlgDecoder.choice(a, col, Lang.T("Délai sans son avant le rechargement", "Time without sound before the reload"), names, si,
             new DlgDecoder.Pick() { public void chose(int i) { st.reloadSec = secs[i]; st.save(); owner.setText(reloadLabel(st)); } });
-        col.addView(Ui.small(a, Lang.T("Recharge le WebSDR quand le son est coupé depuis le délai choisi (de 10 à 60 s), par exemple après une coupure du serveur ou un time-out du WebSDR. Sans effet si le volume est à zéro ou en mode muet. Trois essais de suite au plus.", "Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.")));
+        col.addView(Ui.small(a, Lang.T("Recharge le WebSDR quand le son est coupé depuis le délai choisi (de 10 à 60 s), par exemple après une coupure du serveur ou un time-out du WebSDR. Trois essais de suite au plus.", "Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. Three attempts in a row at most.")));
         Ui.closeOnTap(rd, col);
         rd.show();
     }

@@ -336,12 +336,15 @@
         var c = L.ctxs[i], a = c.__sdrlinkWatch;
         if (!a || c.state !== 'running') continue;
         running = true;
+        L.everRan = true;
         try {
           a.getFloatTimeDomainData(a.buf);
           for (var k = 0; k < a.buf.length; k++) if (Math.abs(a.buf[k]) > 0.00005) { L.lastSound = now; break; }
         } catch (e) { }
       }
-      if (!running) L.lastSound = now;   // pas de son lancé par la page : rien à réinitialiser
+      // Pas de son lancé par la page (jamais démarré) ou page cachée : rien à réinitialiser. Mais un son qui a tourné puis dont
+      // le contexte audio est suspendu ou fermé (arrêt par le serveur : « session timed out ») compte comme un son perdu.
+      if (document.visibilityState === 'hidden' || (!running && !L.everRan)) L.lastSound = now;
     }, 1000);
     // Durée (ms) sans son ; -2 si le curseur de volume de la page est à zéro (réglage de l'opérateur) ; -1 si rien à surveiller.
     L.silentMs = function () {

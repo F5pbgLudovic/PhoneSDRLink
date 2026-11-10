@@ -1112,16 +1112,18 @@ public class MainActivity extends Activity {
 
     // « Réinitialisation automatique WEBSDR » : si la page reste 30 s sans produire de son alors que le volume n'est pas à zéro
     // (téléphone, mute de l'application, curseur de la page), la page est rechargée ; 3 essais de suite au plus par WebSDR.
-    int autoTries;
+    int autoTries, watchCat = 1;
     final Runnable watchRun = new Runnable() {
         public void run() {
             h.postDelayed(this, 3000);
-            if (!st.autoReload || sdrKind.isEmpty() || muted || callMute || focusMute || (isRade(decMode) && radeVoice) || audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0 || autoTries >= 3) return;
+            if (!st.autoReload || sdrKind.isEmpty() || autoTries >= 3) return;
             web.evaluateJavascript("(function(){try{return window.__sdrlink?__sdrlink.silentMs():-1}catch(e){return -1}})()", new android.webkit.ValueCallback<String>() {
                 public void onReceiveValue(String v) {
                     long ms;
                     try { ms = Long.parseLong(v.trim()); } catch (Exception e) { return; }
-                    if (ms >= st.reloadSec * 1000L && st.autoReload && !muted && !callMute && !focusMute && !(isRade(decMode) && radeVoice)) {
+                    int cat = ms < 0 ? (int) ms : 0;   // -1 : rien à surveiller, -2 : volume ou mute de la page
+                    if (cat != watchCat) { watchCat = cat; DiagLog.add(cat == -2 ? "Surveillance du son suspendue : volume ou mute de la page" : cat == -1 ? "Surveillance du son : rien à surveiller" : "Surveillance du son active"); }
+                    if (ms >=st.reloadSec * 1000L && st.autoReload) {
                         autoTries++;
                         status(Lang.F("Plus de son depuis {0} s : le WebSDR est rechargé.", "No sound for {0} s: the WebSDR is reloaded.", st.reloadSec));
                         DiagLog.add("Plus de son depuis " + st.reloadSec + " s : page rechargée (essai " + autoTries + ")");
