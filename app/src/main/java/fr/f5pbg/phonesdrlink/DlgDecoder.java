@@ -293,7 +293,22 @@ final class DlgDecoder {
         col.addView(frame, flp);
         showPanels(sel[0]);
         refresh.run();
-        final Dialog d = Ui.window(a, Lang.T("Décodeur", "Decoder"), col, true);
+        // En-tête : « Décodeur » à gauche, SET (menu classique) à droite, au même niveau
+        LinearLayout head = new LinearLayout(a);
+        head.setOrientation(LinearLayout.HORIZONTAL);
+        head.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        TextView title = Ui.label(a, Lang.T("Décodeur", "Decoder"));
+        title.setTextSize(Ui.big ? 36 : 18);
+        title.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        title.setPadding(Ui.dp(a, 8), Ui.dp(a, 6), 0, Ui.dp(a, 6));
+        head.addView(title, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        Button setMenu = Ui.button(a, "SET", new View.OnClickListener() {
+            public void onClick(View v) { if (dd[0] != null) dd[0].dismiss(); DlgSettings.show(a); }
+        });
+        setMenu.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        head.addView(setMenu, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        col.addView(head, 0);
+        final Dialog d = Ui.window(a, null, col, true);
         dd[0] = d;
         a.decView = log;
         a.decScroll = sv;
