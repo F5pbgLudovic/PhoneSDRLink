@@ -519,7 +519,7 @@ public class MainActivity extends Activity {
         }
         bigMode.setText(btnMode.getText());
         bigScan.setText(btnScan.getText());
-        Ui.paint(bigScan, scanning, Ui.danger());
+        Ui.paint(bigScan, scanning || voiceListening(), scanning ? Ui.danger() : Ui.on());
         bigRec.setText(btnRec.getText());
         Ui.paint(bigRec, recording, Ui.danger());
         bigMute.setText(btnMute.getText());
@@ -728,8 +728,9 @@ public class MainActivity extends Activity {
         Ui.paint(btnLock, locked, Ui.danger());
         btnRec.setText(recording ? "■ " + recTime() : "● REC");
         Ui.paint(btnRec, recording, Ui.danger());
-        btnScan.setText(scanning ? Lang.T("■ Arrêter le scan", "■ Stop scan") : "▶ Scan");
-        Ui.paint(btnScan, scanning, Ui.danger());
+        boolean listen = voiceListening();
+        btnScan.setText(scanning ? "■ Scan" : "▶ Scan");
+        Ui.paint(btnScan, scanning || listen, scanning ? Ui.danger() : Ui.on());   // vert : scan en pause, micro encore à l'écoute
         bigRefresh();
     }
 
@@ -1513,7 +1514,8 @@ public class MainActivity extends Activity {
     // ------------------------------------------------------------------ scan
 
     void onScanButton() {
-        if (scanning) { stopScan(null); return; }
+        if (scanning) { stopScan(null); voiceOff(); return; }   // bouton rouge : scan et écoute du micro coupés (aucun départ à la voix)
+        if (voiceListening()) { voiceOff(); return; }   // bouton vert : le micro est coupé, le scan reste arrêté
         final ScanProfile cur = st.currentScan();
         java.util.ArrayList<String> items = new java.util.ArrayList<String>();
         items.add(Lang.T("Reprendre le scan", "Resume the scan") + "  —  " + resumeText());
@@ -1601,7 +1603,11 @@ public class MainActivity extends Activity {
     final VoiceCmd voice = new VoiceCmd();
     static final long VOICE_IDLE_MS = 5 * 60 * 1000L;   // le micro reste ouvert 5 minutes après la pause du scan
     long voiceUntil;
-    final Runnable voiceIdleRun = new Runnable() { public void run() { voice.stop(); } };
+    final Runnable voiceIdleRun = new Runnable() { public void run() { voice.stop(); updateButtons(); } };
+
+    void voiceOff() { voiceUntil = 0; h.removeCallbacks(voiceIdleRun); voice.stop(); updateButtons(); }
+
+    boolean voiceListening() { return !scanning && st.voiceCmd && voice.active(); }
 
     // Micro ouvert seulement : option cochée, modèle téléchargé, autorisation accordée, application à l'écran.
     void voiceStart() {

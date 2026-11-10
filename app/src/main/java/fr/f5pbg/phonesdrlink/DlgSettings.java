@@ -269,7 +269,7 @@ final class DlgSettings {
         box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(final CompoundButton b, boolean on) {
                 if (quiet[0]) return;
-                if (!on) { st.voiceCmd = false; st.save(); a.voice.stop(); Ui.paint(owner, false, Ui.on()); return; }
+                if (!on) { st.voiceCmd = false; st.save(); a.voice.stop(); a.updateButtons(); Ui.paint(owner, false, Ui.on()); return; }
                 if (!VoiceCmd.ready(a, st.language)) {   // le modèle d'abord
                     quiet[0] = true; b.setChecked(false); quiet[0] = false;
                     Ui.toast(a, Lang.T("Téléchargez d'abord le modèle vocal.", "Download the voice model first."));
