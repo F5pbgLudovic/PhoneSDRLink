@@ -27,4 +27,6 @@ Olivia et Contestia : le décodeur utilise la bibliothèque MFSK de Pawel Jaloch
 
 Icône « partage » (app/src/main/res/drawable/ic_share.xml) : icône « share » des Material Icons de Google, licence Apache 2.0 (https://github.com/google/material-design-icons).
 
+Commande vocale du scan (1.26) : reconnaissance vocale hors ligne avec **Vosk** (Alpha Cephei, https://github.com/alphacep/vosk-api, bibliothèque `com.alphacephei:vosk-android` 0.3.47, licence Apache 2.0) et **JNA** (`net.java.dev.jna:jna` 5.13.0, Apache 2.0 / LGPL 2.1), embarqués dans l'APK. Les modèles de langue (« vosk-model-small-xx », Apache 2.0 d'après le site de Vosk) ne sont **pas** dans l'APK : ils sont téléchargés une fois, à la demande de l'utilisateur, depuis https://alphacephei.com/vosk/models dans le dossier privé de l'application. / Voice command (1.26): offline speech recognition with Vosk (Apache 2.0) and JNA (Apache 2.0 / LGPL 2.1) bundled in the APK; the small language models are downloaded once, on request, from alphacephei.com into the app's private folder.
+
 Le texte complet de la GPL v3 est dans le fichier LICENSE à la racine du dépôt.

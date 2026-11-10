@@ -109,6 +109,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle b) {
         Store.init(this);
         st = Store.I;
+        DiagLog.init(this);
+        DiagLog.add("DÉMARRAGE V" + versionName() + " ; " + DiagLog.state(this));
+        h.postDelayed(diagRun, 60000);
         cleanTemp(false);
         Lang.set(this, st.language);
         Ui.dark = st.dark;
@@ -136,6 +139,7 @@ public class MainActivity extends Activity {
         if (getIntent() != null && getIntent().getStringExtra("olitest") != null) oliviaLoop(getIntent().getStringExtra("olitest"));
         setupWeb();
         refreshAll();
+        if (Ui.reopenSet) { Ui.reopenSet = false; h.post(new Runnable() { public void run() { DlgSettings.show(MainActivity.this); } }); }
         if (Ui.reopenColors) { Ui.reopenColors = false; h.post(new Runnable() { public void run() { DlgSettings.showColors(MainActivity.this); } }); }
         String first = getIntent() != null ? getIntent().getStringExtra("url") : null;
         web.loadUrl(first != null ? first : st.lastUrl);
@@ -154,12 +158,37 @@ public class MainActivity extends Activity {
         } catch (Exception e) { }
     }
 
+    // Journal de diagnostic : un point par minute. Un retard important de ce rappel montre que le fil principal ou le téléphone était bloqué.
+    long diagLast;
+    final Runnable diagRun = new Runnable() {
+        public void run() {
+            long now = android.os.SystemClock.elapsedRealtime(), late = diagLast == 0 ? 0 : now - diagLast - 60000;
+            diagLast = now;
+            DiagLog.add("point" + (late > 5000 ? " (RETARD " + late / 1000 + " s : blocage ?)" : "") + " ; " + (sdrKind.isEmpty() ? "pas de WebSDR" : sdrKind + " " + freq + " Hz " + mode) + " ; " + DiagLog.state(MainActivity.this));
+            h.postDelayed(this, 60000);
+        }
+    };
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (level >= TRIM_MEMORY_RUNNING_LOW) DiagLog.add("MANQUE DE MÉMOIRE (niveau " + level + ") ; " + DiagLog.state(this));
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        DiagLog.add("MÉMOIRE TRÈS BASSE ; " + DiagLog.state(this));
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         web.onResume();
         requestFocus();
-        registerReceiver(volReceiver, new android.content.IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
+        resumed = true;
+        if (st.voiceCmd && (scanning || System.currentTimeMillis() < voiceUntil)) voiceStart();
+        if (!volReg) { registerReceiver(volReceiver, new android.content.IntentFilter("android.media.VOLUME_CHANGED_ACTION")); volReg = true; }
         applyPhoneVolume();
         h.removeCallbacks(watchRun);
         h.postDelayed(watchRun, 5000);
@@ -169,7 +198,9 @@ public class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
         // Pas de web.onPause() ni d'abandon du focus audio : le son continue, fluide, écran éteint (PlayService garde le processus actif).
-        try { unregisterReceiver(volReceiver); } catch (Exception e) { }
+        resumed = false;
+        voice.stop();   // le micro n'est jamais ouvert hors de l'écran de l'application
+        if (!scanning) unregisterVol();   // pendant un scan le récepteur reste actif : une touche de volume écran éteint arrête aussi le scan
         st.freqHz = freq;
         st.mode = mode;
         st.save();
@@ -177,6 +208,9 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        voice.stop();
+        unregisterVol();
+        DiagLog.add("FERMETURE" + (isFinishing() ? " voulue" : " par le système"));
         h.removeCallbacksAndMessages(null);
         if (bigDlg != null) { try { bigDlg.dismiss(); } catch (Exception e) { } }
         stopService(new Intent(this, PlayService.class));
@@ -198,6 +232,7 @@ public class MainActivity extends Activity {
     public void onRequestPermissionsResult(int code, String[] perms, int[] res) {
         super.onRequestPermissionsResult(code, perms, res);
         if (code == 8) MyPos.afterPermission(this);   // position approximative pour la recherche de WebSDR
+        if (code == 9 && voicePermCb != null) { BoolCb cb = voicePermCb; voicePermCb = null; cb.done(res.length > 0 && res[0] == android.content.pm.PackageManager.PERMISSION_GRANTED); }   // micro de la commande vocale
     }
 
     @Override
@@ -232,6 +267,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        if (scanning) { stopScan(Lang.T("bouton du smartphone", "phone button")); return; }   // la touche retour met le scan en pause au lieu de changer de page
         if (web.canGoBack()) web.goBack(); else super.onBackPressed();
     }
 
@@ -769,6 +805,7 @@ public class MainActivity extends Activity {
             }
             @Override
             public boolean onRenderProcessGone(WebView v, RenderProcessGoneDetail d) {
+                DiagLog.add("PAGE PERDUE : le processus de la page s'est arrêté (" + (d.didCrash() ? "plantage" : "tué par le système, mémoire") + ") ; " + DiagLog.state(MainActivity.this));
                 long now = System.currentTimeMillis();
                 if (now - crashSince > 30000) { crashSince = now; crashes = 0; }
                 if (++crashes <= 2) h.post(new Runnable() { public void run() { recreate(); } });
@@ -783,7 +820,7 @@ public class MainActivity extends Activity {
     }
 
     // Script du pont : précédé de la mémoire tampon audio supplémentaire demandée dans SET (ms).
-    String bridgeSrc() { return "window.__sdrlinkBufMs=" + st.bufMs + ";" + bridgeScript; }
+    String bridgeSrc() { return "window.__sdrlinkBufMs=" + st.bufMs + ";window.__sdrlinkEco=" + st.eco + ";" + bridgeScript; }
 
     // Nouvelle mémoire tampon : le script est réinstallé et la page rechargée (le tampon se choisit à la création du contexte audio).
     void applyBuffer() {
@@ -866,9 +903,47 @@ public class MainActivity extends Activity {
         js("if(window.__sdrlink)__sdrlink.setPageVolume(" + f + ");");
     }
 
+    // Volume propre à chaque WebSDR des favoris (SET › Volume par WebSDR) : le niveau réglé avec les touches du téléphone est mémorisé pour le WebSDR
+    // affiché (champ « volume » du favori, en %, exporté avec les favoris) et remis tout seul quand on y revient. Sans niveau mémorisé, le volume du moment est gardé.
+    boolean resumed, volReg;
+    long autoVolMs;   // dernier changement de volume fait par l'application elle-même (volume d'un WebSDR remis) : il n'arrête pas le scan
+
+    void unregisterVol() {
+        if (!volReg) return;
+        try { unregisterReceiver(volReceiver); } catch (Exception e) { }
+        volReg = false;
+    }
+
+    void applySdrVolume() {
+        if (!st.volPerSdr) return;
+        String u = web.getUrl();
+        if (u == null) return;
+        for (Favorite f : st.favorites) {
+            if (f.volume < 0 || !f.matches(u)) continue;
+            int max = Math.max(1, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+            int idx = Math.max(0, Math.min(max, Math.round(f.volume * max / 100f)));
+            if (audio.getStreamVolume(AudioManager.STREAM_MUSIC) != idx) { autoVolMs = System.currentTimeMillis(); audio.setStreamVolume(AudioManager.STREAM_MUSIC, idx, 0); DiagLog.add("Volume remis à " + f.volume + " % pour " + u); }
+            return;
+        }
+    }
+
+    void saveSdrVolume() {
+        if (!st.volPerSdr || sdrKind.isEmpty()) return;
+        String u = web.getUrl();
+        if (u == null) return;
+        int max = Math.max(1, audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        int pct = Math.round(100f * audio.getStreamVolume(AudioManager.STREAM_MUSIC) / max);
+        boolean changed = false;
+        for (Favorite f : st.favorites) if (f.matches(u) && f.volume != pct) { f.volume = pct; changed = true; }
+        if (changed) { st.save(); DiagLog.add("Volume mémorisé " + pct + " % pour " + u); }
+    }
+
     final android.content.BroadcastReceiver volReceiver = new android.content.BroadcastReceiver() {
         public void onReceive(Context c, Intent i) {
-            if (i.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1) == AudioManager.STREAM_MUSIC) applyPhoneVolume();
+            if (i.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1) == AudioManager.STREAM_MUSIC) {
+                if (scanning && System.currentTimeMillis() - autoVolMs > 3000) stopScan(Lang.T("bouton du smartphone", "phone button"));   // touche de volume pendant un scan
+                if (resumed) { applyPhoneVolume(); saveSdrVolume(); }
+            }
         }
     };
 
@@ -1019,6 +1094,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onKeyDown(int code, android.view.KeyEvent e) {
         boolean r = super.onKeyDown(code, e);
+        if (scanning && (code == android.view.KeyEvent.KEYCODE_VOLUME_UP || code == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)) stopScan(Lang.T("bouton du smartphone", "phone button"));
         if (code == android.view.KeyEvent.KEYCODE_VOLUME_UP || code == android.view.KeyEvent.KEYCODE_VOLUME_DOWN) h.postDelayed(new Runnable() { public void run() { applyPhoneVolume(); } }, 150);
         return r;
     }
@@ -1038,15 +1114,16 @@ public class MainActivity extends Activity {
     int autoTries;
     final Runnable watchRun = new Runnable() {
         public void run() {
-            h.postDelayed(this, 5000);
+            h.postDelayed(this, 3000);
             if (!st.autoReload || sdrKind.isEmpty() || muted || callMute || focusMute || (isRade(decMode) && radeVoice) || audio.getStreamVolume(AudioManager.STREAM_MUSIC) == 0 || autoTries >= 3) return;
             web.evaluateJavascript("(function(){try{return window.__sdrlink?__sdrlink.silentMs():-1}catch(e){return -1}})()", new android.webkit.ValueCallback<String>() {
                 public void onReceiveValue(String v) {
                     long ms;
                     try { ms = Long.parseLong(v.trim()); } catch (Exception e) { return; }
-                    if (ms >= 30000 && st.autoReload && !muted && !callMute && !focusMute && !(isRade(decMode) && radeVoice)) {
+                    if (ms >= st.reloadSec * 1000L && st.autoReload && !muted && !callMute && !focusMute && !(isRade(decMode) && radeVoice)) {
                         autoTries++;
-                        status(Lang.T("Plus de son depuis 30 s : le WebSDR est rechargé.", "No sound for 30 s: the WebSDR is reloaded."));
+                        status(Lang.F("Plus de son depuis {0} s : le WebSDR est rechargé.", "No sound for {0} s: the WebSDR is reloaded.", st.reloadSec));
+                        DiagLog.add("Plus de son depuis " + st.reloadSec + " s : page rechargée (essai " + autoTries + ")");
                         web.reload();
                     }
                 }
@@ -1068,6 +1145,7 @@ public class MainActivity extends Activity {
         applyVolume();
         notchSent = notchNow();
         js("if(window.__sdrlink)__sdrlink.setWatch(" + st.autoReload + ");");
+        js("if(window.__sdrlink)__sdrlink.setEco(" + st.eco + ");");
         js("if(window.__sdrlink){__sdrlink.setNotch(" + notchSent + "," + st.notchLevel + ");__sdrlink.setDnr(" + dnrNow() + "," + st.dnrLevel + ");}");
     }
 
@@ -1285,6 +1363,7 @@ public class MainActivity extends Activity {
         sdrF = f;
         if (first && recResume) h.postDelayed(recResumeRun, 1500);
         if (first && decMode != 0) h.postDelayed(decStartRun, 1500);   // le décodeur reprend sur la nouvelle page
+        if (first) applySdrVolume();
         if (first) { applyAudio(); h.postDelayed(new Runnable() { public void run() { maxPageVolume(); } }, 2500); ownStart(); }
         String fam = family(m);
 
@@ -1508,10 +1587,42 @@ public class MainActivity extends Activity {
             dwell = Math.max(1, st.scanMemDwell);
         }
         scanning = true;
+        voiceStart();
         scanDwellMs = dwell * 1000L;
         scanTune();
         h.postDelayed(scanTick, scanDwellMs);
         updateButtons();
+    }
+
+    // ------------------------------------------------------------------ commande vocale du scan (SET › Commande vocale du scan)
+
+    interface BoolCb { void done(boolean ok); }
+    BoolCb voicePermCb;
+    final VoiceCmd voice = new VoiceCmd();
+    static final long VOICE_IDLE_MS = 5 * 60 * 1000L;   // le micro reste ouvert 5 minutes après la pause du scan
+    long voiceUntil;
+    final Runnable voiceIdleRun = new Runnable() { public void run() { voice.stop(); } };
+
+    // Micro ouvert seulement : option cochée, modèle téléchargé, autorisation accordée, application à l'écran.
+    void voiceStart() {
+        h.removeCallbacks(voiceIdleRun);
+        if (!st.voiceCmd || !resumed || !VoiceCmd.ready(this, st.language) || checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED) return;
+        voice.start(this, st.language, new VoiceCmd.Cmd() { public void on(String cmd) { onVoice(cmd); } });
+    }
+
+    void onVoice(String cmd) {
+        status(Lang.F("Commande vocale : « {0} »", "Voice command: \"{0}\"", cmd.equals("plus") ? VoiceCmd.spec(st.language)[4] : cmd.equals("moins") ? VoiceCmd.spec(st.language)[5] : cmd));
+        if (cmd.equals("stop")) stopScan(Lang.T("commande vocale", "voice command"));
+        else if (cmd.equals("start")) { if (!scanning) startScan(true); }
+        else if (cmd.equals("plus")) tuneBySteps(1, 1000);
+        else if (cmd.equals("moins")) tuneBySteps(-1, 1000);
+    }
+
+    // Demande l'accès au micro ; cb reçoit le résultat.
+    void voicePermission(BoolCb cb) {
+        if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == android.content.pm.PackageManager.PERMISSION_GRANTED) { cb.done(true); return; }
+        voicePermCb = cb;
+        requestPermissions(new String[] { android.Manifest.permission.RECORD_AUDIO }, 9);
     }
 
     long scanDwellMs = 5000;
@@ -1582,7 +1693,11 @@ public class MainActivity extends Activity {
         if (!scanning) return;
         scanning = false;
         h.removeCallbacks(scanTick);
+        voiceUntil = System.currentTimeMillis() + VOICE_IDLE_MS;   // le micro reste ouvert un moment après la pause : « start » doit pouvoir reprendre le scan
+        h.removeCallbacks(voiceIdleRun);
+        if (voice.active()) h.postDelayed(voiceIdleRun, VOICE_IDLE_MS);
         status(reason != null ? Lang.F("Scan arrêté : {0}", "Scan stopped: {0}", reason) : Lang.T("Scan arrêté", "Scan stopped"));
+        if (!resumed) unregisterVol();
         updateButtons();
     }
 

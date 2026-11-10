@@ -8,8 +8,8 @@ android {
         applicationId 'fr.f5pbg.phonesdrlink'
         minSdk 26
         targetSdk 34
-        versionCode 26
-        versionName '1.25'
+        versionCode 27
+        versionName '1.26'
         ndk { abiFilters 'arm64-v8a', 'armeabi-v7a' }
         externalNativeBuild { cmake { arguments '-DANDROID_STL=c++_static' } }
     }
@@ -37,5 +37,7 @@ android {
 
 dependencies {
     implementation 'androidx.webkit:webkit:1.11.0'
+    implementation 'com.alphacephei:vosk-android:0.3.47@aar'   // reconnaissance vocale hors ligne (commande vocale du scan)
+    implementation 'net.java.dev.jna:jna:5.13.0@aar'
     testImplementation 'junit:junit:4.13.2'
 }

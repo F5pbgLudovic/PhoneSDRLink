@@ -27,6 +27,35 @@
   var L = window.__sdrlink = { last: '', volume: 1, gains: [], ctxs: [] };
   var __post = function (m) { try { PhoneSdr.post(m); } catch (e) { } };
 
+  // Mode économie (SET) : les animations de la page (spectre, cascade) ne tournent qu'à environ 20 images par seconde au lieu de 60.
+  // Toutes les fonctions rappelées dans une même image partagent le même instant t : la première qui passe ouvre l'image pour les autres.
+  // Le son n'en dépend pas. Les identifiants rendus ici sont très grands pour ne pas se confondre avec ceux du navigateur.
+  L.eco = !!window.__sdrlinkEco;
+  L.setEco = function (on) { L.eco = !!on; };
+  (function () {
+    var raf = window.requestAnimationFrame, caf = window.cancelAnimationFrame, gate = -1e9, seq = 0, live = {};
+    if (!raf || !caf) return;
+    window.requestAnimationFrame = function (cb) {
+      if (!L.eco) return raf.call(window, cb);
+      var id = 1e9 + (++seq);
+      var step = function (t) {
+        if (!(id in live)) return;
+        if (L.eco && t !== gate) {
+          if (t - gate < 45) { live[id] = raf.call(window, step); return; }
+          gate = t;
+        }
+        delete live[id];
+        cb(t);
+      };
+      live[id] = raf.call(window, step);
+      return id;
+    };
+    window.cancelAnimationFrame = function (id) {
+      if (id in live) { var r = live[id]; delete live[id]; return caf.call(window, r); }
+      return caf.call(window, id);
+    };
+  })();
+
   // Son du WebSDR : tout ce que la page envoie vers la sortie audio passe par une entrée commune, puis
   // par le notch automatique et le réducteur de bruit (s'ils sont actifs), puis par le gain réglable (Mute).
   // Installé avant les scripts de la page, donc valable pour tous les types de WebSDR.

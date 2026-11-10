@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	A atualização falhou. Verif
 Installation cancelled or failed. You can try again.	Instalação cancelada ou falhada. Pode tentar novamente.
 Max distance from the current position (km):	Distância máx. da posição atual (km):
 Find WebSDRs	Procurar WebSDR
+Power saving mode	Modo de poupança
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Limita a animação do espetro e da cascata do WebSDR a cerca de 20 imagens por segundo em vez de 60: o processador e o chip gráfico trabalham menos, o telemóvel aquece menos e a bateria dura mais. O som e os descodificadores não são afetados. Útil em 4G, com bateria ou quando o telemóvel aquece; o espetro fica um pouco menos fluido.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Deteta os assobios fixos (portadoras) no som e atenua-os automaticamente. O nível, de 1 (definição original) a 10, aumenta o número de assobios tratados e a força da ação. Não é aplicado em CW nem nos modos digitais (DATA, descodificadores).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Atenua o ruído de fundo quando não há sinal útil. O nível, de 1 (leve) a 10 (forte), define a força da redução; um nível alto pode tornar a voz ligeiramente metálica. Não é aplicado enquanto um descodificador digital estiver a funcionar.
+Time without sound before the reload	Tempo sem som antes de recarregar
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Recarrega o WebSDR quando o som está ausente durante o tempo escolhido (de 10 a 60 s), por exemplo após uma falha do servidor ou um tempo limite do WebSDR. Sem efeito se o volume estiver a zero ou silenciado. No máximo três tentativas seguidas.
+No sound for {0} s: the WebSDR is reloaded.	Sem som há {0} s: o WebSDR é recarregado.
+Setting button colours:	Cores dos botões de definições:
+Active button (function on)	Botão ativo (função ligada)
+Busy button (scan, REC, search…)	Botão em curso (pesquisa, REC, procura…)
+CPU / RAM resources	Recursos do processador / RAM
+Live measurements, only while this window is open.	Medições em direto, apenas enquanto esta janela estiver aberta.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	O processo da página WebSDR (WebView) é separado: a aplicação não o consegue medir.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Atenção: a descodificação FreeDV permanente aumenta bastante a carga do processador (cerca de 10 a 25 % de um núcleo num smartphone OnePlus Nord) e pode aquecer o telemóvel e esgotar a bateria.
+To check the load: SET › CPU / RAM resources.	Para verificar a carga: SET › Recursos do processador / RAM.
+Volume per WebSDR	Volume por WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	O volume definido com as teclas do telemóvel é memorizado para o WebSDR apresentado, se estiver nos favoritos. Ao voltar a esse WebSDR, o volume do telemóvel volta sozinho a esse nível; um WebSDR sem nível memorizado mantém o volume do momento. O nível é guardado com os favoritos: é exportado e importado com eles.
+phone button	botão do telemóvel
+Voice command of the scan	Comando de voz da pesquisa
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Durante uma pesquisa, o microfone escuta quatro palavras: «stop» coloca a pesquisa em pausa, «start» retoma-a, «plus un» avança um passo da régua e «moins un» recua um passo. O reconhecimento é feito no telemóvel, sem Internet. O microfone só está aberto durante uma pesquisa (e 5 minutos após a pausa), com a aplicação no ecrã. Também ouve o altifalante: com auriculares a fiabilidade é muito melhor. A escuta aumenta a carga do processador e da memória.
+Voice model: installed.	Modelo de voz: instalado.
+Voice model: not downloaded.	Modelo de voz: não transferido.
+Delete the voice model	Eliminar o modelo de voz
+Download the voice model (40 MB)	Transferir o modelo de voz (40 MB)
+Download the voice model first.	Transfira primeiro o modelo de voz.
+Microphone access refused.	Acesso ao microfone recusado.
+Voice model downloaded.	Modelo de voz transferido.
+Download failed. Check the connection and try again.	A transferência falhou. Verifique a ligação e tente novamente.
+voice command	comando de voz
+Voice command: "{0}"	Comando de voz: «{0}»
+Reset the voice model	Repor o modelo de voz
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	O modelo de voz segue o idioma da aplicação, com as ordens nesse idioma (em francês: stop, start, plus un, moins un). Os idiomas sem modelo de voz usam inglês (stop, start, plus one, minus one). Se mudar de idioma, use «Repor o modelo de voz».

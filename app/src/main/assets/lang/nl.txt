@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Bijwerken mislukt. Controleer
 Installation cancelled or failed. You can try again.	Installatie geannuleerd of mislukt. U kunt het opnieuw proberen.
 Max distance from the current position (km):	Max. afstand tot de huidige positie (km):
 Find WebSDRs	WebSDR's zoeken
+Power saving mode	Spaarstand
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Beperkt de animatie van het spectrum en de waterval van de WebSDR tot ongeveer 20 beelden per seconde in plaats van 60: de processor en de grafische chip werken minder, de telefoon wordt minder warm en de accu gaat langer mee. Geluid en decoders worden niet beïnvloed. Handig op 4G, op accu of wanneer de telefoon warm wordt; het spectrum is iets minder vloeiend.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Herkent vaste fluittonen (dragers) in het geluid en dempt ze automatisch. Het niveau, van 1 (oorspronkelijke instelling) tot 10, verhoogt het aantal behandelde tonen en de kracht van de ingreep. Niet actief in CW en in digitale modi (DATA, decoders).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Dempt de achtergrondruis wanneer er geen bruikbaar signaal is. Het niveau, van 1 (licht) tot 10 (sterk), bepaalt de sterkte van de reductie; een hoog niveau kan stemmen wat metalig laten klinken. Niet actief zolang een digitale decoder draait.
+Time without sound before the reload	Tijd zonder geluid vóór het herladen
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Laadt de WebSDR opnieuw wanneer het geluid de gekozen tijd (10 tot 60 s) is weggevallen, bijvoorbeeld na een serveruitval of een time-out van de WebSDR. Geen effect als het volume nul is of gedempt. Hoogstens drie pogingen achter elkaar.
+No sound for {0} s: the WebSDR is reloaded.	Al {0} s geen geluid: de WebSDR wordt opnieuw geladen.
+Setting button colours:	Kleuren van de instellingsknoppen:
+Active button (function on)	Actieve knop (functie aan)
+Busy button (scan, REC, search…)	Knop bezig (scan, REC, zoeken…)
+CPU / RAM resources	Processor- / RAM-bronnen
+Live measurements, only while this window is open.	Live metingen, alleen zolang dit venster open is.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	Het proces van de WebSDR-pagina (WebView) staat los: de app kan het niet meten.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Let op: permanente FreeDV-decodering verhoogt de processorbelasting merkbaar (ongeveer 10 tot 25 % van één kern op een OnePlus Nord-smartphone) en kan de telefoon warm maken en de accu leegtrekken.
+To check the load: SET › CPU / RAM resources.	De belasting controleer je via SET › Processor- / RAM-bronnen.
+Volume per WebSDR	Volume per WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Het volume dat met de telefoontoetsen is ingesteld, wordt onthouden voor de getoonde WebSDR als die bij uw favorieten staat. Keert u terug naar die WebSDR, dan zet het telefoonvolume zich vanzelf terug op dat niveau; een WebSDR zonder onthouden niveau houdt het huidige volume. Het niveau wordt met de favorieten opgeslagen: het wordt er samen mee geëxporteerd en geïmporteerd.
+phone button	telefoonknop
+Voice command of the scan	Spraakcommando voor de scan
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Tijdens een scan luistert de microfoon naar vier woorden: „stop” pauzeert de scan, „start” hervat hem, „plus un” gaat één stap van de schaal vooruit en „moins un” één stap terug. De herkenning gebeurt in de telefoon, zonder internet. De microfoon staat alleen open tijdens een scan (en 5 minuten na de pauze), terwijl de app in beeld is. Hij hoort ook de luidspreker: met een headset is de betrouwbaarheid veel beter. Het luisteren verhoogt de belasting van processor en geheugen.
+Voice model: installed.	Spraakmodel: geïnstalleerd.
+Voice model: not downloaded.	Spraakmodel: niet gedownload.
+Delete the voice model	Spraakmodel verwijderen
+Download the voice model (40 MB)	Spraakmodel downloaden (40 MB)
+Download the voice model first.	Download eerst het spraakmodel.
+Microphone access refused.	Toegang tot de microfoon geweigerd.
+Voice model downloaded.	Spraakmodel gedownload.
+Download failed. Check the connection and try again.	Downloaden mislukt. Controleer de verbinding en probeer het opnieuw.
+voice command	spraakcommando
+Voice command: "{0}"	Spraakcommando: „{0}”
+Reset the voice model	Spraakmodel resetten
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Het spraakmodel volgt de taal van de app, met de commando's in die taal (in het Frans: stop, start, plus un, moins un). Talen zonder spraakmodel gebruiken Engels (stop, start, plus one, minus one). Als u de taal wijzigt, gebruik dan „Spraakmodel resetten”.

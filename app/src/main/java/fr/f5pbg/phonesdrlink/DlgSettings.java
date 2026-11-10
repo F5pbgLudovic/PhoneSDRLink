@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -23,10 +24,14 @@ import java.io.OutputStream;
 // Bouton SET : mode sombre, mise à jour, langue, notch automatique (DNF), réducteur de bruit (DNR), nom donné aux WebSDR,
 // import / export des réglages, réinitialisation.
 final class DlgSettings {
+    static Dialog setDlg;   // fenêtre SET ouverte : elle reste dessous pendant import, export et réinitialisation, pour y revenir
+    static void closeSet() { try { if (setDlg != null) setDlg.dismiss(); } catch (Exception e) { } setDlg = null; }
+
     static void show(final MainActivity a) {
         final Store st = a.st;
         LinearLayout col = Ui.column(a);
         final Dialog d = Ui.window(a, "SET", Ui.scroll(a, col), false);
+        setDlg = d;
 
         TextView ver = Ui.label(a, "PhoneSDRLink V" + a.versionName() + " @F5PBG 2026");
         ver.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
@@ -40,59 +45,93 @@ final class DlgSettings {
         decB.setBackground(Ui.roundOutline(Ui.decBtn(), 10, a));
         decB.setTextColor(Ui.onColor(Ui.decBtn()));
         decB.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
-        LinearLayout fdv = Ui.row(a);
-        fdv.addView(toggle(a, "FreeDV auto", st.freedvAuto, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.freedvAuto = on; st.save(); a.applyFreedvAuto(); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 0));
-        // À droite : garder le notch automatique (DNF) et le réducteur de bruit (DNR) pendant FreeDV auto (coupés par défaut en mode numérique).
-        fdv.addView(toggle(a, "DNF + DNR", st.freedvFilters, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.freedvFilters = on; st.save(); a.applyAudio(); }
-        }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 0));
-        col.addView(fdv);
-        col.addView(Ui.small(a, Lang.T("Écoute classique en permanence ; dès que des trames FreeDV RADE sont décodées, le son bascule sur la parole décodée. Coupé pendant qu'un autre décodeur est actif, remis en route dès qu'il s'arrête.", "Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.")));
-        col.addView(toggle(a, Lang.T("Mode sombre", "Dark mode"), st.dark, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.dark = on; st.save(); d.dismiss(); a.recreate(); }
-        }));
-        col.addView(toggle(a, Lang.T("Interdire l'extinction de l'écran", "Keep the screen on"), st.keepScreen, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.keepScreen = on; st.save(); a.applyKeepScreen(); }
-        }));
-        col.addView(toggle(a, Lang.T("Zoom du spectre (1 kHz par mm)", "Spectrum zoom (1 kHz per mm)"), st.spectrumZoom, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.spectrumZoom = on; st.save(); if (on) a.applySpectrumZoom(); }
-        }));
-        col.addView(levelRow(a, toggle(a, Lang.T("Notch automatique (DNF)", "Auto notch (DNF)"), st.autoNotch, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.autoNotch = on; st.save(); a.applyAudio(); }
-        }), st.notchLevel, new Ui.Index() { public void chose(int i) { st.notchLevel = i + 1; st.save(); a.applyAudio(); } }));
-        col.addView(levelRow(a, toggle(a, Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)"), st.autoDnr, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.autoDnr = on; st.save(); a.applyAudio(); }
-        }), st.dnrLevel, new Ui.Index() { public void chose(int i) { st.dnrLevel = i + 1; st.save(); a.applyAudio(); } }));
-        col.addView(toggle(a, Lang.T("Réinitialisation automatique WEBSDR", "Automatic WebSDR reset"), st.autoReload, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.autoReload = on; st.save(); a.applyAudio(); }
-        }));
-        col.addView(Ui.small(a, Lang.T("Recharge le WebSDR si le son est coupé depuis 30 s (sauf volume à zéro ou mute).", "Reloads the WebSDR if the sound has been lost for 30 s (unless volume is zero or muted).")));
-        add(col, a, Lang.T("Mémoire tampon réception", "Reception buffer"), new View.OnClickListener() {
-            public void onClick(View v) { showBuffer(a); }   // SET reste ouvert dessous : le retour arrière y ramène
+        final Button fdvB = add(col, a, "FreeDV auto", new View.OnClickListener() {
+            public void onClick(View v) { showFreedv(a, (Button) v); }
         });
-        add(col, a, Lang.T("Casque / Molette", "Headset / Wheel"), new View.OnClickListener() {
-            public void onClick(View v) { showHeadset(a); }
+        Ui.paint(fdvB, st.freedvAuto, Ui.on());
+        final Button ecoB = add(col, a, Lang.T("Mode économie", "Power saving mode"), new View.OnClickListener() {
+            public void onClick(View v) { showEco(a, (Button) v); }
         });
+        Ui.paint(ecoB, st.eco, Ui.on());
+        // Boutons à un clic : vert = fonction active.
+        final Button darkB = add(col, a, Lang.T("Mode sombre", "Dark mode"), null);
+        Ui.paint(darkB, st.dark, Ui.on());
+        darkB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { st.dark = !st.dark; st.save(); d.dismiss(); Ui.reopenSet = true; a.recreate(); }
+        });
+        final Button keepB = add(col, a, Lang.T("Interdire l'extinction de l'écran", "Keep the screen on"), null);
+        Ui.paint(keepB, st.keepScreen, Ui.on());
+        keepB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { st.keepScreen = !st.keepScreen; st.save(); a.applyKeepScreen(); Ui.paint(keepB, st.keepScreen, Ui.on()); }
+        });
+        final Button zoomB = add(col, a, Lang.T("Zoom du spectre (1 kHz par mm)", "Spectrum zoom (1 kHz per mm)"), null);
+        Ui.paint(zoomB, st.spectrumZoom, Ui.on());
+        zoomB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { st.spectrumZoom = !st.spectrumZoom; st.save(); if (st.spectrumZoom) a.applySpectrumZoom(); Ui.paint(zoomB, st.spectrumZoom, Ui.on()); }
+        });
+        // Notch et réducteur de bruit : le bouton ouvre une fenêtre (coche, niveau, explication).
+        final Button dnfB = add(col, a, filterLabel(st, true), new View.OnClickListener() {
+            public void onClick(View v) { showFilter(a, (Button) v, true); }
+        });
+        Ui.paint(dnfB, st.autoNotch, Ui.on());
+        final Button dnrB = add(col, a, filterLabel(st, false), new View.OnClickListener() {
+            public void onClick(View v) { showFilter(a, (Button) v, false); }
+        });
+        Ui.paint(dnrB, st.autoDnr, Ui.on());
+        final Button relB = add(col, a, reloadLabel(st), new View.OnClickListener() {
+            public void onClick(View v) { showReload(a, (Button) v); }
+        });
+        Ui.paint(relB, st.autoReload, Ui.on());
+        final Button volB = add(col, a, Lang.T("Volume par WebSDR", "Volume per WebSDR"), new View.OnClickListener() {
+            public void onClick(View v) { showVolSdr(a, (Button) v); }
+        });
+        Ui.paint(volB, st.volPerSdr, Ui.on());
+        final Button vocB = add(col, a, Lang.T("Commande vocale du scan", "Voice command of the scan"), new View.OnClickListener() {
+            public void onClick(View v) { showVoice(a, (Button) v); }
+        });
+        Ui.paint(vocB, st.voiceCmd && VoiceCmd.ready(a, st.language), Ui.on());
+        final Button bufB = add(col, a, bufLabel(st), new View.OnClickListener() {
+            public void onClick(View v) { showBuffer(a, (Button) v); }   // SET reste ouvert dessous : le retour arrière y ramène
+        });
+        Ui.paint(bufB, st.bufMs > 0, Ui.on());
+        final Button headB = add(col, a, Lang.T("Casque / Molette", "Headset / Wheel"), new View.OnClickListener() {
+            public void onClick(View v) { showHeadset(a, (Button) v); }
+        });
+        Ui.paint(headB, st.headsetStop, Ui.on());
         add(col, a, Lang.T("Couleurs…", "Colours…"), new View.OnClickListener() {
             public void onClick(View v) { showColors(a); }
         });
 
         add(col, a, Lang.T("Langue :", "Language:") + " " + name(st.language), new View.OnClickListener() {
             public void onClick(View v) {
-                d.dismiss();
                 Ui.choose(a, Lang.T("Langue :", "Language:"), Lang.NAMES, new Ui.Index() {
-                    public void chose(int i) { st.language = Lang.CODES[i]; st.save(); a.recreate(); }
+                    public void chose(int i) { st.language = Lang.CODES[i]; st.save(); d.dismiss(); Ui.reopenSet = true; a.recreate(); }   // on revient dans SET
                 });
             }
         });
-        add(col, a, Lang.T("Vérifier les mises à jour", "Check for updates"), new View.OnClickListener() {
-            public void onClick(View v) { a.checkUpdate(true); }
+        // Mise à jour : un seul bouton pleine largeur. Un appui sur « Auto » (dans le bouton, à droite) change la vérification au démarrage ;
+        // un appui ailleurs lance la vérification, avec un bref éclair de couleur.
+        FrameLayout upd = new FrameLayout(a);
+        final Button updB = Ui.button(a, Lang.T("Vérifier les mises à jour", "Check for updates"), null);
+        updB.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        updB.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                updB.setBackground(Ui.round(Ui.accent(), 10, a));
+                updB.setTextColor(Ui.onColor(Ui.accent()));
+                updB.postDelayed(new Runnable() { public void run() { Ui.paint(updB, false, 0); } }, 350);
+                a.checkUpdate(true);
+            }
         });
-        col.addView(toggle(a, Lang.T("Vérifier les mises à jour au démarrage", "Check for updates at startup"), st.checkUpdates, new CompoundButton.OnCheckedChangeListener() {
+        upd.addView(updB, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        CheckBox autoBox = toggle(a, "Auto", st.checkUpdates, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { st.checkUpdates = on; st.save(); }
-        }));
+        });
+        autoBox.setTextColor(Ui.btnTx());
+        autoBox.setPadding(autoBox.getPaddingLeft(), 0, Ui.dp(a, 12), 0);
+        FrameLayout.LayoutParams alp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.END | Gravity.CENTER_VERTICAL);
+        autoBox.setElevation(Ui.dp(a, 12));   // au-dessus du bouton (un Button a une élévation)
+        upd.addView(autoBox, alp);
+        col.addView(upd, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 3));
         add(col, a, Lang.T("Nom ou indicatif donné aux WebSDR", "Name or callsign for WebSDRs") + " : " + st.callsign, new View.OnClickListener() {
             public void onClick(View v) {
                 Ui.input(a, Lang.T("Nom ou indicatif donné aux WebSDR qui en demandent un (KiwiSDR, websdr.org) :", "Name or callsign given to WebSDRs that ask for one (KiwiSDR, websdr.org):"),
@@ -110,17 +149,197 @@ final class DlgSettings {
                     });
             }
         });
+        add(col, a, Lang.T("Ressources Processeur / RAM", "CPU / RAM resources"), new View.OnClickListener() {
+            public void onClick(View v) { DlgPerf.show(a); }   // les mesures ne tournent que fenêtre ouverte
+        });
         add(col, a, Lang.T("Exporter tous les réglages…", "Export all settings…"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); export(a); }
+            public void onClick(View v) { export(a); }
         });
         add(col, a, Lang.T("Importer des réglages…", "Import settings…"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); importSettings(a); }
+            public void onClick(View v) { importSettings(a); }
         });
         Button reset = add(col, a, Lang.T("Réinitialiser le programme…", "Reset the program…"), new View.OnClickListener() {
-            public void onClick(View v) { d.dismiss(); reset(a); }
+            public void onClick(View v) { reset(a); }
         });
         Ui.paint(reset, false, 0);
         d.show();
+    }
+
+
+    // Bouton « FreeDV auto » : fenêtre avec les coches et l'explication ; le bouton de SET devient vert quand FreeDV auto est actif.
+    static void showFreedv(final MainActivity a, final Button owner) {
+        final Store st = a.st;
+        LinearLayout col = Ui.column(a);
+        Dialog fd = Ui.window(a, "FreeDV auto", Ui.scroll(a, col), false);
+        col.addView(toggle(a, "FreeDV auto", st.freedvAuto, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.freedvAuto = on; st.save(); a.applyFreedvAuto(); Ui.paint(owner, on, Ui.on()); }
+        }));
+        col.addView(Ui.small(a, Lang.T("Écoute classique en permanence ; dès que des trames FreeDV RADE sont décodées, le son bascule sur la parole décodée. Coupé pendant qu'un autre décodeur est actif, remis en route dès qu'il s'arrête.", "Normal listening all the time; as soon as FreeDV RADE frames are decoded, the sound switches to the decoded speech. Suspended while another decoder is active, resumed as soon as it stops.")));
+        TextView warn = Ui.small(a, Lang.T("⚠ Attention : le décodage FreeDV permanent augmente nettement la charge du processeur (de l'ordre de 10 à 25 % d'un cœur sur un smartphone OnePlus Nord) et peut faire chauffer le téléphone et vider la batterie.", "⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery."));
+        warn.setTextColor(Ui.danger());
+        col.addView(warn);
+        TextView warn2 = Ui.small(a, Lang.T("Pour vérifier la charge : SET › Ressources Processeur / RAM.", "To check the load: SET › CPU / RAM resources."));
+        warn2.setTextColor(Ui.danger());
+        col.addView(warn2);
+        // Garder le notch automatique (DNF) et le réducteur de bruit (DNR) pendant FreeDV auto (coupés par défaut en mode numérique).
+        col.addView(toggle(a, "DNF + DNR", st.freedvFilters, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.freedvFilters = on; st.save(); a.applyAudio(); }
+        }));
+        Ui.closeOnTap(fd, col);
+        Ui.flashButtons(col);
+        fd.show();
+    }
+
+    // Texte des boutons DNF / DNR : le réglage (niveau 1 à 10, ou OFF) est visible dans le bouton.
+    static String filterLabel(Store st, boolean dnf) {
+        boolean on = dnf ? st.autoNotch : st.autoDnr;
+        return (dnf ? Lang.T("Notch automatique (DNF)", "Auto notch (DNF)") : Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)")) + " : " + (on ? String.valueOf(dnf ? st.notchLevel : st.dnrLevel) : "OFF");
+    }
+
+    static String reloadLabel(Store st) {
+        return Lang.T("Réinitialisation automatique WEBSDR", "Automatic WebSDR reset") + " : " + (st.autoReload ? st.reloadSec + " s" : "OFF");
+    }
+
+    // Réinitialisation automatique du WebSDR : coche, délai sans son (10 à 60 s) et explication.
+    static void showReload(final MainActivity a, final Button owner) {
+        final Store st = a.st;
+        LinearLayout col = Ui.column(a);
+        Dialog rd = Ui.window(a, Lang.T("Réinitialisation automatique WEBSDR", "Automatic WebSDR reset"), Ui.scroll(a, col), false);
+        col.addView(toggle(a, Lang.T("Réinitialisation automatique WEBSDR", "Automatic WebSDR reset"), st.autoReload, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.autoReload = on; st.save(); a.applyAudio(); Ui.paint(owner, on, Ui.on()); owner.setText(reloadLabel(st)); }
+        }));
+        final int[] secs = new int[11];
+        String[] names = new String[11];
+        int si = 4;
+        for (int i = 0; i < 11; i++) { secs[i] = 10 + 5 * i; names[i] = secs[i] + " s"; if (secs[i] == st.reloadSec) si = i; }
+        DlgDecoder.choice(a, col, Lang.T("Délai sans son avant le rechargement", "Time without sound before the reload"), names, si,
+            new DlgDecoder.Pick() { public void chose(int i) { st.reloadSec = secs[i]; st.save(); owner.setText(reloadLabel(st)); } });
+        col.addView(Ui.small(a, Lang.T("Recharge le WebSDR quand le son est coupé depuis le délai choisi (de 10 à 60 s), par exemple après une coupure du serveur ou un time-out du WebSDR. Sans effet si le volume est à zéro ou en mode muet. Trois essais de suite au plus.", "Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.")));
+        Ui.closeOnTap(rd, col);
+        rd.show();
+    }
+
+    // Fenêtre du notch automatique (dnf = true) ou du réducteur de bruit : coche, niveau de 1 à 10 et explication.
+    static void showFilter(final MainActivity a, final Button owner, final boolean dnf) {
+        final Store st = a.st;
+        LinearLayout col = Ui.column(a);
+        Dialog fd = Ui.window(a, dnf ? Lang.T("Notch automatique (DNF)", "Auto notch (DNF)") : Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)"), Ui.scroll(a, col), false);
+        col.addView(levelRow(a, toggle(a, dnf ? Lang.T("Notch automatique (DNF)", "Auto notch (DNF)") : Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)"), dnf ? st.autoNotch : st.autoDnr, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { if (dnf) st.autoNotch = on; else st.autoDnr = on; st.save(); a.applyAudio(); Ui.paint(owner, on, Ui.on()); owner.setText(filterLabel(st, dnf)); }
+        }), dnf ? st.notchLevel : st.dnrLevel, new Ui.Index() { public void chose(int i) { if (dnf) st.notchLevel = i + 1; else st.dnrLevel = i + 1; st.save(); a.applyAudio(); owner.setText(filterLabel(st, dnf)); } }));
+        col.addView(Ui.small(a, dnf
+            ? Lang.T("Repère les sifflements fixes (porteuses) dans le son et les atténue automatiquement. Le niveau, de 1 (réglage d'origine) à 10, augmente le nombre de sifflements traités et la force de l'action. Non appliqué en CW ni en mode numérique (DATA, décodeurs).", "Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).")
+            : Lang.T("Atténue le souffle de fond quand il n'y a pas de signal utile. Le niveau, de 1 (léger) à 10 (fort), règle la force de la réduction ; un niveau élevé peut rendre la voix un peu métallique. Non appliqué pendant un décodeur numérique.", "Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.")));
+        Ui.closeOnTap(fd, col);
+        fd.show();
+    }
+
+    // Volume par WebSDR : coche et explication ; le bouton de SET est vert quand la fonction est active.
+    static void showVolSdr(final MainActivity a, final Button owner) {
+        final Store st = a.st;
+        LinearLayout col = Ui.column(a);
+        Dialog vd = Ui.window(a, Lang.T("Volume par WebSDR", "Volume per WebSDR"), Ui.scroll(a, col), false);
+        col.addView(toggle(a, Lang.T("Volume par WebSDR", "Volume per WebSDR"), st.volPerSdr, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.volPerSdr = on; st.save(); Ui.paint(owner, on, Ui.on()); }
+        }));
+        col.addView(Ui.small(a, Lang.T("Le volume réglé avec les touches du téléphone est mémorisé pour le WebSDR affiché, s'il est dans vos favoris. Quand on revient sur ce WebSDR, le volume du téléphone est remis tout seul à ce niveau ; un WebSDR sans niveau mémorisé garde le volume du moment. Le niveau est enregistré avec les favoris : il est exporté et importé avec eux.", "The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.")));
+        Ui.closeOnTap(vd, col);
+        vd.show();
+    }
+
+    // Commande vocale du scan : coche, explication, et gestion du modèle de langue (téléchargé une seule fois, à la demande).
+    static void showVoice(final MainActivity a, final Button owner) {
+        final Store st = a.st;
+        LinearLayout col = Ui.column(a);
+        final Dialog vd = Ui.window(a, Lang.T("Commande vocale du scan", "Voice command of the scan"), Ui.scroll(a, col), false);
+        final boolean[] quiet = { false };   // évite que la remise de la coche déclenche à nouveau son action
+        final CheckBox box = toggle(a, Lang.T("Commande vocale du scan", "Voice command of the scan"), st.voiceCmd && VoiceCmd.ready(a, st.language), null);
+        final TextView info = Ui.small(a, "");
+        final Button get = Ui.button(a, "", null);
+        final Button[] resetRef = { null };
+        final Runnable refresh = new Runnable() {
+            public void run() {
+                boolean ok = VoiceCmd.ready(a, st.language);
+                if (resetRef[0] != null) resetRef[0].setVisibility(ok ? View.VISIBLE : View.GONE);
+                info.setText(ok ? Lang.T("Modèle vocal : installé.", "Voice model: installed.") : Lang.T("Modèle vocal : non téléchargé.", "Voice model: not downloaded."));
+                get.setText(ok ? Lang.T("Supprimer le modèle vocal", "Delete the voice model") : Lang.T("Télécharger le modèle vocal (40 Mo)", "Download the voice model (40 MB)"));
+                get.setEnabled(true);
+            }
+        };
+        box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(final CompoundButton b, boolean on) {
+                if (quiet[0]) return;
+                if (!on) { st.voiceCmd = false; st.save(); a.voice.stop(); Ui.paint(owner, false, Ui.on()); return; }
+                if (!VoiceCmd.ready(a, st.language)) {   // le modèle d'abord
+                    quiet[0] = true; b.setChecked(false); quiet[0] = false;
+                    Ui.toast(a, Lang.T("Téléchargez d'abord le modèle vocal.", "Download the voice model first."));
+                    return;
+                }
+                a.voicePermission(new MainActivity.BoolCb() {
+                    public void done(boolean ok) {
+                        if (ok) { st.voiceCmd = true; st.save(); Ui.paint(owner, true, Ui.on()); if (a.scanning) a.voiceStart(); }
+                        else { quiet[0] = true; b.setChecked(false); quiet[0] = false; Ui.toast(a, Lang.T("Accès au micro refusé.", "Microphone access refused.")); }
+                    }
+                });
+            }
+        });
+        col.addView(box);
+        final String[] spc = VoiceCmd.spec(st.language);
+        col.addView(Ui.small(a, Lang.T("Pendant un scan, le micro écoute quatre mots : « stop » met le scan en pause, « start » le reprend, « plus un » avance d'un pas de la réglette et « moins un » recule d'un pas. La reconnaissance se fait dans le téléphone, sans Internet. Le micro n'est ouvert que pendant un scan (et 5 minutes après sa pause), application à l'écran. Il entend aussi le haut-parleur : avec un casque, la fiabilité est bien meilleure. L'écoute augmente la charge du processeur et de la mémoire.", "During a scan, the microphone listens for four words: \"stop\" pauses the scan, \"start\" resumes it, \"plus un\" moves one step of the tuning bar forward and \"moins un\" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.").replace("plus un", spc[4]).replace("moins un", spc[5])));
+        col.addView(Ui.small(a, Lang.T("Le modèle vocal suit la langue de l'application, avec les ordres dans cette langue (en français : stop, start, plus un, moins un). Les langues sans modèle vocal utilisent l'anglais (stop, start, plus one, minus one). Si vous changez de langue, utilisez « Réinitialiser le modèle vocal ».", "The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use \"Reset the voice model\".")));
+        col.addView(info);
+        get.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (VoiceCmd.ready(a, st.language)) {
+                    a.voice.stop();
+                    VoiceCmd.deleteAll(a);
+                    st.voiceCmd = false; st.save(); Ui.paint(owner, false, Ui.on());
+                    quiet[0] = true; box.setChecked(false); quiet[0] = false;
+                    refresh.run();
+                    return;
+                }
+                get.setEnabled(false);
+                VoiceCmd.download(a, st.language, new VoiceCmd.Progress() {
+                    public void on(int pc, String err) {
+                        if (err != null) { info.setText(Lang.T("Échec du téléchargement. Vérifiez la connexion puis réessayez.", "Download failed. Check the connection and try again.")); get.setEnabled(true); return; }
+                        if (pc >= 100) { Ui.toast(a, Lang.T("Modèle vocal téléchargé.", "Voice model downloaded.")); refresh.run(); return; }
+                        info.setText(Lang.F("Téléchargement… {0} %", "Downloading… {0}%", pc));
+                    }
+                });
+            }
+        });
+        // Réinitialiser : supprime les modèles de toutes les langues puis télécharge celui de la langue actuelle (après un changement de langue).
+        final Button reset = Ui.button(a, Lang.T("Réinitialiser le modèle vocal", "Reset the voice model"), new View.OnClickListener() {
+            public void onClick(View v) {
+                a.voice.stop();
+                VoiceCmd.deleteAll(a);
+                st.voiceCmd = false; st.save(); Ui.paint(owner, false, Ui.on());
+                quiet[0] = true; box.setChecked(false); quiet[0] = false;
+                refresh.run();
+                get.performClick();   // télécharge le modèle de la langue actuelle
+            }
+        });
+        reset.setVisibility(VoiceCmd.ready(a, st.language) ? View.VISIBLE : View.GONE);
+        resetRef[0] = reset;
+        col.addView(reset, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 3));
+        col.addView(get, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 3));
+        refresh.run();
+        Ui.closeOnTap(vd, col);
+        vd.show();
+    }
+
+    // Bouton « Mode économie » : fenêtre avec la coche et l'explication ; le bouton de SET devient vert quand le mode est actif.
+    static void showEco(final MainActivity a, final Button owner) {
+        final Store st = a.st;
+        LinearLayout col = Ui.column(a);
+        Dialog ed = Ui.window(a, Lang.T("Mode économie", "Power saving mode"), Ui.scroll(a, col), false);
+        col.addView(toggle(a, Lang.T("Mode économie", "Power saving mode"), st.eco, new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.eco = on; st.save(); a.applyAudio(); Ui.paint(owner, on, Ui.on()); }
+        }));
+        col.addView(Ui.small(a, Lang.T("Limite l'animation du spectre et de la cascade du WebSDR à environ 20 images par seconde au lieu de 60 : le processeur et la puce graphique travaillent moins, le téléphone chauffe moins et la batterie dure plus longtemps. Le son et les décodeurs ne sont pas touchés. Utile en 4G, sur batterie ou quand le téléphone chauffe ; le spectre est un peu moins fluide.", "Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.")));
+        Ui.closeOnTap(ed, col);
+        Ui.flashButtons(col);
+        ed.show();
     }
 
     static String name(String code) {
@@ -151,15 +370,21 @@ final class DlgSettings {
             case 8: return c == Ui.ft8A() || c == Ui.panel();
             case 9: return c == Ui.freqBg();
             case 10: return false;
+            case 11: return c == 0xFFFFFFFF || c == Ui.btn() || c == Ui.danger();   // le texte des boutons actifs est blanc
+            case 12: return c == 0xFFFFFFFF || c == Ui.btn() || c == Ui.on();
             default: return c == Ui.btn();
         }
     }
     static void setColor(Store st, int id, int c) {
-        switch (id) { case 0: st.colBtnBg = c; break; case 1: st.colBtnTx = c; break; case 2: st.colFreqTx = c; break; case 3: st.colFreqBg = c; break; case 4: st.colBarFg = c; break; case 5: st.colBarBg = c; break; case 7: st.colFt8A = c; break; case 8: st.colFt8B = c; break; case 9: st.colDec = c; break; case 10: st.colDecBtn = c; break; default: st.colBg = c; }
+        switch (id) { case 0: st.colBtnBg = c; break; case 1: st.colBtnTx = c; break; case 2: st.colFreqTx = c; break; case 3: st.colFreqBg = c; break; case 4: st.colBarFg = c; break; case 5: st.colBarBg = c; break; case 7: st.colFt8A = c; break; case 8: st.colFt8B = c; break; case 9: st.colDec = c; break; case 10: st.colDecBtn = c; break; case 11: st.colOn = c; break; case 12: st.colDanger = c; break; default: st.colBg = c; }
     }
 
     // Bouton « Mémoire tampon réception » : mémoire tampon audio supplémentaire demandée au WebSDR (essai).
-    static void showBuffer(final MainActivity a) {
+    static String bufLabel(Store st) {
+        return Lang.T("Mémoire tampon réception", "Reception buffer") + " : " + (st.bufMs > 0 ? st.bufMs + " ms" : "OFF");
+    }
+
+    static void showBuffer(final MainActivity a, final Button owner) {
         final Store st = a.st;
         LinearLayout col = Ui.column(a);
         Dialog bd = Ui.window(a, Lang.T("Mémoire tampon réception", "Reception buffer"), Ui.scroll(a, col), false);
@@ -168,18 +393,19 @@ final class DlgSettings {
         for (int i = 0; i < bufMs.length; i++) if (Math.abs(bufMs[i] - st.bufMs) < Math.abs(bufMs[bi] - st.bufMs)) bi = i;   // valeur la plus proche (d'anciennes versions proposaient 250, 1000 ms…)
         DlgDecoder.choice(a, col, Lang.T("Mémoire tampon audio supplémentaire (essai)", "Extra audio buffer (test)"),
             new String[] { Lang.T("Aucune (réglage d'origine)", "None (original setting)"), "100 ms", "200 ms", "300 ms", "400 ms", "500 ms", "600 ms", "700 ms", "800 ms", "900 ms" }, bi,
-            new DlgDecoder.Pick() { public void chose(int i) { st.bufMs = bufMs[i]; st.save(); a.applyBuffer(); } });
+            new DlgDecoder.Pick() { public void chose(int i) { st.bufMs = bufMs[i]; st.save(); owner.setText(bufLabel(st)); Ui.paint(owner, st.bufMs > 0, Ui.on()); a.applyBuffer(); } });
         col.addView(Ui.small(a, Lang.T("Demande au WebSDR une plus grande mémoire tampon de sortie audio : plus de latence, dans l'espoir de supprimer de petites coupures. Le WebSDR est rechargé quand on change la valeur.", "Asks the WebSDR for a larger audio output buffer: more latency, in the hope of removing small dropouts. The WebSDR is reloaded when the value is changed.")));
+        Ui.closeOnTap(bd, col);
         bd.show();
     }
 
     // Bouton « Casque / Molette » : boutons de l'oreillette ou du casque, et bague / molette de doigt (délai et vitesse du défilement rapide).
-    static void showHeadset(final MainActivity a) {
+    static void showHeadset(final MainActivity a, final Button owner) {
         final Store st = a.st;
         LinearLayout col = Ui.column(a);
         Dialog hd = Ui.window(a, Lang.T("Casque / Molette", "Headset / Wheel"), Ui.scroll(a, col), false);
         col.addView(toggle(a, Lang.T("Boutons du casque (arrêt / départ du scan)", "Headset buttons (stop / start the scan)"), st.headsetStop, new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton b, boolean on) { st.headsetStop = on; st.save(); a.applyHeadset(); }
+            public void onCheckedChanged(CompoundButton b, boolean on) { st.headsetStop = on; st.save(); a.applyHeadset(); Ui.paint(owner, on, Ui.on()); }
         }));
         col.addView(Ui.small(a, Lang.T("Bouton de l'oreillette ou du casque : arrête le scan, puis le relance ; un double appui quand il est arrêté recule d'un pas. Décochée : les boutons du casque sont ignorés.", "Earphone or headset button: stops the scan, then starts it again; a double press while it is stopped goes back one step. Unticked: the headset buttons are ignored.")));
         final int[] ringMs = new int[17];
@@ -196,6 +422,7 @@ final class DlgSettings {
         DlgDecoder.choice(a, col, Lang.T("Bague : vitesse du défilement rapide (100 % = vitesse d'origine)", "Finger ring: speed of the fast scroll (100 % = original speed)"), ringPctNames, pi,
             new DlgDecoder.Pick() { public void chose(int i) { st.ringSpeed = ringPct[i]; st.save(); } });
         col.addView(Ui.small(a, Lang.T("Vitesse atteinte quand plusieurs coups de molette se suivent : de presque zéro (10 %) à 150 % ; 100 % est la vitesse d'origine.", "Speed reached when several wheel strokes follow each other: from almost zero (10 %) to 150 %; 100 % is the original speed.")));
+        Ui.closeOnTap(hd, col);
         hd.show();
     }
 
@@ -249,9 +476,20 @@ final class DlgSettings {
         bb.setTextColor(Ui.onColor(Ui.decBtn()));
         bb.setBackground(Ui.roundOutline(Ui.decBtn(), 10, a));
         col.addView(bb, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        col.addView(Ui.small(a, Lang.T("Couleurs des boutons de réglage :", "Setting button colours:")));
+        Button bon = Ui.button(a, Lang.T("Bouton actif (fonction en marche)", "Active button (function on)"), new View.OnClickListener() {
+            public void onClick(View v) { pick(a, d, 11); }
+        });
+        Ui.paint(bon, true, Ui.on());
+        col.addView(bon, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
+        Button bdg = Ui.button(a, Lang.T("Bouton en cours (scan, REC, recherche…)", "Busy button (scan, REC, search…)"), new View.OnClickListener() {
+            public void onClick(View v) { pick(a, d, 12); }
+        });
+        Ui.paint(bdg, true, Ui.danger());
+        col.addView(bdg, Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
         col.addView(Ui.button(a, Lang.T("Couleurs par défaut", "Default colours"), new View.OnClickListener() {
             public void onClick(View v) {
-                st.colBtnBg = st.colBtnTx = st.colFreqTx = st.colFreqBg = st.colBarFg = st.colBarBg = st.colBg = st.colFt8A = st.colFt8B = st.colDec = st.colDecBtn = 0;
+                st.colBtnBg = st.colBtnTx = st.colFreqTx = st.colFreqBg = st.colBarFg = st.colBarBg = st.colBg = st.colFt8A = st.colFt8B = st.colDec = st.colDecBtn = st.colOn = st.colDanger = 0;
                 applyColors(a, d, null);
             }
         }), Ui.lp(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0, a, 2));
@@ -394,7 +632,7 @@ final class DlgSettings {
         col.addView(Ui.label(a, Lang.T("Que faut-il importer de ce fichier ?", "What should be imported from this file?")));
         final CheckBox cfg = Ui.check(a, Lang.T("Configuration (affichage, langue, nom…)", "Configuration (display, language, name…)"), true);
         final CheckBox web = Ui.check(a, Lang.T("WebSDR (favoris et listes de favoris)", "WebSDR (favorites and favorite lists)"), has(text, "Fav="));
-        final CheckBox mem = Ui.check(a, Lang.T("Mémoires de fréquences", "Frequency memories"), has(text, "Mem="));
+        final CheckBox mem = Ui.check(a, Lang.T("Mémoires de fréquences", "Frequency memories"), (has(text, "Mem=") || has(text, "MemRecent=") || has(text, "MemHist=") || has(text, "PhoneHist=")));
         final CheckBox scn = Ui.check(a, Lang.T("Scan (réglage, zones non scannées et profils de scan)", "Scan (setting, skipped ranges and scan profiles)"), has(text, "Scan"));
         cfg.setChecked(has(text, "Language=") || has(text, "DarkMode="));
         for (CheckBox c : new CheckBox[] { cfg, web, mem, scn }) {
@@ -423,6 +661,8 @@ final class DlgSettings {
                 d.dismiss();
                 if (keep.isChecked()) a.st.merge(text, cats); else a.st.parse(text, cats);
                 a.st.save();
+                closeSet();
+                Ui.reopenSet = true;
                 a.recreate();
             }
         }));
@@ -493,6 +733,8 @@ final class DlgSettings {
             WebStorage.getInstance().deleteAllData();
         }
         Store.I.save();
+        closeSet();
+        Ui.reopenSet = !full;   // réinitialisation totale : écran principal ; partielle : retour dans SET
         a.recreate();
     }
 }

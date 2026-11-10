@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Päivitys epäonnistui. Tarki
 Installation cancelled or failed. You can try again.	Asennus peruttiin tai se epäonnistui. Voit yrittää uudelleen.
 Max distance from the current position (km):	Enimmäisetäisyys nykyisestä sijainnista (km):
 Find WebSDRs	Etsi WebSDR-vastaanottimia
+Power saving mode	Virransäästötila
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Rajoittaa WebSDR:n spektrin ja vesiputouksen animaation noin 20 kuvaan sekunnissa 60:n sijaan: prosessori ja grafiikkapiiri kuormittuvat vähemmän, puhelin lämpenee vähemmän ja akku kestää pidempään. Ääni ja dekooderit eivät muutu. Hyödyllinen 4G:ssä, akulla tai kun puhelin kuumenee; spektri on hieman vähemmän sulava.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Tunnistaa äänestä pysyvät vihellykset (kantoaallot) ja vaimentaa ne automaattisesti. Taso 1:stä (alkuperäinen asetus) 10:een lisää käsiteltävien vihellysten määrää ja vaikutuksen voimaa. Ei käytössä CW:ssä eikä digitaalisissa tiloissa (DATA, dekooderit).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Vaimentaa taustasuhinaa, kun hyödyllistä signaalia ei ole. Taso 1:stä (kevyt) 10:een (voimakas) määrää vaimennuksen voimakkuuden; korkea taso voi saada äänen kuulostamaan hieman metalliselta. Ei käytössä, kun digitaalinen dekooderi on käynnissä.
+Time without sound before the reload	Äänetön aika ennen uudelleenlatausta
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Lataa WebSDR:n uudelleen, kun ääni on ollut poissa valitun ajan (10–60 s), esimerkiksi palvelimen katkoksen tai WebSDR:n aikakatkaisun jälkeen. Ei vaikutusta, jos äänenvoimakkuus on nolla tai ääni on mykistetty. Enintään kolme yritystä peräkkäin.
+No sound for {0} s: the WebSDR is reloaded.	Ei ääntä {0} s: WebSDR ladataan uudelleen.
+Setting button colours:	Asetuspainikkeiden värit:
+Active button (function on)	Aktiivinen painike (toiminto päällä)
+Busy button (scan, REC, search…)	Käynnissä oleva painike (skannaus, REC, haku…)
+CPU / RAM resources	Suorittimen / RAM-muistin resurssit
+Live measurements, only while this window is open.	Reaaliaikaiset mittaukset vain, kun tämä ikkuna on auki.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	WebSDR-sivun prosessi (WebView) on erillinen: sovellus ei voi mitata sitä.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Huomio: jatkuva FreeDV-dekoodaus lisää suorittimen kuormaa selvästi (OnePlus Nord -älypuhelimella noin 10–25 % yhdestä ytimestä) ja voi kuumentaa puhelinta ja tyhjentää akkua.
+To check the load: SET › CPU / RAM resources.	Kuorman voi tarkistaa kohdasta SET › Suorittimen / RAM-muistin resurssit.
+Volume per WebSDR	Äänenvoimakkuus WebSDR-kohtaisesti
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Puhelimen painikkeilla säädetty äänenvoimakkuus muistetaan näytettävälle WebSDR:lle, jos se on suosikeissa. Kun palaat tälle WebSDR:lle, puhelimen äänenvoimakkuus palautuu itsestään tälle tasolle; WebSDR, jolla ei ole muistettua tasoa, säilyttää nykyisen äänenvoimakkuuden. Taso tallennetaan suosikkien mukana: se viedään ja tuodaan niiden mukana.
+phone button	puhelimen painike
+Voice command of the scan	Skannauksen äänikomento
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Skannauksen aikana mikrofoni kuuntelee neljää sanaa: ”stop” keskeyttää skannauksen, ”start” jatkaa sitä, ”plus un” siirtyy yhden askeleen eteenpäin asteikolla ja ”moins un” yhden askeleen taaksepäin. Tunnistus tapahtuu puhelimessa ilman internetiä. Mikrofoni on auki vain skannauksen aikana (ja 5 minuuttia sen keskeytyksen jälkeen), kun sovellus on näytöllä. Se kuulee myös kaiuttimen: kuulokkeilla luotettavuus on paljon parempi. Kuuntelu lisää suorittimen ja muistin kuormaa.
+Voice model: installed.	Äänimalli: asennettu.
+Voice model: not downloaded.	Äänimalli: ei ladattu.
+Delete the voice model	Poista äänimalli
+Download the voice model (40 MB)	Lataa äänimalli (40 MB)
+Download the voice model first.	Lataa ensin äänimalli.
+Microphone access refused.	Mikrofonin käyttö evättiin.
+Voice model downloaded.	Äänimalli ladattu.
+Download failed. Check the connection and try again.	Lataus epäonnistui. Tarkista yhteys ja yritä uudelleen.
+voice command	äänikomento
+Voice command: "{0}"	Äänikomento: ”{0}”
+Reset the voice model	Nollaa äänimalli
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Äänimalli seuraa sovelluksen kieltä, ja komennot ovat tällä kielellä (ranskaksi: stop, start, plus un, moins un). Kielet ilman äänimallia käyttävät englantia (stop, start, plus one, minus one). Jos vaihdat kieltä, käytä ”Nollaa äänimalli”.

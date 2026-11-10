@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Η ενημέρωση απέ�
 Installation cancelled or failed. You can try again.	Η εγκατάσταση ακυρώθηκε ή απέτυχε. Μπορείτε να δοκιμάσετε ξανά.
 Max distance from the current position (km):	Μέγιστη απόσταση από την τρέχουσα θέση (km):
 Find WebSDRs	Αναζήτηση WebSDR
+Power saving mode	Λειτουργία εξοικονόμησης
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Περιορίζει την κίνηση του φάσματος και του καταρράκτη του WebSDR σε περίπου 20 καρέ ανά δευτερόλεπτο αντί για 60: ο επεξεργαστής και το γραφικό τσιπ εργάζονται λιγότερο, το τηλέφωνο ζεσταίνεται λιγότερο και η μπαταρία διαρκεί περισσότερο. Ο ήχος και οι αποκωδικοποιητές δεν επηρεάζονται. Χρήσιμο σε 4G, με μπαταρία ή όταν το τηλέφωνο ζεσταίνεται· το φάσμα είναι λίγο λιγότερο ομαλό.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Εντοπίζει σταθερούς συριγμούς (φέροντα) στον ήχο και τους εξασθενεί αυτόματα. Το επίπεδο, από 1 (αρχική ρύθμιση) έως 10, αυξάνει τον αριθμό των συριγμών που επεξεργάζονται και την ισχύ της ενέργειας. Δεν εφαρμόζεται σε CW ούτε σε ψηφιακές λειτουργίες (DATA, αποκωδικοποιητές).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Εξασθενεί το θόρυβο υποβάθρου όταν δεν υπάρχει χρήσιμο σήμα. Το επίπεδο, από 1 (ελαφρύ) έως 10 (ισχυρό), ρυθμίζει την ισχύ της μείωσης· ένα υψηλό επίπεδο μπορεί να κάνει τη φωνή ελαφρώς μεταλλική. Δεν εφαρμόζεται όσο λειτουργεί ψηφιακός αποκωδικοποιητής.
+Time without sound before the reload	Χρόνος χωρίς ήχο πριν από την επαναφόρτωση
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Επαναφορτώνει το WebSDR όταν ο ήχος έχει χαθεί για τον επιλεγμένο χρόνο (10 έως 60 s), για παράδειγμα μετά από διακοπή του διακομιστή ή λήξη χρόνου του WebSDR. Καμία επίδραση αν η ένταση είναι μηδέν ή σε σίγαση. Το πολύ τρεις προσπάθειες στη σειρά.
+No sound for {0} s: the WebSDR is reloaded.	Χωρίς ήχο για {0} s: το WebSDR επαναφορτώνεται.
+Setting button colours:	Χρώματα των κουμπιών ρυθμίσεων:
+Active button (function on)	Ενεργό κουμπί (λειτουργία ενεργή)
+Busy button (scan, REC, search…)	Κουμπί σε εξέλιξη (σάρωση, REC, αναζήτηση…)
+CPU / RAM resources	Πόροι επεξεργαστή / RAM
+Live measurements, only while this window is open.	Μετρήσεις σε πραγματικό χρόνο, μόνο όσο είναι ανοιχτό αυτό το παράθυρο.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	Η διεργασία της σελίδας WebSDR (WebView) είναι ξεχωριστή: η εφαρμογή δεν μπορεί να τη μετρήσει.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Προσοχή: η μόνιμη αποκωδικοποίηση FreeDV αυξάνει αισθητά το φορτίο του επεξεργαστή (περίπου 10 έως 25 % ενός πυρήνα σε smartphone OnePlus Nord) και μπορεί να ζεστάνει το τηλέφωνο και να αδειάσει την μπαταρία.
+To check the load: SET › CPU / RAM resources.	Για να ελέγξετε το φορτίο: SET › Πόροι επεξεργαστή / RAM.
+Volume per WebSDR	Ένταση ανά WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Η ένταση που ρυθμίζετε με τα πλήκτρα του τηλεφώνου αποθηκεύεται για το WebSDR που εμφανίζεται, αν βρίσκεται στα αγαπημένα σας. Όταν επιστρέφετε σε αυτό το WebSDR, η ένταση του τηλεφώνου επαναφέρεται αυτόματα σε αυτό το επίπεδο· ένα WebSDR χωρίς αποθηκευμένο επίπεδο κρατά την τρέχουσα ένταση. Το επίπεδο αποθηκεύεται με τα αγαπημένα: εξάγεται και εισάγεται μαζί τους.
+phone button	κουμπί του τηλεφώνου
+Voice command of the scan	Φωνητική εντολή σάρωσης
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Κατά τη σάρωση, το μικρόφωνο ακούει τέσσερις λέξεις: «stop» διακόπτει τη σάρωση, «start» τη συνεχίζει, «plus un» προχωρά ένα βήμα της κλίμακας και «moins un» πίσω ένα βήμα. Η αναγνώριση γίνεται μέσα στο τηλέφωνο, χωρίς Διαδίκτυο. Το μικρόφωνο είναι ανοιχτό μόνο κατά τη σάρωση (και 5 λεπτά μετά τη διακοπή της), με την εφαρμογή στην οθόνη. Ακούει και το ηχείο: με ακουστικά η αξιοπιστία είναι πολύ καλύτερη. Η ακρόαση αυξάνει το φορτίο του επεξεργαστή και της μνήμης.
+Voice model: installed.	Φωνητικό μοντέλο: εγκατεστημένο.
+Voice model: not downloaded.	Φωνητικό μοντέλο: δεν έχει ληφθεί.
+Delete the voice model	Διαγραφή του φωνητικού μοντέλου
+Download the voice model (40 MB)	Λήψη του φωνητικού μοντέλου (40 MB)
+Download the voice model first.	Λάβετε πρώτα το φωνητικό μοντέλο.
+Microphone access refused.	Η πρόσβαση στο μικρόφωνο απορρίφθηκε.
+Voice model downloaded.	Το φωνητικό μοντέλο λήφθηκε.
+Download failed. Check the connection and try again.	Η λήψη απέτυχε. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.
+voice command	φωνητική εντολή
+Voice command: "{0}"	Φωνητική εντολή: «{0}»
+Reset the voice model	Επαναφορά του φωνητικού μοντέλου
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Το φωνητικό μοντέλο ακολουθεί τη γλώσσα της εφαρμογής, με τις εντολές σε αυτή τη γλώσσα (στα γαλλικά: stop, start, plus un, moins un). Οι γλώσσες χωρίς φωνητικό μοντέλο χρησιμοποιούν αγγλικά (stop, start, plus one, minus one). Αν αλλάξετε γλώσσα, χρησιμοποιήστε «Επαναφορά του φωνητικού μοντέλου».

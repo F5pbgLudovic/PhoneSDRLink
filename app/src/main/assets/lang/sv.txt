@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Uppdateringen misslyckades. K
 Installation cancelled or failed. You can try again.	Installationen avbröts eller misslyckades. Du kan försöka igen.
 Max distance from the current position (km):	Max avstånd från nuvarande position (km):
 Find WebSDRs	Hitta WebSDR
+Power saving mode	Strömsparläge
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Begränsar animeringen av WebSDR-spektrumet och vattenfallet till cirka 20 bilder per sekund i stället för 60: processorn och grafikchipet arbetar mindre, telefonen blir mindre varm och batteriet räcker längre. Ljud och avkodare påverkas inte. Användbart på 4G, på batteri eller när telefonen blir varm; spektrumet är något mindre flytande.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Hittar fasta vissel (bärvågor) i ljudet och dämpar dem automatiskt. Nivån, från 1 (ursprunglig inställning) till 10, ökar antalet behandlade toner och verkans styrka. Används inte i CW eller i digitala lägen (DATA, avkodare).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Dämpar bakgrundsbruset när det inte finns någon användbar signal. Nivån, från 1 (lätt) till 10 (kraftig), bestämmer reduceringens styrka; en hög nivå kan göra röster något metalliska. Används inte medan en digital avkodare körs.
+Time without sound before the reload	Tid utan ljud före omladdning
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Laddar om WebSDR när ljudet har saknats den valda tiden (10 till 60 s), till exempel efter ett serveravbrott eller en timeout i WebSDR. Ingen verkan om volymen är noll eller ljudet är avstängt. Högst tre försök i rad.
+No sound for {0} s: the WebSDR is reloaded.	Inget ljud på {0} s: WebSDR laddas om.
+Setting button colours:	Färger på inställningsknappar:
+Active button (function on)	Aktiv knapp (funktionen är på)
+Busy button (scan, REC, search…)	Knapp pågår (skanning, REC, sökning…)
+CPU / RAM resources	Processor- / RAM-resurser
+Live measurements, only while this window is open.	Direktmätningar, bara medan det här fönstret är öppet.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	WebSDR-sidans process (WebView) är separat: appen kan inte mäta den.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Obs: permanent FreeDV-avkodning ökar processorbelastningen märkbart (ungefär 10 till 25 % av en kärna på en OnePlus Nord-smartphone) och kan göra telefonen varm och tömma batteriet.
+To check the load: SET › CPU / RAM resources.	Belastningen kan kontrolleras i SET › Processor- / RAM-resurser.
+Volume per WebSDR	Volym per WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Volymen som ställts in med telefonens knappar kommer ihåg för den visade WebSDR om den finns bland favoriterna. När du återvänder till den WebSDR:n återställs telefonens volym automatiskt till den nivån; en WebSDR utan sparad nivå behåller den aktuella volymen. Nivån sparas med favoriterna: den exporteras och importeras med dem.
+phone button	telefonknapp
+Voice command of the scan	Röstkommando för skanning
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Under en skanning lyssnar mikrofonen efter fyra ord: ”stop” pausar skanningen, ”start” återupptar den, ”plus un” går ett steg framåt på skalan och ”moins un” ett steg bakåt. Igenkänningen sker i telefonen, utan internet. Mikrofonen är bara öppen under en skanning (och 5 minuter efter pausen), när appen visas på skärmen. Den hör också högtalaren: med hörlurar är tillförlitligheten mycket bättre. Lyssnandet ökar belastningen på processor och minne.
+Voice model: installed.	Röstmodell: installerad.
+Voice model: not downloaded.	Röstmodell: inte nedladdad.
+Delete the voice model	Radera röstmodellen
+Download the voice model (40 MB)	Ladda ner röstmodellen (40 MB)
+Download the voice model first.	Ladda först ner röstmodellen.
+Microphone access refused.	Åtkomst till mikrofonen nekad.
+Voice model downloaded.	Röstmodell nedladdad.
+Download failed. Check the connection and try again.	Nedladdningen misslyckades. Kontrollera anslutningen och försök igen.
+voice command	röstkommando
+Voice command: "{0}"	Röstkommando: ”{0}”
+Reset the voice model	Återställ röstmodellen
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Röstmodellen följer appens språk, med kommandona på det språket (på franska: stop, start, plus un, moins un). Språk utan röstmodell använder engelska (stop, start, plus one, minus one). Om du byter språk, använd ”Återställ röstmodellen”.

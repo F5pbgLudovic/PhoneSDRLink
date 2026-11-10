@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Uuendamine ebaõnnestus. Kont
 Installation cancelled or failed. You can try again.	Paigaldamine katkestati või ebaõnnestus. Võite proovida uuesti.
 Max distance from the current position (km):	Maksimaalne kaugus praegusest asukohast (km):
 Find WebSDRs	Otsi WebSDR-e
+Power saving mode	Säästurežiim
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Piirab WebSDR-i spektri ja kaskaadkuva animatsiooni umbes 20 kaadrini sekundis 60 asemel: protsessor ja graafikakiip töötavad vähem, telefon kuumeneb vähem ja aku peab kauem vastu. Heli ja dekoodereid see ei mõjuta. Kasulik 4G-s, akutoitel või kui telefon kuumeneb; spekter on veidi vähem sujuv.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Tuvastab helis püsivad vilinad (kandjad) ja summutab need automaatselt. Tase 1-st (algseade) kuni 10-ni suurendab töödeldavate vilinate arvu ja mõju tugevust. Ei rakendu CW-s ega digirežiimides (DATA, dekoodrid).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Summutab taustamüra, kui kasulikku signaali pole. Tase 1-st (kerge) kuni 10-ni (tugev) määrab vähendamise tugevuse; kõrge tase võib teha hääle veidi metalseks. Ei rakendu, kui digidekooder töötab.
+Time without sound before the reload	Helita aeg enne taaslaadimist
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Laeb WebSDR-i uuesti, kui heli on valitud aja (10 kuni 60 s) puudunud, näiteks pärast serveri katkestust või WebSDR-i ajalõppu. Mõju puudub, kui helitugevus on null või heli on summutatud. Kuni kolm katset järjest.
+No sound for {0} s: the WebSDR is reloaded.	Heli puudub {0} s: WebSDR laaditakse uuesti.
+Setting button colours:	Seadenuppude värvid:
+Active button (function on)	Aktiivne nupp (funktsioon sees)
+Busy button (scan, REC, search…)	Töös olev nupp (skaneerimine, REC, otsing…)
+CPU / RAM resources	Protsessori / RAM-i ressursid
+Live measurements, only while this window is open.	Reaalajas mõõtmised, ainult kuni see aken on avatud.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	WebSDR-i lehe protsess (WebView) on eraldi: rakendus ei saa seda mõõta.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Tähelepanu: pidev FreeDV dekodeerimine suurendab märgatavalt protsessori koormust (OnePlus Nord nutitelefonis umbes 10 kuni 25 % ühest tuumast) ning võib telefoni kuumutada ja akut tühjendada.
+To check the load: SET › CPU / RAM resources.	Koormust saab kontrollida: SET › Protsessori / RAM-i ressursid.
+Volume per WebSDR	Helitugevus WebSDR-i kohta
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Telefoni nuppudega seatud helitugevus jäetakse meelde kuvatava WebSDR-i jaoks, kui see on teie lemmikute hulgas. Sellele WebSDR-ile naastes taastub telefoni helitugevus ise sellele tasemele; WebSDR, millel meelde jäetud taset pole, säilitab praeguse helitugevuse. Tase salvestatakse lemmikutega: seda eksporditakse ja imporditakse koos nendega.
+phone button	telefoni nupp
+Voice command of the scan	Skaneerimise häälkäsk
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Skaneerimise ajal kuulab mikrofon nelja sõna: „stop“ peatab skaneerimise, „start“ jätkab seda, „plus un“ liigub skaalal ühe sammu edasi ja „moins un“ ühe sammu tagasi. Tuvastus toimub telefonis, ilma internetita. Mikrofon on avatud ainult skaneerimise ajal (ja 5 minutit pärast selle peatamist), kui rakendus on ekraanil. See kuuleb ka valjuhääldit: peakomplektiga on töökindlus palju parem. Kuulamine suurendab protsessori ja mälu koormust.
+Voice model: installed.	Häälmudel: paigaldatud.
+Voice model: not downloaded.	Häälmudel: pole alla laaditud.
+Delete the voice model	Kustuta häälmudel
+Download the voice model (40 MB)	Laadi häälmudel alla (40 MB)
+Download the voice model first.	Laadige esmalt häälmudel alla.
+Microphone access refused.	Juurdepääs mikrofonile keelati.
+Voice model downloaded.	Häälmudel alla laaditud.
+Download failed. Check the connection and try again.	Allalaadimine ebaõnnestus. Kontrollige ühendust ja proovige uuesti.
+voice command	häälkäsk
+Voice command: "{0}"	Häälkäsk: „{0}“
+Reset the voice model	Lähtesta häälmudel
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Häälmudel järgib rakenduse keelt ja käsud on selles keeles (prantsuse keeles: stop, start, plus un, moins un). Keeled, millel häälmudelit pole, kasutavad inglise keelt (stop, start, plus one, minus one). Keele vahetamisel kasutage „Lähtesta häälmudel“.

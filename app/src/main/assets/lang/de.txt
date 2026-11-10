@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Update fehlgeschlagen. Prüfe
 Installation cancelled or failed. You can try again.	Installation abgebrochen oder fehlgeschlagen. Sie können es erneut versuchen.
 Max distance from the current position (km):	Max. Entfernung von der aktuellen Position (km):
 Find WebSDRs	WebSDRs suchen
+Power saving mode	Energiesparmodus
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Begrenzt die Animation von Spektrum und Wasserfall des WebSDR auf etwa 20 Bilder pro Sekunde statt 60: Prozessor und Grafikchip arbeiten weniger, das Telefon wird weniger warm und der Akku hält länger. Ton und Decoder sind nicht betroffen. Nützlich bei 4G, im Akkubetrieb oder wenn das Telefon heiß wird; das Spektrum läuft etwas weniger flüssig.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Erkennt stehende Pfeiftöne (Träger) im Ton und dämpft sie automatisch. Die Stufe von 1 (ursprüngliche Einstellung) bis 10 erhöht die Zahl der bearbeiteten Töne und die Stärke des Eingriffs. Nicht aktiv in CW und in digitalen Betriebsarten (DATA, Decoder).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Dämpft das Grundrauschen, wenn kein Nutzsignal vorhanden ist. Die Stufe von 1 (leicht) bis 10 (stark) bestimmt die Stärke der Reduzierung; eine hohe Stufe kann Stimmen leicht metallisch klingen lassen. Nicht aktiv, solange ein digitaler Decoder läuft.
+Time without sound before the reload	Zeit ohne Ton vor dem Neuladen
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Lädt das WebSDR neu, wenn der Ton für die gewählte Zeit (10 bis 60 s) weg ist, zum Beispiel nach einem Serverausfall oder einem Timeout des WebSDR. Ohne Wirkung, wenn die Lautstärke null ist oder stummgeschaltet wurde. Höchstens drei Versuche hintereinander.
+No sound for {0} s: the WebSDR is reloaded.	Seit {0} s kein Ton: das WebSDR wird neu geladen.
+Setting button colours:	Farben der Einstellungstasten:
+Active button (function on)	Aktive Taste (Funktion an)
+Busy button (scan, REC, search…)	Taste in Arbeit (Scan, REC, Suche…)
+CPU / RAM resources	Prozessor- / RAM-Ressourcen
+Live measurements, only while this window is open.	Live-Messungen, nur solange dieses Fenster geöffnet ist.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	Der Prozess der WebSDR-Seite (WebView) ist getrennt: die App kann ihn nicht messen.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Achtung: die dauerhafte FreeDV-Dekodierung erhöht die Prozessorlast spürbar (etwa 10 bis 25 % eines Kerns auf einem OnePlus-Nord-Smartphone) und kann das Telefon erwärmen und den Akku leeren.
+To check the load: SET › CPU / RAM resources.	Die Last lässt sich prüfen unter SET › Prozessor- / RAM-Ressourcen.
+Volume per WebSDR	Lautstärke je WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Die mit den Telefontasten eingestellte Lautstärke wird für das angezeigte WebSDR gemerkt, wenn es in Ihren Favoriten steht. Kehrt man zu diesem WebSDR zurück, wird die Telefonlautstärke automatisch auf diesen Pegel gesetzt; ein WebSDR ohne gemerkten Pegel behält die aktuelle Lautstärke. Der Pegel wird mit den Favoriten gespeichert: er wird mit ihnen exportiert und importiert.
+phone button	Telefontaste
+Voice command of the scan	Sprachbefehl für den Scan
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Während eines Scans hört das Mikrofon auf vier Wörter: „stop“ pausiert den Scan, „start“ setzt ihn fort, „plus un“ geht einen Schritt der Skala vor und „moins un“ einen Schritt zurück. Die Erkennung läuft im Telefon, ohne Internet. Das Mikrofon ist nur während eines Scans offen (und 5 Minuten nach dessen Pause), bei sichtbarer App. Es hört auch den Lautsprecher: mit Headset ist die Zuverlässigkeit deutlich besser. Das Zuhören erhöht die Prozessor- und Speicherlast.
+Voice model: installed.	Sprachmodell: installiert.
+Voice model: not downloaded.	Sprachmodell: nicht heruntergeladen.
+Delete the voice model	Sprachmodell löschen
+Download the voice model (40 MB)	Sprachmodell herunterladen (40 MB)
+Download the voice model first.	Laden Sie zuerst das Sprachmodell herunter.
+Microphone access refused.	Zugriff auf das Mikrofon abgelehnt.
+Voice model downloaded.	Sprachmodell heruntergeladen.
+Download failed. Check the connection and try again.	Download fehlgeschlagen. Prüfen Sie die Verbindung und versuchen Sie es erneut.
+voice command	Sprachbefehl
+Voice command: "{0}"	Sprachbefehl: „{0}“
+Reset the voice model	Sprachmodell zurücksetzen
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Das Sprachmodell folgt der Sprache der App, mit den Befehlen in dieser Sprache (auf Französisch: stop, start, plus un, moins un). Sprachen ohne Sprachmodell verwenden Englisch (stop, start, plus one, minus one). Wenn Sie die Sprache wechseln, verwenden Sie „Sprachmodell zurücksetzen“.

@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Atnaujinti nepavyko. Patikrin
 Installation cancelled or failed. You can try again.	Diegimas atšauktas arba nepavyko. Galite bandyti dar kartą.
 Max distance from the current position (km):	Maks. atstumas nuo dabartinės vietos (km):
 Find WebSDRs	Ieškoti WebSDR
+Power saving mode	Taupymo režimas
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Apriboja WebSDR spektro ir krintančio vaizdo animaciją iki maždaug 20 kadrų per sekundę vietoje 60: procesorius ir grafikos lustas dirba mažiau, telefonas mažiau kaista, o baterija veikia ilgiau. Garsas ir dekoderiai nepaveikiami. Naudinga 4G tinkle, naudojant bateriją arba kai telefonas kaista; spektras šiek tiek mažiau sklandus.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Aptinka garse pastovius švilpimus (nešlius) ir juos automatiškai slopina. Lygis nuo 1 (pradinis nustatymas) iki 10 didina apdorojamų švilpimų skaičių ir poveikio stiprumą. Netaikoma CW ir skaitmeniniuose režimuose (DATA, dekoderiai).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Slopina foninį šnypštimą, kai nėra naudingo signalo. Lygis nuo 1 (silpnas) iki 10 (stiprus) nustato mažinimo stiprumą; aukštas lygis gali padaryti balsą šiek tiek metališką. Netaikoma, kol veikia skaitmeninis dekoderis.
+Time without sound before the reload	Laikas be garso prieš perkrovimą
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Perkrauna WebSDR, kai garso nėra pasirinktą laiką (nuo 10 iki 60 s), pavyzdžiui, nutrūkus serveriui arba pasibaigus WebSDR laukimo laikui. Poveikio nėra, jei garsumas lygus nuliui arba garsas išjungtas. Daugiausia trys bandymai iš eilės.
+No sound for {0} s: the WebSDR is reloaded.	Garso nėra {0} s: WebSDR perkraunamas.
+Setting button colours:	Nustatymų mygtukų spalvos:
+Active button (function on)	Aktyvus mygtukas (funkcija įjungta)
+Busy button (scan, REC, search…)	Vykdomas mygtukas (skenavimas, REC, paieška…)
+CPU / RAM resources	Procesoriaus / RAM ištekliai
+Live measurements, only while this window is open.	Matavimai tiesiogiai, tik kol šis langas atidarytas.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	WebSDR puslapio procesas (WebView) yra atskiras: programa negali jo išmatuoti.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Dėmesio: nuolatinis FreeDV dekodavimas pastebimai padidina procesoriaus apkrovą (išmaniajame telefone OnePlus Nord apie 10–25 % vieno branduolio) ir gali kaitinti telefoną bei išeikvoti bateriją.
+To check the load: SET › CPU / RAM resources.	Apkrovą galima patikrinti: SET › Procesoriaus / RAM ištekliai.
+Volume per WebSDR	Garsumas kiekvienam WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Telefono mygtukais nustatytas garsumas įsimenamas rodomam WebSDR, jei jis yra jūsų mėgstamiausiųjų sąraše. Grįžus į šį WebSDR, telefono garsumas pats grįžta į šį lygį; WebSDR be įsimintino lygio išlaiko dabartinį garsumą. Lygis saugomas su mėgstamiausiais: eksportuojamas ir importuojamas kartu su jais.
+phone button	telefono mygtukas
+Voice command of the scan	Skenavimo balso komanda
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Skenavimo metu mikrofonas klauso keturių žodžių: „stop“ pristabdo skenavimą, „start“ jį tęsia, „plus un“ pasislenka vienu žingsniu skalėje pirmyn, o „moins un“ vienu žingsniu atgal. Atpažinimas vyksta telefone, be interneto. Mikrofonas atidarytas tik skenavimo metu (ir 5 minutes po jo pristabdymo), kai programa rodoma ekrane. Jis girdi ir garsiakalbį: su ausinėmis patikimumas daug geresnis. Klausymasis padidina procesoriaus ir atminties apkrovą.
+Voice model: installed.	Balso modelis: įdiegtas.
+Voice model: not downloaded.	Balso modelis: neatsisiųstas.
+Delete the voice model	Ištrinti balso modelį
+Download the voice model (40 MB)	Atsisiųsti balso modelį (40 MB)
+Download the voice model first.	Pirmiausia atsisiųskite balso modelį.
+Microphone access refused.	Prieiga prie mikrofono atmesta.
+Voice model downloaded.	Balso modelis atsisiųstas.
+Download failed. Check the connection and try again.	Atsisiųsti nepavyko. Patikrinkite ryšį ir bandykite dar kartą.
+voice command	balso komanda
+Voice command: "{0}"	Balso komanda: „{0}“
+Reset the voice model	Atkurti balso modelį
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Balso modelis seka programos kalbą, o komandos yra tos kalbos (prancūziškai: stop, start, plus un, moins un). Kalbos be balso modelio naudoja anglų kalbą (stop, start, plus one, minus one). Pakeitę kalbą, naudokite „Atkurti balso modelį“.

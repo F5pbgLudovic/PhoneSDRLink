@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Posodobitev ni uspela. Prever
 Installation cancelled or failed. You can try again.	Namestitev je bila preklicana ali ni uspela. Poskusite lahko znova.
 Max distance from the current position (km):	Najv. razdalja od trenutnega položaja (km):
 Find WebSDRs	Poišči WebSDR
+Power saving mode	Varčevalni način
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Omeji animacijo spektra in slapa WebSDR na približno 20 sličic na sekundo namesto 60: procesor in grafični čip delata manj, telefon se manj segreva, baterija pa zdrži dlje. Zvok in dekoderji niso prizadeti. Uporabno v 4G, na bateriji ali ko se telefon segreva; spekter je nekoliko manj tekoč.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Zazna stalne piske (nosilce) v zvoku in jih samodejno zaduši. Raven od 1 (izvirna nastavitev) do 10 povečuje število obdelanih piskov in moč delovanja. Ne uporablja se v CW ali v digitalnih načinih (DATA, dekoderji).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Duši šum ozadja, kadar ni uporabnega signala. Raven od 1 (rahlo) do 10 (močno) določa moč zmanjšanja; visoka raven lahko naredi glas nekoliko kovinski. Ne uporablja se, medtem ko deluje digitalni dekoder.
+Time without sound before the reload	Čas brez zvoka pred ponovnim nalaganjem
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Znova naloži WebSDR, ko zvoka ni izbrani čas (od 10 do 60 s), na primer po izpadu strežnika ali izteku časovne omejitve WebSDR. Brez učinka, če je glasnost nič ali je zvok utišan. Največ trije poskusi zapored.
+No sound for {0} s: the WebSDR is reloaded.	Brez zvoka {0} s: WebSDR se znova nalaga.
+Setting button colours:	Barve gumbov nastavitev:
+Active button (function on)	Aktivni gumb (funkcija vklopljena)
+Busy button (scan, REC, search…)	Gumb v teku (skeniranje, REC, iskanje…)
+CPU / RAM resources	Viri procesorja / RAM
+Live measurements, only while this window is open.	Meritve v živo, samo dokler je to okno odprto.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	Proces strani WebSDR (WebView) je ločen: aplikacija ga ne more meriti.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Pozor: stalno dekodiranje FreeDV opazno poveča obremenitev procesorja (na pametnem telefonu OnePlus Nord približno 10 do 25 % enega jedra) in lahko segreje telefon ter izprazni baterijo.
+To check the load: SET › CPU / RAM resources.	Obremenitev preverite v: SET › Viri procesorja / RAM.
+Volume per WebSDR	Glasnost za vsak WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Glasnost, nastavljena s tipkami telefona, se zapomni za prikazani WebSDR, če je med priljubljenimi. Ko se vrnete na ta WebSDR, se glasnost telefona sama povrne na to raven; WebSDR brez zapomnjene ravni obdrži trenutno glasnost. Raven se shrani s priljubljenimi: izvozi in uvozi se z njimi.
+phone button	tipka telefona
+Voice command of the scan	Glasovni ukaz skeniranja
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Med skeniranjem mikrofon posluša štiri besede: „stop“ ustavi skeniranje, „start“ ga nadaljuje, „plus un“ se premakne za en korak skale naprej, „moins un“ pa za en korak nazaj. Prepoznavanje poteka v telefonu, brez interneta. Mikrofon je odprt samo med skeniranjem (in 5 minut po njegovi ustavitvi), ko je aplikacija na zaslonu. Sliši tudi zvočnik: s slušalkami je zanesljivost veliko boljša. Poslušanje poveča obremenitev procesorja in pomnilnika.
+Voice model: installed.	Glasovni model: nameščen.
+Voice model: not downloaded.	Glasovni model: ni prenesen.
+Delete the voice model	Izbriši glasovni model
+Download the voice model (40 MB)	Prenesi glasovni model (40 MB)
+Download the voice model first.	Najprej prenesite glasovni model.
+Microphone access refused.	Dostop do mikrofona zavrnjen.
+Voice model downloaded.	Glasovni model prenesen.
+Download failed. Check the connection and try again.	Prenos ni uspel. Preverite povezavo in poskusite znova.
+voice command	glasovni ukaz
+Voice command: "{0}"	Glasovni ukaz: „{0}“
+Reset the voice model	Ponastavi glasovni model
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Glasovni model sledi jeziku aplikacije, ukazi pa so v tem jeziku (v francoščini: stop, start, plus un, moins un). Jeziki brez glasovnega modela uporabljajo angleščino (stop, start, plus one, minus one). Če zamenjate jezik, uporabite „Ponastavi glasovni model“.

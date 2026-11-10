@@ -33,8 +33,8 @@ final class Ui {
     static int fg() { return dark ? 0xFFE8ECF0 : 0xFF14181C; }
     static int sub() { return dark ? 0xFF9AA5B1 : 0xFF5A6570; }
     // Couleurs choisies dans SET (0 = couleur d'origine du thème).
-    static boolean reopenColors;
-    static int cBtnBg, cBtnTx, cFreqTx, cFreqBg, cBarFg, cBarBg, cBg, cFt8A, cFt8B, cDec, cDecBtn;
+    static boolean reopenColors, reopenSet;
+    static int cBtnBg, cBtnTx, cFreqTx, cFreqBg, cBarFg, cBarBg, cBg, cFt8A, cFt8B, cDec, cDecBtn, cOn, cDanger;
     // Décodeur : les deux périodes (paire et impaire) de FT8 / FT4 s'affichent en deux couleurs.
     static int decBtn() { return cDecBtn != 0 ? cDecBtn : dark ? 0xFF0A1F4D : 0xFF0D2B6B; }   // bouton Décodeur de SET : bleu très foncé par défaut
     static int onColor(int bg) { return (Color.red(bg) * 30 + Color.green(bg) * 59 + Color.blue(bg) * 11) / 100 > 128 ? Color.BLACK : Color.WHITE; }
@@ -48,10 +48,10 @@ final class Ui {
     static int barBg() { return cBarBg != 0 ? cBarBg : btn(); }
     static int barFgTicks() { return cBarFg != 0 ? cBarFg : sub(); }
     static int barFgText() { return cBarFg != 0 ? cBarFg : fg(); }
-    static void loadColors(Store s) { cBtnBg = s.colBtnBg; cBtnTx = s.colBtnTx; cFreqTx = s.colFreqTx; cFreqBg = s.colFreqBg; cBarFg = s.colBarFg; cBarBg = s.colBarBg; cBg = s.colBg; cFt8A = s.colFt8A; cFt8B = s.colFt8B; cDec = s.colDec; cDecBtn = s.colDecBtn; }
+    static void loadColors(Store s) { cBtnBg = s.colBtnBg; cBtnTx = s.colBtnTx; cFreqTx = s.colFreqTx; cFreqBg = s.colFreqBg; cBarFg = s.colBarFg; cBarBg = s.colBarBg; cBg = s.colBg; cFt8A = s.colFt8A; cFt8B = s.colFt8B; cDec = s.colDec; cDecBtn = s.colDecBtn; cOn = s.colOn; cDanger = s.colDanger; }
     static int accent() { return dark ? 0xFF4FC3F7 : 0xFF0B5FA5; }
-    static int on() { return dark ? 0xFF2E7D32 : 0xFF2E7D32; }
-    static int danger() { return 0xFFC62828; }
+    static int on() { return cOn != 0 ? cOn : 0xFF2E7D32; }   // vert : fonction active
+    static int danger() { return cDanger != 0 ? cDanger : 0xFFC62828; }   // rouge : action en cours
 
     static int dp(Context c, float v) { return Math.round(v * c.getResources().getDisplayMetrics().density); }
 
@@ -91,6 +91,15 @@ final class Ui {
         Context c = b.getContext();
         b.setBackground(round(active ? activeColor : btn(), 10, c));
         b.setTextColor(active ? Color.WHITE : btnTx());
+    }
+
+    // Fenêtre de réglages : un appui ailleurs que sur une coche, un bouton ou une liste (texte, espace vide) ferme la fenêtre
+    // et ramène à l'écran précédent.
+    static void closeOnTap(final Dialog d, View v) {
+        if (v instanceof Button || v instanceof android.widget.AdapterView || v instanceof android.widget.EditText || v instanceof android.widget.ProgressBar) return;   // CheckBox est un Button
+        if (v instanceof ViewGroup) { ViewGroup g = (ViewGroup) v; for (int i = 0; i < g.getChildCount(); i++) closeOnTap(d, g.getChildAt(i)); }
+        if (v instanceof android.widget.ScrollView) return;
+        v.setOnClickListener(new View.OnClickListener() { public void onClick(View x) { d.dismiss(); } });
     }
 
     // Retour visuel des boutons d'une fenêtre : au toucher le bouton prend brièvement la couleur d'accent (retour à la normale 0,35 s après le relâchement,

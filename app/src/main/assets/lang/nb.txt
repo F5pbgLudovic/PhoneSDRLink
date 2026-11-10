@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Oppdateringen mislyktes. Sjek
 Installation cancelled or failed. You can try again.	Installasjonen ble avbrutt eller mislyktes. Du kan prøve igjen.
 Max distance from the current position (km):	Maks. avstand fra nåværende posisjon (km):
 Find WebSDRs	Finn WebSDR-er
+Power saving mode	Strømsparemodus
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Begrenser animasjonen av WebSDR-spekteret og fossefallet til omtrent 20 bilder per sekund i stedet for 60: prosessoren og grafikkbrikken jobber mindre, telefonen blir mindre varm og batteriet varer lenger. Lyd og dekodere påvirkes ikke. Nyttig på 4G, på batteri eller når telefonen blir varm; spekteret er litt mindre flytende.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Finner faste plystretoner (bærebølger) i lyden og demper dem automatisk. Nivået, fra 1 (opprinnelig innstilling) til 10, øker antall behandlede toner og styrken på virkningen. Brukes ikke i CW eller i digitale moduser (DATA, dekodere).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Demper bakgrunnsstøyen når det ikke er noe nyttig signal. Nivået, fra 1 (lett) til 10 (sterkt), bestemmer styrken på reduksjonen; et høyt nivå kan gjøre stemmer litt metalliske. Brukes ikke mens en digital dekoder kjører.
+Time without sound before the reload	Tid uten lyd før ny innlasting
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Laster WebSDR på nytt når lyden har vært borte i den valgte tiden (10 til 60 s), for eksempel etter et serverbrudd eller en tidsavbrudd i WebSDR. Ingen virkning hvis volumet er null eller lyden er dempet. Høyst tre forsøk på rad.
+No sound for {0} s: the WebSDR is reloaded.	Ingen lyd på {0} s: WebSDR lastes inn på nytt.
+Setting button colours:	Farger på innstillingsknapper:
+Active button (function on)	Aktiv knapp (funksjonen er på)
+Busy button (scan, REC, search…)	Knapp i gang (skanning, REC, søk…)
+CPU / RAM resources	Prosessor- / RAM-ressurser
+Live measurements, only while this window is open.	Direktemålinger, bare mens dette vinduet er åpent.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	Prosessen til WebSDR-siden (WebView) er adskilt: appen kan ikke måle den.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Advarsel: permanent FreeDV-dekoding øker prosessorbelastningen merkbart (omtrent 10 til 25 % av én kjerne på en OnePlus Nord-smarttelefon) og kan gjøre telefonen varm og tømme batteriet.
+To check the load: SET › CPU / RAM resources.	Belastningen kan sjekkes i SET › Prosessor- / RAM-ressurser.
+Volume per WebSDR	Lydstyrke per WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Lydstyrken som er stilt inn med telefonens knapper, huskes for den viste WebSDR-en hvis den er i favorittene dine. Når du kommer tilbake til denne WebSDR-en, settes telefonens lydstyrke automatisk tilbake til det nivået; en WebSDR uten husket nivå beholder gjeldende lydstyrke. Nivået lagres sammen med favorittene: det eksporteres og importeres med dem.
+phone button	telefonknapp
+Voice command of the scan	Stemmekommando for skanning
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Under en skanning lytter mikrofonen etter fire ord: «stop» setter skanningen på pause, «start» gjenopptar den, «plus un» flytter ett trinn fremover på skalaen og «moins un» ett trinn tilbake. Gjenkjenningen skjer i telefonen, uten internett. Mikrofonen er bare åpen under en skanning (og 5 minutter etter pausen), når appen er på skjermen. Den hører også høyttaleren: med hodetelefoner er påliteligheten mye bedre. Lyttingen øker belastningen på prosessor og minne.
+Voice model: installed.	Stemmemodell: installert.
+Voice model: not downloaded.	Stemmemodell: ikke lastet ned.
+Delete the voice model	Slett stemmemodellen
+Download the voice model (40 MB)	Last ned stemmemodellen (40 MB)
+Download the voice model first.	Last først ned stemmemodellen.
+Microphone access refused.	Tilgang til mikrofonen avslått.
+Voice model downloaded.	Stemmemodell lastet ned.
+Download failed. Check the connection and try again.	Nedlastingen mislyktes. Sjekk tilkoblingen og prøv igjen.
+voice command	stemmekommando
+Voice command: "{0}"	Stemmekommando: «{0}»
+Reset the voice model	Tilbakestill stemmemodellen
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Stemmemodellen følger appens språk, med kommandoene på det språket (på fransk: stop, start, plus un, moins un). Språk uten stemmemodell bruker engelsk (stop, start, plus one, minus one). Hvis du bytter språk, bruk «Tilbakestill stemmemodellen».

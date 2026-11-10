@@ -762,3 +762,35 @@ Update failed. Check the connection and try again.	Atjaunināšana neizdevās. P
 Installation cancelled or failed. You can try again.	Instalēšana atcelta vai neizdevās. Varat mēģināt vēlreiz.
 Max distance from the current position (km):	Maks. attālums no pašreizējās atrašanās vietas (km):
 Find WebSDRs	Meklēt WebSDR
+Power saving mode	Taupīšanas režīms
+Limits the WebSDR spectrum and waterfall animation to about 20 frames per second instead of 60: the processor and graphics chip work less, the phone runs cooler and the battery lasts longer. Sound and decoders are not affected. Useful on 4G, on battery or when the phone gets hot; the spectrum is slightly less smooth.	Ierobežo WebSDR spektra un ūdenskrituma animāciju līdz apmēram 20 kadriem sekundē 60 vietā: procesors un grafikas mikroshēma strādā mazāk, tālrunis mazāk sakarst un akumulators kalpo ilgāk. Skaņu un dekoderus tas neietekmē. Noderīgi 4G tīklā, ar akumulatoru vai kad tālrunis sakarst; spektrs ir nedaudz mazāk plūdens.
+Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).	Atpazīst skaņā pastāvīgus svilpienus (nesējus) un tos automātiski slāpē. Līmenis no 1 (sākotnējais iestatījums) līdz 10 palielina apstrādāto svilpienu skaitu un darbības spēku. Netiek lietots CW režīmā un ciparu režīmos (DATA, dekoderi).
+Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.	Slāpē fona troksni, kad nav derīga signāla. Līmenis no 1 (viegls) līdz 10 (spēcīgs) nosaka samazināšanas spēku; augsts līmenis var padarīt balsi nedaudz metālisku. Netiek lietots, kamēr darbojas ciparu dekoders.
+Time without sound before the reload	Laiks bez skaņas pirms pārlādes
+Reloads the WebSDR when the sound has been lost for the chosen time (10 to 60 s), for example after a server drop or a WebSDR time-out. No effect if the volume is zero or muted. Three attempts in a row at most.	Pārlādē WebSDR, kad skaņa ir pazudusi izvēlēto laiku (no 10 līdz 60 s), piemēram, pēc servera pārtraukuma vai WebSDR noildzes. Bez iedarbības, ja skaļums ir nulle vai skaņa izslēgta. Ne vairāk kā trīs mēģinājumi pēc kārtas.
+No sound for {0} s: the WebSDR is reloaded.	Skaņas nav {0} s: WebSDR tiek pārlādēts.
+Setting button colours:	Iestatījumu pogu krāsas:
+Active button (function on)	Aktīva poga (funkcija ieslēgta)
+Busy button (scan, REC, search…)	Darbībā esoša poga (skenēšana, REC, meklēšana…)
+CPU / RAM resources	Procesora / RAM resursi
+Live measurements, only while this window is open.	Mērījumi reāllaikā, tikai kamēr šis logs ir atvērts.
+The WebSDR page process (WebView) is separate: the application cannot measure it.	WebSDR lapas process (WebView) ir atsevišķs: lietotne to nevar izmērīt.
+⚠ Warning: permanent FreeDV decoding noticeably raises the processor load (about 10 to 25 % of one core on a OnePlus Nord smartphone) and can make the phone hot and drain the battery.	⚠ Uzmanību: pastāvīga FreeDV dekodēšana jūtami palielina procesora slodzi (viedtālrunī OnePlus Nord aptuveni 10–25 % no viena kodola) un var sakarsēt tālruni un iztukšot akumulatoru.
+To check the load: SET › CPU / RAM resources.	Slodzi var pārbaudīt: SET › Procesora / RAM resursi.
+Volume per WebSDR	Skaļums katram WebSDR
+The volume set with the phone keys is remembered for the displayed WebSDR, if it is in your favorites. When you come back to this WebSDR, the phone volume is set back to that level automatically; a WebSDR without a remembered level keeps the current volume. The level is saved with the favorites: it is exported and imported with them.	Ar tālruņa pogām iestatītais skaļums tiek iegaumēts parādītajam WebSDR, ja tas ir jūsu izlasē. Atgriežoties pie šī WebSDR, tālruņa skaļums pats atjaunojas uz šo līmeni; WebSDR bez iegaumēta līmeņa saglabā pašreizējo skaļumu. Līmenis tiek saglabāts kopā ar izlasi: tas tiek eksportēts un importēts kopā ar to.
+phone button	tālruņa poga
+Voice command of the scan	Skenēšanas balss komanda
+During a scan, the microphone listens for four words: "stop" pauses the scan, "start" resumes it, "plus un" moves one step of the tuning bar forward and "moins un" one step back. Recognition runs inside the phone, without Internet. The microphone is open only during a scan (and for 5 minutes after it is paused), with the application on screen. It also hears the loudspeaker: with a headset, reliability is much better. Listening raises the processor and memory load.	Skenēšanas laikā mikrofons klausās četrus vārdus: „stop” aptur skenēšanu, „start” to atsāk, „plus un” pārvietojas par vienu soli skalā uz priekšu, bet „moins un” par vienu soli atpakaļ. Atpazīšana notiek tālrunī, bez interneta. Mikrofons ir atvērts tikai skenēšanas laikā (un 5 minūtes pēc tās apturēšanas), kad lietotne ir ekrānā. Tas dzird arī skaļruni: ar austiņām uzticamība ir daudz labāka. Klausīšanās palielina procesora un atmiņas slodzi.
+Voice model: installed.	Balss modelis: instalēts.
+Voice model: not downloaded.	Balss modelis: nav lejupielādēts.
+Delete the voice model	Dzēst balss modeli
+Download the voice model (40 MB)	Lejupielādēt balss modeli (40 MB)
+Download the voice model first.	Vispirms lejupielādējiet balss modeli.
+Microphone access refused.	Piekļuve mikrofonam atteikta.
+Voice model downloaded.	Balss modelis lejupielādēts.
+Download failed. Check the connection and try again.	Lejupielāde neizdevās. Pārbaudiet savienojumu un mēģiniet vēlreiz.
+voice command	balss komanda
+Voice command: "{0}"	Balss komanda: „{0}”
+Reset the voice model	Atiestatīt balss modeli
+The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Balss modelis seko lietotnes valodai, un komandas ir šajā valodā (franču valodā: stop, start, plus un, moins un). Valodas bez balss modeļa izmanto angļu valodu (stop, start, plus one, minus one). Ja mainīsiet valodu, izmantojiet „Atiestatīt balss modeli”.
