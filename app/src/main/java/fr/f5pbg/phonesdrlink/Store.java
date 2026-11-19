@@ -247,7 +247,14 @@ final class Store {
     String viewPos = "";              // positions des listes (liste choisie, défilement) : "cle=a,b,c|cle=a,b"
     int iaruRegion = 1;               // liste de mémoires « Modes numériques » : région IARU 1, 2 ou 3
     int colBtnBg, colBtnTx, colFreqTx, colFreqBg, colBarFg, colBarBg, colBg, colFt8A, colFt8B, colDec, colDecBtn, colOn, colDanger;   // couleurs choisies (0 = couleur d'origine)
-    int notchLevel = 1, dnrLevel = 1;   // 1 = réglage d'origine, 10 = le plus fort
+    int notchAlgo = 0, dnrAlgo = 0;   // notchAlgo : 0 = d origine, 1 = adaptatif (LMS), 2 = spectral
+    int[] notchLvs = { 1, 5, 5 };   // niveau de chaque type de DNF
+    int notchLv() { return notchLvs[Math.max(0, Math.min(2, notchAlgo))]; }
+      // dnrAlgo : 0 = léger, 1 = classique, 2 = amélioré, 3 = IA (RNNoise)
+    int[] dnrLvs = { 1, 3, 5, 5 };   // niveau de chaque type de DNR
+    int dnrLv() { return dnrLvs[Math.max(0, Math.min(3, dnrAlgo))]; }
+    // 1 = réglage d origine, 10 = le plus fort
+      // 1 = réglage d'origine, 10 = le plus fort
     String callsign = "PhoneSDRLink";
     String lastUrl = "http://websdr.ewi.utwente.nl:8901/";
     long freqHz = 7100000L;
@@ -346,7 +353,7 @@ final class Store {
     }
 
     void defaultsConfig() {
-        notchLevel = 1; dnrLevel = 1; autoReload = false; reloadSec = 30; eco = true; volPerSdr = true; voiceCmd = false; digAuto = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = colDecBtn = colOn = colDanger = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); oliDefaults(); hellDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450; ringSpeed = 100;
+        notchAlgo = 0; notchLvs = new int[] { 1, 5, 5 }; dnrAlgo = 0; dnrLvs = new int[] { 1, 3, 5, 5 }; autoReload = false; reloadSec = 30; eco = true; volPerSdr = true; voiceCmd = false; digAuto = false; barBottom = false; zoomLeft = false; zoomPos = 0; bufMs = 0; iaruRegion = 1; headsetStop = false; colBtnBg = colBtnTx = colFreqTx = colFreqBg = colBarFg = colBarBg = colBg = colFt8A = colFt8B = colDec = colDecBtn = colOn = colDanger = 0; decOverlay = true; freedvAuto = false; cwDefaults(); rttyDefaults(); pskDefaults(); oliDefaults(); hellDefaults(); sstvSave = true; sstvSens = 5; sstvLoss = 4; js8Speed = 1; decHi = ""; ringMs = 450; ringSpeed = 100;
         dark = true; autoNotch = false; autoDnr = false; keepScreen = false; spectrumZoom = true; checkUpdates = true; callsign = "PhoneSDRLink";
         lastUrl = "http://websdr.ewi.utwente.nl:8901/"; freqHz = 7100000L; mode = "LSB"; defaultsModes();
     }
@@ -402,8 +409,12 @@ final class Store {
                 else if (k.equals("DarkMode")) dark = v.trim().equals("1");
                 else if (k.equals("AutoNotch")) autoNotch = v.trim().equals("1");
                 else if (k.equals("AutoDnr")) autoDnr = v.trim().equals("1");
-                else if (k.equals("PhoneNotchLevel")) notchLevel = Math.max(1, Math.min(10, toInt(v, 1)));
-                else if (k.equals("PhoneDnrLevel")) dnrLevel = Math.max(1, Math.min(10, toInt(v, 1)));
+                else if (k.equals("PhoneNotchLevel")) notchLvs[0] = Math.max(1, Math.min(10, toInt(v, 1)));
+                else if (k.equals("PhoneNotchAlgo")) notchAlgo = Math.max(0, Math.min(2, toInt(v, 0)));
+                else if (k.equals("PhoneNotchLevels")) { String[] p = v.trim().split(","); for (int i = 0; i < 3 && i < p.length; i++) notchLvs[i] = Math.max(1, Math.min(10, toInt(p[i], notchLvs[i]))); }
+                else if (k.equals("PhoneDnrLevel")) dnrLvs[0] = Math.max(1, Math.min(10, toInt(v, 1)));
+                else if (k.equals("PhoneDnrAlgo")) dnrAlgo = Math.max(0, Math.min(3, toInt(v, 0)));
+                else if (k.equals("PhoneDnrLevels")) { String[] p = v.trim().split(","); for (int i = 0; i < 4 && i < p.length; i++) dnrLvs[i] = Math.max(1, Math.min(10, toInt(p[i], dnrLvs[i]))); }
                 else if (k.equals("PhoneAutoReload")) autoReload = v.trim().equals("1");
                 else if (k.equals("PhoneReloadSec")) { try { reloadSec = Math.max(10, Math.min(60, Integer.parseInt(v.trim()))); } catch (Exception e) { } }
                 else if (k.equals("PhoneDigAuto")) digAuto = v.trim().equals("1");
@@ -574,7 +585,7 @@ final class Store {
         Store t = new Store();
         t.favorites.clear();
         t.parse(text, cats & ~IMP_CONFIG | (cats & IMP_CONFIG));
-        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchLevel = t.notchLevel; dnrLevel = t.dnrLevel; autoReload = t.autoReload; reloadSec = t.reloadSec; volPerSdr = t.volPerSdr; voiceCmd = t.voiceCmd; barBottom = t.barBottom; zoomLeft = t.zoomLeft; zoomPos = t.zoomPos; bufMs = t.bufMs; iaruRegion = t.iaruRegion; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; colDec = t.colDec; colDecBtn = t.colDecBtn; colOn = t.colOn; colDanger = t.colDanger; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; sstvSens = t.sstvSens; sstvLoss = t.sstvLoss; js8Speed = t.js8Speed; oliTones = t.oliTones; oliBw = t.oliBw; conTones = t.conTones; conBw = t.conBw; oliAuto = t.oliAuto; oliFreq = t.oliFreq; oliMargin = t.oliMargin; oliInteg = t.oliInteg; oliThr = t.oliThr; oliRev = t.oliRev; hellVar = t.hellVar; hellAuto = t.hellAuto; hellFreq = t.hellFreq; hellSq = t.hellSq; hellInv = t.hellInv; faxLpm = t.faxLpm; faxInv = t.faxInv; faxTol = t.faxTol; faxAlign = t.faxAlign; faxTone = t.faxTone; decHi = t.decHi; ringMs = t.ringMs; ringSpeed = t.ringSpeed; callsign = t.callsign; checkUpdates = t.checkUpdates; }
+        if ((cats & IMP_CONFIG) != 0) { language = t.language.isEmpty() ? language : t.language; dark = t.dark; autoNotch = t.autoNotch; autoDnr = t.autoDnr; notchAlgo = t.notchAlgo; notchLvs = t.notchLvs.clone(); dnrAlgo = t.dnrAlgo; dnrLvs = t.dnrLvs.clone(); autoReload = t.autoReload; reloadSec = t.reloadSec; volPerSdr = t.volPerSdr; voiceCmd = t.voiceCmd; barBottom = t.barBottom; zoomLeft = t.zoomLeft; zoomPos = t.zoomPos; bufMs = t.bufMs; iaruRegion = t.iaruRegion; headsetStop = t.headsetStop; colBtnBg = t.colBtnBg; colBtnTx = t.colBtnTx; colFreqTx = t.colFreqTx; colFreqBg = t.colFreqBg; colBarFg = t.colBarFg; colBarBg = t.colBarBg; colBg = t.colBg; colFt8A = t.colFt8A; colFt8B = t.colFt8B; colDec = t.colDec; colDecBtn = t.colDecBtn; colOn = t.colOn; colDanger = t.colDanger; decOverlay = t.decOverlay; cwAutoTone = t.cwAutoTone; cwAutoSpeed = t.cwAutoSpeed; cwTone = t.cwTone; cwBw = t.cwBw; cwWpm = t.cwWpm; cwThr = t.cwThr; cwChar = t.cwChar; cwWord = t.cwWord; cwSq = t.cwSq; cwAgc = t.cwAgc; cwAfc = t.cwAfc; cwAutoBw = t.cwAutoBw; rttyBaud = t.rttyBaud; rttyShift = t.rttyShift; rttyPol = t.rttyPol; rttySq = t.rttySq; rttyFreq = t.rttyFreq; rttyUos = t.rttyUos; rttyAfc = t.rttyAfc; freedvAuto = t.freedvAuto; pskAuto = t.pskAuto; pskAfc = t.pskAfc; pskFreq = t.pskFreq; pskBaud = t.pskBaud; pskSq = t.pskSq; sstvSave = t.sstvSave; sstvSens = t.sstvSens; sstvLoss = t.sstvLoss; js8Speed = t.js8Speed; oliTones = t.oliTones; oliBw = t.oliBw; conTones = t.conTones; conBw = t.conBw; oliAuto = t.oliAuto; oliFreq = t.oliFreq; oliMargin = t.oliMargin; oliInteg = t.oliInteg; oliThr = t.oliThr; oliRev = t.oliRev; hellVar = t.hellVar; hellAuto = t.hellAuto; hellFreq = t.hellFreq; hellSq = t.hellSq; hellInv = t.hellInv; faxLpm = t.faxLpm; faxInv = t.faxInv; faxTol = t.faxTol; faxAlign = t.faxAlign; faxTone = t.faxTone; decHi = t.decHi; ringMs = t.ringMs; ringSpeed = t.ringSpeed; callsign = t.callsign; checkUpdates = t.checkUpdates; }
         if ((cats & IMP_WEBSDR) != 0) {
             for (int i = 0; i < Favorite.MAX_LISTS; i++) if (!t.favListNames[i].equals("Liste " + (i + 1)) && favListNames[i].equals("Liste " + (i + 1))) favListNames[i] = t.favListNames[i];
             for (Favorite f : t.favorites) {
@@ -615,8 +626,12 @@ final class Store {
         line(sb, "DarkMode", dark ? 1 : 0);
         line(sb, "AutoNotch", autoNotch ? 1 : 0);
         line(sb, "AutoDnr", autoDnr ? 1 : 0);
-        line(sb, "PhoneNotchLevel", notchLevel);
-        line(sb, "PhoneDnrLevel", dnrLevel);
+        line(sb, "PhoneNotchLevel", notchLvs[0]);
+        line(sb, "PhoneNotchAlgo", notchAlgo);
+        line(sb, "PhoneNotchLevels", notchLvs[0] + "," + notchLvs[1] + "," + notchLvs[2]);
+        line(sb, "PhoneDnrLevel", dnrLvs[0]);
+        line(sb, "PhoneDnrAlgo", dnrAlgo);
+        line(sb, "PhoneDnrLevels", dnrLvs[0] + "," + dnrLvs[1] + "," + dnrLvs[2] + "," + dnrLvs[3]);
         line(sb, "PhoneAutoReload", autoReload ? 1 : 0);
         line(sb, "PhoneReloadSec", reloadSec);
         line(sb, "PhoneDigAuto", digAuto ? 1 : 0);

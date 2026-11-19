@@ -794,3 +794,13 @@ voice command	comando de voz
 Voice command: "{0}"	Comando de voz: «{0}»
 Reset the voice model	Repor o modelo de voz
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	O modelo de voz segue o idioma da aplicação, com as ordens nesse idioma (em francês: stop, start, plus un, moins un). Os idiomas sem modelo de voz usam inglês (stop, start, plus one, minus one). Se mudar de idioma, use «Repor o modelo de voz».
+Noise reducer type	Tipo de redutor
+Light (phone)	Leve (telefone)
+Classic	Clássico
+Improved (MMSE-LSA)	Melhorado (MMSE-LSA)
+AI (RNNoise)	IA (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Tipos: leve (filtros do navegador, o que menos pesa no telefone), clássico (filtro espectral), melhorado (MMSE-LSA, voz menos deformada) e IA (rede neural RNNoise, o ruído pode quase desaparecer entre as palavras, usa mais processador). Cada tipo mantém o seu próprio nível.
+Notch type	Tipo de notch
+Adaptive (LMS)	Adaptativo (LMS)
+Spectral (FFT)	Espectral (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tipos: clássico (filtros notch do navegador que seguem os apitos detetados), adaptativo (um filtro aprende e subtrai continuamente os apitos estáveis; segue os que se deslocam), espectral (análise FFT: as riscas estáveis são baixadas ao nível das vizinhas). Cada tipo mantém o seu próprio nível; quanto mais alto, mais rápido e forte atua o DNF, com o risco de afetar a voz.

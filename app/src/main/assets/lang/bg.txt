@@ -794,3 +794,13 @@ voice command	гласова команда
 Voice command: "{0}"	Гласова команда: „{0}“
 Reset the voice model	Нулиране на гласовия модел
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Гласовият модел следва езика на приложението, а командите са на този език (на френски: stop, start, plus un, moins un). Езиците без гласов модел използват английски (stop, start, plus one, minus one). Ако смените езика, използвайте „Нулиране на гласовия модел“.
+Noise reducer type	Тип шумопотискане
+Light (phone)	Лек (телефон)
+Classic	Класически
+Improved (MMSE-LSA)	Подобрен (MMSE-LSA)
+AI (RNNoise)	ИИ (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Типове: лек (филтри на браузъра, най-малко натоварва телефона), класически (спектрален филтър), подобрен (MMSE-LSA, по-малко изкривен глас) и ИИ (невронна мрежа RNNoise, шумът между думите може почти да изчезне, използва повече процесор). Всеки тип запомня собственото си ниво.
+Notch type	Тип нотч
+Adaptive (LMS)	Адаптивен (LMS)
+Spectral (FFT)	Спектрален (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Типове: класически (нотч филтри на браузъра, които следват откритите свирки), адаптивен (филтър се учи и непрекъснато изважда стабилните свирки; следва и онези, които се изместват), спектрален (FFT анализ: стабилните линии се свалят до нивото на съседните). Всеки тип запомня собственото си ниво; колкото е по-високо, толкова по-бързо и по-силно действа DNF, с риск да засегне гласа.

@@ -99,6 +99,7 @@ public class MainActivity extends Activity {
     AudioManager audio;
     AudioFocusRequest focusReq;
     String bridgeScript = "";
+    String nrScript = "", nfScript = "", rnnB64 = "";   // réducteurs de bruit de SDRLink (nr.js) et poids du réseau RNNoise (rnn.b64, lu à la demande)
     FileCb fileCb;
 
     interface FileCb { void done(Uri uri); }
@@ -125,6 +126,8 @@ public class MainActivity extends Activity {
         mode = st.mode;
         bwHz = st.bwFor(mode);
         try { InputStream in = getAssets().open("bridge.js"); bridgeScript = Store.readAll(in); in.close(); } catch (Exception e) { }
+        try { InputStream in = getAssets().open("nr.js"); nrScript = Store.readAll(in); in.close(); } catch (Exception e) { }
+        try { InputStream in = getAssets().open("nf.js"); nfScript = Store.readAll(in); in.close(); } catch (Exception e) { }
         build();
         applyKeepScreen();
         applyHeadset();
@@ -821,7 +824,15 @@ public class MainActivity extends Activity {
     }
 
     // Script du pont : précédé de la mémoire tampon audio supplémentaire demandée dans SET (ms).
-    String bridgeSrc() { return "window.__sdrlinkBufMs=" + st.bufMs + ";window.__sdrlinkEco=" + st.eco + ";" + bridgeScript; }
+    String bridgeSrc() { return "window.__sdrlinkBufMs=" + st.bufMs + ";window.__sdrlinkEco=" + st.eco + ";" + nrScript + "\n" + nfScript + "\n" + (st.dnrAlgo == 3 ? rnnJs() : "") + bridgeScript; }
+
+    // Poids de RNNoise (117 Ko en base64) : lus et envoyés à la page seulement quand le type IA est choisi.
+    String rnnJs() {
+        if (rnnB64.isEmpty()) { try { InputStream in = getAssets().open("rnn.b64"); rnnB64 = Store.readAll(in).trim(); in.close(); } catch (Exception e) { } }
+        return rnnB64.isEmpty() ? "" : "window.__sdrlinkRnnB64='" + rnnB64 + "';";
+    }
+
+    void ensureRnn() { String s = rnnJs(); if (!s.isEmpty()) js("if(!window.__sdrlinkRnnB64){" + s + "}"); }
 
     // Nouvelle mémoire tampon : le script est réinstallé et la page rechargée (le tampon se choisit à la création du contexte audio).
     void applyBuffer() {
@@ -1149,7 +1160,7 @@ public class MainActivity extends Activity {
         notchSent = notchNow();
         js("if(window.__sdrlink)__sdrlink.setWatch(" + st.autoReload + ");");
         js("if(window.__sdrlink)__sdrlink.setEco(" + st.eco + ");");
-        js("if(window.__sdrlink){__sdrlink.setNotch(" + notchSent + "," + st.notchLevel + ");__sdrlink.setDnr(" + dnrNow() + "," + st.dnrLevel + ");}");
+        js("if(window.__sdrlink){__sdrlink.setNotch(" + notchSent + "," + st.notchLv() + "," + st.notchAlgo + ");__sdrlink.setDnr(" + dnrNow() + "," + st.dnrLv() + "," + st.dnrAlgo + ");}");
     }
 
     static String toSdr(String m) {
@@ -1349,6 +1360,8 @@ public class MainActivity extends Activity {
         if ("click".equals(msg)) { onPageClick(); return; }
         if (msg.startsWith("mp3|")) { recWrite(msg.substring(4)); return; }
         if (msg.equals("mp3end")) { recFinish(); return; }
+        if (msg.startsWith("nf|")) { DiagLog.add("DNF branché : " + msg.substring(3)); return; }
+        if (msg.startsWith("nr|")) { DiagLog.add("DNR branché : " + msg.substring(3)); return; }
         if (msg.startsWith("rec|")) { onRecMessage(msg.split("\\|", -1)); return; }
         if (msg.startsWith("dec|")) { onDecMessage(msg); return; }
         if (msg.startsWith("zv|")) { try { onOwnZoom(Integer.parseInt(msg.substring(3).trim())); } catch (NumberFormatException e) { } return; }

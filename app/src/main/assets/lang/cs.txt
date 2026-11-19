@@ -794,3 +794,13 @@ voice command	hlasový příkaz
 Voice command: "{0}"	Hlasový příkaz: „{0}“
 Reset the voice model	Obnovit hlasový model
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Hlasový model sleduje jazyk aplikace a příkazy jsou v tomto jazyce (ve francouzštině: stop, start, plus un, moins un). Jazyky bez hlasového modelu používají angličtinu (stop, start, plus one, minus one). Při změně jazyka použijte „Obnovit hlasový model“.
+Noise reducer type	Typ redukce šumu
+Light (phone)	Lehký (telefon)
+Classic	Klasický
+Improved (MMSE-LSA)	Vylepšený (MMSE-LSA)
+AI (RNNoise)	UI (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Typy: lehký (filtry prohlížeče, nejméně zatěžuje telefon), klasický (spektrální filtr), vylepšený (MMSE-LSA, méně zkreslený hlas) a UI (neuronová síť RNNoise, šum může mezi slovy téměř zmizet, vyžaduje více výkonu procesoru). Každý typ si pamatuje vlastní úroveň.
+Notch type	Typ notche
+Adaptive (LMS)	Adaptivní (LMS)
+Spectral (FFT)	Spektrální (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Typy: klasický (notch filtry prohlížeče sledující zjištěné hvizdy), adaptivní (filtr se učí a průběžně odečítá stabilní hvizdy; sleduje i ty, které se posouvají), spektrální (analýza FFT: stabilní čáry se sníží na úroveň sousedních). Každý typ si pamatuje vlastní úroveň; čím vyšší, tím rychleji a silněji DNF působí, s rizikem zásahu do hlasu.

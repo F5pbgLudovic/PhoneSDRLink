@@ -794,3 +794,13 @@ voice command	hangparancs
 Voice command: "{0}"	Hangparancs: „{0}”
 Reset the voice model	Hangmodell visszaállítása
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	A hangmodell az alkalmazás nyelvét követi, a parancsok ezen a nyelven vannak (franciául: stop, start, plus un, moins un). A hangmodell nélküli nyelvek angolt használnak (stop, start, plus one, minus one). Ha nyelvet vált, használja a „Hangmodell visszaállítása” gombot.
+Noise reducer type	A zajcsökkentő típusa
+Light (phone)	Könnyű (telefon)
+Classic	Klasszikus
+Improved (MMSE-LSA)	Továbbfejlesztett (MMSE-LSA)
+AI (RNNoise)	MI (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Típusok: könnyű (a böngésző szűrői, a telefont terheli a legkevésbé), klasszikus (spektrális szűrő), továbbfejlesztett (MMSE-LSA, kevésbé torzított hang) és MI (RNNoise neurális hálózat, a zaj a szavak között szinte eltűnhet, több processzort használ). Minden típus megjegyzi a saját szintjét.
+Notch type	Notch típusa
+Adaptive (LMS)	Adaptív (LMS)
+Spectral (FFT)	Spektrális (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Típusok: klasszikus (a böngésző notch szűrői, amelyek követik az észlelt sípolásokat), adaptív (egy szűrő tanul, és folyamatosan kivonja a stabil sípolásokat; követi az elmozdulókat is), spektrális (FFT elemzés: a stabil vonalakat a szomszédaik szintjére csökkenti). Minden típus megjegyzi a saját szintjét; minél magasabb, annál gyorsabban és erősebben hat a DNF, a hang sérülésének kockázatával.

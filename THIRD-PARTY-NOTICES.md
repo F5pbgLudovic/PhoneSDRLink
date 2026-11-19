@@ -30,3 +30,44 @@ Icône « partage » (app/src/main/res/drawable/ic_share.xml) : icône « share 
 Commande vocale du scan (1.26) : reconnaissance vocale hors ligne avec **Vosk** (Alpha Cephei, https://github.com/alphacep/vosk-api, bibliothèque `com.alphacephei:vosk-android` 0.3.47, licence Apache 2.0) et **JNA** (`net.java.dev.jna:jna` 5.13.0, Apache 2.0 / LGPL 2.1), embarqués dans l'APK. Les modèles de langue (« vosk-model-small-xx », Apache 2.0 d'après le site de Vosk) ne sont **pas** dans l'APK : ils sont téléchargés une fois, à la demande de l'utilisateur, depuis https://alphacephei.com/vosk/models dans le dossier privé de l'application. / Voice command (1.26): offline speech recognition with Vosk (Apache 2.0) and JNA (Apache 2.0 / LGPL 2.1) bundled in the APK; the small language models are downloaded once, on request, from alphacephei.com into the app's private folder.
 
 Le texte complet de la GPL v3 est dans le fichier LICENSE à la racine du dépôt.
+
+RNNoise 0.1.1 (1.30) : le réducteur de bruit « IA » du DNR est le réseau de neurones **RNNoise** (Jean-Marc Valin, Mozilla, Xiph.Org ; https://github.com/xiph/rnnoise), porté en JavaScript avec ses poids d origine (app/src/main/assets/nr.js et rnn.b64), licence BSD 3 clauses, texte ci-dessous. Les deux autres types du DNR (classique Wiener, amélioré MMSE-LSA) et les deux nouveaux types du DNF (adaptatif LMS, spectral FFT) sont du code écrit pour SDRLink et PhoneSDRLink (GPL v3).
+
+/ RNNoise 0.1.1 (1.30): the "AI" noise reducer of the DNR is the **RNNoise** neural network (Jean-Marc Valin, Mozilla, Xiph.Org), ported to JavaScript with its original weights, 3-clause BSD licence, text below.
+
+## Licence de RNNoise / RNNoise licence
+
+
+```
+Copyright (c) 2017, Mozilla
+Copyright (c) 2007-2017, Jean-Marc Valin
+Copyright (c) 2005-2017, Xiph.Org Foundation
+Copyright (c) 2003-2004, Mark Borgerding
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+- Neither the name of the Xiph.Org Foundation nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION
+OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```

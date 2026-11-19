@@ -794,3 +794,13 @@ voice command	komenda głosowa
 Voice command: "{0}"	Komenda głosowa: „{0}”
 Reset the voice model	Zresetuj model głosowy
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Model głosowy podąża za językiem aplikacji, a polecenia są w tym języku (po francusku: stop, start, plus un, moins un). Języki bez modelu głosowego używają angielskiego (stop, start, plus one, minus one). Po zmianie języka użyj „Zresetuj model głosowy”.
+Noise reducer type	Typ reduktora szumu
+Light (phone)	Lekki (telefon)
+Classic	Klasyczny
+Improved (MMSE-LSA)	Ulepszony (MMSE-LSA)
+AI (RNNoise)	SI (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Typy: lekki (filtry przeglądarki, najmniej obciąża telefon), klasyczny (filtr widmowy), ulepszony (MMSE-LSA, mniej zniekształcony głos) i SI (sieć neuronowa RNNoise, szum może prawie zniknąć między słowami, zużywa więcej procesora). Każdy typ zachowuje własny poziom.
+Notch type	Typ notcha
+Adaptive (LMS)	Adaptacyjny (LMS)
+Spectral (FFT)	Widmowy (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Typy: klasyczny (filtry notch przeglądarki podążające za wykrytymi gwizdami), adaptacyjny (filtr uczy się i stale odejmuje stabilne gwizdy; podąża też za dryfującymi), widmowy (analiza FFT: stabilne prążki są obniżane do poziomu sąsiednich). Każdy typ zachowuje własny poziom; im wyższy, tym szybciej i mocniej działa DNF, z ryzykiem naruszenia głosu.

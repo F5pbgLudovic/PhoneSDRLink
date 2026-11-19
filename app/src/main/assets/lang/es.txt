@@ -794,3 +794,13 @@ voice command	comando de voz
 Voice command: "{0}"	Comando de voz: «{0}»
 Reset the voice model	Restablecer el modelo de voz
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	El modelo de voz sigue el idioma de la aplicación, con las órdenes en ese idioma (en francés: stop, start, plus un, moins un). Los idiomas sin modelo de voz usan inglés (stop, start, plus one, minus one). Si cambia de idioma, use «Restablecer el modelo de voz».
+Noise reducer type	Tipo de reductor
+Light (phone)	Ligero (teléfono)
+Classic	Clásico
+Improved (MMSE-LSA)	Mejorado (MMSE-LSA)
+AI (RNNoise)	IA (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Tipos: ligero (filtros del navegador, el que menos carga el teléfono), clásico (filtro espectral), mejorado (MMSE-LSA, voz menos deformada) e IA (red neuronal RNNoise, el ruido puede casi desaparecer entre palabras, usa más procesador). Cada tipo conserva su propio nivel.
+Notch type	Tipo de notch
+Adaptive (LMS)	Adaptativo (LMS)
+Spectral (FFT)	Espectral (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tipos: clásico (filtros notch del navegador que siguen los silbidos detectados), adaptativo (un filtro aprende y resta continuamente los silbidos estables; sigue los que derivan), espectral (análisis por FFT: las rayas estables se bajan al nivel de sus vecinas). Cada tipo conserva su propio nivel; cuanto más alto, más rápido y fuerte actúa el DNF, con riesgo de afectar a la voz.

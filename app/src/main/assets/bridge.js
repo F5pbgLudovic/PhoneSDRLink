@@ -89,8 +89,8 @@
         ctx.__sdrlinkOut = g;
         L.gains.push(g);
         L.ctxs.push(ctx);
-        if (L.notchOn) notch(ctx, true);
-        if (L.dnrOn) dnr(ctx, true);
+        if (L.notchOn) { if (L.notchAlgo === 0) notch(ctx, true); nf(ctx, L.notchAlgo > 0); }
+        if (L.dnrOn) { dnr(ctx, L.dnrAlgo === 0); nr(ctx, L.dnrAlgo > 0); }
         if (L.watchOn) watch(ctx);
       }
       return ctx.__sdrlinkIn;
@@ -132,7 +132,8 @@
     };
     // Chaîne : entrée → [notch] → [réducteur de bruit] → gain de sortie. Les liens sont refaits à chaque changement.
     var rewire = function (ctx) {
-      var input = ctx.__sdrlinkIn, out = ctx.__sdrlinkOut, n = ctx.__sdrlinkNotch, d = ctx.__sdrlinkDnr;
+      var input = ctx.__sdrlinkIn, out = ctx.__sdrlinkOut, n = ctx.__sdrlinkNotch, d = ctx.__sdrlinkDnr, q = ctx.__sdrlinkNr;
+      var f = ctx.__sdrlinkNf;
       if (!input) return;
       var links = ctx.__sdrlinkLinks || [];
       for (var i = 0; i < links.length; i++) { try { origDisconnect.call(links[i][0], links[i][1]); } catch (e) { } }
@@ -140,7 +141,9 @@
       var prev = input;
       var link = function (a, b) { origConnect.call(a, b); links.push([a, b]); };
       if (n && n.on) { link(prev, n.f[0]); prev = n.f[NOTCHES - 1]; }
+      if (f && f.on && f.node) { link(prev, f.node); prev = f.node; }
       if (d && d.on) { link(prev, d.input); prev = d.output; }
+      if (q && q.on && q.node) { link(prev, q.node); prev = q.node; }
       link(prev, out);
     };
 
@@ -196,12 +199,78 @@
         d.g[k].gain.setTargetAtTime(Math.pow(10, -d.att[k] / 20), ctx.currentTime, 0.04);
       }
     };
+    // Types de réducteur de bruit (1.30), les mêmes que dans SDRLink : 0 = léger (filtres du navigateur, le DNR d'origine du téléphone),
+    // 1 = classique (Wiener), 2 = amélioré (MMSE-LSA), 3 = IA (RNNoise). Les types 1 à 3 passent par le code de nr.js (celui de SDRLink,
+    // indices 0 à 2 là-bas) dans un AudioWorklet (pages https) ou, sinon, un ScriptProcessor ; niveau de 1 à 10 pour chacun.
+    L.dnrAlgo = 0; L.dnrLvl = 1;
+    L.rnnW = function () {
+      if (!L.__rnnW || !L.__rnnW.length) {
+        try { var b = atob(window.__sdrlinkRnnB64 || ''), u = new Int8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i) << 24 >> 24; L.__rnnW = u; }
+        catch (e) { L.__rnnW = new Int8Array(0); }
+      }
+      return L.__rnnW;
+    };
+    var nrUrl = null;
+    var nrModule = function () {
+      if (!nrUrl) {
+        var src = SdrlinkDnr.toString() + '\n' + SdrlinkLsa.toString() + '\n' + SdrlinkRnn.toString() + '\n' + SdrlinkNr.toString() +
+          '\nregisterProcessor(\'sdrlink-dnr\', class extends AudioWorkletProcessor {\n' +
+          ' constructor(o) { super(); var p = o && o.processorOptions || {}, c = this.c = new SdrlinkNr(sampleRate, p.w); c.set(p.algo, p.lvl);\n' +
+          '  this.port.onmessage = function (e) { if (e.data && e.data.lvl) c.set(e.data.algo, e.data.lvl); if (e.data && e.data.reset) c.reset(); }; }\n' +
+          ' process(inp, out) { var x = inp[0] && inp[0][0], y = out[0] && out[0][0]; if (!x) { if (y) y.fill(0); return true; } this.c.process(x, y); return true; }\n});\n';
+        nrUrl = URL.createObjectURL(new Blob([src], { type: 'application/javascript' }));
+      }
+      return nrUrl;
+    };
+    var nrScript = function (ctx, q) {
+      var bs = 256;
+      while (bs * 2 <= ctx.sampleRate * 0.045 && bs < 4096) bs *= 2;
+      var sp = ctx.createScriptProcessor(bs, 1, 1), core = new SdrlinkNr(ctx.sampleRate, L.rnnW());
+      sp.channelCount = 1;
+      sp.channelCountMode = 'explicit';
+      core.set(L.dnrAlgo - 1, L.dnrLvl);
+      sp.onaudioprocess = function (e) { core.process(e.inputBuffer.getChannelData(0), e.outputBuffer.getChannelData(0)); };
+      q.core = core; q.kind = 'script';
+      return sp;
+    };
+    var nr = function (ctx, on) {
+      var q = ctx.__sdrlinkNr;
+      if (!ctx.__sdrlinkIn) return;
+      if (!q) {
+        if (!on) return;
+        q = ctx.__sdrlinkNr = { on: false, node: null, kind: '' };
+        var ready = function (node) { q.node = node; __post("nr|on|" + q.kind + "|" + (L.dnrAlgo - 1) + "|" + L.dnrLvl); if (q.on) rewire(ctx); };
+        var fallback = function () { try { if (ctx.createScriptProcessor) ready(nrScript(ctx, q)); } catch (e) { } };
+        try {
+          if (!ctx.audioWorklet || !window.AudioWorkletNode) throw new Error('no AudioWorklet');
+          ctx.audioWorklet.addModule(nrModule()).then(function () {
+            var node = new AudioWorkletNode(ctx, 'sdrlink-dnr', { numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [1], channelCount: 1, channelCountMode: 'explicit',
+              processorOptions: { w: L.rnnW(), algo: L.dnrAlgo - 1, lvl: L.dnrLvl } });
+            q.kind = 'worklet';
+            node.port.postMessage({ algo: L.dnrAlgo - 1, lvl: L.dnrLvl });
+            ready(node);
+          }).catch(fallback);
+        } catch (e) { fallback(); }
+      }
+      if (on === q.on) return;
+      q.on = on;
+      if (on && q.node) { if (q.kind === 'worklet') q.node.port.postMessage({ reset: 1 }); else if (q.core) q.core.reset(); }
+      rewire(ctx);
+    };
     L.dnrOn = false;
-    L.setDnr = function (on, lvl) {
-      lvl = Math.max(1, Math.min(10, lvl | 0 || 1)) - 1;
-      DNR_OPEN = 6 + lvl * 0.67; DNR_MAX = 14 + lvl * 1.8; DNR_SLOPE = 2.3 + lvl * 0.13;
+    L.setDnr = function (on, lvl, algo) {
+      L.dnrLvl = Math.max(1, Math.min(10, lvl | 0 || 1));
+      L.dnrAlgo = Math.max(0, Math.min(3, algo | 0));
+      if (L.dnrAlgo === 3 && L.rnnW().length !== 87503) L.dnrAlgo = 2;   // poids de RNNoise absents : on retombe sur l'amélioré
+      var l0 = L.dnrLvl - 1;
+      DNR_OPEN = 6 + l0 * 0.67; DNR_MAX = 14 + l0 * 1.8; DNR_SLOPE = 2.3 + l0 * 0.13;
       L.dnrOn = !!on;
-      for (var i = 0; i < L.ctxs.length; i++) dnr(L.ctxs[i], L.dnrOn);
+      for (var i = 0; i < L.ctxs.length; i++) {
+        var c = L.ctxs[i], q = c.__sdrlinkNr;
+        if (q && q.node) { if (q.kind === 'worklet') q.node.port.postMessage({ algo: L.dnrAlgo - 1, lvl: L.dnrLvl }); else if (q.core && L.dnrAlgo > 0) q.core.set(L.dnrAlgo - 1, L.dnrLvl); }
+        if (L.dnrOn && L.dnrAlgo > 0 || c.__sdrlinkDnr) dnr(c, L.dnrOn && L.dnrAlgo === 0);
+        nr(c, L.dnrOn && L.dnrAlgo > 0);
+      }
     };
     setInterval(function () {
       if (!L.dnrOn) return;
@@ -292,14 +361,72 @@
     var rebuildDnr = function (ctx) {
       ctx.__sdrlinkDnr = null;
       dnr(ctx, true);
-    };    L.notchOn = false;
-    L.setNotch = function (on, lvl) {
-      lvl = Math.max(1, Math.min(10, lvl | 0 || 1)) - 1;
+    };    // Types de notch automatique (1.30) : 0 = d'origine (filtres coupe-bande du navigateur), 1 = adaptatif (annulateur de raies
+    // NLMS), 2 = spectral (FFT). Les types 1 et 2 passent par le code de nf.js (indices 0 et 1 là-bas), dans un AudioWorklet
+    // (pages https) ou, sinon, un ScriptProcessor. Niveau de 1 à 10 pour chacun.
+    L.notchAlgo = 0; L.notchLvl = 1;
+    var nfUrl = null;
+    var nfModule = function () {
+      if (!nfUrl) {
+        var src = SdrlinkAnf.toString() + '\n' + SdrlinkSpf.toString() + '\n' + SdrlinkNf.toString() +
+          '\nregisterProcessor(\'sdrlink-nf\', class extends AudioWorkletProcessor {\n' +
+          ' constructor(o) { super(); var p = o && o.processorOptions || {}, c = this.c = new SdrlinkNf(sampleRate); c.set(p.algo, p.lvl);\n' +
+          '  this.port.onmessage = function (e) { if (e.data && e.data.lvl) c.set(e.data.algo, e.data.lvl); if (e.data && e.data.reset) c.reset(); }; }\n' +
+          ' process(inp, out) { var x = inp[0] && inp[0][0], y = out[0] && out[0][0]; if (!x) { if (y) y.fill(0); return true; } this.c.process(x, y); return true; }\n});\n';
+        nfUrl = URL.createObjectURL(new Blob([src], { type: 'application/javascript' }));
+      }
+      return nfUrl;
+    };
+    var nfScript = function (ctx, q) {
+      var bs = 256;
+      while (bs * 2 <= ctx.sampleRate * 0.045 && bs < 4096) bs *= 2;
+      var sp = ctx.createScriptProcessor(bs, 1, 1), core = new SdrlinkNf(ctx.sampleRate);
+      sp.channelCount = 1;
+      sp.channelCountMode = 'explicit';
+      core.set(L.notchAlgo - 1, L.notchLvl);
+      sp.onaudioprocess = function (e) { core.process(e.inputBuffer.getChannelData(0), e.outputBuffer.getChannelData(0)); };
+      q.core = core; q.kind = 'script';
+      return sp;
+    };
+    var nf = function (ctx, on) {
+      var q = ctx.__sdrlinkNf;
+      if (!ctx.__sdrlinkIn) return;
+      if (!q) {
+        if (!on) return;
+        q = ctx.__sdrlinkNf = { on: false, node: null, kind: '' };
+        var ready = function (node) { q.node = node; __post('nf|on|' + q.kind + '|' + (L.notchAlgo - 1) + '|' + L.notchLvl); if (q.on) rewire(ctx); };
+        var fallback = function () { try { if (ctx.createScriptProcessor) ready(nfScript(ctx, q)); } catch (e) { } };
+        try {
+          if (!ctx.audioWorklet || !window.AudioWorkletNode) throw new Error('no AudioWorklet');
+          ctx.audioWorklet.addModule(nfModule()).then(function () {
+            var node = new AudioWorkletNode(ctx, 'sdrlink-nf', { numberOfInputs: 1, numberOfOutputs: 1, outputChannelCount: [1], channelCount: 1, channelCountMode: 'explicit',
+              processorOptions: { algo: L.notchAlgo - 1, lvl: L.notchLvl } });
+            q.kind = 'worklet';
+            node.port.postMessage({ algo: L.notchAlgo - 1, lvl: L.notchLvl });
+            ready(node);
+          }).catch(fallback);
+        } catch (e) { fallback(); }
+      }
+      if (on === q.on) return;
+      q.on = on;
+      if (on && q.node) { if (q.kind === 'worklet') q.node.port.postMessage({ reset: 1 }); else if (q.core) q.core.reset(); }
+      rewire(ctx);
+    };
+    L.notchOn = false;
+    L.setNotch = function (on, lvl, algo) {
+      L.notchLvl = Math.max(1, Math.min(10, lvl | 0 || 1));
+      L.notchAlgo = Math.max(0, Math.min(2, algo | 0));
+      lvl = L.notchLvl - 1;
       var old = nAct;
       nAct = NL_COUNT[lvl]; ABOVE = NL_ABOVE[lvl]; HOLD = NL_HOLD[lvl]; nWidth = NL_WIDTH[lvl];
       if (nAct < old) for (var c = 0; c < L.ctxs.length; c++) { var nn = L.ctxs[c].__sdrlinkNotch; if (nn) for (var j = nAct; j < NOTCHES; j++) release(L.ctxs[c], nn, j); }
       L.notchOn = !!on;
-      for (var i = 0; i < L.ctxs.length; i++) notch(L.ctxs[i], L.notchOn);
+      for (var i = 0; i < L.ctxs.length; i++) {
+        var cx = L.ctxs[i], q = cx.__sdrlinkNf;
+        if (q && q.node) { if (q.kind === 'worklet') q.node.port.postMessage({ algo: L.notchAlgo - 1, lvl: L.notchLvl }); else if (q.core && L.notchAlgo > 0) q.core.set(L.notchAlgo - 1, L.notchLvl); }
+        if (L.notchOn && L.notchAlgo === 0 || cx.__sdrlinkNotch) notch(cx, L.notchOn && L.notchAlgo === 0);
+        nf(cx, L.notchOn && L.notchAlgo > 0);
+      }
     };
     setInterval(function () {
       if (!L.notchOn) return;

@@ -794,3 +794,13 @@ voice command	glasovni ukaz
 Voice command: "{0}"	Glasovni ukaz: „{0}“
 Reset the voice model	Ponastavi glasovni model
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Glasovni model sledi jeziku aplikacije, ukazi pa so v tem jeziku (v francoščini: stop, start, plus un, moins un). Jeziki brez glasovnega modela uporabljajo angleščino (stop, start, plus one, minus one). Če zamenjate jezik, uporabite „Ponastavi glasovni model“.
+Noise reducer type	Vrsta zmanjševalnika šuma
+Light (phone)	Lahek (telefon)
+Classic	Klasičen
+Improved (MMSE-LSA)	Izboljšan (MMSE-LSA)
+AI (RNNoise)	UI (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Vrste: lahek (filtri brskalnika, telefon najmanj obremenjuje), klasičen (spektralni filter), izboljšan (MMSE-LSA, manj popačen glas) in UI (nevronska mreža RNNoise, šum lahko med besedami skoraj izgine, porabi več procesorja). Vsaka vrsta ohrani svojo raven.
+Notch type	Vrsta notcha
+Adaptive (LMS)	Prilagodljiv (LMS)
+Spectral (FFT)	Spektralni (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Vrste: klasičen (notch filtri brskalnika, ki sledijo zaznane žvižge), prilagodljiv (filter se uči in sproti odšteva stabilne žvižge; sledi tudi tistim, ki se premikajo), spektralni (analiza FFT: stabilne črte se znižajo na raven sosednjih). Vsaka vrsta ohrani svojo raven; višja ko je, hitreje in močneje deluje DNF, s tveganjem, da prizadene glas.

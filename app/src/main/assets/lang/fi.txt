@@ -794,3 +794,13 @@ voice command	äänikomento
 Voice command: "{0}"	Äänikomento: ”{0}”
 Reset the voice model	Nollaa äänimalli
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Äänimalli seuraa sovelluksen kieltä, ja komennot ovat tällä kielellä (ranskaksi: stop, start, plus un, moins un). Kielet ilman äänimallia käyttävät englantia (stop, start, plus one, minus one). Jos vaihdat kieltä, käytä ”Nollaa äänimalli”.
+Noise reducer type	Kohinanvaimentimen tyyppi
+Light (phone)	Kevyt (puhelin)
+Classic	Klassinen
+Improved (MMSE-LSA)	Parannettu (MMSE-LSA)
+AI (RNNoise)	tekoäly (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Tyypit: kevyt (selaimen suodattimet, säästää puhelinta eniten), klassinen (spektrisuodatin), parannettu (MMSE-LSA, vähemmän vääristynyt ääni) ja tekoäly (RNNoise-neuroverkko, kohina voi lähes kadota sanojen välillä, käyttää enemmän suoritinta). Kukin tyyppi muistaa oman tasonsa.
+Notch type	Notch-tyyppi
+Adaptive (LMS)	Mukautuva (LMS)
+Spectral (FFT)	Spektri (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tyypit: klassinen (selaimen notch-suodattimet, jotka seuraavat havaittuja vinkunoita), mukautuva (suodatin oppii ja vähentää jatkuvasti vakaat vinkunat; se seuraa myös ajelehtivia), spektri (FFT-analyysi: vakaat viivat lasketaan naapurien tasolle). Kukin tyyppi muistaa oman tasonsa; mitä korkeampi, sitä nopeammin ja voimakkaammin DNF toimii, ja se voi vaikuttaa ääneen.

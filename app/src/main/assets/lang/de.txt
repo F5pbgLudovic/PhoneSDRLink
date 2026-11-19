@@ -794,3 +794,13 @@ voice command	Sprachbefehl
 Voice command: "{0}"	Sprachbefehl: „{0}“
 Reset the voice model	Sprachmodell zurücksetzen
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Das Sprachmodell folgt der Sprache der App, mit den Befehlen in dieser Sprache (auf Französisch: stop, start, plus un, moins un). Sprachen ohne Sprachmodell verwenden Englisch (stop, start, plus one, minus one). Wenn Sie die Sprache wechseln, verwenden Sie „Sprachmodell zurücksetzen“.
+Noise reducer type	Art des Rauschminderers
+Light (phone)	Leicht (Telefon)
+Classic	Klassisch
+Improved (MMSE-LSA)	Verbessert (MMSE-LSA)
+AI (RNNoise)	KI (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Arten: leicht (Browser-Filter, schont das Telefon am meisten), klassisch (Spektralfilter), verbessert (MMSE-LSA, weniger verzerrte Stimme) und KI (neuronales Netz RNNoise, das Rauschen kann zwischen den Wörtern fast verschwinden, braucht mehr Rechenleistung). Jede Art behält ihre eigene Stufe.
+Notch type	Notch-Art
+Adaptive (LMS)	Adaptiv (LMS)
+Spectral (FFT)	Spektral (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Arten: klassisch (Notch-Filter des Browsers, die den erkannten Pfeiftönen folgen), adaptiv (ein Filter lernt und zieht stabile Pfeiftöne laufend ab; er folgt auch wandernden), spektral (FFT-Analyse: stabile Linien werden auf den Pegel ihrer Nachbarn abgesenkt). Jede Art behält ihre eigene Stufe; je höher sie ist, desto schneller und stärker wirkt der DNF, mit dem Risiko, die Stimme zu beeinträchtigen.

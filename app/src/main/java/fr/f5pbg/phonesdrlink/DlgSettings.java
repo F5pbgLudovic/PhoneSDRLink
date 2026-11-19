@@ -193,7 +193,26 @@ final class DlgSettings {
     // Texte des boutons DNF / DNR : le réglage (niveau 1 à 10, ou OFF) est visible dans le bouton.
     static String filterLabel(Store st, boolean dnf) {
         boolean on = dnf ? st.autoNotch : st.autoDnr;
-        return (dnf ? Lang.T("Notch automatique (DNF)", "Auto notch (DNF)") : Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)")) + " : " + (on ? String.valueOf(dnf ? st.notchLevel : st.dnrLevel) : "OFF");
+        return (dnf ? Lang.T("Notch automatique (DNF)", "Auto notch (DNF)") : Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)")) + " : " + (on ? (dnf ? nfName(st.notchAlgo) + " " + st.notchLv() : dnrName(st.dnrAlgo) + " " + st.dnrLv()) : "OFF");
+    }
+
+    // Types de notch automatique : celui d origine, plus l adaptatif (annulateur de raies LMS) et le spectral (FFT).
+    static String nfName(int i) {
+        switch (i) {
+            case 1: return Lang.T("Adaptatif (LMS)", "Adaptive (LMS)");
+            case 2: return Lang.T("Spectral (FFT)", "Spectral (FFT)");
+            default: return Lang.T("Classique", "Classic");
+        }
+    }
+
+    // Types de réducteur de bruit : les mêmes que dans SDRLink (classique, amélioré, IA) plus le DNR léger d origine du téléphone.
+    static String dnrName(int i) {
+        switch (i) {
+            case 1: return Lang.T("Classique", "Classic");
+            case 2: return Lang.T("Amélioré (MMSE-LSA)", "Improved (MMSE-LSA)");
+            case 3: return Lang.T("IA (RNNoise)", "AI (RNNoise)");
+            default: return Lang.T("Léger (téléphone)", "Light (phone)");
+        }
     }
 
     static String reloadLabel(Store st) {
@@ -223,13 +242,40 @@ final class DlgSettings {
     static void showFilter(final MainActivity a, final Button owner, final boolean dnf) {
         final Store st = a.st;
         LinearLayout col = Ui.column(a);
-        Dialog fd = Ui.window(a, dnf ? Lang.T("Notch automatique (DNF)", "Auto notch (DNF)") : Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)"), Ui.scroll(a, col), false);
+        final Dialog fd = Ui.window(a, dnf ? Lang.T("Notch automatique (DNF)", "Auto notch (DNF)") : Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)"), Ui.scroll(a, col), false);
+        if (dnf) {
+            // Type de notch : en choisir un met le DNF en marche. Chaque type garde son niveau.
+            String[] nn = new String[3];
+            for (int i = 0; i < 3; i++) nn[i] = nfName(i);
+            DlgDecoder.choice(a, col, Lang.T("Type de notch", "Notch type"), nn, st.notchAlgo, new DlgDecoder.Pick() {
+                public void chose(int i) {
+                    st.notchAlgo = i; st.autoNotch = true; st.save();
+                    a.applyAudio(); Ui.paint(owner, true, Ui.on()); owner.setText(filterLabel(st, true));
+                    fd.dismiss(); showFilter(a, owner, true);
+                }
+            });
+        }
+        if (!dnf) {
+            // Type de réducteur : mêmes types que SDRLink ; en choisir un met le DNR en marche. Chaque type garde son niveau.
+            String[] names = new String[4];
+            for (int i = 0; i < 4; i++) names[i] = dnrName(i);
+            DlgDecoder.choice(a, col, Lang.T("Type de réducteur", "Noise reducer type"), names, st.dnrAlgo, new DlgDecoder.Pick() {
+                public void chose(int i) {
+                    st.dnrAlgo = i; st.autoDnr = true; st.save();
+                    if (i == 3) a.ensureRnn();
+                    a.applyAudio(); Ui.paint(owner, true, Ui.on()); owner.setText(filterLabel(st, false));
+                    fd.dismiss(); showFilter(a, owner, false);   // la fenêtre est refaite pour afficher le niveau de ce type
+                }
+            });
+        }
         col.addView(levelRow(a, toggle(a, dnf ? Lang.T("Notch automatique (DNF)", "Auto notch (DNF)") : Lang.T("Réducteur de bruit (DNR)", "Noise reducer (DNR)"), dnf ? st.autoNotch : st.autoDnr, new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton b, boolean on) { if (dnf) st.autoNotch = on; else st.autoDnr = on; st.save(); a.applyAudio(); Ui.paint(owner, on, Ui.on()); owner.setText(filterLabel(st, dnf)); }
-        }), dnf ? st.notchLevel : st.dnrLevel, new Ui.Index() { public void chose(int i) { if (dnf) st.notchLevel = i + 1; else st.dnrLevel = i + 1; st.save(); a.applyAudio(); owner.setText(filterLabel(st, dnf)); } }));
+        }), dnf ? st.notchLv() : st.dnrLv(), new Ui.Index() { public void chose(int i) { if (dnf) st.notchLvs[st.notchAlgo] = i + 1; else st.dnrLvs[st.dnrAlgo] = i + 1; st.save(); a.applyAudio(); owner.setText(filterLabel(st, dnf)); } }));
         col.addView(Ui.small(a, dnf
             ? Lang.T("Repère les sifflements fixes (porteuses) dans le son et les atténue automatiquement. Le niveau, de 1 (réglage d'origine) à 10, augmente le nombre de sifflements traités et la force de l'action. Non appliqué en CW ni en mode numérique (DATA, décodeurs).", "Detects steady whistles (carriers) in the sound and attenuates them automatically. The level, from 1 (original setting) to 10, increases the number of whistles handled and the strength of the action. Not applied in CW or in digital modes (DATA, decoders).")
             : Lang.T("Atténue le souffle de fond quand il n'y a pas de signal utile. Le niveau, de 1 (léger) à 10 (fort), règle la force de la réduction ; un niveau élevé peut rendre la voix un peu métallique. Non appliqué pendant un décodeur numérique.", "Attenuates the background hiss when there is no useful signal. The level, from 1 (light) to 10 (strong), sets the strength of the reduction; a high level can make voices sound slightly metallic. Not applied while a digital decoder is running.")));
+        if (dnf) col.addView(Ui.small(a, Lang.T("Types : classique (filtres coupe-bande du navigateur qui suivent les raies repérées), adaptatif (un filtre apprend et retranche en continu les sifflements stables ; il suit ceux qui dérivent), spectral (analyse par FFT : les raies stables sont ramenées au niveau de leurs voisines). Chaque type garde son propre niveau ; plus il est élevé, plus le DNF réagit vite et fort, au risque de toucher la voix.", "Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.")));
+        if (!dnf) col.addView(Ui.small(a, Lang.T("Types : léger (filtres du navigateur, le plus économe pour le téléphone), classique (filtre spectral), amélioré (MMSE-LSA, voix moins déformée) et IA (réseau de neurones RNNoise : le bruit peut presque disparaître entre les mots, mais le processeur travaille davantage). Chaque type garde son propre niveau.", "Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.")));
         Ui.closeOnTap(fd, col);
         fd.show();
     }

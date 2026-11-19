@@ -794,3 +794,13 @@ voice command	häälkäsk
 Voice command: "{0}"	Häälkäsk: „{0}“
 Reset the voice model	Lähtesta häälmudel
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Häälmudel järgib rakenduse keelt ja käsud on selles keeles (prantsuse keeles: stop, start, plus un, moins un). Keeled, millel häälmudelit pole, kasutavad inglise keelt (stop, start, plus one, minus one). Keele vahetamisel kasutage „Lähtesta häälmudel“.
+Noise reducer type	Müravähendi tüüp
+Light (phone)	Kerge (telefon)
+Classic	Klassikaline
+Improved (MMSE-LSA)	Täiustatud (MMSE-LSA)
+AI (RNNoise)	tehisintellekt (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Tüübid: kerge (brauseri filtrid, koormab telefoni kõige vähem), klassikaline (spektrifilter), täiustatud (MMSE-LSA, vähem moonutatud hääl) ja tehisintellekt (RNNoise'i närvivõrk, müra võib sõnade vahel peaaegu kaduda, kasutab rohkem protsessorit). Iga tüüp jätab meelde oma taseme.
+Notch type	Notchi tüüp
+Adaptive (LMS)	Adaptiivne (LMS)
+Spectral (FFT)	Spektraalne (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tüübid: klassikaline (brauseri notch-filtrid, mis järgivad leitud vilesid), adaptiivne (filter õpib ja lahutab pidevalt stabiilsed vilesid; järgib ka triivivaid), spektraalne (FFT-analüüs: stabiilsed jooned viiakse naabrite tasemele). Iga tüüp jätab meelde oma taseme; mida kõrgem, seda kiiremini ja tugevamalt DNF toimib, riskiga häält mõjutada.

@@ -794,3 +794,13 @@ voice command	röstkommando
 Voice command: "{0}"	Röstkommando: ”{0}”
 Reset the voice model	Återställ röstmodellen
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Röstmodellen följer appens språk, med kommandona på det språket (på franska: stop, start, plus un, moins un). Språk utan röstmodell använder engelska (stop, start, plus one, minus one). Om du byter språk, använd ”Återställ röstmodellen”.
+Noise reducer type	Typ av brusreducering
+Light (phone)	Lätt (telefon)
+Classic	Klassisk
+Improved (MMSE-LSA)	Förbättrad (MMSE-LSA)
+AI (RNNoise)	AI (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Typer: lätt (webbläsarens filter, skonsammast för telefonen), klassisk (spektralfilter), förbättrad (MMSE-LSA, mindre förvrängd röst) och AI (neuralt nätverk RNNoise, bruset kan nästan försvinna mellan orden, använder mer processor). Varje typ behåller sin egen nivå.
+Notch type	Notchtyp
+Adaptive (LMS)	Adaptiv (LMS)
+Spectral (FFT)	Spektral (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Typer: klassisk (webbläsarens notchfilter som följer de funna tjuten), adaptiv (ett filter lär sig och drar kontinuerligt bort stabila tjut; det följer även dem som driver), spektral (FFT-analys: stabila linjer sänks till grannarnas nivå). Varje typ behåller sin egen nivå; ju högre, desto snabbare och kraftigare verkar DNF, med risk att påverka rösten.

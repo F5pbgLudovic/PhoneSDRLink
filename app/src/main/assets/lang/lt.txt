@@ -794,3 +794,13 @@ voice command	balso komanda
 Voice command: "{0}"	Balso komanda: „{0}“
 Reset the voice model	Atkurti balso modelį
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Balso modelis seka programos kalbą, o komandos yra tos kalbos (prancūziškai: stop, start, plus un, moins un). Kalbos be balso modelio naudoja anglų kalbą (stop, start, plus one, minus one). Pakeitę kalbą, naudokite „Atkurti balso modelį“.
+Noise reducer type	Triukšmo mažinimo tipas
+Light (phone)	Lengvas (telefonas)
+Classic	Klasikinis
+Improved (MMSE-LSA)	Patobulintas (MMSE-LSA)
+AI (RNNoise)	DI (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Tipai: lengvas (naršyklės filtrai, telefoną apkrauna mažiausiai), klasikinis (spektrinis filtras), patobulintas (MMSE-LSA, mažiau iškraipytas balsas) ir DI (neuroninis tinklas RNNoise, triukšmas tarp žodžių gali beveik išnykti, naudoja daugiau procesoriaus). Kiekvienas tipas prisimena savo lygį.
+Notch type	Notch tipas
+Adaptive (LMS)	Adaptyvus (LMS)
+Spectral (FFT)	Spektrinis (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tipai: klasikinis (naršyklės notch filtrai, sekantys aptiktus švilpimus), adaptyvus (filtras mokosi ir nuolat atima stabilius švilpimus; seka ir dreifuojančius), spektrinis (FFT analizė: stabilios linijos nuleidžiamos iki kaimynų lygio). Kiekvienas tipas prisimena savo lygį; kuo aukštesnis, tuo greičiau ir stipriau veikia DNF, galima paveikti balsą.

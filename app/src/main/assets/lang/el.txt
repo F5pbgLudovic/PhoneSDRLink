@@ -794,3 +794,13 @@ voice command	φωνητική εντολή
 Voice command: "{0}"	Φωνητική εντολή: «{0}»
 Reset the voice model	Επαναφορά του φωνητικού μοντέλου
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Το φωνητικό μοντέλο ακολουθεί τη γλώσσα της εφαρμογής, με τις εντολές σε αυτή τη γλώσσα (στα γαλλικά: stop, start, plus un, moins un). Οι γλώσσες χωρίς φωνητικό μοντέλο χρησιμοποιούν αγγλικά (stop, start, plus one, minus one). Αν αλλάξετε γλώσσα, χρησιμοποιήστε «Επαναφορά του φωνητικού μοντέλου».
+Noise reducer type	Τύπος μείωσης θορύβου
+Light (phone)	Ελαφρύς (τηλέφωνο)
+Classic	Κλασικός
+Improved (MMSE-LSA)	Βελτιωμένος (MMSE-LSA)
+AI (RNNoise)	ΤΝ (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Τύποι: ελαφρύς (φίλτρα του προγράμματος περιήγησης, επιβαρύνει λιγότερο το τηλέφωνο), κλασικός (φασματικό φίλτρο), βελτιωμένος (MMSE-LSA, λιγότερο παραμορφωμένη φωνή) και ΤΝ (νευρωνικό δίκτυο RNNoise, ο θόρυβος μπορεί σχεδόν να εξαφανιστεί ανάμεσα στις λέξεις, χρησιμοποιεί περισσότερο επεξεργαστή). Κάθε τύπος θυμάται το δικό του επίπεδο.
+Notch type	Τύπος notch
+Adaptive (LMS)	Προσαρμοστικός (LMS)
+Spectral (FFT)	Φασματικός (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Τύποι: κλασικός (φίλτρα notch του προγράμματος περιήγησης που ακολουθούν τους εντοπισμένους συριγμούς), προσαρμοστικός (ένα φίλτρο μαθαίνει και αφαιρεί συνεχώς τους σταθερούς συριγμούς· ακολουθεί και όσους μετακινούνται), φασματικός (ανάλυση FFT: οι σταθερές γραμμές κατεβαίνουν στο επίπεδο των γειτονικών). Κάθε τύπος θυμάται το δικό του επίπεδο· όσο υψηλότερο, τόσο ταχύτερα και ισχυρότερα δρα το DNF, με κίνδυνο να επηρεάσει τη φωνή.

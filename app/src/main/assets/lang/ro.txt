@@ -794,3 +794,13 @@ voice command	comandă vocală
 Voice command: "{0}"	Comandă vocală: „{0}”
 Reset the voice model	Resetează modelul vocal
 The voice model follows the application language, with the orders in that language (in French: stop, start, plus un, moins un). Languages without a voice model use English (stop, start, plus one, minus one). If you change the language, use "Reset the voice model".	Modelul vocal urmează limba aplicației, cu comenzile în acea limbă (în franceză: stop, start, plus un, moins un). Limbile fără model vocal folosesc engleza (stop, start, plus one, minus one). Dacă schimbați limba, folosiți „Resetează modelul vocal”.
+Noise reducer type	Tipul reductorului de zgomot
+Light (phone)	Ușor (telefon)
+Classic	Clasic
+Improved (MMSE-LSA)	Îmbunătățit (MMSE-LSA)
+AI (RNNoise)	IA (RNNoise)
+Types: light (browser filters, easiest on the phone), classic (spectral filter), improved (MMSE-LSA, less distorted voice) and AI (RNNoise neural network, the noise can almost vanish between words, uses more processor). Each type keeps its own level.	Tipuri: ușor (filtrele browserului, cel mai puțin solicitant pentru telefon), clasic (filtru spectral), îmbunătățit (MMSE-LSA, voce mai puțin deformată) și IA (rețea neuronală RNNoise, zgomotul poate dispărea aproape complet între cuvinte, folosește mai mult procesor). Fiecare tip își păstrează propriul nivel.
+Notch type	Tipul notch
+Adaptive (LMS)	Adaptiv (LMS)
+Spectral (FFT)	Spectral (FFT)
+Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tipuri: clasic (filtre notch ale browserului care urmăresc fluierăturile detectate), adaptiv (un filtru învață și scade continuu fluierăturile stabile; le urmărește și pe cele care derivă), spectral (analiză FFT: liniile stabile sunt coborâte la nivelul vecinelor). Fiecare tip își păstrează propriul nivel; cu cât e mai mare, cu atât DNF acționează mai rapid și mai puternic, cu riscul de a afecta vocea.
