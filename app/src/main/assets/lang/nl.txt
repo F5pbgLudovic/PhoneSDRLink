@@ -812,3 +812,5 @@ Pause on signal	Pauze bij signaal
 pause on signal {0}	pauze bij signaal {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Scan gepauzeerd op {0}: signaal {1} dB, hervat over {2}
 Signal threshold (S/N):	Signaaldrempel (S/N):
+Steps back:	Stappen terug:
+Scan of the extended 27 MHz band	Scan van de uitgebreide 27 MHz-band

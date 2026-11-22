@@ -812,3 +812,5 @@ Pause on signal	Pausa con señal
 pause on signal {0}	pausa con señal {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Escaneo en pausa en {0}: señal {1} dB, continúa en {2}
 Signal threshold (S/N):	Umbral de señal (S/N):
+Steps back:	Pasos atrás:
+Scan of the extended 27 MHz band	Escaneo de la banda ampliada de 27 MHz

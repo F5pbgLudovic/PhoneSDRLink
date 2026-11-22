@@ -812,3 +812,5 @@ Pause on signal	Pauze pie signāla
 pause on signal {0}	pauze pie signāla {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Skenēšana apturēta uz {0}: signāls {1} dB, turpinās pēc {2}
 Signal threshold (S/N):	Signāla slieksnis (S/N):
+Steps back:	Soļi atpakaļ:
+Scan of the extended 27 MHz band	Paplašinātās 27 MHz joslas skenēšana

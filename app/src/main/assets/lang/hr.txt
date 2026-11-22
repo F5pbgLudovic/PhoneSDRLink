@@ -812,3 +812,5 @@ Pause on signal	Pauza na signalu
 pause on signal {0}	pauza na signalu {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Skeniranje pauzirano na {0}: signal {1} dB, nastavlja se za {2}
 Signal threshold (S/N):	Prag signala (S/N):
+Steps back:	Koraka natrag:
+Scan of the extended 27 MHz band	Skeniranje proširenog pojasa 27 MHz

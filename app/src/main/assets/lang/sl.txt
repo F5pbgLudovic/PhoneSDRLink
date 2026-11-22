@@ -812,3 +812,5 @@ Pause on signal	Premor ob signalu
 pause on signal {0}	premor ob signalu {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Iskanje v premoru na {0}: signal {1} dB, nadaljuje čez {2}
 Signal threshold (S/N):	Prag signala (S/N):
+Steps back:	Korakov nazaj:
+Scan of the extended 27 MHz band	Skeniranje razširjenega pasu 27 MHz

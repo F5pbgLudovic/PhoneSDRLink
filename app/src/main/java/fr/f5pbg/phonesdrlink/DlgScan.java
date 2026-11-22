@@ -23,7 +23,7 @@ final class DlgScan {
     static final int[] PAUSES = { 1, 2, 3, 4, 5, 10, 15, 30, 60, 300, 600, 900, 1800 };   // pause sur signal, secondes
     static final int[] SNRS = new int[38];   // seuil de signal : 3 à 40 dB, de 1 en 1
     static { for (int i = 0; i < SNRS.length; i++) SNRS[i] = 3 + i; }
-    Spinner spSnr;
+    Spinner spSnr, spBack;
     CheckBox chkPause;
     Spinner spPause;
     TextView lblDwell;
@@ -175,7 +175,7 @@ final class DlgScan {
         chkPause = Ui.check(a, Lang.T("Pause sur signal", "Pause on signal"), false);
         chkPause.setTextSize(14);
         chkPause.setOnCheckedChangeListener(new android.widget.CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(android.widget.CompoundButton b, boolean on) { spPause.setEnabled(on); spPause.setAlpha(on ? 1f : 0.4f); spSnr.setEnabled(on); spSnr.setAlpha(on ? 1f : 0.4f); }
+            public void onCheckedChanged(android.widget.CompoundButton b, boolean on) { spPause.setEnabled(on); spPause.setAlpha(on ? 1f : 0.4f); spSnr.setEnabled(on); spSnr.setAlpha(on ? 1f : 0.4f); spBack.setEnabled(on); spBack.setAlpha(on ? 1f : 0.4f); }
         });
         ArrayList<String> sn = new ArrayList<String>();
         for (int s : SNRS) sn.add(s + " dB");
@@ -185,11 +185,17 @@ final class DlgScan {
         spSnr.setEnabled(false);
         spSnr.setAlpha(0.4f);
         col.addView(pair(cell(lblDwell, dw), cell(chkPause, spPause)));
-        col.addView(pair(cell(Ui.small(a, Lang.T("Seuil du signal (S/N) :", "Signal threshold (S/N):")), spSnr), new View(a)));
+        ArrayList<String> bk = new ArrayList<String>();
+        for (int i = 1; i <= 99; i++) bk.add(String.valueOf(i));
+        spBack = Ui.spinner(a, bk);
+        spBack.setEnabled(false);
+        spBack.setAlpha(0.4f);
+        col.addView(pair(cell(Ui.small(a, Lang.T("Seuil du signal (S/N) :", "Signal threshold (S/N):")), spSnr), cell(Ui.small(a, Lang.T("Pas en arrière :", "Steps back:")), spBack)));
 
         // Zones non scannées (scan de fréquences)
         pnlZones = new LinearLayout(a);
         pnlZones.setOrientation(LinearLayout.VERTICAL);
+        pnlZones.setPadding(0, Ui.dp(a, 12), 0, 0);
         LinearLayout zh = Ui.row(a);
         zh.setGravity(Gravity.CENTER_VERTICAL);
         zh.addView(Ui.small(a, Lang.T("Zones non scannées (kHz) :", "Skipped ranges (kHz):")), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
@@ -256,6 +262,7 @@ final class DlgScan {
         int qi = 9;
         for (int i = 0; i < SNRS.length; i++) if (SNRS[i] == p.snrDb) qi = i;
         spSnr.setSelection(qi);
+        spBack.setSelection(Math.max(1, Math.min(99, p.back)) - 1);
         rbFreq.setChecked(p.type == 0);
         rbMem.setChecked(p.type == 1);
         showType();
@@ -308,6 +315,7 @@ final class DlgScan {
         chkPause.setChecked(false);
         spPause.setSelection(5);
         spSnr.setSelection(9);
+        spBack.setSelection(0);
         if (rbFreq.isChecked()) {
             txtStart.setText("");
             txtEnd.setText("");
@@ -338,6 +346,7 @@ final class DlgScan {
         p.memDwell = DWELLS[Math.max(0, spDwellM.getSelectedItemPosition())];
         p.pauseSec = chkPause.isChecked() ? PAUSES[Math.max(0, spPause.getSelectedItemPosition())] : 0;
         p.snrDb = SNRS[Math.max(0, spSnr.getSelectedItemPosition())];
+        p.back = Math.max(0, spBack.getSelectedItemPosition()) + 1;
         int mi = spMode.getSelectedItemPosition();
         p.mode = mi <= 0 ? "" : MainActivity.MODES[mi - 1];
         for (int i = 0; i < zoneRows.size(); i++) {

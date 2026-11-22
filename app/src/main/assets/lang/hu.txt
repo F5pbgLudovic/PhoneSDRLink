@@ -812,3 +812,5 @@ Pause on signal	Szünet jelnél
 pause on signal {0}	szünet jelnél {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Pásztázás szünetel itt: {0}: jel {1} dB, folytatás ennyi múlva: {2}
 Signal threshold (S/N):	Jelküszöb (S/N):
+Steps back:	Lépés vissza:
+Scan of the extended 27 MHz band	A kiterjesztett 27 MHz-es sáv pásztázása

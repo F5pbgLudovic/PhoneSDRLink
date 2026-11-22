@@ -812,3 +812,5 @@ Pause on signal	Pauză la semnal
 pause on signal {0}	pauză la semnal {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Scanare în pauză pe {0}: semnal {1} dB, reia în {2}
 Signal threshold (S/N):	Prag semnal (S/N):
+Steps back:	Pași înapoi:
+Scan of the extended 27 MHz band	Scanarea benzii extinse de 27 MHz

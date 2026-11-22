@@ -132,6 +132,7 @@ final class ScanProfile {
     int freqDwell = 5000, memDwell = 5000;   // millisecondes
     int pauseSec = 0;               // 0 = scan classique ; sinon pause sur signal : reprise après tant de secondes sans signal
     int snrDb = 12;                 // seuil de signal (S/N en dB) pour la pause
+    int back = 1;                   // pas en arrière avant la pause (1 à 99)
     String mode = "";               // mode du scan de fréquences ("" = mode en cours)
     ArrayList<long[]> skips = new ArrayList<long[]>();
     ArrayList<String> mems = new ArrayList<String>();
@@ -184,7 +185,7 @@ final class ScanProfile {
         StringBuilder z = new StringBuilder(), m = new StringBuilder();
         for (long[] s : skips) { if (z.length() > 0) z.append(';'); z.append(skipText(s)); }
         for (String s : mems) { if (m.length() > 0) m.append(';'); m.append(s); }
-        return name.replace("|", "/") + "|" + type + "|" + startHz + "|" + endHz + "|" + stepHz + "|" + freqDwell + "|" + memDwell + "|" + z + "|" + m + "|" + mode + "|" + pauseSec + "|ms|" + snrDb;
+        return name.replace("|", "/") + "|" + type + "|" + startHz + "|" + endHz + "|" + stepHz + "|" + freqDwell + "|" + memDwell + "|" + z + "|" + m + "|" + mode + "|" + pauseSec + "|ms|" + snrDb + "|" + back;
     }
 
     static ScanProfile fromSetting(String v) {
@@ -206,6 +207,7 @@ final class ScanProfile {
         if (p.length > 9 && java.util.Arrays.asList(MainActivity.MODES).contains(p[9].trim())) s.mode = p[9].trim();
         if (p.length > 10) s.pauseSec = Math.max(0, Store.toInt(p[10], 0));
         if (p.length > 12) { int sd = Store.toInt(p[12], 12); if (sd >= 3 && sd <= 40) s.snrDb = sd; }
+        if (p.length > 13) { int bk = Store.toInt(p[13], 1); if (bk >= 1 && bk <= 99) s.back = bk; }
         return s;
     }
 
@@ -315,7 +317,7 @@ final class Store {
     // Scan
     int scanType;
     long scanStart, scanEnd, scanStep = 1000; String scanMode = "";
-    int scanFreqDwell = 5000, scanMemDwell = 5000, scanPause = 0, scanSnr = 12;   // ms, ms, s, dB
+    int scanFreqDwell = 5000, scanMemDwell = 5000, scanPause = 0, scanSnr = 12, scanBack = 1;   // ms, ms, s, dB, pas
     final ArrayList<long[]> scanSkips = new ArrayList<long[]>();
     final ArrayList<ScanProfile> scanProfiles = new ArrayList<ScanProfile>();
 
@@ -337,7 +339,11 @@ final class Store {
         Store s = new Store();
         boolean existed = file.exists();
         if (existed) { try { s.parse(readFile(file), 0xFFFF); } catch (Exception e) { } }
-        else s.language = Lang.systemDefault();
+        else {
+            s.language = Lang.systemDefault();
+            // Première installation : profils de scan d'exemple (assets/default-scans.txt).
+            try { InputStream in = ctx.getAssets().open("default-scans.txt"); String t = readAll(in); in.close(); s.parse(t, IMP_SCAN); } catch (Exception e) { }
+        }
         if (existed && s.language.isEmpty()) s.language = Lang.systemDefault();
         I = s;
     }
@@ -361,7 +367,7 @@ final class Store {
     }
 
     void defaultsScan() {
-        scanType = 0; scanMode = ""; scanStart = scanEnd = 0; scanStep = 1000; scanFreqDwell = scanMemDwell = 5000; scanPause = 0; scanSnr = 12;
+        scanType = 0; scanMode = ""; scanStart = scanEnd = 0; scanStep = 1000; scanFreqDwell = scanMemDwell = 5000; scanPause = 0; scanSnr = 12; scanBack = 1;
         scanSkips.clear();
         scanProfiles.clear();
         for (Memory m : memories) m.scan = false;
@@ -574,6 +580,7 @@ final class Store {
                 else if (k.equals("ScanMemDwellMs")) { int d = toInt(v, 5000); if (d > 0) scanMemDwell = d; }
                 else if (k.equals("ScanPause")) scanPause = Math.max(0, toInt(v, 0));
                 else if (k.equals("ScanSnr")) { int d = toInt(v, 12); if (d >= 3 && d <= 40) scanSnr = d; }
+                else if (k.equals("ScanBack")) { int d = toInt(v, 1); if (d >= 1 && d <= 99) scanBack = d; }
                 else if (k.equals("ScanMemDwell")) { int d = toInt(v, 5); if (d > 0) scanMemDwell = d * 1000; }
                 else if (k.equals("ScanSkip")) { long[] z = ScanProfile.parseSkip(v.trim()); if (z != null && skips.size() < ScanProfile.MAX_SKIPS) skips.add(z); }
                 else if (k.equals("ScanProfile")) { ScanProfile p = ScanProfile.fromSetting(v); if (p != null && profs.size() < ScanProfile.MAX_PROFILES) profs.add(p); }
@@ -776,6 +783,7 @@ final class Store {
         line(sb, "ScanFreqDwellMs", scanFreqDwell);
         line(sb, "ScanPause", scanPause);
         line(sb, "ScanSnr", scanSnr);
+        line(sb, "ScanBack", scanBack);
         line(sb, "ScanMemDwellMs", scanMemDwell);
         for (long[] z : scanSkips) line(sb, "ScanSkip", ScanProfile.skipText(z));
         for (ScanProfile p : scanProfiles) line(sb, "ScanProfile", p.toSetting());
@@ -875,14 +883,14 @@ final class Store {
     // Réglage de scan du moment, sous forme de profil.
     ScanProfile currentScan() {
         ScanProfile p = new ScanProfile();
-        p.type = scanType; p.startHz = scanStart; p.endHz = scanEnd; p.stepHz = scanStep; p.freqDwell = scanFreqDwell; p.memDwell = scanMemDwell; p.mode = scanMode; p.pauseSec = scanPause; p.snrDb = scanSnr;
+        p.type = scanType; p.startHz = scanStart; p.endHz = scanEnd; p.stepHz = scanStep; p.freqDwell = scanFreqDwell; p.memDwell = scanMemDwell; p.mode = scanMode; p.pauseSec = scanPause; p.snrDb = scanSnr; p.back = scanBack;
         for (long[] z : scanSkips) p.skips.add(new long[] { z[0], z[1] });
         for (Memory m : memories) if (m.scan) p.mems.add(m.key());
         return p;
     }
 
     void useScan(ScanProfile p) {
-        scanType = p.type; scanStart = p.startHz; scanEnd = p.endHz; scanStep = p.stepHz; scanFreqDwell = p.freqDwell; scanMemDwell = p.memDwell; scanMode = p.mode; scanPause = p.pauseSec; scanSnr = p.snrDb;
+        scanType = p.type; scanStart = p.startHz; scanEnd = p.endHz; scanStep = p.stepHz; scanFreqDwell = p.freqDwell; scanMemDwell = p.memDwell; scanMode = p.mode; scanPause = p.pauseSec; scanSnr = p.snrDb; scanBack = p.back;
         scanSkips.clear();
         for (long[] z : p.skips) scanSkips.add(new long[] { z[0], z[1] });
         for (Memory m : memories) m.scan = p.mems.contains(m.key());

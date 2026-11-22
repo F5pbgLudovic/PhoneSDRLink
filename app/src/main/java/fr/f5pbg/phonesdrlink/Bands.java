@@ -16,6 +16,8 @@ final class Bands {
         { "12", new long[] { 24890000, 24990000 }, new long[] { 24890000, 24990000 }, new long[] { 24890000, 24990000 }, "USB" },
         { "10", new long[] { 28000000, 29700000 }, new long[] { 28000000, 29700000 }, new long[] { 28000000, 29700000 }, "USB" },
         { "6", new long[] { 50000000, 52000000 }, new long[] { 50000000, 54000000 }, new long[] { 50000000, 54000000 }, "USB" },
+        // Bande étendue du 27 MHz (26,000 à 28,000 MHz) : placée après le 10 m, donc 28,000 MHz reste au 10 m ; at() la renvoie de 26,000 à 27,999 MHz.
+        { "27", new long[] { 26000000, 28000000 }, new long[] { 26000000, 28000000 }, new long[] { 26000000, 28000000 }, "AM" },
     };
 
     static int region = 0;   // 1, 2 ou 3 ; 0 = pas encore déterminée

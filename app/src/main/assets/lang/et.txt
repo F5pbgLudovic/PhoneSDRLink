@@ -812,3 +812,5 @@ Pause on signal	Paus signaali korral
 pause on signal {0}	paus signaali korral {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Skannimine peatatud sagedusel {0}: signaal {1} dB, jätkub {2} pärast
 Signal threshold (S/N):	Signaali lävi (S/N):
+Steps back:	Samme tagasi:
+Scan of the extended 27 MHz band	27 MHz laiendatud ala skannimine

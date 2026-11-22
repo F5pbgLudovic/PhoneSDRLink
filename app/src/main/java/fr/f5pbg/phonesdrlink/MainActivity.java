@@ -1628,7 +1628,7 @@ public class MainActivity extends Activity {
         java.util.HashSet<ScanProfile> shown = new java.util.HashSet<ScanProfile>();
         if (b >= 0) {
             final long lo = Bands.lo(b), hi = Bands.hi(b);
-            items.add(Lang.F("Scan de la bande des {0} m", "Scan of the {0} m band", Bands.name(b)) + "  —  " + Memory.kHz(lo) + " – " + Memory.kHz(hi) + " kHz");
+            items.add((Bands.name(b).equals("27") ? Lang.T("Scan de la bande étendue des 27 MHz", "Scan of the extended 27 MHz band") : Lang.F("Scan de la bande des {0} m", "Scan of the {0} m band", Bands.name(b))) + "  —  " + Memory.kHz(lo) + " – " + Memory.kHz(hi) + " kHz");
             acts.add(new Runnable() { public void run() {
                 ScanProfile p = st.currentScan();
                 p.type = 0; p.startHz = lo; p.endHz = hi; p.skips.clear();
@@ -1892,8 +1892,9 @@ public class MainActivity extends Activity {
             h.removeCallbacks(scanTick);
             holdFromHz = scanHz; holdFromIdx = scanIndex;   // fréquence où le signal a été repéré : le scan reprendra après elle
             // le signal mesuré vient en fait de la fréquence précédente (le son arrive après le réglage) : retour d un pas
-            if (st.scanType == 0) { long f = scanRun.prev(scanHz); if (f >= 0) { scanHz = f; scanTune(); } }
-            else if (scanMems.size() > 1) { scanIndex = (scanIndex - 1 + scanMems.size()) % scanMems.size(); scanTune(); }
+            int back = Math.max(1, st.scanBack);
+            if (st.scanType == 0) { long f = scanHz; for (int i = 0; i < back; i++) { long g = scanRun.prev(f); if (g < 0) break; f = g; } if (f != scanHz) { scanHz = f; scanTune(); } }
+            else if (scanMems.size() > 1) { int n = scanMems.size(); scanIndex = ((scanIndex - back) % n + n) % n; scanTune(); }
             scanHolding = true;
             holdLastSig = System.currentTimeMillis();
             holdShownSec = -1;

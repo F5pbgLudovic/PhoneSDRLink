@@ -812,3 +812,5 @@ Pause on signal	Paus vid signal
 pause on signal {0}	paus vid signal {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Skanning pausad på {0}: signal {1} dB, återupptas om {2}
 Signal threshold (S/N):	Signaltröskel (S/N):
+Steps back:	Steg tillbaka:
+Scan of the extended 27 MHz band	Skanning av det utökade 27 MHz-bandet

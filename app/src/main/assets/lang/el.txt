@@ -812,3 +812,5 @@ Pause on signal	Παύση σε σήμα
 pause on signal {0}	παύση σε σήμα {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Η σάρωση σε παύση στο {0}: σήμα {1} dB, συνέχεια σε {2}
 Signal threshold (S/N):	Όριο σήματος (S/N):
+Steps back:	Βήματα πίσω:
+Scan of the extended 27 MHz band	Σάρωση της εκτεταμένης ζώνης 27 MHz

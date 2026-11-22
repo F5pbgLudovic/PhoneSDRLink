@@ -812,3 +812,5 @@ Pause on signal	Pausa com sinal
 pause on signal {0}	pausa com sinal {0}
 Scan paused on {0}: signal {1} dB, resumes in {2}	Varrimento em pausa em {0}: sinal {1} dB, retoma em {2}
 Signal threshold (S/N):	Limiar do sinal (S/N):
+Steps back:	Passos atrás:
+Scan of the extended 27 MHz band	Varrimento da banda alargada dos 27 MHz
