@@ -806,3 +806,9 @@ Spectral (FFT)	Spektrinis (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tipai: klasikinis (naršyklės notch filtrai, sekantys aptiktus švilpimus), adaptyvus (filtras mokosi ir nuolat atima stabilius švilpimus; seka ir dreifuojančius), spektrinis (FFT analizė: stabilios linijos nuleidžiamos iki kaimynų lygio). Kiekvienas tipas prisimena savo lygį; kuo aukštesnis, tuo greičiau ir stipriau veikia DNF, galima paveikti balsą.
 Scan of the {0} m band	{0} m juostos skenavimas
 No sound after the screen woke up: the WebSDR is reloaded.	Pabudus ekranui garso nėra: WebSDR įkeliamas iš naujo.
++ Range	+ Sritis
+Skipped ranges (kHz):	Praleidžiamos sritys (kHz):
+Pause on signal	Pauzė esant signalui
+pause on signal {0}	pauzė esant signalui {0}
+Scan paused on {0}: signal {1} dB, resumes in {2}	Skenavimas pristabdytas ties {0}: signalas {1} dB, tęsiama po {2}
+Signal threshold (S/N):	Signalo slenkstis (S/N):

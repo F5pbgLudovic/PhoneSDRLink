@@ -19,7 +19,15 @@ import java.util.ArrayList;
 // Bouton « Conf scan » : scan de fréquences (début, fin, pas, durée, jusqu'à 10 zones non scannées) ou de mémoires (cochées, durée),
 // et jusqu'à 10 profils de scan nommés (comme SDRLink).
 final class DlgScan {
-    static final int[] DWELLS = { 1, 2, 5, 10, 30, 60, 120, 300, 600 };
+    static final int[] DWELLS = { 50, 100, 250, 500, 1000, 2000, 5000, 10000, 30000, 60000, 120000, 300000, 600000 };   // ms
+    static final int[] PAUSES = { 1, 2, 3, 4, 5, 10, 15, 30, 60, 300, 600, 900, 1800 };   // pause sur signal, secondes
+    static final int[] SNRS = new int[38];   // seuil de signal : 3 à 40 dB, de 1 en 1
+    static { for (int i = 0; i < SNRS.length; i++) SNRS[i] = 3 + i; }
+    Spinner spSnr;
+    CheckBox chkPause;
+    Spinner spPause;
+    TextView lblDwell;
+    LinearLayout pnlZones;
     static final long[] STEPS = { 100, 250, 500, 1000, 2500, 5000, 6250, 9000, 10000, 12500, 25000, 100000 };
 
     final MainActivity a;
@@ -47,19 +55,35 @@ final class DlgScan {
 
     static int dwellIndex(int sec) {
         for (int i = 0; i < DWELLS.length; i++) if (DWELLS[i] == sec) return i;
-        return 2;
+        return 6;
     }
 
+    LinearLayout cell(View top, View v) {
+        LinearLayout c = new LinearLayout(a);
+        c.setOrientation(LinearLayout.VERTICAL);
+        c.addView(top);
+        c.addView(v);
+        return c;
+    }
+
+    LinearLayout pair(View x, View y) {
+        LinearLayout r = Ui.row(a);
+        r.addView(x, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        r.addView(y, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        return r;
+    }
+
+    // Fenêtre sans ascenseur pour un scan de fréquences : les champs sont côte à côte.
     void open() {
         LinearLayout col = Ui.column(a);
+        int pd = Ui.dp(a, 8);
+        col.setPadding(pd, pd, pd, pd);
         d = Ui.window(a, Lang.T("Conf scan", "Scan setup"), Ui.scroll(a, col), true);
 
-        // Profils
-        col.addView(Ui.small(a, Lang.T("Profil :", "Profile:")));
+        // Profils : liste et nom côte à côte
         spProfile = Ui.spinner(a, new ArrayList<String>());
-        col.addView(spProfile);
         profName = Ui.edit(a, "", Lang.T("Nom du profil", "Profile name"), InputType.TYPE_CLASS_TEXT);
-        col.addView(profName);
+        col.addView(pair(cell(Ui.small(a, Lang.T("Profil :", "Profile:")), spProfile), cell(Ui.small(a, Lang.T("Nom :", "Name:")), profName)));
         LinearLayout pr = Ui.row(a);
         pr.addView(Ui.button(a, Lang.T("Enregistrer", "Save"), new View.OnClickListener() { public void onClick(View v) { saveProfile(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
         pr.addView(Ui.button(a, Lang.T("Renommer", "Rename"), new View.OnClickListener() { public void onClick(View v) { renameProfile(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
@@ -77,7 +101,6 @@ final class DlgScan {
         });
 
         // Type
-        col.addView(Ui.small(a, Lang.T("Type de scan :", "Scan type:")));
         RadioGroup rg = new RadioGroup(a);
         rg.setOrientation(RadioGroup.HORIZONTAL);
         rbFreq = new RadioButton(a);
@@ -93,64 +116,91 @@ final class DlgScan {
             public void onCheckedChanged(android.widget.CompoundButton b, boolean on) { showType(); }
         });
 
-        // Fréquences
+        // Fréquences : début / fin, pas / mode
         pnlFreq = new LinearLayout(a);
         pnlFreq.setOrientation(LinearLayout.VERTICAL);
-        pnlFreq.addView(Ui.small(a, Lang.T("Début (kHz) :", "Start (kHz):")));
         txtStart = Ui.edit(a, "", "", InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        pnlFreq.addView(txtStart);
-        pnlFreq.addView(Ui.small(a, Lang.T("Fin (kHz) :", "End (kHz):")));
         txtEnd = Ui.edit(a, "", "", InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        pnlFreq.addView(txtEnd);
-        pnlFreq.addView(Ui.small(a, Lang.T("Pas :", "Step:")));
+        pnlFreq.addView(pair(cell(Ui.small(a, Lang.T("Début (kHz) :", "Start (kHz):")), txtStart), cell(Ui.small(a, Lang.T("Fin (kHz) :", "End (kHz):")), txtEnd)));
         ArrayList<String> steps = new ArrayList<String>();
         for (long s : STEPS) steps.add(MainActivity.scanStepText(s));
         spStep = Ui.spinner(a, steps);
-        pnlFreq.addView(spStep);
-        pnlFreq.addView(Ui.small(a, Lang.T("Mode :", "Mode:")));
         ArrayList<String> modes = new ArrayList<String>();
         modes.add(Lang.T("(mode inchangé)", "(mode unchanged)"));
         for (String s : MainActivity.MODES) modes.add(MainActivity.modeLabel(s));
         spMode = Ui.spinner(a, modes);
         spMode.setOnTouchListener(new View.OnTouchListener() { public boolean onTouch(View v, android.view.MotionEvent e) { modeTouched = true; return false; } });
-        pnlFreq.addView(spMode);
+        pnlFreq.addView(pair(cell(Ui.small(a, Lang.T("Pas :", "Step:")), spStep), cell(Ui.small(a, Lang.T("Mode :", "Mode:")), spMode)));
         txtStart.addTextChangedListener(new android.text.TextWatcher() {
             public void beforeTextChanged(CharSequence s, int x, int y, int z) { }
             public void onTextChanged(CharSequence s, int x, int y, int z) { }
             public void afterTextChanged(android.text.Editable s) { proposeMode(); }
         });
-        pnlFreq.addView(Ui.small(a, Lang.T("Durée sur chaque fréquence :", "Time on each frequency:")));
-        spDwellF = Ui.spinner(a, dwellNames());
-        pnlFreq.addView(spDwellF);
-        pnlFreq.addView(Ui.small(a, Lang.T("Zones non scannées (de … à … kHz) :", "Skipped ranges (from … to … kHz):")));
-        zonesBox = new LinearLayout(a);
-        zonesBox.setOrientation(LinearLayout.VERTICAL);
-        pnlFreq.addView(zonesBox);
-        pnlFreq.addView(Ui.button(a, Lang.T("+ Zone non scannée", "+ Skipped range"), new View.OnClickListener() {
-            public void onClick(View v) { addZone("", ""); }
-        }));
         col.addView(pnlFreq);
 
-        // Mémoires
+        // Mémoires : liste à hauteur limitée (son propre défilement, seulement s'il y a beaucoup de mémoires)
         pnlMem = new LinearLayout(a);
         pnlMem.setOrientation(LinearLayout.VERTICAL);
         pnlMem.addView(Ui.small(a, Lang.T("Mémoires à parcourir :", "Memories to scan:")));
+        LinearLayout memList = new LinearLayout(a);
+        memList.setOrientation(LinearLayout.VERTICAL);
         for (Memory m : st.memories) {
             CheckBox c = Ui.check(a, m.label() + "  —  " + Memory.kHz(m.hz) + " kHz" + (m.mode.isEmpty() ? "" : " " + MainActivity.modeLabel(m.mode))
                 + "  (" + st.memListLabel(m.list) + ")", false);
             c.setTextSize(14);
             memChecks.add(c);
-            pnlMem.addView(c);
+            memList.addView(c);
         }
-        if (st.memories.isEmpty()) pnlMem.addView(Ui.small(a, Lang.T("(aucune mémoire : bouton Mémoires)", "(no memory: Memories button)")));
+        if (st.memories.isEmpty()) memList.addView(Ui.small(a, Lang.T("(aucune mémoire : bouton Mémoires)", "(no memory: Memories button)")));
+        android.widget.ScrollView ms = new android.widget.ScrollView(a);
+        ms.addView(memList);
+        pnlMem.addView(ms, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(a, 150)));
         LinearLayout mr = Ui.row(a);
         mr.addView(Ui.button(a, Lang.T("Tout cocher", "Check all"), new View.OnClickListener() { public void onClick(View v) { setAll(true); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
         mr.addView(Ui.button(a, Lang.T("Tout décocher", "Uncheck all"), new View.OnClickListener() { public void onClick(View v) { setAll(false); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
         pnlMem.addView(mr);
-        pnlMem.addView(Ui.small(a, Lang.T("Durée sur chaque mémoire :", "Time on each memory:")));
-        spDwellM = Ui.spinner(a, dwellNames());
-        pnlMem.addView(spDwellM);
         col.addView(pnlMem);
+
+        // Durée sur chaque fréquence (ou mémoire) / pause sur signal : communes aux deux types
+        spDwellF = Ui.spinner(a, dwellNames());
+        spDwellM = Ui.spinner(a, dwellNames());
+        lblDwell = Ui.small(a, "");
+        LinearLayout dw = new LinearLayout(a);
+        dw.setOrientation(LinearLayout.VERTICAL);
+        dw.addView(spDwellF);
+        dw.addView(spDwellM);
+        ArrayList<String> pn = new ArrayList<String>();
+        for (int s : PAUSES) pn.add(MainActivity.dwellText(s * 1000));
+        spPause = Ui.spinner(a, pn);
+        chkPause = Ui.check(a, Lang.T("Pause sur signal", "Pause on signal"), false);
+        chkPause.setTextSize(14);
+        chkPause.setOnCheckedChangeListener(new android.widget.CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(android.widget.CompoundButton b, boolean on) { spPause.setEnabled(on); spPause.setAlpha(on ? 1f : 0.4f); spSnr.setEnabled(on); spSnr.setAlpha(on ? 1f : 0.4f); }
+        });
+        ArrayList<String> sn = new ArrayList<String>();
+        for (int s : SNRS) sn.add(s + " dB");
+        spSnr = Ui.spinner(a, sn);
+        spPause.setEnabled(false);
+        spPause.setAlpha(0.4f);
+        spSnr.setEnabled(false);
+        spSnr.setAlpha(0.4f);
+        col.addView(pair(cell(lblDwell, dw), cell(chkPause, spPause)));
+        col.addView(pair(cell(Ui.small(a, Lang.T("Seuil du signal (S/N) :", "Signal threshold (S/N):")), spSnr), new View(a)));
+
+        // Zones non scannées (scan de fréquences)
+        pnlZones = new LinearLayout(a);
+        pnlZones.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout zh = Ui.row(a);
+        zh.setGravity(Gravity.CENTER_VERTICAL);
+        zh.addView(Ui.small(a, Lang.T("Zones non scannées (kHz) :", "Skipped ranges (kHz):")), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        zh.addView(Ui.button(a, Lang.T("+ Zone", "+ Range"), new View.OnClickListener() {
+            public void onClick(View v) { addZone("", ""); }
+        }));
+        pnlZones.addView(zh);
+        zonesBox = new LinearLayout(a);
+        zonesBox.setOrientation(LinearLayout.VERTICAL);
+        pnlZones.addView(zonesBox);
+        col.addView(pnlZones);
 
         // Boutons
         LinearLayout b1 = Ui.row(a);
@@ -158,12 +208,9 @@ final class DlgScan {
         Button start = Ui.button(a, Lang.T("Lancer le scan", "Start scan"), new View.OnClickListener() { public void onClick(View v) { finish(true); } });
         Ui.paint(start, true, Ui.on());
         b1.addView(start, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.4f, a, 2));
+        b1.addView(Ui.button(a, Lang.T("Annuler", "Cancel"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, a, 2));
+        b1.addView(Ui.button(a, "OK", new View.OnClickListener() { public void onClick(View v) { finish(false); } }), Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.7f, a, 2));
         col.addView(b1);
-        LinearLayout b2 = Ui.row(a);
-        b2.setGravity(Gravity.END);
-        b2.addView(Ui.button(a, Lang.T("Annuler", "Cancel"), new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } }));
-        b2.addView(Ui.button(a, "OK", new View.OnClickListener() { public void onClick(View v) { finish(false); } }));
-        col.addView(b2);
 
         load(st.currentScan());
         d.setOnDismissListener(new android.content.DialogInterface.OnDismissListener() { public void onDismiss(android.content.DialogInterface x) { st.save(); } });
@@ -202,6 +249,13 @@ final class DlgScan {
         for (int i = 0; i < memChecks.size(); i++) memChecks.get(i).setChecked(p.mems.contains(st.memories.get(i).key()));
         clearZones();
         for (long[] z : p.skips) addZone(Memory.kHz(z[0]), Memory.kHz(z[1]));
+        chkPause.setChecked(p.pauseSec > 0);
+        int pi = 5;
+        for (int i = 0; i < PAUSES.length; i++) if (PAUSES[i] == p.pauseSec) pi = i;
+        spPause.setSelection(pi);
+        int qi = 9;
+        for (int i = 0; i < SNRS.length; i++) if (SNRS[i] == p.snrDb) qi = i;
+        spSnr.setSelection(qi);
         rbFreq.setChecked(p.type == 0);
         rbMem.setChecked(p.type == 1);
         showType();
@@ -219,6 +273,10 @@ final class DlgScan {
     void showType() {
         pnlFreq.setVisibility(rbFreq.isChecked() ? View.VISIBLE : View.GONE);
         pnlMem.setVisibility(rbFreq.isChecked() ? View.GONE : View.VISIBLE);
+        pnlZones.setVisibility(rbFreq.isChecked() ? View.VISIBLE : View.GONE);
+        spDwellF.setVisibility(rbFreq.isChecked() ? View.VISIBLE : View.GONE);
+        spDwellM.setVisibility(rbFreq.isChecked() ? View.GONE : View.VISIBLE);
+        lblDwell.setText(rbFreq.isChecked() ? Lang.T("Durée sur chaque fréquence :", "Time on each frequency:") : Lang.T("Durée sur chaque mémoire :", "Time on each memory:"));
     }
 
     void setAll(boolean on) { for (CheckBox c : memChecks) c.setChecked(on); }
@@ -247,17 +305,20 @@ final class DlgScan {
 
     // Remet à zéro les choix du type affiché (l'autre type garde les siens).
     void resetShown() {
+        chkPause.setChecked(false);
+        spPause.setSelection(5);
+        spSnr.setSelection(9);
         if (rbFreq.isChecked()) {
             txtStart.setText("");
             txtEnd.setText("");
             spStep.setSelection(3);
             spMode.setSelection(0);
             modeTouched = false;
-            spDwellF.setSelection(dwellIndex(5));
+            spDwellF.setSelection(dwellIndex(5000));
             clearZones();
         } else {
             setAll(false);
-            spDwellM.setSelection(dwellIndex(5));
+            spDwellM.setSelection(dwellIndex(5000));
         }
     }
 
@@ -275,6 +336,8 @@ final class DlgScan {
         p.stepHz = STEPS[Math.max(0, spStep.getSelectedItemPosition())];
         p.freqDwell = DWELLS[Math.max(0, spDwellF.getSelectedItemPosition())];
         p.memDwell = DWELLS[Math.max(0, spDwellM.getSelectedItemPosition())];
+        p.pauseSec = chkPause.isChecked() ? PAUSES[Math.max(0, spPause.getSelectedItemPosition())] : 0;
+        p.snrDb = SNRS[Math.max(0, spSnr.getSelectedItemPosition())];
         int mi = spMode.getSelectedItemPosition();
         p.mode = mi <= 0 ? "" : MainActivity.MODES[mi - 1];
         for (int i = 0; i < zoneRows.size(); i++) {

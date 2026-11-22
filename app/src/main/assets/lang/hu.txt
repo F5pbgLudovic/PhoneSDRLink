@@ -806,3 +806,9 @@ Spectral (FFT)	Spektrális (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Típusok: klasszikus (a böngésző notch szűrői, amelyek követik az észlelt sípolásokat), adaptív (egy szűrő tanul, és folyamatosan kivonja a stabil sípolásokat; követi az elmozdulókat is), spektrális (FFT elemzés: a stabil vonalakat a szomszédaik szintjére csökkenti). Minden típus megjegyzi a saját szintjét; minél magasabb, annál gyorsabban és erősebben hat a DNF, a hang sérülésének kockázatával.
 Scan of the {0} m band	A {0} m-es sáv pásztázása
 No sound after the screen woke up: the WebSDR is reloaded.	A képernyő felébredése után nincs hang: a WebSDR újratöltődik.
++ Range	+ Sáv
+Skipped ranges (kHz):	Kihagyott sávok (kHz):
+Pause on signal	Szünet jelnél
+pause on signal {0}	szünet jelnél {0}
+Scan paused on {0}: signal {1} dB, resumes in {2}	Pásztázás szünetel itt: {0}: jel {1} dB, folytatás ennyi múlva: {2}
+Signal threshold (S/N):	Jelküszöb (S/N):

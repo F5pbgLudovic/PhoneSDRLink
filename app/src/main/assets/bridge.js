@@ -110,6 +110,7 @@
         if (L.notchOn) { if (L.notchAlgo === 0) notch(ctx, true); nf(ctx, L.notchAlgo > 0); }
         if (L.dnrOn) { dnr(ctx, L.dnrAlgo === 0); nr(ctx, L.dnrAlgo > 0); }
         if (L.watchOn) watch(ctx);
+        if (L.snrOn) snrNode(ctx);
       }
       return ctx.__sdrlinkIn;
     };
@@ -493,6 +494,46 @@
       // le contexte audio est suspendu ou fermé (arrêt par le serveur : « session timed out ») compte comme un son perdu.
       if (realVis() === 'hidden' || (!running && !L.everRan)) L.lastSound = now;
     }, 1000);
+    // Rapport signal sur bruit pour « Pause sur signal » du scan : un analyseur léger (FFT de 1024, lu seulement quand le scan le demande,
+    // 5 à 7 fois par seconde) sur l'entrée commune. S/N = moyenne du dixième le plus fort des raies de 250 à 2800 Hz moins le
+    // niveau médian (le plancher de bruit). Aucun calcul tant que L.snrOn est faux.
+    L.snrOn = false;
+    var snrNode = function (ctx) {
+      if (ctx.__sdrlinkSnr || !ctx.__sdrlinkIn || !ctx.createAnalyser) return;
+      var a = ctx.__sdrlinkSnr = ctx.createAnalyser();
+      a.fftSize = 1024;
+      a.smoothingTimeConstant = 0.85;
+      origConnect.call(ctx.__sdrlinkIn, a);
+      a.buf = new Float32Array(a.frequencyBinCount);
+    };
+    L.setSnr = function (on) {
+      L.snrOn = !!on;
+      for (var i = 0; i < L.ctxs.length; i++) {
+        var c = L.ctxs[i];
+        if (L.snrOn) snrNode(c);
+        else if (c.__sdrlinkSnr) { try { origDisconnect.call(c.__sdrlinkIn, c.__sdrlinkSnr); } catch (e) { } c.__sdrlinkSnr = null; }
+      }
+    };
+    // dB, ou -99 s'il n'y a pas de son qui tourne.
+    L.snr = function () {
+      var best = -99;
+      for (var i = 0; i < L.ctxs.length; i++) {
+        var c = L.ctxs[i], a = c.__sdrlinkSnr;
+        if (!a || c.state !== 'running') continue;
+        try {
+          a.getFloatFrequencyData(a.buf);
+          var hz = c.sampleRate / a.fftSize, lo = Math.max(1, Math.round(250 / hz)), hi = Math.min(a.buf.length - 1, Math.round(2800 / hz)), v = [];
+          for (var k = lo; k <= hi; k++) if (a.buf[k] > -200) v.push(a.buf[k]);
+          if (v.length < 8) continue;
+          v.sort(function (x, y) { return x - y; });
+          var n = Math.max(2, Math.round(v.length / 10)), s = 0;
+          for (var j = 0; j < n; j++) s += v[v.length - 1 - j];
+          var r = s / n - v[v.length >> 1];
+          if (r > best) best = r;
+        } catch (e) { }
+      }
+      return Math.round(best * 10) / 10;
+    };
     // Réveil de l'écran : les contextes audio suspendus repartent, et pendant 'secs' secondes on écoute si le son revient.
     L.wake = function (secs) {
       L.wakeUntil = Date.now() + (secs || 8) * 1000;

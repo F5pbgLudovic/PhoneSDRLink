@@ -806,3 +806,9 @@ Spectral (FFT)	Spektrálny (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Typy: klasický (notch filtre prehliadača sledujúce zistené hvizdy), adaptívny (filter sa učí a priebežne odpočítava stabilné hvizdy; sleduje aj tie, ktoré sa posúvajú), spektrálny (analýza FFT: stabilné čiary sa znížia na úroveň susedných). Každý typ si pamätá vlastnú úroveň; čím vyššia, tým rýchlejšie a silnejšie DNF pôsobí, s rizikom zásahu do hlasu.
 Scan of the {0} m band	Skenovanie pásma {0} m
 No sound after the screen woke up: the WebSDR is reloaded.	Po zapnutí displeja nie je počuť zvuk: WebSDR sa načíta znova.
++ Range	+ Pásmo
+Skipped ranges (kHz):	Vynechané pásma (kHz):
+Pause on signal	Pauza pri signáli
+pause on signal {0}	pauza pri signáli {0}
+Scan paused on {0}: signal {1} dB, resumes in {2}	Skenovanie pozastavené na {0}: signál {1} dB, pokračuje o {2}
+Signal threshold (S/N):	Prah signálu (S/N):

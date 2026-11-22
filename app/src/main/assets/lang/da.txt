@@ -806,3 +806,9 @@ Spectral (FFT)	Spektral (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Typer: klassisk (browserens notchfiltre, der følger de fundne hvin), adaptiv (et filter lærer og trækker løbende stabile hvin fra; det følger også dem, der driver), spektral (FFT-analyse: stabile linjer sænkes til niveauet for deres naboer). Hver type beholder sit eget niveau; jo højere, desto hurtigere og kraftigere virker DNF, med risiko for at påvirke stemmen.
 Scan of the {0} m band	Scanning af {0} m-båndet
 No sound after the screen woke up: the WebSDR is reloaded.	Ingen lyd efter skærmen vågnede: WebSDR genindlæses.
++ Range	+ Område
+Skipped ranges (kHz):	Områder der springes over (kHz):
+Pause on signal	Pause ved signal
+pause on signal {0}	pause ved signal {0}
+Scan paused on {0}: signal {1} dB, resumes in {2}	Scanning sat på pause på {0}: signal {1} dB, genoptages om {2}
+Signal threshold (S/N):	Signalgrænse (S/N):

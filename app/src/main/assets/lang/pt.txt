@@ -806,3 +806,9 @@ Spectral (FFT)	Espectral (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tipos: clássico (filtros notch do navegador que seguem os apitos detetados), adaptativo (um filtro aprende e subtrai continuamente os apitos estáveis; segue os que se deslocam), espectral (análise FFT: as riscas estáveis são baixadas ao nível das vizinhas). Cada tipo mantém o seu próprio nível; quanto mais alto, mais rápido e forte atua o DNF, com o risco de afetar a voz.
 Scan of the {0} m band	Varrimento da banda dos {0} m
 No sound after the screen woke up: the WebSDR is reloaded.	Sem som após o ecrã acordar: o WebSDR é recarregado.
++ Range	+ Zona
+Skipped ranges (kHz):	Zonas ignoradas (kHz):
+Pause on signal	Pausa com sinal
+pause on signal {0}	pausa com sinal {0}
+Scan paused on {0}: signal {1} dB, resumes in {2}	Varrimento em pausa em {0}: sinal {1} dB, retoma em {2}
+Signal threshold (S/N):	Limiar do sinal (S/N):

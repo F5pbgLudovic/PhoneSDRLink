@@ -806,3 +806,9 @@ Spectral (FFT)	Φασματικός (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Τύποι: κλασικός (φίλτρα notch του προγράμματος περιήγησης που ακολουθούν τους εντοπισμένους συριγμούς), προσαρμοστικός (ένα φίλτρο μαθαίνει και αφαιρεί συνεχώς τους σταθερούς συριγμούς· ακολουθεί και όσους μετακινούνται), φασματικός (ανάλυση FFT: οι σταθερές γραμμές κατεβαίνουν στο επίπεδο των γειτονικών). Κάθε τύπος θυμάται το δικό του επίπεδο· όσο υψηλότερο, τόσο ταχύτερα και ισχυρότερα δρα το DNF, με κίνδυνο να επηρεάσει τη φωνή.
 Scan of the {0} m band	Σάρωση της ζώνης των {0} m
 No sound after the screen woke up: the WebSDR is reloaded.	Δεν υπάρχει ήχος μετά την αφύπνιση της οθόνης: το WebSDR φορτώνεται ξανά.
++ Range	+ Περιοχή
+Skipped ranges (kHz):	Περιοχές που παραλείπονται (kHz):
+Pause on signal	Παύση σε σήμα
+pause on signal {0}	παύση σε σήμα {0}
+Scan paused on {0}: signal {1} dB, resumes in {2}	Η σάρωση σε παύση στο {0}: σήμα {1} dB, συνέχεια σε {2}
+Signal threshold (S/N):	Όριο σήματος (S/N):

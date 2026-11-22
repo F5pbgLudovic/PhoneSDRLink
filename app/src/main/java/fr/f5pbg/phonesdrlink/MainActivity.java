@@ -1183,6 +1183,7 @@ public class MainActivity extends Activity {
         notchSent = notchNow();
         js("if(window.__sdrlink)__sdrlink.setWatch(" + st.autoReload + ");");
         js("if(window.__sdrlink)__sdrlink.setEco(" + st.eco + ");");
+        js("if(window.__sdrlink)__sdrlink.setSnr(" + (scanning && st.scanPause > 0) + ");");
         js("if(window.__sdrlink){__sdrlink.setNotch(" + notchSent + "," + st.notchLv() + "," + st.notchAlgo + ");__sdrlink.setDnr(" + dnrNow() + "," + st.dnrLv() + "," + st.dnrAlgo + ");}");
     }
 
@@ -1656,16 +1657,19 @@ public class MainActivity extends Activity {
         });
     }
 
-    static String dwellText(int sec) {
+    static String dwellText(int ms) {
+        if (ms < 1000) return Lang.F("{0} s", "{0} s", String.valueOf(ms / 1000.0));
+        int sec = ms / 1000;
         return sec < 60 ? Lang.F("{0} s", "{0} s", sec) : Lang.F("{0} min", "{0} min", sec / 60);
     }
 
     static String scanStepText(long hz) { return hz < 1000 ? hz + " Hz" : Memory.kHz(hz) + " kHz"; }
 
     String summary(ScanProfile p) {
-        if (p.type == 1) return Lang.F("mémoires : {0}, {1}", "memories: {0}, {1}", p.mems.size(), dwellText(p.memDwell));
+        if (p.type == 1) return Lang.F("mémoires : {0}, {1}", "memories: {0}, {1}", p.mems.size(), dwellText(p.memDwell)) + (p.pauseSec > 0 ? ", " + Lang.F("pause sur signal {0}", "pause on signal {0}", dwellText(p.pauseSec * 1000)) : "");
         if (p.lo() <= 0 || p.lo() == p.hi()) return Lang.T("fréquences non réglées", "frequencies not set");
         String s = Memory.kHz(p.lo()) + " – " + Memory.kHz(p.hi()) + " kHz, " + scanStepText(p.stepHz) + ", " + dwellText(p.freqDwell);
+        if (p.pauseSec > 0) s += ", " + Lang.F("pause sur signal {0}", "pause on signal {0}", dwellText(p.pauseSec * 1000));
         if (!p.skips.isEmpty()) s += ", " + Lang.F("zones non scannées : {0}", "skipped ranges: {0}", p.skips.size());
         return s;
     }
@@ -1706,13 +1710,13 @@ public class MainActivity extends Activity {
             if (scanRun.lo() <= 0 || scanRun.lo() == scanRun.hi()) { status(Lang.T("Scan : indiquez les fréquences de début et de fin dans « Conf scan »", "Scan: set the start and end frequencies in \"Scan setup\"")); return; }
             scanHz = resumeFreq(scanRun, cur);
             if (scanHz < 0) { status(Lang.T("Scan : toutes les fréquences sont dans des zones non scannées (« Conf scan »)", "Scan: all frequencies are in skipped ranges (\"Scan setup\")")); return; }
-            dwell = Math.max(1, st.scanFreqDwell);
+            dwell = Math.max(50, st.scanFreqDwell);
         } else {
             scanMems = scanMemories();
             if (scanMems.isEmpty()) { status(Lang.T("Scan : cochez des mémoires dans « Conf scan »", "Scan: check memories in \"Scan setup\"")); return; }
             scanIndex = 0;
             if (resume) for (int i = 0; i < scanMems.size(); i++) if (scanMems.get(i).hz == cur) scanIndex = i;
-            dwell = Math.max(1, st.scanMemDwell);
+            dwell = Math.max(50, st.scanMemDwell);
         }
         scanning = true;
         if (st.scanType == 0 && scanRun != null && !scanRun.mode.isEmpty() && !scanRun.mode.equals(mode)) {   // mode choisi pour ce scan
@@ -1721,7 +1725,10 @@ public class MainActivity extends Activity {
             setSdr(0, toSdr(mode));
         }
         voiceStart();
-        scanDwellMs = dwell * 1000L;
+        scanDwellMs = dwell;
+        snrPollMs = Math.max(40, Math.min(160, dwell / 3));   // lecture du S/N : 3 fois par durée de fréquence au moins
+        snrSettleMs = Math.min(400, dwell * 2 / 5);          // ignore le début de chaque fréquence (le son arrive après le réglage)
+        if (st.scanPause > 0) snrStart();
         scanTune();
         h.postDelayed(scanTick, scanDwellMs);
         updateButtons();
@@ -1829,6 +1836,7 @@ public class MainActivity extends Activity {
     void stopScan(String reason) {
         if (!scanning) return;
         scanning = false;
+        snrStop();
         h.removeCallbacks(scanTick);
         voiceUntil = System.currentTimeMillis() + VOICE_IDLE_MS;   // le micro reste ouvert un moment après la pause : « start » doit pouvoir reprendre le scan
         h.removeCallbacks(voiceIdleRun);
@@ -1836,6 +1844,74 @@ public class MainActivity extends Activity {
         status(reason != null ? Lang.F("Scan arrêté : {0}", "Scan stopped: {0}", reason) : Lang.T("Scan arrêté", "Scan stopped"));
         if (!resumed) unregisterVol();
         updateButtons();
+    }
+
+    // ------------------------------------------------------------------ pause sur signal (Conf scan : coche « Pause sur signal »)
+    // Le pont JS mesure le S/N du son (analyseur de 1024 points, lu 6 fois par seconde seulement pendant un scan avec pause).
+    // Signal repéré (S/N >= seuil) : le scan reste 'pauseSec' secondes sur la fréquence (quel que soit le signal ensuite),
+    // puis repart d'un pas. Sans la coche, rien n'est mesuré ni lancé.
+    long snrPollMs = 160, snrSettleMs = 400;
+    boolean scanHolding, snrBusy;
+    long scanTuneAt, holdLastSig, holdShownSec = -1, holdFromHz;
+    int holdFromIdx;
+    String scanWhat = "";
+    final Runnable snrPoll = new Runnable() { public void run() { snrPollRun(); } };
+
+    void snrStart() {
+        scanHolding = false;
+        js("if(window.__sdrlink)__sdrlink.setSnr(true);");
+        h.removeCallbacks(snrPoll);
+        h.postDelayed(snrPoll, snrPollMs);
+    }
+
+    void snrStop() {
+        h.removeCallbacks(snrPoll);
+        scanHolding = false;
+        if (web != null) js("if(window.__sdrlink)__sdrlink.setSnr(false);");
+    }
+
+    void snrPollRun() {
+        if (!scanning || st.scanPause <= 0) return;
+        h.postDelayed(snrPoll, snrPollMs);
+        if (snrBusy) return;
+        snrBusy = true;
+        web.evaluateJavascript("(function(){try{return window.__sdrlink?__sdrlink.snr():-99}catch(e){return -99}})()", new android.webkit.ValueCallback<String>() {
+            public void onReceiveValue(String v) {
+                snrBusy = false;
+                double snr;
+                try { snr = Double.parseDouble(v.trim()); } catch (Exception e) { return; }
+                if (scanning && st.scanPause > 0) onSnr(snr);
+            }
+        });
+    }
+
+    void onSnr(double snr) {
+        long now = System.currentTimeMillis();
+        if (!scanHolding) {
+            if (now - scanTuneAt < snrSettleMs || snr < st.scanSnr) return;
+            h.removeCallbacks(scanTick);
+            holdFromHz = scanHz; holdFromIdx = scanIndex;   // fréquence où le signal a été repéré : le scan reprendra après elle
+            // le signal mesuré vient en fait de la fréquence précédente (le son arrive après le réglage) : retour d un pas
+            if (st.scanType == 0) { long f = scanRun.prev(scanHz); if (f >= 0) { scanHz = f; scanTune(); } }
+            else if (scanMems.size() > 1) { scanIndex = (scanIndex - 1 + scanMems.size()) % scanMems.size(); scanTune(); }
+            scanHolding = true;
+            holdLastSig = System.currentTimeMillis();
+            holdShownSec = -1;
+            DiagLog.add("Scan : signal sur " + scanWhat + " (S/N " + snr + " dB), pause");
+            h.removeCallbacks(scanTick);
+        }
+        long left = holdLastSig + st.scanPause * 1000L - now;
+        if (left <= 0) {
+            scanHolding = false;
+            scanHz = holdFromHz; scanIndex = holdFromIdx;   // reprise après la fréquence du signal (sans y revenir)
+            scanNext();
+            return;
+        }
+        long sec = (left + 999) / 1000;
+        if (sec != holdShownSec) {
+            holdShownSec = sec;
+            status(Lang.F("Scan en pause sur {0} : signal {1} dB, reprise dans {2}", "Scan paused on {0}: signal {1} dB, resumes in {2}", scanWhat, snr, (sec / 60) + ":" + (sec % 60 < 10 ? "0" : "") + (sec % 60)));
+        }
     }
 
     void scanNext() {
@@ -1854,6 +1930,9 @@ public class MainActivity extends Activity {
             applyMemory(m);
             what = m.label() + (m.name.length() > 0 ? " (" + Memory.kHz(m.hz) + " kHz)" : "");
         }
+        scanWhat = what;
+        scanTuneAt = System.currentTimeMillis();
+        scanHolding = false;
         status(Lang.F("Scan : {0}", "Scan: {0}", what));
     }
 
