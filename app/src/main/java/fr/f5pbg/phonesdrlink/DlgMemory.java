@@ -283,6 +283,26 @@ final class DlgMemory {
         final Spinner sm = Ui.spinner(a, modes);
         for (int i = 0; i < MainActivity.MODES.length; i++) if (MainActivity.MODES[i].equals(m.mode)) sm.setSelection(i + 1);
         col.addView(sm);
+        if (isNew) {
+            // Nouvelle mémoire : le mode proposé est celui de la bande radioamateur de la fréquence (mode retenu par l'opérateur, sinon LSB
+            // sous 10 MHz, USB au-dessus), tant que l'opérateur n'a pas choisi lui-même. Hors des bandes, ou pour les mémoires déjà
+            // enregistrées, le choix reste « mode inchangé » : le scan garde alors le mode en cours.
+            final boolean[] touched = { false };
+            sm.setOnTouchListener(new View.OnTouchListener() { public boolean onTouch(View v, android.view.MotionEvent e) { touched[0] = true; return false; } });
+            final Runnable propose = new Runnable() { public void run() {
+                if (touched[0]) return;
+                int b = Bands.at(DlgKeypad.parse(khz.getText().toString()));
+                if (b < 0) return;
+                String bm = st.bandMode(b);
+                for (int i = 0; i < MainActivity.MODES.length; i++) if (MainActivity.MODES[i].equals(bm)) sm.setSelection(i + 1);
+            } };
+            if (m.mode.isEmpty()) propose.run();
+            khz.addTextChangedListener(new android.text.TextWatcher() {
+                public void beforeTextChanged(CharSequence s, int a1, int b1, int c1) { }
+                public void onTextChanged(CharSequence s, int a1, int b1, int c1) { }
+                public void afterTextChanged(android.text.Editable s) { propose.run(); }
+            });
+        }
         col.addView(Ui.small(a, Lang.T("Liste :", "List:")));
         ArrayList<String> lists = new ArrayList<String>();
         for (int i = 0; i < st.memListCount; i++) lists.add(st.memListLabel(i));

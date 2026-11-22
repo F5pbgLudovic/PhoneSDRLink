@@ -804,3 +804,5 @@ Notch type	Typ notcha
 Adaptive (LMS)	Adaptacyjny (LMS)
 Spectral (FFT)	Widmowy (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Typy: klasyczny (filtry notch przeglądarki podążające za wykrytymi gwizdami), adaptacyjny (filtr uczy się i stale odejmuje stabilne gwizdy; podąża też za dryfującymi), widmowy (analiza FFT: stabilne prążki są obniżane do poziomu sąsiednich). Każdy typ zachowuje własny poziom; im wyższy, tym szybciej i mocniej działa DNF, z ryzykiem naruszenia głosu.
+Scan of the {0} m band	Skanowanie pasma {0} m
+No sound after the screen woke up: the WebSDR is reloaded.	Brak dźwięku po włączeniu ekranu: WebSDR jest ładowany ponownie.

@@ -804,3 +804,5 @@ Notch type	Notchi tüüp
 Adaptive (LMS)	Adaptiivne (LMS)
 Spectral (FFT)	Spektraalne (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Tüübid: klassikaline (brauseri notch-filtrid, mis järgivad leitud vilesid), adaptiivne (filter õpib ja lahutab pidevalt stabiilsed vilesid; järgib ka triivivaid), spektraalne (FFT-analüüs: stabiilsed jooned viiakse naabrite tasemele). Iga tüüp jätab meelde oma taseme; mida kõrgem, seda kiiremini ja tugevamalt DNF toimib, riskiga häält mõjutada.
+Scan of the {0} m band	{0} m ala skaneerimine
+No sound after the screen woke up: the WebSDR is reloaded.	Pärast ekraani ärkamist heli pole: WebSDR laaditakse uuesti.

@@ -130,6 +130,7 @@ final class ScanProfile {
     int type;                       // 0 fréquences, 1 mémoires
     long startHz, endHz, stepHz = 1000;
     int freqDwell = 5, memDwell = 5;
+    String mode = "";               // mode du scan de fréquences ("" = mode en cours)
     ArrayList<long[]> skips = new ArrayList<long[]>();
     ArrayList<String> mems = new ArrayList<String>();
 
@@ -181,7 +182,7 @@ final class ScanProfile {
         StringBuilder z = new StringBuilder(), m = new StringBuilder();
         for (long[] s : skips) { if (z.length() > 0) z.append(';'); z.append(skipText(s)); }
         for (String s : mems) { if (m.length() > 0) m.append(';'); m.append(s); }
-        return name.replace("|", "/") + "|" + type + "|" + startHz + "|" + endHz + "|" + stepHz + "|" + freqDwell + "|" + memDwell + "|" + z + "|" + m;
+        return name.replace("|", "/") + "|" + type + "|" + startHz + "|" + endHz + "|" + stepHz + "|" + freqDwell + "|" + memDwell + "|" + z + "|" + m + "|" + mode;
     }
 
     static ScanProfile fromSetting(String v) {
@@ -199,6 +200,7 @@ final class ScanProfile {
         if ((i = Store.toInt(p[6], 0)) > 0) s.memDwell = i;
         if (p.length > 7) for (String z : p[7].split(";")) { long[] r = parseSkip(z.trim()); if (r != null && s.skips.size() < MAX_SKIPS) s.skips.add(r); }
         if (p.length > 8) for (String m : p[8].split(";")) if (m.length() > 0) s.mems.add(m);
+        if (p.length > 9 && java.util.Arrays.asList(MainActivity.MODES).contains(p[9].trim())) s.mode = p[9].trim();
         return s;
     }
 
@@ -277,6 +279,14 @@ final class Store {
         if ("CW".equals(m)) bwCw = hz; else if ("USB".equals(m) || "LSB".equals(m)) bwSsb = hz; else if ("AM".equals(m)) bwAm = hz; else if ("FM".equals(m)) bwFm = hz; else bwData = hz;
     }
 
+    // Mode retenu pour chaque bande radioamateur (nom de bande -> mode), voir Bands. Sans choix de l'opérateur : mode usuel de la bande.
+    final java.util.HashMap<String, String> bandModes = new java.util.HashMap<String, String>();
+
+    String bandMode(int band) {
+        String m = bandModes.get(Bands.name(band));
+        return m != null && !m.isEmpty() ? m : Bands.defMode(band);
+    }
+
     void defaultsModes() { stepCw = 10; stepSsb = 1000; stepOther = 1000; bwCw = 300; bwSsb = 2900; bwAm = 6000; bwFm = 8000; bwData = 0; }
     // WebSDR
     final ArrayList<Favorite> favorites = new ArrayList<Favorite>();
@@ -299,7 +309,7 @@ final class Store {
     }
     // Scan
     int scanType;
-    long scanStart, scanEnd, scanStep = 1000;
+    long scanStart, scanEnd, scanStep = 1000; String scanMode = "";
     int scanFreqDwell = 5, scanMemDwell = 5;
     final ArrayList<long[]> scanSkips = new ArrayList<long[]>();
     final ArrayList<ScanProfile> scanProfiles = new ArrayList<ScanProfile>();
@@ -346,7 +356,7 @@ final class Store {
     }
 
     void defaultsScan() {
-        scanType = 0; scanStart = scanEnd = 0; scanStep = 1000; scanFreqDwell = scanMemDwell = 5;
+        scanType = 0; scanMode = ""; scanStart = scanEnd = 0; scanStep = 1000; scanFreqDwell = scanMemDwell = 5;
         scanSkips.clear();
         scanProfiles.clear();
         for (Memory m : memories) m.scan = false;
@@ -511,6 +521,13 @@ final class Store {
                 else if (k.equals("PhoneBwAm")) bwAm = okBw(toInt(v, 6000), 6000);
                 else if (k.equals("PhoneBwFm")) bwFm = okBw(toInt(v, 8000), 8000);
                 else if (k.equals("PhoneBwData")) bwData = okBw(toInt(v, 0), 0);
+                else if (k.equals("PhoneBandModes")) {   // « 40:LSB,20:USB »
+                    bandModes.clear();
+                    for (String e : v.split(",")) {
+                        String[] q = e.split(":");
+                        if (q.length == 2 && q[0].trim().length() > 0 && java.util.Arrays.asList(MainActivity.MODES).contains(q[1].trim())) bandModes.put(q[0].trim(), q[1].trim());
+                    }
+                }
             }
             if (web) {
                 if (k.equals("Fav")) { if (v.length() > 0) { favs.add(Favorite.fromSetting(v)); favSeen = true; } }
@@ -546,6 +563,7 @@ final class Store {
                 else if (k.equals("ScanStart")) scanStart = Math.max(0, toLong(v, 0));
                 else if (k.equals("ScanEnd")) scanEnd = Math.max(0, toLong(v, 0));
                 else if (k.equals("ScanStep")) { long s = toLong(v, 1000); if (s > 0) scanStep = s; }
+                else if (k.equals("ScanMode")) scanMode = java.util.Arrays.asList(MainActivity.MODES).contains(v.trim()) ? v.trim() : "";
                 else if (k.equals("ScanFreqDwell")) { int d = toInt(v, 5); if (d > 0) scanFreqDwell = d; }
                 else if (k.equals("ScanMemDwell")) { int d = toInt(v, 5); if (d > 0) scanMemDwell = d; }
                 else if (k.equals("ScanSkip")) { long[] z = ScanProfile.parseSkip(v.trim()); if (z != null && skips.size() < ScanProfile.MAX_SKIPS) skips.add(z); }
@@ -727,6 +745,7 @@ final class Store {
         line(sb, "PhoneBwAm", bwAm);
         line(sb, "PhoneBwFm", bwFm);
         line(sb, "PhoneBwData", bwData);
+        { StringBuilder bm = new StringBuilder(); for (java.util.Map.Entry<String, String> e : bandModes.entrySet()) { if (bm.length() > 0) bm.append(','); bm.append(e.getKey()).append(':').append(e.getValue()); } line(sb, "PhoneBandModes", bm.toString()); }
         line(sb, "FirstSearch", firstSearchDone ? 1 : 0);
         line(sb, "ListCount", favListCount);
         for (int i = 0; i < favListCount; i++) line(sb, "List" + (i + 1), favListNames[i]);
@@ -744,6 +763,7 @@ final class Store {
         line(sb, "ScanStart", scanStart);
         line(sb, "ScanEnd", scanEnd);
         line(sb, "ScanStep", scanStep);
+        line(sb, "ScanMode", scanMode);
         line(sb, "ScanFreqDwell", scanFreqDwell);
         line(sb, "ScanMemDwell", scanMemDwell);
         for (long[] z : scanSkips) line(sb, "ScanSkip", ScanProfile.skipText(z));
@@ -844,14 +864,14 @@ final class Store {
     // Réglage de scan du moment, sous forme de profil.
     ScanProfile currentScan() {
         ScanProfile p = new ScanProfile();
-        p.type = scanType; p.startHz = scanStart; p.endHz = scanEnd; p.stepHz = scanStep; p.freqDwell = scanFreqDwell; p.memDwell = scanMemDwell;
+        p.type = scanType; p.startHz = scanStart; p.endHz = scanEnd; p.stepHz = scanStep; p.freqDwell = scanFreqDwell; p.memDwell = scanMemDwell; p.mode = scanMode;
         for (long[] z : scanSkips) p.skips.add(new long[] { z[0], z[1] });
         for (Memory m : memories) if (m.scan) p.mems.add(m.key());
         return p;
     }
 
     void useScan(ScanProfile p) {
-        scanType = p.type; scanStart = p.startHz; scanEnd = p.endHz; scanStep = p.stepHz; scanFreqDwell = p.freqDwell; scanMemDwell = p.memDwell;
+        scanType = p.type; scanStart = p.startHz; scanEnd = p.endHz; scanStep = p.stepHz; scanFreqDwell = p.freqDwell; scanMemDwell = p.memDwell; scanMode = p.mode;
         scanSkips.clear();
         for (long[] z : p.skips) scanSkips.add(new long[] { z[0], z[1] });
         for (Memory m : memories) m.scan = p.mems.contains(m.key());

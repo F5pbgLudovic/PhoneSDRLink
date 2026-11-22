@@ -195,7 +195,28 @@ public class MainActivity extends Activity {
         applyPhoneVolume();
         h.removeCallbacks(watchRun);
         h.postDelayed(watchRun, 5000);
+        // Réveil de l'écran : la page ne doit pas avoir été touchée. Les contextes audio suspendus repartent ; si aucun son n'est revenu
+        // après 9 s (sans coupure voulue : Muet ou volume de la page), le WebSDR est rechargé une fois, comme le ferait « Init ».
+        h.removeCallbacks(wakeRun);
+        if (!sdrKind.isEmpty()) {
+            js("if(window.__sdrlink)__sdrlink.wake(10);");
+            h.postDelayed(wakeRun, 9000);
+        }
     }
+
+    final Runnable wakeRun = new Runnable() {
+        public void run() {
+            if (sdrKind.isEmpty() || !resumed) return;
+            web.evaluateJavascript("(function(){try{return window.__sdrlink?__sdrlink.wakeState():-1}catch(e){return -1}})()", new android.webkit.ValueCallback<String>() {
+                public void onReceiveValue(String v) {
+                    if (v == null || !v.trim().equals("0")) return;
+                    DiagLog.add("Réveil de l'écran : aucun son après 9 s, page rechargée");
+                    status(Lang.T("Plus de son au réveil de l'écran : le WebSDR est rechargé.", "No sound after the screen woke up: the WebSDR is reloaded."));
+                    web.reload();
+                }
+            });
+        }
+    };
 
     @Override
     protected void onPause() {
@@ -367,6 +388,7 @@ public class MainActivity extends Activity {
         // Ligne 3 : scan, conf scan, mémoires
         LinearLayout r3 = Ui.row(this);
         btnScan = Ui.button(this, "▶ Scan", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; onScanButton(); } });
+        btnScan.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { if (blocked()) return true; onScanLong(); return true; } });
         btnScanConf = Ui.button(this, Lang.T("Conf scan", "Scan setup"), new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgScan.show(MainActivity.this); } });
         btnMem = Ui.button(this, Lang.T("Mémoires", "Memories"), new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgMemory.show(MainActivity.this); } });
         btnStep = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseStep(); } });
@@ -465,6 +487,7 @@ public class MainActivity extends Activity {
         bigMode = bigButton(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseMode(); } });
         bigMode.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { chooseBandwidth(); return true; } });
         bigScan = bigButton(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; onScanButton(); } });
+        bigScan.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { if (blocked()) return true; onScanLong(); return true; } });
         bigRec = bigButton(new View.OnClickListener() { public void onClick(View v) { onRecButton(); } });
         bigRec.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { openRecordings(); return true; } });
         bigMute = bigButton(new View.OnClickListener() { public void onClick(View v) { muted = !muted; applyVolume(); updateButtons(); } });
@@ -1404,9 +1427,16 @@ public class MainActivity extends Activity {
         if (user) settleUntil = 0;
         // Réglage fait dans la page (clic dans la cascade, touches) : l'affichage le suit.
         if (System.currentTimeMillis() < targetUntil && Math.abs(f - target) > 400) return;   // retard de la page pendant qu'on glisse
+        if (user && f > 0) bandScanFollow(f);
+        String autoM = user && f > 0 ? bandAutoMode(f) : null;   // l'opérateur a changé de bande dans la page : mode de la nouvelle bande
         if (f > 0) freq = f;
-        if (!fam.isEmpty() && !toSdr(mode).equals(fam)) {
+        if (autoM != null) {
+            mode = autoM;
+            syncBw(true);
+            setSdr(0, toSdr(mode));
+        } else if (!fam.isEmpty() && !toSdr(mode).equals(fam)) {
             mode = fromFamily(fam);
+            if (user) noteBandMode();   // mode changé par l'opérateur dans la page : retenu pour cette bande
             syncBw(true);
             if (bwHz > 0) h.postDelayed(new Runnable() { public void run() { if (bwHz > 0) js("if(window.__sdrlink)__sdrlink.setBw(" + bwHz + ");"); } }, 700);
         }
@@ -1453,12 +1483,50 @@ public class MainActivity extends Activity {
 
     void tune(long hz) {
         hz = Math.max(Store.MIN_HZ, Math.min(Store.MAX_HZ, hz));
+        bandScanFollow(hz);
+        String nm = bandAutoMode(hz);
         freq = hz;
         target = hz;
         targetUntil = System.currentTimeMillis() + 1000;
-        setSdr(hz, "");
+        if (nm != null) { mode = nm; syncBw(true); }
+        setSdr(hz, nm != null ? toSdr(nm) : "");
         updateDisplays();
         saveSoon();
+    }
+
+    // Passage dans une autre bande radioamateur (160 à 6 m) : le mode retenu par l'opérateur pour cette bande est repris, sinon le mode
+    // usuel (LSB en 160, 80 et 40 m ; USB en 60 m et à partir de 30 m). Rien ne change dans une même bande, hors des bandes, ni quand un
+    // décodeur tourne. null = mode inchangé. À appeler avant de modifier freq.
+    String bandAutoMode(long newHz) {
+        if (decMode != 0) return null;
+        if (scanning && st.scanType == 0 && scanRun != null && !scanRun.mode.isEmpty()) return null;   // le scan a son propre mode
+        int nb = Bands.at(newHz);
+        if (nb < 0 || nb == Bands.at(freq)) return null;
+        String m = st.bandMode(nb);
+        return m.equals(mode) ? null : m;
+    }
+
+    // Changement de bande radioamateur (hors scan en marche) : le scan prêt devient celui de la nouvelle bande, soit la première configuration
+    // enregistrée qui y tient, soit la bande entière. À appeler avant de modifier freq.
+    void bandScanFollow(long newHz) {
+        int nb = Bands.at(newHz);
+        if (scanning || nb < 0 || nb == Bands.at(freq)) return;
+        long lo = Bands.lo(nb), hi = Bands.hi(nb);
+        ScanProfile pick = null;
+        for (ScanProfile p : st.scanProfiles) if (p.type == 0 && p.lo() >= lo && p.hi() <= hi && p.lo() < p.hi()) { pick = p; break; }
+        if (pick == null) {
+            pick = st.currentScan();
+            pick.type = 0; pick.startHz = lo; pick.endHz = hi; pick.skips.clear(); pick.mode = "";
+            if (pick.stepHz <= 0) pick.stepHz = 1000;
+        }
+        st.useScan(pick);
+        st.save();
+    }
+
+    // Choix de mode de l'opérateur : retenu pour la bande où l'on se trouve.
+    void noteBandMode() {
+        int b = Bands.at(freq);
+        if (b >= 0 && mode != null && !mode.equals(st.bandMode(b))) { st.bandModes.put(Bands.name(b), mode); st.save(); }
     }
 
     // Le mode change : le pas et la largeur de bande retenus pour ce mode sont repris (le pas s'affiche d'après le mode).
@@ -1471,6 +1539,7 @@ public class MainActivity extends Activity {
 
     void setMode(String m) {
         mode = m;
+        noteBandMode();
         syncBw(true);
         setSdr(0, toSdr(m));
         updateDisplays();
@@ -1517,7 +1586,8 @@ public class MainActivity extends Activity {
     }
 
     void applyMemory(Memory m) {
-        freq = m.hz;
+        bandScanFollow(m.hz);
+        freq = m.hz;   // mémoire sans mode : le mode en cours est gardé (pas de choix automatique de la bande)
         target = m.hz;
         targetUntil = System.currentTimeMillis() + 1000;
         if (!m.mode.isEmpty()) { mode = m.mode; syncBw(true); }
@@ -1531,17 +1601,58 @@ public class MainActivity extends Activity {
     void onScanButton() {
         if (scanning) { stopScan(null); voiceOff(); return; }   // bouton rouge : scan et écoute du micro coupés (aucun départ à la voix)
         if (voiceListening()) { voiceOff(); return; }   // bouton vert : le micro est coupé, le scan reste arrêté
-        final ScanProfile cur = st.currentScan();
-        java.util.ArrayList<String> items = new java.util.ArrayList<String>();
-        items.add(Lang.T("Reprendre le scan", "Resume the scan") + "  —  " + resumeText());
-        items.add(Lang.T("Réglage actuel de « Conf scan »", "Current \"Scan setup\" setting") + "  —  " + summary(cur));
-        for (ScanProfile p : st.scanProfiles) items.add(p.name + "  —  " + summary(p));
-        Ui.choose(this, "Scan", items.toArray(new String[0]), new Ui.Index() {
-            public void chose(int i) {
-                if (i == 0) startScan(true);
-                else if (i == 1) startScan(false);
-                else { st.useScan(st.scanProfiles.get(i - 2)); st.save(); startScan(false); }
+        // Clic court : reprend le scan qui était en cours, sans rien demander. Aucun scan réglé : celui de la première configuration
+        // enregistrée ; aucune configuration : la fenêtre « Conf scan ».
+        if (scanReady(st.currentScan())) { startScan(true); return; }
+        if (!st.scanProfiles.isEmpty()) {
+            st.useScan(st.scanProfiles.get(0));
+            st.save();
+            if (scanReady(st.currentScan())) { startScan(true); return; }
+        }
+        DlgScan.show(this);
+    }
+
+    boolean scanReady(ScanProfile p) {
+        if (p.type == 1) return !p.mems.isEmpty();
+        return p.lo() > 0 && p.lo() != p.hi() && p.next(-1) >= 0;
+    }
+
+    // Clic long : menu des reprises de scan. D'abord la bande radioamateur où l'on se trouve (la bande entière, puis les configurations
+    // enregistrées qui en font partie), ensuite la reprise du scan, le réglage actuel et les autres configurations.
+    void onScanLong() {
+        if (scanning || voiceListening()) return;
+        final java.util.ArrayList<String> items = new java.util.ArrayList<String>();
+        final java.util.ArrayList<Runnable> acts = new java.util.ArrayList<Runnable>();
+        int b = Bands.at(freq);
+        java.util.HashSet<ScanProfile> shown = new java.util.HashSet<ScanProfile>();
+        if (b >= 0) {
+            final long lo = Bands.lo(b), hi = Bands.hi(b);
+            items.add(Lang.F("Scan de la bande des {0} m", "Scan of the {0} m band", Bands.name(b)) + "  —  " + Memory.kHz(lo) + " – " + Memory.kHz(hi) + " kHz");
+            acts.add(new Runnable() { public void run() {
+                ScanProfile p = st.currentScan();
+                p.type = 0; p.startHz = lo; p.endHz = hi; p.skips.clear();
+                if (p.stepHz <= 0) p.stepHz = 1000;
+                st.useScan(p); st.save(); startScan(true);
+            } });
+            for (final ScanProfile p : st.scanProfiles) {
+                if (p.type == 0 && p.lo() >= lo && p.hi() <= hi && p.lo() < p.hi()) {
+                    shown.add(p);
+                    items.add(p.name + "  —  " + summary(p));
+                    acts.add(new Runnable() { public void run() { st.useScan(p); st.save(); startScan(true); } });
+                }
             }
+        }
+        items.add(Lang.T("Reprendre le scan", "Resume the scan") + "  —  " + resumeText());
+        acts.add(new Runnable() { public void run() { startScan(true); } });
+        items.add(Lang.T("Réglage actuel de « Conf scan »", "Current \"Scan setup\" setting") + "  —  " + summary(st.currentScan()));
+        acts.add(new Runnable() { public void run() { startScan(false); } });
+        for (final ScanProfile p : st.scanProfiles) {
+            if (shown.contains(p)) continue;
+            items.add(p.name + "  —  " + summary(p));
+            acts.add(new Runnable() { public void run() { st.useScan(p); st.save(); startScan(false); } });
+        }
+        Ui.choose(this, "Scan", items.toArray(new String[0]), new Ui.Index() {
+            public void chose(int i) { if (i >= 0 && i < acts.size()) acts.get(i).run(); }
         });
     }
 
@@ -1604,6 +1715,11 @@ public class MainActivity extends Activity {
             dwell = Math.max(1, st.scanMemDwell);
         }
         scanning = true;
+        if (st.scanType == 0 && scanRun != null && !scanRun.mode.isEmpty() && !scanRun.mode.equals(mode)) {   // mode choisi pour ce scan
+            mode = scanRun.mode;
+            syncBw(true);
+            setSdr(0, toSdr(mode));
+        }
         voiceStart();
         scanDwellMs = dwell * 1000L;
         scanTune();

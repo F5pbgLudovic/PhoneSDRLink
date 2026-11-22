@@ -804,3 +804,5 @@ Notch type	Notch-Art
 Adaptive (LMS)	Adaptiv (LMS)
 Spectral (FFT)	Spektral (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Arten: klassisch (Notch-Filter des Browsers, die den erkannten Pfeiftönen folgen), adaptiv (ein Filter lernt und zieht stabile Pfeiftöne laufend ab; er folgt auch wandernden), spektral (FFT-Analyse: stabile Linien werden auf den Pegel ihrer Nachbarn abgesenkt). Jede Art behält ihre eigene Stufe; je höher sie ist, desto schneller und stärker wirkt der DNF, mit dem Risiko, die Stimme zu beeinträchtigen.
+Scan of the {0} m band	Scan des {0}-m-Bandes
+No sound after the screen woke up: the WebSDR is reloaded.	Kein Ton nach dem Aufwachen des Bildschirms: das WebSDR wird neu geladen.

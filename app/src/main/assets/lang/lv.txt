@@ -804,3 +804,5 @@ Notch type	Notch veids
 Adaptive (LMS)	Adaptīvs (LMS)
 Spectral (FFT)	Spektrālais (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Veidi: klasisks (pārlūka notch filtri, kas seko atrastajiem svilpieniem), adaptīvs (filtrs mācās un nepārtraukti atņem stabilos svilpienus; seko arī tiem, kas dreifē), spektrālais (FFT analīze: stabilās līnijas tiek pazeminātas līdz kaimiņu līmenim). Katrs veids atceras savu līmeni; jo augstāks, jo ātrāk un stiprāk darbojas DNF, ar risku ietekmēt balsi.
+Scan of the {0} m band	{0} m joslas skenēšana
+No sound after the screen woke up: the WebSDR is reloaded.	Pēc ekrāna pamošanās skaņas nav: WebSDR tiek ielādēts no jauna.

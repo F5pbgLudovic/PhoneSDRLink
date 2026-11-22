@@ -27,6 +27,24 @@
   var L = window.__sdrlink = { last: '', volume: 1, gains: [], ctxs: [] };
   var __post = function (m) { try { PhoneSdr.post(m); } catch (e) { } };
 
+  // Écran éteint puis rallumé : la page ne doit s'apercevoir de rien. La WebView déclare la page « cachée » à l'extinction ;
+  // beaucoup de WebSDR coupent alors leur son ou leur connexion et ne repartent pas au réveil. La page voit donc toujours
+  // « visible », et les évènements de visibilité ne lui parviennent pas. realHidden() garde le vrai état pour la surveillance.
+  var realVis = function () { return 'visible'; };
+  try {
+    var vd = Object.getOwnPropertyDescriptor(Document.prototype, 'visibilityState');
+    if (vd && vd.get) realVis = function () { return vd.get.call(document); };
+    Object.defineProperty(Document.prototype, 'visibilityState', { get: function () { return 'visible'; }, configurable: true });
+    Object.defineProperty(Document.prototype, 'webkitVisibilityState', { get: function () { return 'visible'; }, configurable: true });
+    Object.defineProperty(Document.prototype, 'hidden', { get: function () { return false; }, configurable: true });
+    Object.defineProperty(Document.prototype, 'webkitHidden', { get: function () { return false; }, configurable: true });
+    var stopEv = function (e) { e.stopImmediatePropagation(); };
+    ['visibilitychange', 'webkitvisibilitychange', 'pagehide', 'freeze'].forEach(function (t) {
+      window.addEventListener(t, stopEv, true);
+      document.addEventListener(t, stopEv, true);
+    });
+  } catch (e) { }
+
   // Mode économie (SET) : les animations de la page (spectre, cascade) ne tournent qu'à environ 20 images par seconde au lieu de 60.
   // Toutes les fonctions rappelées dans une même image partagent le même instant t : la première qui passe ouvre l'image pour les autres.
   // Le son n'en dépend pas. Les identifiants rendus ici sont très grands pour ne pas se confondre avec ceux du navigateur.
@@ -457,8 +475,9 @@
       if (L.watchOn) for (var i = 0; i < L.ctxs.length; i++) watch(L.ctxs[i]);
     };
     setInterval(function () {
-      if (!L.watchOn) return;
-      var running = false, now = Date.now();
+      var now = Date.now();
+      if (!L.watchOn && !(L.wakeUntil > now)) return;
+      var running = false;
       for (var i = 0; i < L.ctxs.length; i++) {
         var c = L.ctxs[i], a = c.__sdrlinkWatch;
         if (!a || c.state !== 'running') continue;
@@ -466,13 +485,46 @@
         L.everRan = true;
         try {
           a.getFloatTimeDomainData(a.buf);
-          for (var k = 0; k < a.buf.length; k++) if (Math.abs(a.buf[k]) > 0.00005) { L.lastSound = now; break; }
+          for (var k = 0; k < a.buf.length; k++) if (Math.abs(a.buf[k]) > 0.00005) { L.lastSound = now; if (L.wakeUntil > now) L.wakeHeard = true; break; }
         } catch (e) { }
       }
+      if (!L.watchOn) return;
       // Pas de son lancé par la page (jamais démarré) ou page cachée : rien à réinitialiser. Mais un son qui a tourné puis dont
       // le contexte audio est suspendu ou fermé (arrêt par le serveur : « session timed out ») compte comme un son perdu.
-      if (document.visibilityState === 'hidden' || (!running && !L.everRan)) L.lastSound = now;
+      if (realVis() === 'hidden' || (!running && !L.everRan)) L.lastSound = now;
     }, 1000);
+    // Réveil de l'écran : les contextes audio suspendus repartent, et pendant 'secs' secondes on écoute si le son revient.
+    L.wake = function (secs) {
+      L.wakeUntil = Date.now() + (secs || 8) * 1000;
+      L.wakeHeard = false;
+      for (var i = 0; i < L.ctxs.length; i++) {
+        var c = L.ctxs[i];
+        watch(c);
+        try { if (c.state === 'suspended' && c.resume) c.resume(); } catch (e) { }
+      }
+    };
+    // Après le réveil : 1 = le son est revenu ; 0 = aucun son (et rien ne le coupe volontairement) ; -1 = rien à juger.
+    L.wakeState = function () {
+      if (L.wakeHeard) return 1;
+      if (!L.ctxs.length) return -1;
+      return pageMuted() ? -1 : 0;
+    };
+    var pageMuted = function () {
+      try {
+        var k = detect(), el = null;
+        if (k === 'websdr') el = document.getElementById('volumecontrol2');
+        else if (k === 'owrx' || k === 'owrx+') el = document.getElementById('openwebrx-panel-volume');
+        else if (k === 'kiwi') el = document.querySelector('input.id-input-volume');
+        else if (k === 'phantom') el = L.phantomVolume();
+        if (el && parseFloat(el.value) <= parseFloat(el.min || 0)) return true;
+        var m = document.querySelectorAll('[id*=mute i],[class*=mute i],[name*=mute i],[aria-label*=mute i],[title*=mute i]');
+        for (var i = 0; i < m.length; i++) {
+          var e2 = m[i], cls = String(e2.className && e2.className.baseVal !== undefined ? e2.className.baseVal : e2.className);
+          if (e2.checked === true || e2.getAttribute('aria-pressed') === 'true' || /(^|[\s_-])(muted|active|on|pressed|selected|checked)([\s_-]|$)/i.test(cls)) return true;
+        }
+      } catch (e) { }
+      return false;
+    };
     // Durée (ms) sans son ; -2 si le curseur de volume de la page est à zéro (réglage de l'opérateur) ; -1 si rien à surveiller.
     L.silentMs = function () {
       if (!L.watchOn) return -1;

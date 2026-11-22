@@ -804,3 +804,5 @@ Notch type	Vrsta notcha
 Adaptive (LMS)	Prilagodljiv (LMS)
 Spectral (FFT)	Spektralni (FFT)
 Types: classic (browser notch filters that follow the detected whistles), adaptive (a filter learns and continuously subtracts steady whistles; it follows drifting ones), spectral (FFT analysis: steady lines are brought down to the level of their neighbours). Each type keeps its own level; the higher it is, the faster and stronger the DNF acts, with a risk of touching the voice.	Vrste: klasičen (notch filtri brskalnika, ki sledijo zaznane žvižge), prilagodljiv (filter se uči in sproti odšteva stabilne žvižge; sledi tudi tistim, ki se premikajo), spektralni (analiza FFT: stabilne črte se znižajo na raven sosednjih). Vsaka vrsta ohrani svojo raven; višja ko je, hitreje in močneje deluje DNF, s tveganjem, da prizadene glas.
+Scan of the {0} m band	Skeniranje pasu {0} m
+No sound after the screen woke up: the WebSDR is reloaded.	Po prebujenju zaslona ni zvoka: WebSDR se znova naloži.

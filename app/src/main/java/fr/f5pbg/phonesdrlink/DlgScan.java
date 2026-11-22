@@ -25,7 +25,8 @@ final class DlgScan {
     final MainActivity a;
     final Store st;
     Dialog d;
-    Spinner spProfile, spStep, spDwellF, spDwellM;
+    Spinner spProfile, spStep, spDwellF, spDwellM, spMode;
+    boolean modeTouched;
     EditText profName, txtStart, txtEnd;
     RadioButton rbFreq, rbMem;
     LinearLayout pnlFreq, pnlMem, zonesBox;
@@ -106,6 +107,18 @@ final class DlgScan {
         for (long s : STEPS) steps.add(MainActivity.scanStepText(s));
         spStep = Ui.spinner(a, steps);
         pnlFreq.addView(spStep);
+        pnlFreq.addView(Ui.small(a, Lang.T("Mode :", "Mode:")));
+        ArrayList<String> modes = new ArrayList<String>();
+        modes.add(Lang.T("(mode inchangé)", "(mode unchanged)"));
+        for (String s : MainActivity.MODES) modes.add(MainActivity.modeLabel(s));
+        spMode = Ui.spinner(a, modes);
+        spMode.setOnTouchListener(new View.OnTouchListener() { public boolean onTouch(View v, android.view.MotionEvent e) { modeTouched = true; return false; } });
+        pnlFreq.addView(spMode);
+        txtStart.addTextChangedListener(new android.text.TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int x, int y, int z) { }
+            public void onTextChanged(CharSequence s, int x, int y, int z) { }
+            public void afterTextChanged(android.text.Editable s) { proposeMode(); }
+        });
         pnlFreq.addView(Ui.small(a, Lang.T("Durée sur chaque fréquence :", "Time on each frequency:")));
         spDwellF = Ui.spinner(a, dwellNames());
         pnlFreq.addView(spDwellF);
@@ -184,12 +197,23 @@ final class DlgScan {
         spStep.setSelection(si);
         spDwellF.setSelection(dwellIndex(p.freqDwell));
         spDwellM.setSelection(dwellIndex(p.memDwell));
+        spMode.setSelection(0);
+        for (int i = 0; i < MainActivity.MODES.length; i++) if (MainActivity.MODES[i].equals(p.mode)) spMode.setSelection(i + 1);
         for (int i = 0; i < memChecks.size(); i++) memChecks.get(i).setChecked(p.mems.contains(st.memories.get(i).key()));
         clearZones();
         for (long[] z : p.skips) addZone(Memory.kHz(z[0]), Memory.kHz(z[1]));
         rbFreq.setChecked(p.type == 0);
         rbMem.setChecked(p.type == 1);
         showType();
+    }
+
+    // Nouveau scan (aucune configuration chargée) : le mode proposé est celui de la bande du début, tant que l opérateur n a pas choisi.
+    void proposeMode() {
+        if (filling || modeTouched || lastLoaded >= 0 || spMode == null) return;
+        int b = Bands.at(DlgKeypad.parse(txtStart.getText().toString()) );
+        if (b < 0) return;
+        String bm = st.bandMode(b);
+        for (int i = 0; i < MainActivity.MODES.length; i++) if (MainActivity.MODES[i].equals(bm)) spMode.setSelection(i + 1);
     }
 
     void showType() {
@@ -227,6 +251,8 @@ final class DlgScan {
             txtStart.setText("");
             txtEnd.setText("");
             spStep.setSelection(3);
+            spMode.setSelection(0);
+            modeTouched = false;
             spDwellF.setSelection(dwellIndex(5));
             clearZones();
         } else {
@@ -249,6 +275,8 @@ final class DlgScan {
         p.stepHz = STEPS[Math.max(0, spStep.getSelectedItemPosition())];
         p.freqDwell = DWELLS[Math.max(0, spDwellF.getSelectedItemPosition())];
         p.memDwell = DWELLS[Math.max(0, spDwellM.getSelectedItemPosition())];
+        int mi = spMode.getSelectedItemPosition();
+        p.mode = mi <= 0 ? "" : MainActivity.MODES[mi - 1];
         for (int i = 0; i < zoneRows.size(); i++) {
             String ta = zoneRows.get(i)[0].getText().toString().trim(), tb = zoneRows.get(i)[1].getText().toString().trim();
             if (ta.isEmpty() && tb.isEmpty()) continue;
