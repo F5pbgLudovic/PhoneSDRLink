@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Scanare în pauză pe {0}: sem
 Signal threshold (S/N):	Prag semnal (S/N):
 Steps back:	Pași înapoi:
 Scan of the extended 27 MHz band	Scanarea benzii extinse de 27 MHz
+Flat	Plat
+Clear voice (presence)	Voce clară (prezență)
+Bass cut	Tăiere de bas
+Warm	Cald
+Softened treble	Acuți atenuați
+DX (boosted midrange)	DX (medii accentuate)
+Equalizer on	Egalizor pornit
+Preset…	Presetare…
+10-band equalizer — PhoneSDRLink	Egalizor cu 10 benzi — PhoneSDRLink

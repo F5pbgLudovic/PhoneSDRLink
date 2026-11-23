@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Skannaus tauolla taajuudella {
 Signal threshold (S/N):	Signaalin kynnys (S/N):
 Steps back:	Askelta taakse:
 Scan of the extended 27 MHz band	Laajennetun 27 MHz:n kaistan skannaus
+Flat	Tasainen
+Clear voice (presence)	Selkeä ääni (läsnäolo)
+Bass cut	Bassoleikkaus
+Warm	Lämmin
+Softened treble	Pehmennetyt diskantit
+DX (boosted midrange)	DX (korostetut keskitaajuudet)
+Equalizer on	Taajuuskorjain päällä
+Preset…	Esiasetus…
+10-band equalizer — PhoneSDRLink	10-kaistainen taajuuskorjain — PhoneSDRLink

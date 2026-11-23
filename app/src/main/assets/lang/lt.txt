@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Skenavimas pristabdytas ties {
 Signal threshold (S/N):	Signalo slenkstis (S/N):
 Steps back:	Žingsnių atgal:
 Scan of the extended 27 MHz band	Išplėstinės 27 MHz juostos skenavimas
+Flat	Plokščias
+Clear voice (presence)	Aiškus balsas (presence)
+Bass cut	Žemų dažnių nukirpimas
+Warm	Šiltas
+Softened treble	Švelnesni aukštieji
+DX (boosted midrange)	DX (sustiprinti vidutiniai)
+Equalizer on	Glaudintuvas įjungtas
+Preset…	Išankstinė nuostata…
+10-band equalizer — PhoneSDRLink	10 juostų glaudintuvas — PhoneSDRLink

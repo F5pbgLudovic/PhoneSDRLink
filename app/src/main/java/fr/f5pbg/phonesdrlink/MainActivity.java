@@ -392,6 +392,7 @@ public class MainActivity extends Activity {
         btnScanConf = Ui.button(this, Lang.T("Conf scan", "Scan setup"), new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgScan.show(MainActivity.this); } });
         btnMem = Ui.button(this, Lang.T("Mémoires", "Memories"), new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; DlgMemory.show(MainActivity.this); } });
         btnStep = Ui.button(this, "", new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseStep(); } });
+        btnStep.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { if (blocked()) return true; DlgEq.show(MainActivity.this); return true; } });
         for (Button x : new Button[] { btnScan, btnScanConf, btnMem, btnStep }) { x.setTextSize(13); x.setPadding(Ui.dp(this, 4), 0, Ui.dp(this, 4), 0); }
         r3.addView(btnScan, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1, this, 2));
         r3.addView(btnScanConf, Ui.lp(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.05f, this, 2));
@@ -493,6 +494,7 @@ public class MainActivity extends Activity {
         bigMute = bigButton(new View.OnClickListener() { public void onClick(View v) { muted = !muted; applyVolume(); updateButtons(); } });
         bigMute.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { onMuteLongPress(); return true; } });
         bigStep = bigButton(new View.OnClickListener() { public void onClick(View v) { if (blocked()) return; chooseStep(); } });
+        btnStep.setOnLongClickListener(new View.OnLongClickListener() { public boolean onLongClick(View v) { if (blocked()) return true; DlgEq.show(MainActivity.this); return true; } });
         Button back = bigButton(new View.OnClickListener() { public void onClick(View v) { d.dismiss(); } });
         back.setText("◀ " + Lang.T("Retour", "Back"));
         Button[][] grid = { { bigMode, bigScan }, { bigRec, bigMute }, { bigStep, back } };
@@ -1184,6 +1186,7 @@ public class MainActivity extends Activity {
         js("if(window.__sdrlink)__sdrlink.setWatch(" + st.autoReload + ");");
         js("if(window.__sdrlink)__sdrlink.setEco(" + st.eco + ");");
         js("if(window.__sdrlink)__sdrlink.setSnr(" + (scanning && st.scanPause > 0) + ");");
+        js(DlgEq.pageCall(st.fxRx));
         js("if(window.__sdrlink){__sdrlink.setNotch(" + notchSent + "," + st.notchLv() + "," + st.notchAlgo + ");__sdrlink.setDnr(" + dnrNow() + "," + st.dnrLv() + "," + st.dnrAlgo + ");}");
     }
 

@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Skanning satt på pause på {0
 Signal threshold (S/N):	Signalgrense (S/N):
 Steps back:	Trinn tilbake:
 Scan of the extended 27 MHz band	Skanning av det utvidede 27 MHz-båndet
+Flat	Flat
+Clear voice (presence)	Klar stemme (presence)
+Bass cut	Basskutt
+Warm	Varm
+Softened treble	Dempet diskant
+DX (boosted midrange)	DX (løftede mellomtoner)
+Equalizer on	Equalizer på
+Preset…	Forhåndsinnstilling…
+10-band equalizer — PhoneSDRLink	10-bånds equalizer — PhoneSDRLink

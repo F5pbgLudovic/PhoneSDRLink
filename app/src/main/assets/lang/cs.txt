@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Skenování pozastaveno na {0}
 Signal threshold (S/N):	Práh signálu (S/N):
 Steps back:	Kroky zpět:
 Scan of the extended 27 MHz band	Skenování rozšířeného pásma 27 MHz
+Flat	Plochý
+Clear voice (presence)	Čistý hlas (presence)
+Bass cut	Ořez basů
+Warm	Teplý
+Softened treble	Zjemněné výšky
+DX (boosted midrange)	DX (zvýrazněné středy)
+Equalizer on	Ekvalizér zapnut
+Preset…	Předvolba…
+10-band equalizer — PhoneSDRLink	10pásmový ekvalizér — PhoneSDRLink

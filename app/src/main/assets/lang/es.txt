@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Escaneo en pausa en {0}: seña
 Signal threshold (S/N):	Umbral de señal (S/N):
 Steps back:	Pasos atrás:
 Scan of the extended 27 MHz band	Escaneo de la banda ampliada de 27 MHz
+Flat	Plano
+Clear voice (presence)	Voz clara (presencia)
+Bass cut	Corte de graves
+Warm	Cálido
+Softened treble	Agudos suavizados
+DX (boosted midrange)	DX (medios realzados)
+Equalizer on	Ecualizador activado
+Preset…	Preajuste…
+10-band equalizer — PhoneSDRLink	Ecualizador de 10 bandas — PhoneSDRLink

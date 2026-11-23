@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Skenēšana apturēta uz {0}: 
 Signal threshold (S/N):	Signāla slieksnis (S/N):
 Steps back:	Soļi atpakaļ:
 Scan of the extended 27 MHz band	Paplašinātās 27 MHz joslas skenēšana
+Flat	Plakans
+Clear voice (presence)	Skaidra balss (presence)
+Bass cut	Basu nogriešana
+Warm	Silts
+Softened treble	Mīkstināti augstie
+DX (boosted midrange)	DX (pastiprināti vidējie)
+Equalizer on	Ekvalaizers ieslēgts
+Preset…	Sagatave…
+10-band equalizer — PhoneSDRLink	10 joslu ekvalaizers — PhoneSDRLink

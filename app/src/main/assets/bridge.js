@@ -109,6 +109,7 @@
         L.ctxs.push(ctx);
         if (L.notchOn) { if (L.notchAlgo === 0) notch(ctx, true); nf(ctx, L.notchAlgo > 0); }
         if (L.dnrOn) { dnr(ctx, L.dnrAlgo === 0); nr(ctx, L.dnrAlgo > 0); }
+        if (L.eqOn) eq(ctx);
         if (L.watchOn) watch(ctx);
         if (L.snrOn) snrNode(ctx);
       }
@@ -163,9 +164,35 @@
       if (f && f.on && f.node) { link(prev, f.node); prev = f.node; }
       if (d && d.on) { link(prev, d.input); prev = d.output; }
       if (q && q.on && q.node) { link(prev, q.node); prev = q.node; }
+      var e = ctx.__sdrlinkEq;
+      if (e && e.on) { link(prev, e.f[0]); prev = e.f[9]; }
       link(prev, out);
     };
 
+    // Égaliseur 10 bandes (1.34, identique à celui de SDRLink 1.54) : 10 filtres en cloche du navigateur en fin de chaîne,
+    // avant le volume ; une bande au-dessus de 45 % de la fréquence d'échantillonnage reste à 0 dB.
+    var EQF = [31, 60, 115, 220, 420, 800, 1500, 2800, 5300, 10000];
+    L.eqOn = false; L.eqG = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var eq = function (ctx) {
+      var e = ctx.__sdrlinkEq;
+      if (!e) {
+        if (!L.eqOn || !ctx.__sdrlinkIn || !ctx.createBiquadFilter) return;
+        e = ctx.__sdrlinkEq = { on: false, f: [] };
+        for (var i = 0; i < 10; i++) {
+          var b = ctx.createBiquadFilter();
+          b.type = 'peaking'; b.frequency.value = EQF[i]; b.Q.value = 1.41; b.gain.value = 0;
+          if (i > 0) origConnect.call(e.f[i - 1], b);
+          e.f.push(b);
+        }
+      }
+      for (var j = 0; j < 10; j++) e.f[j].gain.value = EQF[j] < ctx.sampleRate * 0.45 ? +L.eqG[j] || 0 : 0;
+      if (e.on !== L.eqOn) { e.on = L.eqOn; rewire(ctx); }
+    };
+    L.setEq = function (on, g) {
+      L.eqOn = !!on;
+      if (g && g.length === 10) L.eqG = g.slice();
+      for (var i = 0; i < L.ctxs.length; i++) eq(L.ctxs[i]);
+    };
     // Réducteur de bruit (DNR) léger : 16 filtres passe-bande en parallèle, chacun avec son gain. Un analyseur mesure le
     // niveau de chaque bande 20 fois par seconde et suit son plancher de bruit ; une bande qui ne dépasse pas ce plancher
     // de plus de 6 dB est atténuée (jusqu'à 14 dB), une bande qui porte un signal passe intacte. Le travail du signal est fait

@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Pásztázás szünetel itt: {0
 Signal threshold (S/N):	Jelküszöb (S/N):
 Steps back:	Lépés vissza:
 Scan of the extended 27 MHz band	A kiterjesztett 27 MHz-es sáv pásztázása
+Flat	Lapos
+Clear voice (presence)	Tiszta hang (prezencia)
+Bass cut	Mélyvágás
+Warm	Meleg
+Softened treble	Lágyított magasak
+DX (boosted midrange)	DX (kiemelt közepek)
+Equalizer on	Ekvalizer be
+Preset…	Előbeállítás…
+10-band equalizer — PhoneSDRLink	10 sávos ekvalizer — PhoneSDRLink

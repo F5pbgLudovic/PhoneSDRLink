@@ -814,3 +814,12 @@ Scan paused on {0}: signal {1} dB, resumes in {2}	Η σάρωση σε παύσ�
 Signal threshold (S/N):	Όριο σήματος (S/N):
 Steps back:	Βήματα πίσω:
 Scan of the extended 27 MHz band	Σάρωση της εκτεταμένης ζώνης 27 MHz
+Flat	Επίπεδο
+Clear voice (presence)	Καθαρή φωνή (παρουσία)
+Bass cut	Αποκοπή μπάσων
+Warm	Ζεστό
+Softened treble	Απαλά πρίμα
+DX (boosted midrange)	DX (ενισχυμένα μεσαία)
+Equalizer on	Ισοσταθμιστής ενεργός
+Preset…	Προεπιλογή…
+10-band equalizer — PhoneSDRLink	Ισοσταθμιστής 10 ζωνών — PhoneSDRLink
