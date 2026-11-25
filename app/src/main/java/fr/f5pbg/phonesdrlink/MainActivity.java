@@ -2788,7 +2788,7 @@ public class MainActivity extends Activity {
 
     void decStartJs() {
         if (decMode == 0) return;
-        web.evaluateJavascript("(function(){try{__sdrlink.decStart(" + decRate(decMode) + ")}catch(e){PhoneSdr.post(\"dec|err|\"+e)}})()", null);
+        web.evaluateJavascript("(function(){try{__sdrlink.decStart(" + decRate(decMode) + "," + isRade(decMode) + ")}catch(e){PhoneSdr.post(\"dec|err|\"+e)}})()", null);
     }
 
     final Runnable decStartRun = new Runnable() { public void run() { decStartJs(); } };

@@ -16,6 +16,11 @@ final class RadeEngine {
     interface Listener { void onStatus(String s); void onEvent(String line); void onVoice(boolean on); void onPcm(short[] pcm, int n); }
 
     static final int RATE = 8000;
+    static final int MIN_SNR = -8, START_SAMPLES = 4800;   // 0,3 s de parole à 16 kHz
+    static final int LEAD = 4000;                           // 250 ms d'avance avant de jouer (sinon trous : la parole arrive par blocs)
+    int pending;
+    boolean playing;
+    int written;
     final Listener ls;
     final Handler h = new Handler(Looper.getMainLooper());
     final LinkedBlockingQueue<short[]> q = new LinkedBlockingQueue<short[]>();
@@ -41,7 +46,7 @@ final class RadeEngine {
                 .setAudioFormat(new AudioFormat.Builder().setEncoding(AudioFormat.ENCODING_PCM_16BIT).setSampleRate(16000).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build())
                 .setBufferSizeInBytes(Math.max(minBuf, 16000 * 2))
                 .setTransferMode(AudioTrack.MODE_STREAM).build();
-            track.play();
+            playing = false;   // lecture lancée après 250 ms de parole en réserve
             if (mutedNow) track.setVolume(0f);
         } catch (Exception e) { track = null; }
         running = true;
@@ -88,7 +93,7 @@ final class RadeEngine {
             if (in == null) {   // plus de son depuis une demi-seconde : la parole décodée s'arrête, on rend le son du WebSDR
                 if (voiceOn && System.currentTimeMillis() - lastVoiceMs >= 1500) {
                     voiceOn = false;
-                    if (track != null) { try { track.pause(); track.flush(); track.play(); } catch (Exception e) { } }
+                    if (track != null) { try { track.pause(); track.flush(); playing = false; pending = 0; written = 0; } catch (Exception e) { } }
                     h.post(new Runnable() { public void run() { if (running && ls != null) ls.onVoice(false); } });
                 }
                 continue;
@@ -98,15 +103,23 @@ final class RadeEngine {
             short[] out = outBuf;
             int w = Decoders.radeProcess(handle, in, in.length, out, st);
             long nowV = System.currentTimeMillis();
-            if (w > 0) lastVoiceMs = nowV;
-            boolean voice = lastVoiceMs > 0 && nowV - lastVoiceMs < 1500;   // de la parole décodée vient d'arriver : le son du WebSDR est remplacé par elle
+            if (w > 0 && st[1] < MIN_SNR) w = 0;   // 1.35 (comme SDRLink 1.56) : sous −8 dB, le décodeur s'est accroché à tort, on ignore
+            if (w > 0) {
+                // parole annoncée seulement après 0,3 s de décodage continu (pas sur un éclair isolé)
+                if (!voiceOn) {
+                    pending = nowV - lastVoiceMs > 500 ? w : pending + w;
+                    lastVoiceMs = nowV;
+                    if (pending < START_SAMPLES) w = 0;
+                } else lastVoiceMs = nowV;
+            }
+            boolean voice = lastVoiceMs > 0 && nowV - lastVoiceMs < 1500 && (voiceOn || pending >= START_SAMPLES);   // de la parole décodée vient d'arriver : le son du WebSDR est remplacé par elle
             if (voice != voiceOn) {
                 voiceOn = voice;
-                if (!voice && track != null) { try { track.pause(); track.flush(); track.play(); } catch (Exception e) { } }
+                if (!voice && track != null) { try { track.pause(); track.flush(); playing = false; pending = 0; written = 0; } catch (Exception e) { } }
                 final boolean vv = voice;
                 h.post(new Runnable() { public void run() { if (running && ls != null) ls.onVoice(vv); } });
             }
-            if (w > 0 && track != null && voiceOn) track.write(out, 0, w);
+            if (w > 0 && track != null && voiceOn) { track.write(out, 0, w); written += w; if (!playing && written >= LEAD) { try { track.play(); playing = true; } catch (Exception e) { } } }
             if (w > 0 && voiceOn && ls != null) ls.onPcm(out, w);   // pour l'enregistrement (REC) : la parole décodée, 16 kHz
             boolean sync = st[0] != 0;
             long now = System.currentTimeMillis();

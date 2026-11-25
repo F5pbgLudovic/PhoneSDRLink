@@ -748,7 +748,7 @@
   // Décodeurs numériques (FT8, FreeDV RADE) : le son brut de la page (avant volume, muet, notch et réducteur de bruit) est
   // ramené à `rate` Hz (moyenne par intervalle, qui fait aussi office de filtre) puis envoyé en base64 (16 bits petit-boutiste).
   L.dec = null;
-  L.decStart = function (rate) {
+  L.decStart = function (rate, hq) {
     L.decStop();
     var ctx = null, i;
     for (i = 0; i < L.ctxs.length; i++) if (L.ctxs[i].state === 'running') { ctx = L.ctxs[i]; break; }
@@ -761,8 +761,45 @@
     origConnect.call(ctx.__sdrlinkIn, sp);
     origConnect.call(sp, silent);
     origConnect.call(silent, ctx.destination);
+    // FreeDV (1.35, comme SDRLink 1.56) : vrai filtre passe-bas (sinc fenêtré de Blackman, coupure 0,45 × 8000 Hz, 64 points par
+    // échantillon de sortie) puis interpolation de Catmull-Rom, à la place de la moyenne par intervalle qui déforme le signal.
+    var hqf = null, hist = new Float32Array(0), base = 0, tn = 0, hh = 0;
+    if (hq && rate === 8000 && ctx.sampleRate !== 8000) {
+      var nt = Math.min(511, Math.round(ratio * 64) | 1), fc = Math.min(0.45 * rate, 0.375 * ctx.sampleRate) / ctx.sampleRate, sm = 0, k;
+      hqf = new Float32Array(nt); hh = (nt - 1) >> 1;
+      for (k = 0; k < nt; k++) {
+        var xx = k - hh, sc = xx === 0 ? 2 * fc : Math.sin(2 * Math.PI * fc * xx) / (Math.PI * xx);
+        hqf[k] = sc * (0.42 - 0.5 * Math.cos(2 * Math.PI * k / (nt - 1)) + 0.08 * Math.cos(4 * Math.PI * k / (nt - 1)));
+        sm += hqf[k];
+      }
+      for (k = 0; k < nt; k++) hqf[k] /= sm;
+    }
     sp.onaudioprocess = function (e) {
       var d = e.inputBuffer.getChannelData(0), out = new Int16Array(Math.ceil(d.length / ratio) + 2), n = 0, j, v;
+      if (hqf) {
+        var b = new Float32Array(hist.length + d.length), nb = b.length, ff = function (i) {   // sortie filtrée à l'échantillon absolu i
+          var y = 0, a = i - hh - base, m;
+          for (m = 0; m < hqf.length; m++) y += hqf[m] * b[a + m];
+          return y;
+        };
+        b.set(hist, 0); b.set(d, hist.length);
+        while (true) {
+          var i0 = Math.floor(tn), fr = tn - i0;
+          if (i0 + 2 + hh >= base + nb) break;
+          if (i0 - 1 - hh < base) { if (base === 0 && i0 - 1 - hh < 0) { tn = hh + 1; continue; } break; }
+          var p0 = ff(i0 - 1), p1 = ff(i0), p2 = ff(i0 + 1), p3 = ff(i0 + 2);
+          v = p1 + 0.5 * fr * (p2 - p0 + fr * (2 * p0 - 5 * p1 + 4 * p2 - p3 + fr * (3 * (p1 - p2) + p3 - p0)));
+          out[n++] = Math.max(-1, Math.min(1, v)) * 32767 | 0;
+          tn += ratio;
+        }
+        var keep = Math.max(0, Math.min(nb, Math.floor(tn) - 1 - hh - base));
+        hist = b.slice(keep); base += keep;
+        if (!n) return;
+        var by = new Uint8Array(out.buffer, 0, n * 2), sx = '';
+        for (j = 0; j < by.length; j += 8192) sx += String.fromCharCode.apply(null, by.subarray(j, j + 8192));
+        __post('dec|d|' + btoa(sx));
+        return;
+      }
       for (j = 0; j < d.length; j++) {
         acc += d[j]; cnt++; phase++;
         if (phase >= ratio) {
